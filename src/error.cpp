@@ -55,14 +55,14 @@ Error::Error(Type errorType, Severity errorSeverity, const QString &errorText, c
 Error::Error(QNetworkReply *reply, QObject *parent) :
     QObject(parent), d_ptr(new ErrorPrivate)
 {
-    if (networkReply && networkReply->error() != QNetworkReply::NoError) {
+    if (reply && reply->error() != QNetworkReply::NoError) {
 
         Q_D(Error);
 
         d->type = RequestError;
         d->severity = Critical;
 
-        switch(networkReply->error()) {
+        switch(reply->error()) {
         case QNetworkReply::ConnectionRefusedError:
             d->text = tr("The remote server refused the connection.");
             break;
@@ -90,12 +90,14 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
         case QNetworkReply::BackgroundRequestNotAllowedError:
             d->text = tr("The background request is not currently allowed due to platform policy.");
             break;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
         case QNetworkReply::TooManyRedirectsError:
             d->text = tr("While following redirects, the maximum limit was reached.");
             break;
         case QNetworkReply::InsecureRedirectError:
             d->text = tr("While following redirects, the network access API detected a redirect from an encrypted protocol (https) to an unencrypted one (http).");
             break;
+#endif
         case QNetworkReply::ProxyConnectionRefusedError:
             d->text = tr("The connection to the proxy server was refused (the proxy server is not accepting requests).");
             break;
@@ -126,6 +128,7 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
         case QNetworkReply::ContentReSendError:
             d->text = tr("The request needed to be sent again, but this failed for example because the upload data could not be read a second time.");
             break;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
         case QNetworkReply::ContentConflictError:
             d->text = tr("The request could not be completed due to a conflict with the current state of the resource.");
             break;
@@ -141,6 +144,7 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
         case QNetworkReply::ServiceUnavailableError:
             d->text = tr("The server is unable to handle the request at this time.");
             break;
+#endif
         case QNetworkReply::ProtocolUnknownError:
             d->text = tr("The Network Access API cannot honor the request because the protocol is not known.");
             break;
@@ -159,15 +163,17 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
         case QNetworkReply::ProtocolFailure:
             d->text = tr("A breakdown in protocol was detected (parsing error, invalid or unexpected responses, etc.).");
             break;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
         case QNetworkReply::UnknownServerError:
             d->text = tr("An unknown error related to the server response was detected.");
             break;
+#endif
         default:
-            d->type = NoError;
+            d->text = tr("An unknown error related to the server response was detected.");
             break;
         }
 
-        d->data = networkReply->request().url().toString();
+        d->data = reply->request().url().toString();
 
 #ifdef QT_DEBUG
         d->printOut();
