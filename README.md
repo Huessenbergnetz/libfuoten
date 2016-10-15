@@ -1,2 +1,2 @@
 # libfuoten
-Qt based library to privide access to the ownCloud / Nextcloud News app.
+Qt based library to provide access to the ownCloud / Nextcloud News app.
