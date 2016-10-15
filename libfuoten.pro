@@ -9,11 +9,14 @@ CONFIG -= console
 CONFIG -= app_bundle
 CONFIG += shared
 CONFIG += c++11
-CONFIG += ne_keywords
+CONFIG += no_keywords
 
 DEFINES += FUOTEN_LIBRARY
 
-target.path = $$INSTALL_DIB_DIR
+isEmpty(INSTALL_LIB_DIR): INSTALL_LIB_DIR = $$[QT_INSTALL_LIBS]
+
+target = $$TARGET
+target.path = $$INSTALL_LIB_DIR
 INSTALLS += target
 
 HEADERS += \
