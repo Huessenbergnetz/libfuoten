@@ -20,5 +20,10 @@ target.path = $$INSTALL_LIB_DIR
 INSTALLS += target
 
 HEADERS += \
-    src/fuoten_global.h
+    src/fuoten_global.h \
+    src/error.h \
+    src/error_p.h
+
+SOURCES += \
+    src/error.cpp
 
