@@ -22,8 +22,11 @@ INSTALLS += target
 HEADERS += \
     src/fuoten_global.h \
     src/error.h \
-    src/error_p.h
+    src/error_p.h \
+    src/component.h \
+    src/component_p.h
 
 SOURCES += \
-    src/error.cpp
+    src/error.cpp \
+    src/component.cpp
 
