@@ -25,6 +25,8 @@
 
 #include <QtCore/qglobal.h>
 
+#define DEFAULT_USER_AGENT "Libfuoten 0.0.1"
+
 #if defined(FUOTEN_LIBRARY)
 #  define FUOTENSHARED_EXPORT Q_DECL_EXPORT
 #else
