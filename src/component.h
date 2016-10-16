@@ -361,6 +361,13 @@ protected:
      */
     virtual void extractError(QNetworkReply *reply) = 0;
 
+    /*!
+     * \brief Set this to true if the request requires authentication.
+     *
+     * Default: true
+     */
+    void setRequiresAuth(bool reqAuth);
+
 
 private Q_SLOTS:
     void _requestFinished();

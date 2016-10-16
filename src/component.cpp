@@ -126,7 +126,9 @@ void Component::sendRequest()
         nr.setRawHeader(QByteArrayLiteral("Accept"), QByteArrayLiteral("application/json"));
     }
 
-    nr.setRawHeader(QByteArrayLiteral("Authorization"), d->authHeader);
+    if (d->requiresAuth) {
+        nr.setRawHeader(QByteArrayLiteral("Authorization"), d->authHeader);
+    }
 
 #ifdef QT_DEBUG
     qDebug() << "Start performing network operation.";
@@ -218,7 +220,7 @@ bool Component::checkInput()
 {
     Q_D(Component);
 
-    if (username().isEmpty() || password().isEmpty()) {
+    if (d->requiresAuth && (username().isEmpty() || password().isEmpty())) {
         setError(new Error(Error::InputError, Error::Critical, tr("You have to specify a username and a password."), QString(), this));
         Q_EMIT failed(error());
         return false;

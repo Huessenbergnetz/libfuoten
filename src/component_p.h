@@ -45,7 +45,8 @@ public:
         timeoutTimer(nullptr),
         reply(nullptr),
         namOperation(QNetworkAccessManager::GetOperation),
-        expectedJSONType(Component::Empty)
+        expectedJSONType(Component::Empty),
+        requiresAuth(true)
     {}
 
     virtual ~ComponentPrivate() {}
@@ -73,7 +74,7 @@ public:
 
     void createAuthHeader()
     {
-        if (!username.isEmpty() && !password.isEmpty()) {
+        if (requiresAuth && !username.isEmpty() && !password.isEmpty()) {
             authHeader = QByteArrayLiteral("Basic ");
             QString auth(username);
             auth.append(QLatin1String(":")).append(password);
@@ -108,6 +109,7 @@ public:
     QJsonDocument jsonResult;
     QByteArray result;
     QByteArray authHeader;
+    bool requiresAuth;
 };
 
 }
