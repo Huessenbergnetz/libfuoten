@@ -27,6 +27,7 @@
 #include "fuoten_global.h"
 
 class QNetworkReply;
+struct QJsonParseError;
 
 namespace Fuoten {
 
@@ -125,6 +126,11 @@ public:
      * \brief Constructs a new Error object from a QNetworkReply.
      */
     Error(QNetworkReply *reply, QObject *parent = nullptr);
+
+    /*!
+     * \brief Constructs a new Error object form a QJsonParseError.
+     */
+    Error(QJsonParseError jsonError, QObject *parent = nullptr);
 
 
     /*!

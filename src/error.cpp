@@ -22,6 +22,7 @@
 
 #include "error_p.h"
 #include <QNetworkReply>
+#include <QJsonParseError>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -181,6 +182,21 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
 
     }
 }
+
+
+
+
+Error::Error(QJsonParseError jsonError, QObject *parent) :
+    QObject(parent), d_ptr(new ErrorPrivate)
+{
+    if (jsonError.error != QJsonParseError::NoError) {
+        Q_D(Error);
+        d->type = OutputError;
+        d->severity = Critical;
+        d->text = jsonError.errorString();
+    }
+}
+
 
 
 
