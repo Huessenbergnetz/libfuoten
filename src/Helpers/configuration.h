@@ -152,16 +152,6 @@ public:
     virtual void setServerVersion(const QString &nServerVersion) = 0;
 
     /*!
-     * \brief Set to true if the account data is valid.
-     *
-     * Reimplement this in a subclass. You can use checkAccountValidity() to perform a simple check if the
-     * important data is not empty.
-     *
-     * \sa isAccountValid(), checkAccountValidity()
-     */
-    virtual void setIsAccountValid(bool nIsAccountValid) = 0;
-
-    /*!
      * \brief Sets the user's avatar.
      *
      * Reimplement this in a subclass if you want to handle the user's avatar image returned by Fuoten::Generic::Status.
@@ -181,6 +171,16 @@ protected:
      * \sa setIsAccountValid(), isAccountValid()
      */
     void checkAccountValidity();
+
+    /*!
+     * \brief Set to true if the account data is valid.
+     *
+     * Reimplement this in a subclass. You can use checkAccountValidity() to perform a simple check if the
+     * important data is not empty.
+     *
+     * \sa isAccountValid(), checkAccountValidity()
+     */
+    virtual void setIsAccountValid(bool nIsAccountValid) = 0;
 
 private:
     Q_DISABLE_COPY(Configuration)
