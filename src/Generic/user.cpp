@@ -93,7 +93,8 @@ bool User::checkOutput()
         d->resultObject = jsonResult().object();
 
         if (!d->resultObject.contains(QStringLiteral("displayName"))) {
-            setError(new Error(Error::OutputError, Error::Critical, tr("Can not find the user's display name in the server reply."), QString(), this));
+            //% "Can not find the user's display name in the server reply."
+            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-displayname-not-found"), QString(), this));
             Q_EMIT failed(error());
             return false;
         }

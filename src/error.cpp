@@ -65,112 +65,146 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
 
         switch(reply->error()) {
         case QNetworkReply::ConnectionRefusedError:
-            d->text = tr("The remote server at %1 refused the connection.").arg(reply->request().url().host());
+            //% "The remote server at %1 refused the connection."
+            d->text = qtTrId("err-net-reply-1").arg(reply->request().url().host());
             break;
         case QNetworkReply::RemoteHostClosedError:
-            d->text = tr("The remote server at %1 closed the connection prematurely, before the entire reply was received and processed.").arg(reply->request().url().host());
+            //% "The remote server at %1 closed the connection prematurely, before the entire reply was received and processed."
+            d->text = qtTrId("err-net-reply-2").arg(reply->request().url().host());
             break;
         case QNetworkReply::HostNotFoundError:
-            d->text = tr("The remote host name %1 was not found.").arg(reply->request().url().host());
+            //% "The remote host name %1 was not found."
+            d->text = qtTrId("err-net-reply-3").arg(reply->request().url().host());
             break;
         case QNetworkReply::TimeoutError:
-            d->text = tr("The connection to the server at %1 timed out.").arg(reply->request().url().host());
+            //% "The connection to the server at %1 timed out."
+            d->text = qtTrId("err-net-reply-4").arg(reply->request().url().host());
             break;
         case QNetworkReply::OperationCanceledError:
-            d->text = tr("The operation was canceled before it was finished.");
+            //% "The operation was canceled before it was finished."
+            d->text = qtTrId("err-net-reply-5");
             break;
         case QNetworkReply::SslHandshakeFailedError:
-            d->text = tr("The SSL/TLS handshake failed and the encrypted channel could not be established.");
+            //% "The SSL/TLS handshake failed and the encrypted channel could not be established."
+            d->text = qtTrId("err-net-reply-6");
             break;
         case QNetworkReply::TemporaryNetworkFailureError:
-            d->text = tr("The connection was broken due to disconnection from the network.");
+            //% "The connection was broken due to disconnection from the network."
+            d->text = qtTrId("err-net-reply-7");
             break;
         case QNetworkReply::NetworkSessionFailedError:
-            d->text = tr("The connection was broken due to disconnection from the network or failure to start the network.");
+            //% "The connection was broken due to disconnection from the network or failure to start the network."
+            d->text = qtTrId("err-net-reply-8");
             break;
         case QNetworkReply::BackgroundRequestNotAllowedError:
-            d->text = tr("The background request is not currently allowed due to platform policy.");
+            //% "The background request is not currently allowed due to platform policy."
+            d->text = qtTrId("err-net-reply-9");
             break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
         case QNetworkReply::TooManyRedirectsError:
-            d->text = tr("While following redirects, the maximum limit was reached.");
+            //% "While following redirects, the maximum limit was reached."
+            d->text = qtTrId("err-net-reply-10");
             break;
         case QNetworkReply::InsecureRedirectError:
-            d->text = tr("While following redirects, the network access API detected a redirect from an encrypted protocol (https) to an unencrypted one (http).");
+            //% "While following redirects, the network access API detected a redirect from an encrypted protocol (https) to an unencrypted one (http)."
+            d->text = qtTrId("err-net-reply-11");
             break;
 #endif
         case QNetworkReply::ProxyConnectionRefusedError:
-            d->text = tr("The connection to the proxy server was refused (the proxy server is not accepting requests).");
+            //% "The connection to the proxy server was refused (the proxy server is not accepting requests)."
+            d->text = qtTrId("err-net-reply-101");
             break;
         case QNetworkReply::ProxyConnectionClosedError:
-            d->text = tr("The proxy server closed the connection prematurely, before the entire reply was received and processed.");
+            //% "The proxy server closed the connection prematurely, before the entire reply was received and processed."
+            d->text = qtTrId("err-net-reply-102");
             break;
         case QNetworkReply::ProxyNotFoundError:
-            d->text = tr("The proxy host name was not found (invalid proxy hostname).");
+            //% "The proxy host name was not found (invalid proxy hostname)."
+            d->text = qtTrId("err-net-reply-103");
             break;
         case QNetworkReply::ProxyTimeoutError:
-            d->text = tr("The connection to the proxy timed out or the proxy did not reply in time to the request sent");
+            //% "The connection to the proxy timed out or the proxy did not reply in time to the request sent"
+            d->text = qtTrId("err-net-reply-104");
             break;
         case QNetworkReply::ProxyAuthenticationRequiredError:
-            d->text = tr("The proxy requires authentication in order to honour the request but did not accept any credentials offered (if any).");
+            //% "The proxy requires authentication in order to honour the request but did not accept any credentials offered (if any)."
+            d->text = qtTrId("err-net-reply-105");
             break;
         case QNetworkReply::ContentAccessDenied:
-            d->text = tr("The access to the remote content was denied.");
+            //% "The access to the remote content was denied."
+            d->text = qtTrId("err-net-reply-201");
             break;
         case QNetworkReply::ContentOperationNotPermittedError:
-            d->text = tr("The operation requested on the remote content is not permitted.");
+            //% "The operation requested on the remote content is not permitted."
+            d->text = qtTrId("err-net-reply-202");
             break;
         case QNetworkReply::ContentNotFoundError:
-            d->text = tr("The remote content was not found at the server.");
+            //% "The remote content was not found at the server."
+            d->text = qtTrId("err-net-reply-203");
             break;
         case QNetworkReply::AuthenticationRequiredError:
-            d->text = tr("The remote server requires authentication to serve the content but the credentials provided were not accepted (if any).");
+            //% "The remote server requires authentication to serve the content but the credentials provided were not accepted (if any)."
+            d->text = qtTrId("err-net-reply-204");
             break;
         case QNetworkReply::ContentReSendError:
-            d->text = tr("The request needed to be sent again, but this failed for example because the upload data could not be read a second time.");
+            //% "The request needed to be sent again, but this failed for example because the upload data could not be read a second time."
+            d->text = qtTrId("err-net-reply-205");
             break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
         case QNetworkReply::ContentConflictError:
-            d->text = tr("The request could not be completed due to a conflict with the current state of the resource.");
+            //% "The request could not be completed due to a conflict with the current state of the resource."
+            d->text = qtTrId("err-net-reply-206");
             break;
         case QNetworkReply::ContentGoneError:
-            d->text = tr("The requested resource is no longer available at the server.");
+            //% "The requested resource is no longer available at the server."
+            d->text = qtTrId("err-net-reply-207");
             break;
         case QNetworkReply::InternalServerError:
-            d->text = tr("The server encountered an unexpected condition which prevented it from fulfilling the request.");
+            //% "The server encountered an unexpected condition which prevented it from fulfilling the request."
+            d->text = qtTrId("err-net-reply-401");
             break;
         case QNetworkReply::OperationNotImplementedError:
-            d->text = tr("The server does not support the functionality required to fulfill the request.");
+            //% "The server does not support the functionality required to fulfill the request."
+            d->text = qtTrId("err-net-reply-402");
             break;
         case QNetworkReply::ServiceUnavailableError:
-            d->text = tr("The server is unable to handle the request at this time.");
+            //% "The server is unable to handle the request at this time."
+            d->text = qtTrId("err-net-reply-403");
             break;
 #endif
         case QNetworkReply::ProtocolUnknownError:
-            d->text = tr("The Network Access API cannot honor the request because the protocol is not known.");
+            //% "The Network Access API cannot honor the request because the protocol is not known."
+            d->text = qtTrId("err-net-reply-301");
             break;
         case QNetworkReply::ProtocolInvalidOperationError:
-            d->text = tr("The requested operation is invalid for this protocol.");
+            //% "The requested operation is invalid for this protocol."
+            d->text = qtTrId("err-net-reply-302");
             break;
         case QNetworkReply::UnknownNetworkError:
-            d->text = tr("An unknown network-related error was detected.");
+            //% "An unknown network-related error was detected."
+            d->text = qtTrId("err-net-reply-99");
             break;
         case QNetworkReply::UnknownProxyError:
-            d->text = tr("An unknown proxy-related error was detected.");
+            //% "An unknown proxy-related error was detected."
+            d->text = qtTrId("err-net-reply-199");
             break;
         case QNetworkReply::UnknownContentError:
-            d->text = tr("An unknown error related to the remote content was detected.");
+            //% "An unknown error related to the remote content was detected."
+            d->text = qtTrId("err-net-reply-299");
             break;
         case QNetworkReply::ProtocolFailure:
-            d->text = tr("A breakdown in protocol was detected (parsing error, invalid or unexpected responses, etc.).");
+            //% "A breakdown in protocol was detected (parsing error, invalid or unexpected responses, etc.)."
+            d->text = qtTrId("err-net-reply-399");
             break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
         case QNetworkReply::UnknownServerError:
-            d->text = tr("An unknown error related to the server response was detected.");
+            //% "An unknown error related to the server response was detected."
+            d->text = qtTrId("err-net-reply-499");
             break;
 #endif
         default:
-            d->text = tr("An unknown error related to the server response was detected.");
+            //% "An unknown error related to the server response was detected."
+            d->text = qtTrId("err-net-reply-499");
             break;
         }
 

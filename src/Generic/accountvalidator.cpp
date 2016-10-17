@@ -58,7 +58,8 @@ void AccountValidator::start()
     d->setInOperatin(true);
 
     if (!configuration()) {
-        setError(new Error(Error::InputError, Error::Critical, tr("No configuration available."), QString(), this));
+        //% "No configuration available."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("id-err-no-config"), QString(), this));
         Q_EMIT failed(error());
         return;
     }
@@ -79,12 +80,14 @@ void AccountValidator::gotVersion()
 {
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
     if (configuration()->getServerVersion().lowerThan(5,2,4)) {
-        setError(new Error(Error::ServerError, Error::Warning, tr("The version of your News App is lower than 5.2.4. Status and user information can not be queried."), configuration()->getServerVersion().toString(), this));
+        //% "The version of your News App is lower than 5.2.4. Status and user information can not be queried."
+        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-status-user"), configuration()->getServerVersion().toString(), this));
         return;
     }
 #else
     if (configuration()->getServerVersion() < QVersionNumber(5,2,4)) {
-        setError(new Error(Error::ServerError, Error::Warning, tr("The version of your News App is lower than 5.2.4. Status and user information can not be queried."), configuration()->getServerVersion().toString(), this));
+        //% "The version of your News App is lower than 5.2.4. Status and user information can not be queried."
+        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-status-user"), configuration()->getServerVersion().toString(), this));
         return;
     }
 #endif
@@ -106,12 +109,14 @@ void AccountValidator::gotStatus()
 {
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
     if (configuration()->getServerVersion().lowerThan(6,0,5)) {
-        setError(new Error(Error::ServerError, Error::Warning, tr("The version of your News App is lower than 6.0.5. User information can not be queried."), configuration()->getServerVersion().toString(), this));
+        //% "The version of your News App is lower than 6.0.5. User information can not be queried."
+        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-user"), configuration()->getServerVersion().toString(), this));
         return;
     }
 #else
     if (configuration()->getServerVersion() < QVersionNumber(6,0,5)) {
-        setError(new Error(Error::ServerError, Error::Warning, tr("The version of your News App is lower than 6.0.5. User information can not be queried."), configuration()->getServerVersion().toString(), this));
+        //% "The version of your News App is lower than 6.0.5. User information can not be queried."
+        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-user"), configuration()->getServerVersion().toString(), this));
         return;
     }
 #endif

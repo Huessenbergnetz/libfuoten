@@ -88,13 +88,15 @@ bool Status::checkOutput()
         d->resultObject = jsonResult().object();
 
         if (!d->resultObject.contains(QStringLiteral("version"))) {
-            setError(new Error(Error::OutputError, Error::Critical, tr("Can not find the version information in the server reply."), QString(), this));
+            //% "Can not find the version information in the server reply."
+            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-not-found"), QString(), this));
             Q_EMIT failed(error());
             return false;
         }
 
         if (!d->resultObject.contains(QStringLiteral("warnings"))) {
-            setError(new Error(Error::OutputError, Error::Critical, tr("Can not find the warnings information in the server reply."), QString(), this));
+            //% "Can not find the warnings information in the server reply."
+            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-warnings-not-found"), QString(), this));
             Q_EMIT failed(error());
             return false;
         }

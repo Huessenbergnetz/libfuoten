@@ -92,7 +92,8 @@ void Component::sendRequest()
     }
 
     if (!url.isValid()) {
-        setError(new Error(Error::InputError, Error::Critical, tr("Invalid API URL."), url.toString(), this));
+        //% "Invalid API URL"
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("invalid-api-url"), url.toString(), this));
         Q_EMIT failed(error());
         setInOperation(false);
         return;
@@ -204,7 +205,8 @@ void Component::_requestTimedOut()
 {
     Q_D(Component);
 
-    setError(new Error(Error::RequestError, Error::Critical, tr("The connection to the server timed out after %n second(s).", "", requestTimeout()), d->reply->request().url().toString(), this));
+    //% "The connection to the server timed out after %n second(s)."
+    setError(new Error(Error::RequestError, Error::Critical, qtTrId("err-conn-timeout", requestTimeout()), d->reply->request().url().toString(), this));
 
     QNetworkReply *nr = d->reply;
     d->reply = nullptr;
@@ -227,31 +229,36 @@ bool Component::checkInput()
     Q_D(Component);
 
     if (!d->configuration) {
-        setError(new Error(Error::InputError, Error::Critical, tr("No configuration available."), QString(), this));
+        //% "No configuration available."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("id-err-no-config"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
     if (d->requiresAuth && (d->configuration->getUsername().isEmpty() || d->configuration->getPassword().isEmpty())) {
-        setError(new Error(Error::InputError, Error::Critical, tr("You have to specify a username and a password."), QString(), this));
+        //% "You have to specify a username and a password."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("err-username-pass-missing"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
     if (d->configuration->getHost().isEmpty()) {
-        setError(new Error(Error::InputError, Error::Critical, tr("No host specified."), QString(), this));
+        //% "No host specified"
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("err-no-host"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
     if (d->apiRoute.isEmpty()) {
-        setError(new Error(Error::InputError, Error::Critical, tr("No API route specified."), QString(), this));
+        //% "No API route specified."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("err-no-route"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
     if ((d->namOperation == QNetworkAccessManager::PostOperation || d->namOperation == QNetworkAccessManager::PutOperation) && d->payload.isEmpty()) {
-        setError(new Error(Error::InputError, Error::Critical, tr("Empty payload when trying to perform a PUT or POST network operation."), QString(), this));
+        //% "Empty payload when trying to perform a PUT or POST network operation."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("err-no-payloud"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
@@ -276,19 +283,22 @@ bool Component::checkOutput()
     }
 
     if ((d->jsonResult.isNull() || d->jsonResult.isEmpty()) && !(d->expectedJSONType == Empty)) {
-        setError(new Error(Error::OutputError, Error::Critical, tr("The request replied an empty answer, but there was content expected."), QString(), this));
+        //% "The request replied an empty answer, but there was content expected."
+        setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-empty-answer"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
     if ((d->expectedJSONType == Array) && !d->jsonResult.isArray()) {
-        setError(new Error(Error::OutputError, Error::Critical, tr("It was expected that the request returns a JSON array, but it returned something else."), QString(), this));
+        //% "It was expected that the request returns a JSON array, but it returned something else."
+        setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-array"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
     if ((d->expectedJSONType == Object && !d->jsonResult.isObject())) {
-        setError(new Error(Error::OutputError, Error::Critical, tr("It was expected that the request returns a JSON object, but it returned something else."), QString(), this));
+        //% "It was expected that the request returns a JSON object, but it returned something else."
+        setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-object"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }

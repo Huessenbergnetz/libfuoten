@@ -85,7 +85,8 @@ bool Version::checkOutput()
         d->resultObject = jsonResult().object();
 
         if (!d->resultObject.contains(QStringLiteral("version"))) {
-            setError(new Error(Error::OutputError, Error::Critical, tr("Can not find the version information in the server reply."), QString(), this));
+            //% "Can not find the version information in the server reply."
+            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-not-found"), QString(), this));
             Q_EMIT failed(error());
             if (configuration()) { configuration()->setServerVersion("0.0.0"); }
             return false;
