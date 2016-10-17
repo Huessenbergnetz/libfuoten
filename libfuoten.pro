@@ -19,10 +19,15 @@ DEFINES += FUOTEN_LIBRARY
 DEFINES += VERSION_STRING=\"\\\"$${VERSION}\\\"\"
 
 isEmpty(INSTALL_LIB_DIR): INSTALL_LIB_DIR = $$[QT_INSTALL_LIBS]
+isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRANSLATIONS]
 
 target = $$TARGET
 target.path = $$INSTALL_LIB_DIR
 INSTALLS += target
+
+langfiles.path = $$INSTALL_TRANSLATIONS_DIR
+langfiles.files = translations/*.qm
+INSTALLS += langfiles
 
 HEADERS += \
     src/fuoten_global.h \
