@@ -39,7 +39,8 @@ HEADERS += \
     src/Generic/user.h \
     src/Generic/user_p.h \
     src/Generic/accountvalidator.h \
-    src/Generic/accountvalidator_p.h
+    src/Generic/accountvalidator_p.h \
+    src/fuoten.h
 
 SOURCES += \
     src/error.cpp \
