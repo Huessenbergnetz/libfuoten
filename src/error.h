@@ -86,7 +86,8 @@ public:
         RequestError,       /**< The request was not setup correctly. */
         JSONParsingError,   /**< Failed to parse JSON data. */
         InputError,         /**< An error occured while providing data to the library methods. */
-        OutputError         /**< An error occured while processing the returned data from the API. */
+        OutputError,        /**< An error occured while processing the returned data from the API. */
+        ServerError         /**< An error occured on the server. */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Type)

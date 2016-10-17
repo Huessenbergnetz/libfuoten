@@ -65,16 +65,16 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
 
         switch(reply->error()) {
         case QNetworkReply::ConnectionRefusedError:
-            d->text = tr("The remote server refused the connection.");
+            d->text = tr("The remote server at %1 refused the connection.").arg(reply->request().url().host());
             break;
         case QNetworkReply::RemoteHostClosedError:
-            d->text = tr("The remote server closed the connection prematurely, before the entire reply was received and processed.");
+            d->text = tr("The remote server at %1 closed the connection prematurely, before the entire reply was received and processed.").arg(reply->request().url().host());
             break;
         case QNetworkReply::HostNotFoundError:
-            d->text = tr("The remote host name was not found.");
+            d->text = tr("The remote host name %1 was not found.").arg(reply->request().url().host());
             break;
         case QNetworkReply::TimeoutError:
-            d->text = tr("The connection to the server timed out.");
+            d->text = tr("The connection to the server at %1 timed out.").arg(reply->request().url().host());
             break;
         case QNetworkReply::OperationCanceledError:
             d->text = tr("The operation was canceled before it was finished.");
