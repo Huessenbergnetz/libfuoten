@@ -69,19 +69,20 @@ void Component::sendRequest()
 
     QUrl url;
 
-    if (useSSL()) {
+    if (d->configuration->getUseSSL()) {
         url.setScheme(QStringLiteral("https"));
     } else {
         url.setScheme(QStringLiteral("http"));
     }
 
-    if (port() != 0) {
-        url.setPort(port());
+    if (d->configuration->getServerPort() != 0) {
+        url.setPort(d->configuration->getServerPort());
     }
 
-    url.setHost(host());
+    url.setHost(d->configuration->getHost());
 
-    QString urlPath = installPath();
+    QString urlPath = d->configuration->getInstallPath();
+    urlPath.append(QStringLiteral("/index.php/apps/news/api/v1-2"));
     urlPath.append(d->apiRoute);
 
     url.setPath(urlPath);
@@ -99,6 +100,9 @@ void Component::sendRequest()
 
     if (!d->networkAccessManager) {
         setNetworkAccessManager(new QNetworkAccessManager(this));
+        if (d->configuration->getIgnoreSSLErrors()) {
+            connect(d->networkAccessManager, &QNetworkAccessManager::sslErrors, this, &Component::_ignoreSSLErrors);
+        }
     }
 
     QNetworkRequest nr;
@@ -113,9 +117,7 @@ void Component::sendRequest()
         }
     }
 
-    if (!d->userAgent.isEmpty()) {
-        nr.setRawHeader(QByteArrayLiteral("User-Agent"), userAgent().toUtf8());
-    }
+    nr.setRawHeader(QByteArrayLiteral("User-Agent"), d->configuration->getUserAgent().toUtf8());
 
     if (!d->payload.isEmpty()) {
         nr.setRawHeader(QByteArrayLiteral("Content-Length"), QByteArray::number(d->payload.length()));
@@ -127,7 +129,11 @@ void Component::sendRequest()
     }
 
     if (d->requiresAuth) {
-        nr.setRawHeader(QByteArrayLiteral("Authorization"), d->authHeader);
+        QByteArray authHeader = QByteArrayLiteral("Basic ");
+        QString auth(d->configuration->getUsername());
+        auth.append(QLatin1String(":")).append(d->configuration->getPassword());
+        authHeader.append(auth.toUtf8().toBase64());
+        nr.setRawHeader(QByteArrayLiteral("Authorization"), authHeader);
     }
 
 #ifdef QT_DEBUG
@@ -220,13 +226,19 @@ bool Component::checkInput()
 {
     Q_D(Component);
 
-    if (d->requiresAuth && (username().isEmpty() || password().isEmpty())) {
+    if (!d->configuration) {
+        setError(new Error(Error::InputError, Error::Critical, tr("No configuration available."), QString(), this));
+        Q_EMIT failed(error());
+        return false;
+    }
+
+    if (d->requiresAuth && (d->configuration->getUsername().isEmpty() || d->configuration->getPassword().isEmpty())) {
         setError(new Error(Error::InputError, Error::Critical, tr("You have to specify a username and a password."), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
-    if (host().isEmpty()) {
+    if (d->configuration->getHost().isEmpty()) {
         setError(new Error(Error::InputError, Error::Critical, tr("No host specified."), QString(), this));
         Q_EMIT failed(error());
         return false;
@@ -359,135 +371,17 @@ void Component::setError(Error *nError)
 
 
 
-bool Component::useSSL() const { Q_D(const Component); return d->useSSL; }
+Configuration *Component::configuration() const { Q_D(const Component); return d->configuration; }
 
-void Component::setUseSSL(bool nUseSSL)
+void Component::setConfiguration(Configuration *nConfiguration)
 {
     Q_D(Component);
-    if (nUseSSL != d->useSSL) {
-        d->useSSL = nUseSSL;
+    if (nConfiguration != d->configuration) {
+        d->configuration = nConfiguration;
 #ifdef QT_DEBUG
-        qDebug() << "Changed useSSL to" << d->useSSL;
+        qDebug() << "Changed configuration to" << d->configuration;
 #endif
-        Q_EMIT useSSLChanged(useSSL());
-    }
-}
-
-
-
-
-QString Component::host() const { Q_D(const Component); return d->host; }
-
-void Component::setHost(const QString &nHost)
-{
-    Q_D(Component);
-    if (nHost != d->host) {
-        d->host = nHost;
-#ifdef QT_DEBUG
-        qDebug() << "Changed host to" << d->host;
-#endif
-        Q_EMIT hostChanged(host());
-    }
-}
-
-
-
-
-quint16 Component::port() const { Q_D(const Component); return d->port; }
-
-void Component::setPort(quint16 nPort)
-{
-    Q_D(Component);
-    if (nPort != d->port) {
-        d->port = nPort;
-#ifdef QT_DEBUG
-        qDebug() << "Changed port to" << d->port;
-#endif
-        Q_EMIT portChanged(port());
-    }
-}
-
-
-
-
-QString Component::installPath() const { Q_D(const Component); return d->installPath; }
-
-void Component::setInstallPath(const QString &nInstallPath)
-{
-    Q_D(Component);
-    if (nInstallPath != d->installPath) {
-        d->installPath = nInstallPath;
-#ifdef QT_DEBUG
-        qDebug() << "Changed installPath to" << d->installPath;
-#endif
-        Q_EMIT installPathChanged(installPath());
-    }
-}
-
-
-
-
-bool Component::ignoreSSLErrors() const { Q_D(const Component); return d->ignoreSSLErrors; }
-
-void Component::setIgnoreSSLErrors(bool nIgnoreSSLErrors)
-{
-    Q_D(Component);
-    if (nIgnoreSSLErrors != d->ignoreSSLErrors) {
-        d->ignoreSSLErrors = nIgnoreSSLErrors;
-#ifdef QT_DEBUG
-        qDebug() << "Changed ignoreSSLErrors to" << d->ignoreSSLErrors;
-#endif
-        Q_EMIT ignoreSSLErrorsChanged(ignoreSSLErrors());
-    }
-}
-
-
-
-QString Component::username() const { Q_D(const Component); return d->username; }
-
-void Component::setUsername(const QString &nUsername)
-{
-    Q_D(Component);
-    if (nUsername != d->username) {
-        d->username = nUsername;
-#ifdef QT_DEBUG
-        qDebug() << "Changed username to" << d->username;
-#endif
-        d->createAuthHeader();
-        Q_EMIT usernameChanged(username());
-    }
-}
-
-
-
-
-QString Component::password() const { Q_D(const Component); return d->password; }
-
-void Component::setPassword(const QString &nPassword)
-{
-    Q_D(Component);
-    if (nPassword != d->password) {
-        d->password = nPassword;
-#ifdef QT_DEBUG
-        qDebug() << "Changed password to" << d->password;
-#endif
-        d->createAuthHeader();
-        Q_EMIT passwordChanged(password());
-    }
-}
-
-
-QString Component::userAgent() const { Q_D(const Component); return d->userAgent; }
-
-void Component::setUserAgent(const QString &nUserAgent)
-{
-    Q_D(Component);
-    if (nUserAgent != d->userAgent) {
-        d->userAgent = nUserAgent;
-#ifdef QT_DEBUG
-        qDebug() << "Changed userAgent to" << d->userAgent;
-#endif
-        Q_EMIT userAgentChanged(userAgent());
+        Q_EMIT configurationChanged(configuration());
     }
 }
 
@@ -581,4 +475,12 @@ void Component::setUrlQuery(const QUrlQuery &query)
 {
     Q_D(Component);
     d->urlQuery = query;
+}
+
+
+
+void Component::setRequiresAuth(bool reqAuth)
+{
+    Q_D(Component);
+    d->requiresAuth = reqAuth;
 }

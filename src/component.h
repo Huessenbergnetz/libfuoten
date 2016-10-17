@@ -36,15 +36,120 @@ namespace Fuoten {
 
 class ComponentPrivate;
 class Error;
+class Configuration;
 
 /*!
  * \brief Base class for all API requests.
+ *
+ * This is the base class for all other classes that implement API operations. When creating a subclass
+ * of Component, you have to reimplement successCallback(), extractError() and checkOutput(). Optionally you should reimplement
+ * checkInput() if your derived class provides own input properties that should be checked before starting the network request.
+ *
+ * When reimplementing checkOutput() and checkInput() you have to call the implementations of the class from which you derive
+ * to also include their checks and perform some basic operations. In the function that starts the request, set setInOperation() to true
+ * and call sendRequest(). In your error handling and successCallback() functions you should afterwards set inOpeartion back to false.
+ *
+ * In your reimplementation of successCallback() you should work on the content requested from the News App API that can be
+ * obtained by jsonResult(). The content returned by jsonResult() will be set by Component::checkOutput().
+ *
+ * In the constructor of your class you should set the API route to use and the expected result, that will be checked by Component::checkOutput().
+ *
+ * Component and its subclasses in libfuoten using a <a href="https://techbase.kde.org/Policies/Library_Code_Policy/Shared_D-Pointer_Example">shared D-pointer</a>.
+ *
+ * \par Subclassing exmaple
+ *
+ * \code{.cpp}
+ *
+ * #include <Fuoten/component.h>
+ * #include <Fuoten/error.h>
+ *
+ * class MyClass : public Fuoten::Component
+ * {
+ *     Q_OBJECT
+ * public:
+ *     MyClass(QObject *parent = nullptr);
+ *
+ *     void get();
+ *
+ * protected:
+ *     void successCallback() Q_DECL_OVERRIDE;
+ *     void extractError(QNetworkReply *reply) Q_DECL_OVERRIDE;
+ *     bool checkOutput() Q_DECL_OVERRIDE;
+ *
+ * private:
+ *     Q_DISABLE_COPY(MyClass)
+ * };
+ *
+ *
+ * MyClass::MyClass(QObject *parent) : Fuoten::Component(parent)
+ * {
+ *     setApiRoute(QStringLiteral("/route"));
+ *     setExpectedJSONType(Component::Object);
+ *     setNetworkOperation(QNetworkAccessManager::GetOperation);
+ * };
+ *
+ * void MyClass::get()
+ * {
+ *     if (inOperation()) {
+ *         return;
+ *     }
+ *
+ *     setInOperation(true);
+ *
+ *     sendRequest();
+ * }
+ *
+ *
+ * void MyClass::successCallback()
+ * {
+ *     const QJsonDocument r = jsonResult();
+ *
+ *     // operate on the result
+ *     // ...
+ *
+ *     setInOperation(false);
+ *
+ *     emit succeeded(r);
+ * }
+ *
+ *
+ * void MyClass::extractError(QNetworkReply *reply)
+ * {
+ *     setError(new Fuoten::Error(reply, this));
+ *     setInOperation(false);
+ *     emit failed(error());
+ * }
+ *
+ *
+ * bool MyClass::checkOutput()
+ * {
+ *     const QJsonObject o = jsonResult().object();
+ *
+ *     if (Fuoten::Component::checkOutput()) {
+ *
+ *         if (!o.contains(QStringLiteral("my_important_value"))) {
+ *             setError(new Fuoten::Error(Fuoten::Error::OutputError, Fuoten::Error::Critical, tr("Can not find that really important value in the server reply."), QString(), this));
+ *             emit failed(error());
+ *             return false;
+ *         } else {
+ *             return true;
+ *         }
+ *
+ *     } else {
+ *         return false;
+ *     }
+ * }
+ *
+ *
+ * \endcode
+ *
+ * \headerfile "" <Fuoten/component.h>
  */
 class FUOTENSHARED_EXPORT Component : public QObject
 {
     Q_OBJECT
     /*!
-     * \brief Define a custom QNetowrkAccessManager to perform netowkr operations.
+     * \brief Define a custom QNetowrkAccessManager to perform network operations.
      *
      * When no custom QNetworkAccessManager is set, a new one will be created when sending the API
      * request via sendRequest(). The internal created network manager will be a child object of
@@ -71,7 +176,7 @@ class FUOTENSHARED_EXPORT Component : public QObject
     /*!
      * \brief Timeout in seconds for network requests.
      *
-     * If you set the timeout to 0 or lower, it wil be disabled. Default value: \a 120 \a seconds
+     * If you set the timeout to 0, it wil be disabled. Default value: \a 120 \a seconds
      *
      * \par Access functions:
      * <TABLE><TR><TD>quint8</TD><TD>requestTimeout() const</TD></TR><TR><TD>void</TD><TD>setRequestTimeout(quint8 nRequestTimeout)</TD></TR></TABLE>
@@ -89,94 +194,18 @@ class FUOTENSHARED_EXPORT Component : public QObject
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>errorChanged(Error *error)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Error *error READ error NOTIFY errorChanged)
+    Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
     /*!
-     * \brief Set this to true to use SSL/TLS.
+     * \brief Pointer to a Configuration object.
      *
-     * The default is \c true.
+     * It is mandatory for all calls to set this property to a valid object that contains the authentication information for the server.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>bool</TD><TD>useSSL() const</TD></TR><TR><TD>void</TD><TD>setUseSSL(bool nUseSSL)</TD></TR></TABLE>
+     * <TABLE><TR><TD>Configuration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(Configuration *nConfiguration)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>useSSLChanged(bool useSSL)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>configurationChanged(Configuration *configuration)</TD></TR></TABLE>
      */
-    Q_PROPERTY(bool useSSL READ useSSL WRITE setUseSSL NOTIFY useSSLChanged)
-    /*!
-     * \brief The hostname of the ownCloud/Nextcloud server.
-     *
-     * Set this to the hostname your cloud server is installed on. If for example your cloud is installed on \a https://cloud.example.com,
-     * set the hostname to \c cloud.example.com, if your cloud is installed on \a https://example.com/mycloud/, set the hostname to \c example.com
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>QString</TD><TD>host() const</TD></TR><TR><TD>void</TD><TD>setHost(const QString &nHost)</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>hostChanged(const QString &host)</TD></TR></TABLE>
-     */
-    Q_PROPERTY(QString host READ host WRITE setHost NOTIFY hostChanged)
-    /*!
-     * \brief The port the server runs on.
-     *
-     * Only set this to another value than \c 0 if your server runs on a different port than the standard ports for HTTP or HTTPS.
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>quint16</TD><TD>port() const</TD></TR><TR><TD>void</TD><TD>setPort(quint16 nPort)</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>portChanged(quint16 port)</TD></TR></TABLE>
-     */
-    Q_PROPERTY(quint16 port READ port WRITE setPort NOTIFY portChanged)
-    /*!
-     * \brief Subdirectory the cloud is installed in.
-     *
-     * Set this to the path the ownCloud/Nextcloud is installed on your server. Start with a leading slash and omit a finishing slash.
-     * If your cloud is installed for example on \a https://example.com/cloud/, than set the installPath to \c /cloud. If your cloud
-     * is installed on \a https://cloud.example.com/, leave this property empty. Default: \a empty.
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>QString</TD><TD>installPath() const</TD></TR><TR><TD>void</TD><TD>setInstallPath(const QString &nInstallPath)</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>installPathChanged(const QString &installPath)</TD></TR></TABLE>
-     */
-    Q_PROPERTY(QString installPath READ installPath WRITE setInstallPath NOTIFY installPathChanged)
-    /*!
-     * \brief Ignores all SSL errors. Be careful.
-     *
-     * Be careful when setting this to true. It will ignore all SSL errors and the sslErrors() signal will not be emitted. Default: \c false
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>bool</TD><TD>ignoreSSLErrors() const</TD></TR><TR><TD>void</TD><TD>setIgnoreSSLErrors(bool nIgnoreSSLErrors)</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>ignoreSSLErrorsChanged(bool ignoreSSLErrors)</TD></TR></TABLE>
-     */
-    Q_PROPERTY(bool ignoreSSLErrors READ ignoreSSLErrors WRITE setIgnoreSSLErrors NOTIFY ignoreSSLErrorsChanged)
-    /*!
-     * \brief The username used for the authentication.
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>QString</TD><TD>username() const</TD></TR><TR><TD>void</TD><TD>setUsername(const QString &nUsername)</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>usernameChanged(const QString &username)</TD></TR></TABLE>
-     */
-    Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
-    /*!
-     * \brief The password used for the authentication.
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>QString</TD><TD>password() const</TD></TR><TR><TD>void</TD><TD>setPassword(const QString &nPassword)</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>passwordChanged(const QString &password)</TD></TR></TABLE>
-     */
-    Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
-    /*!
-     * \brief The user agent to use in the request.
-     *
-     * Default: Libfuoten CURRENT_VERSION
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>QString</TD><TD>userAgent() const</TD></TR><TR><TD>void</TD><TD>setUserAgent(const QString &nUserAgent)</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>userAgentChanged(const QString &userAgent)</TD></TR></TABLE>
-     */
-    Q_PROPERTY(QString userAgent READ userAgent WRITE setUserAgent NOTIFY userAgentChanged)
+    Q_PROPERTY(Fuoten::Configuration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
 public:
     /*!
      * \brief Constructs a new Component object.
@@ -192,53 +221,32 @@ public:
      * \brief Defines the expected JSON type.
      */
     enum ExpectedJSONType {
-        Empty   = 0,
-        Array   = 1,
-        Object  = 2
+        Empty   = 0,    /**< Expects an empty body in the reply. */
+        Array   = 1,    /**< Expects a JSON array in the reply body. */
+        Object  = 2     /**< Expects a JSON object in the reply body. */
     };
 
     QNetworkAccessManager *networkAccessManager() const;
     bool inOperation() const;
     quint8 requestTimeout() const;
     Error *error() const;
-    bool useSSL() const;
-    QString host() const;
-    quint16 port() const;
-    QString installPath() const;
-    bool ignoreSSLErrors() const;
-    QString username() const;
-    QString password() const;
-    QString userAgent() const;
+    Configuration *configuration() const;
 
     void setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessManager);
     void setRequestTimeout(quint8 nRequestTimeout);
-    void setUseSSL(bool nUseSSL);
-    void setHost(const QString &nHost);
-    void setPort(quint16 nPort);
-    void setInstallPath(const QString &nInstallPath);
-    void setIgnoreSSLErrors(bool nIgnoreSSLErrors);
-    void setUsername(const QString &nUsername);
-    void setPassword(const QString &nPassword);
-    void setUserAgent(const QString &nUserAgent);
+    void setConfiguration(Configuration *nConfiguration);
 
 Q_SIGNALS:
     void networkAccessManagerChanged(QNetworkAccessManager *networkAccessManager);
     void inOperationChanged(bool inOperation);
     void requestTimeoutChanged(quint8 requestTimeout);
     void errorChanged(Error *error);
-    void useSSLChanged(bool useSSL);
-    void hostChanged(const QString &host);
-    void portChanged(quint16 port);
-    void installPathChanged(const QString &installPath);
-    void ignoreSSLErrorsChanged(bool ignoreSSLErrors);
-    void usernameChanged(const QString &username);
-    void passwordChanged(const QString &password);
-    void userAgentChanged(const QString &userAgent);
+    void configurationChanged(Configuration *configuration);
 
     /*!
      * \brief This signal is emitted if the SSL/TLS session encountered errors during the set up.
      *
-     * Will only be emitted if \link Component::ignoreSSLErrors ignoreSSLErrors \endlink is set to \c false (the default).
+     * Will only be emitted if Configuration::getIgnoreSSLErrors() returns \c false (the default).
      */
     void sslErrors(QNetworkReply *reply, const QList<QSslError> &errors);
 
@@ -259,7 +267,7 @@ protected:
     /*!
      * \brief Sets the value of the \link Component::inOperation inOperation \endlink property.
      *
-     * Use this in subclasses of Component to indicate, that the request is still running.
+     * Use this in subclasses of Component to indicate, that the request is still running or has been finished.
      */
     void setInOperation(bool nInOperation);
 
@@ -271,7 +279,7 @@ protected:
     void setError(Error *nError);
 
     /*!
-     * \brief Sets the expected JSON type for initial outpt check.
+     * \brief Sets the expected JSON type for initial output check.
      *
      * Default: Empty
      */
@@ -291,13 +299,16 @@ protected:
      * \brief Performs basic input checks.
      *
      * Reimplement this in a subclass and call the parent's class implementation from there.
+     * The basic implementation checks for valid \link Component::configuration configuration property \endlink and basic server and user settings.
      */
     virtual bool checkInput();
 
     /*!
-     * \brief Performs basic input checks.
+     * \brief Performs basic output checks.
      *
      * Reimplement this in a subclass and call the parent's class implementation from there.
+     * The basic implementation extracts the JSON body, if there is data expected (setExpectedJSONType() is not set to Empty) and checks if
+     * the expected JSON data type can be found.
      */
     virtual bool checkOutput();
 

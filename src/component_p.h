@@ -24,6 +24,7 @@
 #define COMPONENT_P_H
 
 #include "component.h"
+#include "Helpers/configuration.h"
 #include <QTimer>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -38,10 +39,7 @@ public:
         inOperation(false),
         requestTimeout(120),
         error(nullptr),
-        useSSL(true),
-        port(0),
-        ignoreSSLErrors(false),
-        userAgent(QStringLiteral(DEFAULT_USER_AGENT)),
+        configuration(nullptr),
         timeoutTimer(nullptr),
         reply(nullptr),
         namOperation(QNetworkAccessManager::GetOperation),
@@ -72,29 +70,11 @@ public:
         }
     }
 
-    void createAuthHeader()
-    {
-        if (requiresAuth && !username.isEmpty() && !password.isEmpty()) {
-            authHeader = QByteArrayLiteral("Basic ");
-            QString auth(username);
-            auth.append(QLatin1String(":")).append(password);
-            authHeader.append(auth.toUtf8().toBase64());
-        }
-    }
-
-
     QNetworkAccessManager *networkAccessManager;
     bool inOperation;
     quint8 requestTimeout;
     Error *error;
-    bool useSSL;
-    QString host;
-    quint16 port;
-    QString installPath;
-    bool ignoreSSLErrors;
-    QString username;
-    QString password;
-    QString userAgent;
+    Configuration *configuration;
 
 
     quint8 retryCount;
@@ -108,7 +88,6 @@ public:
     QString apiRoute;
     QJsonDocument jsonResult;
     QByteArray result;
-    QByteArray authHeader;
     bool requiresAuth;
 };
 
