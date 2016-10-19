@@ -88,14 +88,14 @@ bool Version::checkOutput()
             //% "Can not find the version information in the server reply."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-not-found"), QString(), this));
             Q_EMIT failed(error());
-            if (configuration()) { configuration()->setServerVersion("0.0.0"); }
+            if (configuration()) { configuration()->setServerVersion(QStringLiteral("0.0.0")); }
             return false;
         } else {
             return true;
         }
 
     } else {
-        if (configuration()) { configuration()->setServerVersion("0.0.0"); }
+        if (configuration()) { configuration()->setServerVersion(QStringLiteral("0.0.0")); }
         return false;
     }
 }
