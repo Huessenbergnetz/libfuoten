@@ -113,12 +113,22 @@ bool NewsAppVersion::lowerThan(int maj, int min, int mic) const
     }
 }
 
+bool NewsAppVersion::lowerThan(const NewsAppVersion &other) const
+{
+    return lowerThan(other.maj(), other.min(), other.mic());
+}
+
 
 bool NewsAppVersion::equalTo(int maj, int min, int mic) const
 {
     return (d->maj == maj && d->min == min && d->mic == mic);
 }
 
+
+bool NewsAppVersion::equalTo(const NewsAppVersion &other) const
+{
+    return equalTo(other.maj(), other.min(), other.mic());
+}
 
 
 bool NewsAppVersion::greaterThan(int maj, int min, int mic) const
@@ -143,16 +153,33 @@ bool NewsAppVersion::greaterThan(int maj, int min, int mic) const
 }
 
 
+bool NewsAppVersion::greaterThan(const NewsAppVersion &other) const
+{
+    return greaterThan(other.maj(), other.min(), other.mic());
+}
+
+
 
 bool NewsAppVersion::lowerThanOrEqualTo(int maj, int min, int mic) const
 {
     return (lowerThan(maj, min, mic) || equalTo(maj, min, mic));
 }
 
+bool NewsAppVersion::lowerThanOrEqualTo(const NewsAppVersion &other) const
+{
+    return lowerThanOrEqualTo(other.maj(), other.min(), other.mic());
+}
+
 
 bool NewsAppVersion::greaterThanOrEqualTo(int maj, int min, int mic) const
 {
     return (greaterThan(maj, min, mic) || equalTo(maj, min, mic));
+}
+
+
+bool NewsAppVersion::greaterThanOrEqualTo(const NewsAppVersion &other) const
+{
+    return greaterThanOrEqualTo(other.maj(), other.min(), other.mic());
 }
 
 

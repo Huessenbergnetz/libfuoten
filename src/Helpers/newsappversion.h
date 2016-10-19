@@ -82,9 +82,19 @@ public:
     bool lowerThan(int maj, int min = 0, int mic = 0) const;
 
     /*!
+     * \brief Returns true if this version is lower than \a other.
+     */
+    bool lowerThan(const NewsAppVersion &other) const;
+
+    /*!
      * \brief Returns true if this version is equal to the arguments.
      */
     bool equalTo(int maj, int min = 0, int mic = 0) const;
+
+    /*!
+     * \brief Returns true if this version is equal to \a other.
+     */
+    bool equalTo(const NewsAppVersion &other) const;
 
     /*!
      * \brief Returns true if this version is greater than the arguments.
@@ -92,14 +102,29 @@ public:
     bool greaterThan(int maj, int min = 0, int mic = 0) const;
 
     /*!
+     * \brief Returns true if this version is greater than \a other.
+     */
+    bool greaterThan(const NewsAppVersion &other) const;
+
+    /*!
      * \brief Returns true if this version is lower or equal to the arguments.
      */
     bool lowerThanOrEqualTo(int maj, int min = 0, int mic = 0) const;
 
     /*!
+     * \brief Returns true if this version is lower or equal to \a other.
+     */
+    bool lowerThanOrEqualTo(const NewsAppVersion &other) const;
+
+    /*!
      * \brief Returns true if this version is greater or equal to the arguments.
      */
     bool greaterThanOrEqualTo(int maj, int min = 0, int mic = 0) const;
+
+    /*!
+     * \brief Returns true if this version is greater or equal to \a other.
+     */
+    bool greaterThanOrEqualTo(const NewsAppVersion &other) const;
 
     /*!
      * \brief Returns true all parts of the version are 0.
