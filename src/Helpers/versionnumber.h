@@ -1,25 +1,25 @@
-#ifndef NEWSAPPVERSION_H
-#define NEWSAPPVERSION_H
+#ifndef VERSIONNUMBER_H
+#define VERSIONNUMBER_H
 
 #include <QSharedDataPointer>
 #include <QString>
 
 namespace Fuoten {
 
-class NewsAppVersionData : public QSharedData
+class VersionNumberData : public QSharedData
 {
 public:
-    NewsAppVersionData() :
+    VersionNumberData() :
         maj(0),
         min(0),
         mic(0)
     {}
 
-    NewsAppVersionData(const NewsAppVersionData &other) :
+    VersionNumberData(const VersionNumberData &other) :
         QSharedData(other), maj(other.maj), min(other.min), mic(other.mic)
     {}
 
-    ~NewsAppVersionData() {}
+    ~VersionNumberData() {}
 
     int maj;
     int min;
@@ -32,19 +32,30 @@ public:
  * This is a helper class for Qt versions prior to Qt 5.6. Qt 5.6 provides QVersionNumber that
  * makes this class obsolete.
  */
-class NewsAppVersion
+class VersionNumber
 {
 public:
     /*!
      * \brief Constructs a null version.
      */
-    NewsAppVersion();
+    VersionNumber();
 
-    NewsAppVersion(int maj, int min, int mic);
+    /*!
+     * \brief Constructs a new version from the given arguments.
+     */
+    VersionNumber(int maj, int min, int mic);
 
-    NewsAppVersion(const QString &versionString);
+    /*!
+     * \brief Constructs a new version from a string.
+     *
+     * String has to be in format "0.2.4".
+     */
+    VersionNumber(const QString &versionString);
 
-    NewsAppVersion(const NewsAppVersion &other);
+    /*!
+     * \brief Constructs a copy of \a other.
+     */
+    VersionNumber(const VersionNumber &other);
 
     /*!
      * \brief Sets the major version number.
@@ -84,7 +95,7 @@ public:
     /*!
      * \brief Returns true if this version is lower than \a other.
      */
-    bool lowerThan(const NewsAppVersion &other) const;
+    bool lowerThan(const VersionNumber &other) const;
 
     /*!
      * \brief Returns true if this version is equal to the arguments.
@@ -94,7 +105,7 @@ public:
     /*!
      * \brief Returns true if this version is equal to \a other.
      */
-    bool equalTo(const NewsAppVersion &other) const;
+    bool equalTo(const VersionNumber &other) const;
 
     /*!
      * \brief Returns true if this version is greater than the arguments.
@@ -104,7 +115,7 @@ public:
     /*!
      * \brief Returns true if this version is greater than \a other.
      */
-    bool greaterThan(const NewsAppVersion &other) const;
+    bool greaterThan(const VersionNumber &other) const;
 
     /*!
      * \brief Returns true if this version is lower or equal to the arguments.
@@ -114,7 +125,7 @@ public:
     /*!
      * \brief Returns true if this version is lower or equal to \a other.
      */
-    bool lowerThanOrEqualTo(const NewsAppVersion &other) const;
+    bool lowerThanOrEqualTo(const VersionNumber &other) const;
 
     /*!
      * \brief Returns true if this version is greater or equal to the arguments.
@@ -124,7 +135,7 @@ public:
     /*!
      * \brief Returns true if this version is greater or equal to \a other.
      */
-    bool greaterThanOrEqualTo(const NewsAppVersion &other) const;
+    bool greaterThanOrEqualTo(const VersionNumber &other) const;
 
     /*!
      * \brief Returns true all parts of the version are 0.
@@ -142,9 +153,9 @@ public:
     QString toString() const;
 
 private:
-    QSharedDataPointer<NewsAppVersionData> d;
+    QSharedDataPointer<VersionNumberData> d;
 };
 
 }
 
-#endif // NEWSAPPVERSION_H
+#endif // VERSIONNUMBER_H

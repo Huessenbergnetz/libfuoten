@@ -38,22 +38,22 @@ HEADERS += \
     src/Generic/version.h \
     src/Generic/version_p.h \
     src/Helpers/configuration.h \
-    src/Helpers/newsappversion.h \
     src/Generic/status.h \
     src/Generic/status_p.h \
     src/Generic/user.h \
     src/Generic/user_p.h \
     src/Generic/accountvalidator.h \
     src/Generic/accountvalidator_p.h \
-    src/fuoten.h
+    src/fuoten.h \
+    src/Helpers/versionnumber.h
 
 SOURCES += \
     src/error.cpp \
     src/component.cpp \
     src/Generic/version.cpp \
     src/Helpers/configuration.cpp \
-    src/Helpers/newsappversion.cpp \
     src/Generic/status.cpp \
     src/Generic/user.cpp \
-    src/Generic/accountvalidator.cpp
+    src/Generic/accountvalidator.cpp \
+    src/Helpers/versionnumber.cpp
 

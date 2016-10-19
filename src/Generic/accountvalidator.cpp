@@ -24,7 +24,7 @@
 #include "../Helpers/configuration.h"
 #include "../error.h"
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-#include "../Helpers/newsappversion.h"
+#include "../Helpers/versionnumber.h"
 #else
 #include <QVersionNumber>
 #endif

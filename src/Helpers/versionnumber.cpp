@@ -1,4 +1,4 @@
-#include "newsappversion.h"
+#include "versionnumber.h"
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QRegularExpressionMatchIterator>
@@ -7,16 +7,16 @@
 
 using namespace Fuoten;
 
-NewsAppVersion::NewsAppVersion()
+VersionNumber::VersionNumber()
 {
-    d = new NewsAppVersionData;
+    d = new VersionNumberData;
 }
 
 
 
-NewsAppVersion::NewsAppVersion(int maj, int min, int mic)
+VersionNumber::VersionNumber(int maj, int min, int mic)
 {
-    d = new NewsAppVersionData;
+    d = new VersionNumberData;
     setMaj(maj);
     setMin(min);
     setMic(mic);
@@ -24,22 +24,22 @@ NewsAppVersion::NewsAppVersion(int maj, int min, int mic)
 
 
 
-NewsAppVersion::NewsAppVersion(const QString &versionString)
+VersionNumber::VersionNumber(const QString &versionString)
 {
-    d = new NewsAppVersionData;
+    d = new VersionNumberData;
     loadFromString(versionString);
 }
 
 
 
-NewsAppVersion::NewsAppVersion(const NewsAppVersion &other) : d(other.d)
+VersionNumber::VersionNumber(const VersionNumber &other) : d(other.d)
 {
 
 }
 
 
 
-void NewsAppVersion::loadFromString(const QString &versionString)
+void VersionNumber::loadFromString(const QString &versionString)
 {
     if (versionString.isEmpty()) {
         setMaj(0);
@@ -76,23 +76,23 @@ void NewsAppVersion::loadFromString(const QString &versionString)
 
 
 
-void NewsAppVersion::setMaj(int maj) { d->maj = maj; }
+void VersionNumber::setMaj(int maj) { d->maj = maj; }
 
-void NewsAppVersion::setMin(int min) { d->min = min; }
+void VersionNumber::setMin(int min) { d->min = min; }
 
-void NewsAppVersion::setMic(int mic) { d->mic = mic; }
-
-
-int NewsAppVersion::maj() const { return d->maj; }
-
-int NewsAppVersion::min() const { return d->min; }
-
-int NewsAppVersion::mic() const { return d->mic; }
+void VersionNumber::setMic(int mic) { d->mic = mic; }
 
 
+int VersionNumber::maj() const { return d->maj; }
+
+int VersionNumber::min() const { return d->min; }
+
+int VersionNumber::mic() const { return d->mic; }
 
 
-bool NewsAppVersion::lowerThan(int maj, int min, int mic) const
+
+
+bool VersionNumber::lowerThan(int maj, int min, int mic) const
 {
     if (d->maj < maj) {
         return true;
@@ -113,25 +113,25 @@ bool NewsAppVersion::lowerThan(int maj, int min, int mic) const
     }
 }
 
-bool NewsAppVersion::lowerThan(const NewsAppVersion &other) const
+bool VersionNumber::lowerThan(const VersionNumber &other) const
 {
     return lowerThan(other.maj(), other.min(), other.mic());
 }
 
 
-bool NewsAppVersion::equalTo(int maj, int min, int mic) const
+bool VersionNumber::equalTo(int maj, int min, int mic) const
 {
     return (d->maj == maj && d->min == min && d->mic == mic);
 }
 
 
-bool NewsAppVersion::equalTo(const NewsAppVersion &other) const
+bool VersionNumber::equalTo(const VersionNumber &other) const
 {
     return equalTo(other.maj(), other.min(), other.mic());
 }
 
 
-bool NewsAppVersion::greaterThan(int maj, int min, int mic) const
+bool VersionNumber::greaterThan(int maj, int min, int mic) const
 {
     if (d->maj > maj) {
         return true;
@@ -153,44 +153,44 @@ bool NewsAppVersion::greaterThan(int maj, int min, int mic) const
 }
 
 
-bool NewsAppVersion::greaterThan(const NewsAppVersion &other) const
+bool VersionNumber::greaterThan(const VersionNumber &other) const
 {
     return greaterThan(other.maj(), other.min(), other.mic());
 }
 
 
 
-bool NewsAppVersion::lowerThanOrEqualTo(int maj, int min, int mic) const
+bool VersionNumber::lowerThanOrEqualTo(int maj, int min, int mic) const
 {
     return (lowerThan(maj, min, mic) || equalTo(maj, min, mic));
 }
 
-bool NewsAppVersion::lowerThanOrEqualTo(const NewsAppVersion &other) const
+bool VersionNumber::lowerThanOrEqualTo(const VersionNumber &other) const
 {
     return lowerThanOrEqualTo(other.maj(), other.min(), other.mic());
 }
 
 
-bool NewsAppVersion::greaterThanOrEqualTo(int maj, int min, int mic) const
+bool VersionNumber::greaterThanOrEqualTo(int maj, int min, int mic) const
 {
     return (greaterThan(maj, min, mic) || equalTo(maj, min, mic));
 }
 
 
-bool NewsAppVersion::greaterThanOrEqualTo(const NewsAppVersion &other) const
+bool VersionNumber::greaterThanOrEqualTo(const VersionNumber &other) const
 {
     return greaterThanOrEqualTo(other.maj(), other.min(), other.mic());
 }
 
 
 
-bool NewsAppVersion::isNull() const
+bool VersionNumber::isNull() const
 {
     return (d->maj == 0 && d->min == 0 && d->mic == 0);
 }
 
 
-QString NewsAppVersion::toString() const
+QString VersionNumber::toString() const
 {
     return QStringLiteral("%1.%2.%3").arg(QString::number(maj()), QString::number(min()), QString::number(mic()));
 }

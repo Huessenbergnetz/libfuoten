@@ -25,7 +25,7 @@
 
 #include <QSettings>
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-#include "newsappversion.h"
+#include "versionnumber.h"
 #else
 #include <QVersionNumber>
 #endif
@@ -99,13 +99,13 @@ public:
     /*!
      * \brief Returns the News App version number used on the server.
      *
-     * When building on Qt 5.6 or newer, this returns a QVersionNumber, otherwise it returns a NewsAppVersion.
+     * When building on Qt 5.6 or newer, this returns a QVersionNumber, otherwise it returns a VersionNumber.
      *
      * \sa setServerVersion()
      */
     virtual QVersionNumber getServerVersion() const = 0;
 #else
-    virtual NewsAppVersion getServerVersion() const = 0;
+    virtual VersionNumber getServerVersion() const = 0;
 #endif
 
     /*!
