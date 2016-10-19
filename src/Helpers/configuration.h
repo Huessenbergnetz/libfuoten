@@ -48,7 +48,7 @@ class FUOTENSHARED_EXPORT Configuration : public QSettings
 {
     Q_OBJECT
 public:
-    Configuration(QObject *parent = nullptr);
+    explicit Configuration(QObject *parent = nullptr);
 
     /*!
      * \brief Returns the user name used for authentication.
