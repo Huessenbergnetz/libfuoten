@@ -414,6 +414,14 @@ void Component::setApiRoute(const QString &route)
 
 
 
+void Component::setApiRoute(const QStringList &routeParts)
+{
+    Q_D(Component);
+    d->apiRoute = QStringLiteral("/").append(routeParts.join(QChar('/')));
+}
+
+
+
 
 QJsonDocument Component::jsonResult() const
 {
@@ -477,6 +485,13 @@ void Component::setPayload(const QByteArray &payload)
 {
     Q_D(Component);
     d->payload = payload;
+}
+
+
+void Component::setPayload(const QJsonObject &payload)
+{
+    Q_D(Component);
+    d->payload = QJsonDocument(payload).toJson();
 }
 
 

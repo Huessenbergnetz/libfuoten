@@ -43,7 +43,7 @@ Version::Version(VersionPrivate &dd, QObject *parent) :
 }
 
 
-void Version::get()
+void Version::execute()
 {
     if (inOperation()) {
         return;

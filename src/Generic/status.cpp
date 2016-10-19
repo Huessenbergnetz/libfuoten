@@ -43,7 +43,7 @@ Status::Status(StatusPrivate &dd, QObject *parent) :
 }
 
 
-void Status::get()
+void Status::execute()
 {
     if (inOperation()) {
         return;

@@ -71,7 +71,7 @@ void AccountValidator::start()
         connect(d->version, &Component::failed, this, &AccountValidator::setError);
     }
 
-    d->version->get();
+    d->version->execute();
 }
 
 
@@ -101,7 +101,7 @@ void AccountValidator::gotVersion()
         connect(d->status, &Component::failed, this, &AccountValidator::setError);
     }
 
-    d->status->get();
+    d->status->execute();
 }
 
 
@@ -130,7 +130,7 @@ void AccountValidator::gotStatus()
         connect(d->user, &Component::failed, this, &AccountValidator::setError);
     }
 
-    d->user->get();
+    d->user->execute();
 }
 
 

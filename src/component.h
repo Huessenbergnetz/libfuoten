@@ -226,6 +226,37 @@ public:
         Object  = 2     /**< Expects a JSON object in the reply body. */
     };
 
+    /*!
+     * \brief Executes the API request.
+     *
+     * Reimplement this in a subclass to prepare the request and start it by calling sendRequest().
+     *
+     * \par Implementation example
+     *
+     * \code{.cpp}
+     * void RenameFolder::execute()
+     * {
+     *     if (inOperation()) {
+     *         qWarning("Operation is still running.");
+     *         return;
+     *     }
+     *
+     *     setInOperation(true);
+     *
+     *     QStringList routeParts;
+     *     routeParts << QStringLiteral("folders") << QString::number(folderId());
+     *     setApiRoute(routeParts);
+     *
+     *     QJsonObject jsonPayload;
+     *     jsonPayload.insert(QStringLiteral("name"), newFolderName());
+     *     setPayload(jsonPayload);
+     *
+     *     sendRequest();
+     * }
+     * \endcode
+     */
+    Q_INVOKABLE virtual void execute() = 0;
+
     QNetworkAccessManager *networkAccessManager() const;
     bool inOperation() const;
     quint8 requestTimeout() const;
@@ -291,6 +322,13 @@ protected:
     void setApiRoute(const QString &route);
 
     /*!
+     * \brief Sets the API route constructed from a route part list.
+     *
+     * The parts in the QStringList will be joind with a '/' into the API route path.
+     */
+    void setApiRoute(const QStringList &routeParts);
+
+    /*!
      * \brief Returns the JSON result document.
      */
     QJsonDocument jsonResult() const;
@@ -351,6 +389,11 @@ protected:
      * \brief Sets the payload for the request.
      */
     void setPayload(const QByteArray &payload);
+
+    /*!
+     * \brief Sets the payload for the request.
+     */
+    void setPayload(const QJsonObject &payload);
 
     /*!
      * \brief Sets the URL query for the request.

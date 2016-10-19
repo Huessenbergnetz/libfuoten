@@ -55,7 +55,7 @@ public:
     /*!
      * \brief Starts the API request.
      */
-    Q_INVOKABLE void get();
+    Q_INVOKABLE void execute() Q_DECL_OVERRIDE;
 
 protected:
     User(UserPrivate &dd, QObject *parent = nullptr);

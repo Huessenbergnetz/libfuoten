@@ -44,7 +44,7 @@ User::User(UserPrivate &dd, QObject *parent) :
 
 
 
-void User::get()
+void User::execute()
 {
     if (inOperation()) {
         return;
