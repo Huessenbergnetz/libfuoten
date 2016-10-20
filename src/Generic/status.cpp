@@ -23,6 +23,9 @@
 #include "status_p.h"
 #include "../error.h"
 #include <QJsonValue>
+#ifdef QT_DEBUG
+#include <QtDebug>
+#endif
 
 
 using namespace Fuoten;
@@ -46,8 +49,13 @@ Status::Status(StatusPrivate &dd, QObject *parent) :
 void Status::execute()
 {
     if (inOperation()) {
+        qWarning("Still in operation. Returning.");
         return;
     }
+
+#ifdef QT_DEBUG
+    qDebug() << "Start requesting the status from the server.";
+#endif
 
     setInOperation(true);
 
@@ -66,6 +74,11 @@ void Status::successCallback()
         }
     }
     setInOperation(false);
+
+#ifdef QT_DEBUG
+    qDebug() << "Successfully requested the status from the server.";
+#endif
+
     Q_EMIT succeeded(jsonResult());
 }
 

@@ -23,6 +23,9 @@
 #include "user_p.h"
 #include "../error.h"
 #include <QJsonValue>
+#ifdef QT_DEBUG
+#include <QtDebug>
+#endif
 
 using namespace Fuoten;
 using namespace Generic;
@@ -47,8 +50,13 @@ User::User(UserPrivate &dd, QObject *parent) :
 void User::execute()
 {
     if (inOperation()) {
+        qWarning("Still in operation. Returning.");
         return;
     }
+
+#ifdef QT_DEBUG
+    qDebug() << "Start requesting user information from the server.";
+#endif
 
     setInOperation(true);
 
@@ -71,6 +79,11 @@ void User::successCallback()
     }
 
     setInOperation(false);
+
+#ifdef QT_DEBUG
+    qDebug() << "Successfully requested user information from the server.";
+#endif
+
     Q_EMIT succeeded(jsonResult());
 }
 

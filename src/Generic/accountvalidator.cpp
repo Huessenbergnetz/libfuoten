@@ -52,8 +52,13 @@ AccountValidator::~AccountValidator()
 void AccountValidator::start()
 {
     if (inOperation()) {
+        qWarning("Still in operation. Returning.");
         return;
     }
+
+#ifdef QT_DEBUG
+    qDebug() << "Start validating account data.";
+#endif
 
     Q_D(AccountValidator);
 
@@ -142,6 +147,11 @@ void AccountValidator::gotUser()
 {
     Q_D(AccountValidator);
     d->setInOperatin(false);
+
+#ifdef QT_DEBUG
+    qDebug() << "Successfully validated account data";
+#endif
+
     Q_EMIT succeeded();
 }
 
@@ -177,13 +187,14 @@ void AccountValidator::setError(Error *nError)
     if (nError != d->error) {
         Error *old = d->error;
         d->error = nError;
-        if (old && old->parent() == this) {
-            delete old;
-        }
 #ifdef QT_DEBUG
         qDebug() << "Changed error to" << d->error;
 #endif
         Q_EMIT errorChanged(error());
+
+        if (old && old->parent() == this) {
+            delete old;
+        }
     }
     d->setInOperatin(false);
     if (d->error && (d->error->severity() == Error::Critical || d->error->severity() == Error::Fatal)) {

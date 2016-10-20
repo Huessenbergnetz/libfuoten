@@ -23,6 +23,9 @@
 #include "version_p.h"
 #include "../error.h"
 #include <QJsonValue>
+#ifdef QT_DEBUG
+#include <QtDebug>
+#endif
 
 using namespace Fuoten;
 using namespace Generic;
@@ -46,8 +49,13 @@ Version::Version(VersionPrivate &dd, QObject *parent) :
 void Version::execute()
 {
     if (inOperation()) {
+        qWarning("Still in operation. Returning.");
         return;
     }
+
+#ifdef QT_DEBUG
+    qDebug() << "Start requesting version information from the server.";
+#endif
 
     setInOperation(true);
 
@@ -62,6 +70,11 @@ void Version::successCallback()
         configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
     }
     setInOperation(false);
+
+#ifdef QT_DEBUG
+    qDebug() << "Successfully requested version information from the server.";
+#endif
+
     Q_EMIT succeeded(jsonResult());
 }
 

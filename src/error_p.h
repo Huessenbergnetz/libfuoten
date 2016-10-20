@@ -24,6 +24,9 @@
 #define ERROR_P_H
 
 #include "error.h"
+#ifdef QT_DEBUG
+#include <QtDebug>
+#endif
 
 namespace Fuoten {
 
@@ -38,35 +41,12 @@ public:
 #ifdef QT_DEBUG
     void printOut()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-
         switch(severity) {
         case Error::Warning:
-            qWarning("%s", qUtf8Printable(text));
+            qWarning() << text;
             break;
         case Error::Critical:
-            qCritical("%s", qUtf8Printable(text));
-            break;
-        case Error::Fatal:
-            qFatal("%s", qUtf8Printable(text));
-            break;
-        case Error::Nothing:
-        default:
-            break;
-        }
-
-        if (!data.isEmpty()) {
-            qDebug("%s", qUtf8Printable(data));
-        }
-
-#else
-
-        switch(severity) {
-        case Error::Warning:
-            qWarning("%s", text.toUtf8().constData());
-            break;
-        case Error::Critical:
-            qCritical("%s", text.toUtf8().constData());
+            qCritical() << text;
             break;
         case Error::Fatal:
             qFatal("%s", text.toUtf8().constData());
@@ -77,10 +57,9 @@ public:
         }
 
         if (!data.isEmpty()) {
+            qDebug() << data;
             qDebug("%s", data.toUtf8().constData());
         }
-
-#endif
     }
 #endif
 
