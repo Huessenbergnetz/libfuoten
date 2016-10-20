@@ -56,6 +56,10 @@ void GetFolders::execute()
 
 void GetFolders::successCallback()
 {
+    if (storageHandler()) {
+        storageHandler()->foldersRequested(jsonResult());
+    }
+
     setInOperation(false);
     Q_EMIT succeeded(jsonResult());
 }
