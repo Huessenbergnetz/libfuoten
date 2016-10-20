@@ -82,12 +82,13 @@ public:
      * \brief Defines the error type.
      */
     enum Type {
-        NoError,            /**< No error has occured. */
-        RequestError,       /**< The request was not setup correctly. */
-        JSONParsingError,   /**< Failed to parse JSON data. */
-        InputError,         /**< An error occured while providing data to the library methods. */
-        OutputError,        /**< An error occured while processing the returned data from the API. */
-        ServerError         /**< An error occured on the server. */
+        NoError             = 0,    /**< No error has occured. */
+        RequestError        = 1,    /**< The request was not setup correctly. */
+        JSONParsingError    = 2,    /**< Failed to parse JSON data. */
+        InputError          = 3,    /**< An error occured while providing data to the library methods. */
+        OutputError         = 4,    /**< An error occured while processing the returned data from the API. */
+        ServerError         = 5,    /**< An error occured on the server. */
+        ApplicationError    = 6     /**< An error occured in the local application. */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Type)
@@ -100,10 +101,10 @@ public:
      * \brief Defines the severity of the error.
      */
     enum Severity {
-        Nothing,            /**< No error has occured */
-        Warning,            /**< Only a warning, but operation was perfmormed */
-        Critical,           /**< A critical error has occured, the operation has been canceled */
-        Fatal               /**< A fatal error has occured, the application will be exited */
+        Nothing     = 0,    /**< No error has occured */
+        Warning     = 1,    /**< Only a warning, but operation was perfmormed */
+        Critical    = 2,    /**< A critical error has occured, the operation has been canceled */
+        Fatal       = 3     /**< A fatal error has occured, the application will be exited */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Severity)
