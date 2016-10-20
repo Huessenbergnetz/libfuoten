@@ -45,7 +45,14 @@ HEADERS += \
     src/Generic/accountvalidator.h \
     src/Generic/accountvalidator_p.h \
     src/fuoten.h \
-    src/Helpers/versionnumber.h
+    src/Helpers/versionnumber.h \
+    src/baseitem.h \
+    src/baseitem_p.h \
+    src/folderitem.h \
+    src/folderitem_p.h \
+    src/Helpers/storagehandler.h \
+    src/Folders/getfolders.h \
+    src/Folders/getfolders_p.h
 
 SOURCES += \
     src/error.cpp \
@@ -55,5 +62,9 @@ SOURCES += \
     src/Generic/status.cpp \
     src/Generic/user.cpp \
     src/Generic/accountvalidator.cpp \
-    src/Helpers/versionnumber.cpp
+    src/Helpers/versionnumber.cpp \
+    src/baseitem.cpp \
+    src/folderitem.cpp \
+    src/Helpers/storagehandler.cpp \
+    src/Folders/getfolders.cpp
 
