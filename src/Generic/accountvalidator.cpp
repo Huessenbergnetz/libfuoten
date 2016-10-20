@@ -51,6 +51,10 @@ AccountValidator::~AccountValidator()
 
 void AccountValidator::start()
 {
+    if (inOperation()) {
+        return;
+    }
+
     Q_D(AccountValidator);
 
     setError(nullptr);
