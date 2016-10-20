@@ -397,6 +397,23 @@ void Component::setConfiguration(Configuration *nConfiguration)
 
 
 
+StorageHandler *Component::storageHandler() const { Q_D(const Component); return d->storageHandler; }
+
+void Component::setStorageHandler(StorageHandler *nStorageHandler)
+{
+    Q_D(Component);
+    if (nStorageHandler != d->storageHandler) {
+        d->storageHandler = nStorageHandler;
+#ifdef QT_DEBUG
+        qDebug() << "Changed storageHandler to" << d->storageHandler;
+#endif
+        Q_EMIT storageHandlerChanged(storageHandler());
+    }
+}
+
+
+
+
 
 void Component::setExpectedJSONType(ExpectedJSONType type)
 {
