@@ -22,6 +22,9 @@
 
 #include "getfolders_p.h"
 #include "../error.h"
+#ifdef QT_DEBUG
+#include <QtDebug>
+#endif
 
 using namespace Fuoten;
 
@@ -45,8 +48,13 @@ GetFolders::GetFolders(GetFoldersPrivate &dd, QObject *parent) :
 void GetFolders::execute()
 {
     if (inOperation()) {
+        qWarning("Still in operation. Returning.");
         return;
     }
+
+#ifdef QT_DEBUG
+    qDebug() << "Start requesting folders from the server.";
+#endif
 
     setInOperation(true);
 
@@ -61,6 +69,11 @@ void GetFolders::successCallback()
     }
 
     setInOperation(false);
+
+#ifdef QT_DEBUG
+    qDebug() << "Successfully requested the folder list from the server.";
+#endif
+
     Q_EMIT succeeded(jsonResult());
 }
 
