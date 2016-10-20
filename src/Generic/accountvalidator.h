@@ -24,6 +24,7 @@
 #define ACCOUNTVALIDATOR_H
 
 #include <QObject>
+#include "../fuoten_global.h"
 
 namespace Fuoten {
 
@@ -43,7 +44,7 @@ class AccountValidatorPrivate;
  * \headerfile "" <Fuoten/Generic/accountvalidator.h>
  * \sa Status, User, Version
  */
-class AccountValidator : public QObject
+class FUOTENSHARED_EXPORT AccountValidator : public QObject
 {
     Q_OBJECT
     /*!

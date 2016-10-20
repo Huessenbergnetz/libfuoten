@@ -25,6 +25,7 @@
 
 #include <QSharedDataPointer>
 #include <QString>
+#include "../fuoten_global.h"
 
 namespace Fuoten {
 
@@ -54,7 +55,7 @@ public:
  * This is a helper class for Qt versions prior to Qt 5.6. Qt 5.6 provides QVersionNumber that
  * makes this class obsolete.
  */
-class VersionNumber
+class FUOTENSHARED_EXPORT VersionNumber
 {
 public:
     /*!

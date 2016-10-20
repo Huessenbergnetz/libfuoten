@@ -24,6 +24,7 @@
 #define STORAGEHANDLER_H
 
 #include <QObject>
+#include "../fuoten_global.h"
 
 namespace Fuoten {
 
@@ -37,7 +38,7 @@ namespace Fuoten {
  *
  * \headerfile "" <Fuoten/Helpers/storagehandler.h>
  */
-class StorageHandler : public QObject
+class FUOTENSHARED_EXPORT StorageHandler : public QObject
 {
     Q_OBJECT
 public:
