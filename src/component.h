@@ -89,7 +89,7 @@ class StorageHandler;
  *     setNetworkOperation(QNetworkAccessManager::GetOperation);
  * };
  *
- * void MyClass::get()
+ * void MyClass::execute()
  * {
  *     if (inOperation()) {
  *         return;
@@ -106,7 +106,7 @@ class StorageHandler;
  *     const QJsonDocument r = jsonResult();
  *
  *     // operate on the result
- *     // ...
+ *     // or use a reimplementation of StorageHandler
  *
  *     setInOperation(false);
  *

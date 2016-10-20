@@ -143,7 +143,9 @@ void Component::sendRequest()
     if (!nr.rawHeaderList().isEmpty()) {
         const QList<QByteArray> hl = nr.rawHeaderList();
         for (const QByteArray &h : hl) {
-            qDebug() << h << nr.rawHeader(h);
+            if (h != QByteArrayLiteral("Authorization")) {
+                qDebug() << h << nr.rawHeader(h);
+            }
         }
     }
     if (!d->payload.isEmpty()) {
@@ -179,7 +181,8 @@ void Component::_requestFinished()
     d->result = d->reply->readAll();
 
 #ifdef QT_DEBUG
-    qDebug() << "Request result:" << d->result;
+//    qDebug() << "Request result:" << d->result;
+    fprintf(stderr, "Request result: \n%s\n", d->result.constData());
 #endif
 
     if (d->reply->error() == QNetworkReply::NoError) {
