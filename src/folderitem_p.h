@@ -32,10 +32,27 @@ namespace Fuoten {
 class FolderItemPrivate : public BaseItemPrivate
 {
 public:
-    FolderItemPrivate() : BaseItemPrivate() {}
+    FolderItemPrivate() :
+        BaseItemPrivate(),
+        feedCount(0),
+        unreadCount(0),
+        itemCount(0)
+    {}
+
+    FolderItemPrivate(quint64 _id, const QString &_name, uint _feedCount, uint _unreadCount, uint _itemCount) :
+        BaseItemPrivate(_id),
+        name(_name),
+        feedCount(_feedCount),
+        unreadCount(_unreadCount),
+        itemCount(_itemCount)
+    {}
 
     QString name;
+    uint feedCount;
+    uint unreadCount;
+    uint itemCount;
     QString newName;
+
 };
 
 }

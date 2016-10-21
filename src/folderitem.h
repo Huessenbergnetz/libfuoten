@@ -45,11 +45,46 @@ class FUOTENSHARED_EXPORT FolderItem : public BaseItem
      * \brief The name of the folder.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>QString</TD><TD>name() const</TD></TR><TR><TD>void</TD><TD>setName(const QString &nName)</TD></TR></TABLE>
+     * <TABLE><TR><TD>QString</TD><TD>name() const</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>nameChanged(const QString &name)</TD></TR></TABLE>
+     *
+     * \sa setName()
      */
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    /*!
+     * \brief Returns the number of feeds conained in this folder.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>uint</TD><TD>feedCount() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>feedCountChanged(uint feedCount)</TD></TR></TABLE>
+     *
+     * \sa setFeedCount()
+     */
+    Q_PROPERTY(uint feedCount READ feedCount NOTIFY feedCountChanged)
+    /*!
+     * \brief Returns the number of unread items in this folder.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>uint</TD><TD>unreadCount() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>unreadCountChanged(uint unreadCount)</TD></TR></TABLE>
+     *
+     * \sa setUnreadCount()
+     */
+    Q_PROPERTY(uint unreadCount READ unreadCount NOTIFY unreadCountChanged)
+    /*!
+     * \brief Returns the number of items in this folder.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>uint</TD><TD>itemCount() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>itemCountChanged(const uint &itemCount)</TD></TR></TABLE>
+     *
+     * \sa setItemCount()
+     */
+    Q_PROPERTY(uint itemCount READ itemCount NOTIFY itemCountChanged)
 public:
     /*!
      * \brief Constructs a new empty FolderItem object.
@@ -66,11 +101,45 @@ public:
      */
     FolderItem(const QJsonObject &json, QObject *parent = nullptr);
 
-    QString name() const;
+    /*!
+     * \brief Constructs a new FolderItem object from the given arguments.
+     */
+    FolderItem(quint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent = nullptr);
 
+    QString name() const;
+    uint feedCount() const;
+    uint unreadCount() const;
+    uint itemCount() const;
+
+    /*!
+     * \brief Sets the name of the folder.
+     *
+     * \sa name
+     */
     void setName(const QString &nName);
 
-    Q_INVOKABLE void changeName(const QString &nName);
+    /*!
+     * \brief Sets the number of feeds the folder contains.
+     *
+     * \sa feedCount
+     */
+    void setFeedCount(uint nFeedCount);
+
+    /*!
+     * \brief Sets the number of unread items in this folder.
+     *
+     * \sa unreadCount
+     */
+    void setUnreadCount(uint nUnreadCount);
+
+    /*!
+     * \brief Sets the total number of items in this folder.
+     *
+     * \sa itemCount
+     */
+    void setItemCount(const uint &nItemCount);
+
+    Q_INVOKABLE void rename(const QString &nName);
 
     void loadFromJson(const QJsonDocument &json) Q_DECL_OVERRIDE;
 
@@ -79,6 +148,9 @@ public:
 
 Q_SIGNALS:
     void nameChanged(const QString &name);
+    void feedCountChanged(uint feedCount);
+    void unreadCountChanged(uint unreadCount);
+    void itemCountChanged(const uint &itemCount);
 
 protected:
     FolderItem(FolderItemPrivate &dd, QObject *parent = nullptr);

@@ -15,16 +15,23 @@ FolderItem::FolderItem(QObject *parent) :
 
 
 FolderItem::FolderItem(const QJsonDocument &json, QObject *parent) :
-    BaseItem(*new FolderItemPrivate, parent)
+    BaseItem(* new FolderItemPrivate, parent)
 {
     loadFromJson(json);
 }
 
 
 FolderItem::FolderItem(const QJsonObject &json, QObject *parent) :
-    BaseItem(*new FolderItemPrivate, parent)
+    BaseItem(* new FolderItemPrivate, parent)
 {
     loadFromJson(json);
+}
+
+
+FolderItem::FolderItem(quint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent) :
+    BaseItem(* new FolderItemPrivate(id, name, feedCount, unreadCount, itemCount), parent)
+{
+
 }
 
 
@@ -52,8 +59,61 @@ void FolderItem::setName(const QString &nName)
 
 
 
+uint FolderItem::feedCount() const { Q_D(const FolderItem); return d->feedCount; }
 
-void FolderItem::changeName(const QString &nName)
+void FolderItem::setFeedCount(uint nFeedCount)
+{
+    Q_D(FolderItem);
+    if (nFeedCount != d->feedCount) {
+        d->feedCount = nFeedCount;
+#ifdef QT_DEBUG
+        qDebug() << "Changed feedCount to" << d->feedCount;
+#endif
+        Q_EMIT feedCountChanged(feedCount());
+    }
+}
+
+
+
+
+uint FolderItem::unreadCount() const { Q_D(const FolderItem); return d->unreadCount; }
+
+void FolderItem::setUnreadCount(uint nUnreadCount)
+{
+    Q_D(FolderItem);
+    if (nUnreadCount != d->unreadCount) {
+        d->unreadCount = nUnreadCount;
+#ifdef QT_DEBUG
+        qDebug() << "Changed unreadCount to" << d->unreadCount;
+#endif
+        Q_EMIT unreadCountChanged(unreadCount());
+    }
+}
+
+
+
+
+uint FolderItem::itemCount() const { Q_D(const FolderItem); return d->itemCount; }
+
+void FolderItem::setItemCount(const uint &nItemCount)
+{
+    Q_D(FolderItem);
+    if (nItemCount != d->itemCount) {
+        d->itemCount = nItemCount;
+#ifdef QT_DEBUG
+        qDebug() << "Changed itemCount to" << d->itemCount;
+#endif
+        Q_EMIT itemCountChanged(itemCount());
+    }
+}
+
+
+
+
+
+
+
+void FolderItem::rename(const QString &nName)
 {
     Q_D(FolderItem);
 
