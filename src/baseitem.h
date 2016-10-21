@@ -37,9 +37,10 @@ class BaseItemPrivate;
 class StorageHandler;
 
 /*!
- * \brief Base class for FolderItem, FeedItem and NewsItem.
+ * \brief Abstract base class for FolderItem, FeedItem and NewsItem.
  *
- * Provides some basic properties used by other items.
+ * Provides some basic properties used by other items. You have to derive this class and
+ * implement the pure virtual funtions.
  *
  * \headerfile "" <Fuoten/baseitem.h>
  */
@@ -62,6 +63,8 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
      * <TABLE><TR><TD>quint64</TD><TD>id() const</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>idChanged(quint64 id)</TD></TR></TABLE>
+     *
+     * \sa setId()
      */
     Q_PROPERTY(quint64 id READ id NOTIFY idChanged)
     /*!
@@ -71,6 +74,8 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>errorChanged(Error *error)</TD></TR></TABLE>
+     *
+     * \sa setError()
      */
     Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
     /*!
@@ -111,7 +116,9 @@ public:
     StorageHandler *storageHandler() const;
 
     /*!
-     * \brief Sets the database ID of the item.
+     * \brief Sets the database ID of the item/feed/folder.
+     *
+     * \sa id
      */
     void setId(quint64 nId);
 
@@ -119,14 +126,17 @@ public:
     void setStorageHandler(StorageHandler *nStorageHandler);
 
     /*!
-     * \brief Loads the item data from a JSON document.
+     * \brief Loads the data from a JSON document into the item/feed/folder.
      */
     virtual void loadFromJson(const QJsonDocument &json) = 0;
 
     /*!
-     * \brief Loads the item data from a JSON object.
+     * \brief Loads the data from a JSON object into the item/feed/folder.
      */
     virtual void loadFromJson(const QJsonObject &json) = 0;
+
+protected Q_SLOTS:
+    void setError(Error *nError);
 
 Q_SIGNALS:
     void inOperationChanged(bool inOperation);
@@ -140,7 +150,6 @@ protected:
     BaseItem(BaseItemPrivate &dd, QObject *parent = nullptr);
 
 //    void setInOperation(bool nInOperation);
-//    void setError(Error *nError);
 
 private:
     Q_DISABLE_COPY(BaseItem)

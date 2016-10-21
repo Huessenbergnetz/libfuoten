@@ -36,7 +36,15 @@ public:
     BaseItemPrivate() :
 //        inOperation(false),
         id(0),
-//        error(nullptr),
+        error(nullptr),
+        configuration(nullptr),
+        storageHandler(nullptr),
+        comp(nullptr)
+    {}
+
+    BaseItemPrivate(quint64 _id) :
+        id(_id),
+        error(nullptr),
         configuration(nullptr),
         storageHandler(nullptr),
         comp(nullptr)
@@ -46,7 +54,7 @@ public:
 
 //    bool inOperation;
     quint64 id;
-//    Error *error;
+    Error *error;
     Configuration *configuration;
     StorageHandler *storageHandler;
 

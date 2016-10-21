@@ -21,6 +21,7 @@
  */
 
 #include "baseitem_p.h"
+#include "error.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -55,20 +56,8 @@ bool BaseItem::inOperation() const
     } else {
         return false;
     }
-//    Q_D(const BaseItem); return d->inOperation;
 }
 
-//void BaseItem::setInOperation(bool nInOperation)
-//{
-//    Q_D(BaseItem);
-//    if (nInOperation != d->inOperation) {
-//        d->inOperation = nInOperation;
-//#ifdef QT_DEBUG
-//        qDebug() << "Changed inOperation to" << d->inOperation;
-//#endif
-//        Q_EMIT inOperationChanged(inOperation());
-//    }
-//}
 
 
 
@@ -92,26 +81,41 @@ void BaseItem::setId(quint64 nId)
 
 Error *BaseItem::error() const
 {
-    Q_D(const BaseItem);
-    if (d->comp) {
-        return d->comp->error();
-    } else {
-        return nullptr;
-    }
-//    Q_D(const BaseItem); return d->error;
+    Q_D(const BaseItem); return d->error;
 }
 
-//void BaseItem::setError(Error *nError)
-//{
-//    Q_D(BaseItem);
-//    if (nError != d->error) {
-//        d->error = nError;
-//#ifdef QT_DEBUG
-//        qDebug() << "Changed error to" << d->error;
-//#endif
-//        Q_EMIT errorChanged(error());
-//    }
-//}
+void BaseItem::setError(Error *nError)
+{
+    Q_D(BaseItem);
+    if (nError != d->error) {
+        Error *old = d->error;
+
+        if (nError) {
+            if (nError->parent() != this) {
+                d->error = new Error(nError->type(), nError->severity(), nError->text(), nError->data(), this);
+            } else {
+                d->error = nError;
+            }
+        } else {
+            d->error = nError;
+        }
+
+#ifdef QT_DEBUG
+        qDebug() << "Changed error to" << d->error;
+#endif
+        Q_EMIT errorChanged(error());
+
+        if (old) {
+            if (old->parent() == this) {
+                delete old;
+            }
+        }
+
+        if (d->error && (d->error->type() != Error::NoError) && (d->error->severity() == Error::Critical || d->error->severity() == Error::Fatal)) {
+            Q_EMIT inOperationChanged(false);
+        }
+    }
+}
 
 
 
