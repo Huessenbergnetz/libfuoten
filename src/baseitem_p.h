@@ -34,7 +34,6 @@ class BaseItemPrivate
 {
 public:
     BaseItemPrivate() :
-//        inOperation(false),
         id(0),
         error(nullptr),
         configuration(nullptr),
@@ -52,7 +51,6 @@ public:
 
     virtual ~BaseItemPrivate() {}
 
-//    bool inOperation;
     quint64 id;
     Error *error;
     Configuration *configuration;

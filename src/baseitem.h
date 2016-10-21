@@ -48,7 +48,7 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
 {
     Q_OBJECT
     /*!
-     * \brief Returns true while there is an operation running on the item..
+     * \brief Returns true while there is an operation running on the item.
      *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>inOperation() const</TD></TR></TABLE>
@@ -148,8 +148,6 @@ Q_SIGNALS:
 protected:
     const QScopedPointer<BaseItemPrivate> d_ptr;
     BaseItem(BaseItemPrivate &dd, QObject *parent = nullptr);
-
-//    void setInOperation(bool nInOperation);
 
 private:
     Q_DISABLE_COPY(BaseItem)
