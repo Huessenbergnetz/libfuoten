@@ -50,6 +50,23 @@ public:
     Q_ENUMS(Type)
 #endif
 
+    /*!
+     * \brief Sorting role.
+     */
+    enum SortingRole {
+        ID          = 0,    /**< Sort by database ID */
+        Name        = 1,    /**< Sort by name/title */
+        Time        = 2,    /**< Sort by time */
+        UnreadCount = 3,    /**< Sort by unread item count */
+        ItemCount   = 4,    /**< Sort by total item count */
+        FeedCount   = 5     /**< Sort by feed count */
+    };
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    Q_ENUM(SortingRole)
+#else
+    Q_ENUMS(SortingRole)
+#endif
+
 private:
     Fuoten();
     ~Fuoten();
@@ -58,6 +75,7 @@ private:
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Fuoten::Fuoten::Type)
+Q_DECLARE_METATYPE(Fuoten::Fuoten::SortingRole)
 #endif
 
 #endif // FUOTEN
