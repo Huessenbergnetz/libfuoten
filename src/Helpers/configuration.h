@@ -95,7 +95,6 @@ public:
      */
     virtual bool isAccountValid() const = 0;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     /*!
      * \brief Returns the News App version number used on the server.
      *
@@ -104,9 +103,6 @@ public:
      * \sa setServerVersion()
      */
     virtual QVersionNumber getServerVersion() const = 0;
-#else
-    virtual VersionNumber getServerVersion() const = 0;
-#endif
 
     /*!
      * \brief Returns the server port used for the connection.

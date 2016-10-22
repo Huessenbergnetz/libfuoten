@@ -87,19 +87,11 @@ void AccountValidator::start()
 
 void AccountValidator::gotVersion()
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-    if (configuration()->getServerVersion().lowerThan(5,2,4)) {
-        //% "The version of your News App is lower than 5.2.4. Status and user information can not be queried."
-        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-status-user"), configuration()->getServerVersion().toString(), this));
-        return;
-    }
-#else
     if (configuration()->getServerVersion() < QVersionNumber(5,2,4)) {
         //% "The version of your News App is lower than 5.2.4. Status and user information can not be queried."
         setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-status-user"), configuration()->getServerVersion().toString(), this));
         return;
     }
-#endif
 
     Q_D(AccountValidator);
 
@@ -116,19 +108,11 @@ void AccountValidator::gotVersion()
 
 void AccountValidator::gotStatus()
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-    if (configuration()->getServerVersion().lowerThan(6,0,5)) {
-        //% "The version of your News App is lower than 6.0.5. User information can not be queried."
-        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-user"), configuration()->getServerVersion().toString(), this));
-        return;
-    }
-#else
     if (configuration()->getServerVersion() < QVersionNumber(6,0,5)) {
         //% "The version of your News App is lower than 6.0.5. User information can not be queried."
         setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-user"), configuration()->getServerVersion().toString(), this));
         return;
     }
-#endif
 
     Q_D(AccountValidator);
 

@@ -27,6 +27,7 @@
 #include <QString>
 #include "../fuoten_global.h"
 
+
 namespace Fuoten {
 
 class VersionNumberData : public QSharedData
@@ -110,55 +111,55 @@ public:
      */
     int mic() const;
 
-    /*!
-     * \brief Returns true if this version is lower than the arguments.
-     */
-    bool lowerThan(int maj, int min = 0, int mic = 0) const;
+//    /*!
+//     * \brief Returns true if this version is lower than the arguments.
+//     */
+//    bool lowerThan(int maj, int min = 0, int mic = 0) const;
 
-    /*!
-     * \brief Returns true if this version is lower than \a other.
-     */
-    bool lowerThan(const VersionNumber &other) const;
+//    /*!
+//     * \brief Returns true if this version is lower than \a other.
+//     */
+//    bool lowerThan(const VersionNumber &other) const;
 
-    /*!
-     * \brief Returns true if this version is equal to the arguments.
-     */
-    bool equalTo(int maj, int min = 0, int mic = 0) const;
+//    /*!
+//     * \brief Returns true if this version is equal to the arguments.
+//     */
+//    bool equalTo(int maj, int min = 0, int mic = 0) const;
 
-    /*!
-     * \brief Returns true if this version is equal to \a other.
-     */
-    bool equalTo(const VersionNumber &other) const;
+//    /*!
+//     * \brief Returns true if this version is equal to \a other.
+//     */
+//    bool equalTo(const VersionNumber &other) const;
 
-    /*!
-     * \brief Returns true if this version is greater than the arguments.
-     */
-    bool greaterThan(int maj, int min = 0, int mic = 0) const;
+//    /*!
+//     * \brief Returns true if this version is greater than the arguments.
+//     */
+//    bool greaterThan(int maj, int min = 0, int mic = 0) const;
 
-    /*!
-     * \brief Returns true if this version is greater than \a other.
-     */
-    bool greaterThan(const VersionNumber &other) const;
+//    /*!
+//     * \brief Returns true if this version is greater than \a other.
+//     */
+//    bool greaterThan(const VersionNumber &other) const;
 
-    /*!
-     * \brief Returns true if this version is lower or equal to the arguments.
-     */
-    bool lowerThanOrEqualTo(int maj, int min = 0, int mic = 0) const;
+//    /*!
+//     * \brief Returns true if this version is lower or equal to the arguments.
+//     */
+//    bool lowerThanOrEqualTo(int maj, int min = 0, int mic = 0) const;
 
-    /*!
-     * \brief Returns true if this version is lower or equal to \a other.
-     */
-    bool lowerThanOrEqualTo(const VersionNumber &other) const;
+//    /*!
+//     * \brief Returns true if this version is lower or equal to \a other.
+//     */
+//    bool lowerThanOrEqualTo(const VersionNumber &other) const;
 
-    /*!
-     * \brief Returns true if this version is greater or equal to the arguments.
-     */
-    bool greaterThanOrEqualTo(int maj, int min = 0, int mic = 0) const;
+//    /*!
+//     * \brief Returns true if this version is greater or equal to the arguments.
+//     */
+//    bool greaterThanOrEqualTo(int maj, int min = 0, int mic = 0) const;
 
-    /*!
-     * \brief Returns true if this version is greater or equal to \a other.
-     */
-    bool greaterThanOrEqualTo(const VersionNumber &other) const;
+//    /*!
+//     * \brief Returns true if this version is greater or equal to \a other.
+//     */
+//    bool greaterThanOrEqualTo(const VersionNumber &other) const;
 
     /*!
      * \brief Returns true all parts of the version are 0.
@@ -175,10 +176,44 @@ public:
      */
     QString toString() const;
 
+    /*!
+     * \brief Returns \c true if this version number is not equal to \a other. Otherwise returns false.
+     */
+    bool operator!=(const VersionNumber &other) const;
+
+    /*!
+     * \brief Returns \c true if this version number is equal to \a other. Otherwise returns false.
+     */
+    bool operator==(const VersionNumber &other) const;
+
+    /*!
+     * \brief Returns \c true if this version number is lower than \a other. Otherwise returns false.
+     */
+    bool operator<(const VersionNumber &other) const;
+
+    /*!
+     * \brief Returns \c true if this version number is lower than or equal to \a other. Otherwise returns false.
+     */
+    bool operator<=(const VersionNumber &other) const;
+
+    /*!
+     * \brief Returns \c true if this version number is greater than \a other. Otherwise returns false.
+     */
+    bool operator>(const VersionNumber &other) const;
+
+    /*!
+     * \brief Returns \c true if this version number is greater than or equal to \a other. Otherwise returns false.
+     */
+    bool operator>=(const VersionNumber &other) const;
+
 private:
     QSharedDataPointer<VersionNumberData> d;
 };
 
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+typedef Fuoten::VersionNumber QVersionNumber;
+#endif
 
 #endif // VERSIONNUMBER_H
