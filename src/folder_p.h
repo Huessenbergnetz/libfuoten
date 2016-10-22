@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * Folders/getfolders_p.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,21 +18,40 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GETFOLDERS_P
-#define GETFOLDERS_P
+#ifndef FUOTENFOLDER_P_H
+#define FUOTENFOLDER_P_H
 
-#include "getfolders.h"
-#include "../component_p.h"
-
+#include "folder.h"
+#include "baseitem_p.h"
 
 namespace Fuoten {
 
-class GetFoldersPrivate : public ComponentPrivate {
+class FolderPrivate : public BaseItemPrivate
+{
 public:
-    GetFoldersPrivate() : ComponentPrivate() {}
+    FolderPrivate() :
+        BaseItemPrivate(),
+        feedCount(0),
+        unreadCount(0),
+        itemCount(0)
+    {}
+
+    FolderPrivate(quint64 _id, const QString &_name, uint _feedCount, uint _unreadCount, uint _itemCount) :
+        BaseItemPrivate(_id),
+        name(_name),
+        feedCount(_feedCount),
+        unreadCount(_unreadCount),
+        itemCount(_itemCount)
+    {}
+
+    QString name;
+    uint feedCount;
+    uint unreadCount;
+    uint itemCount;
+    QString newName;
+
 };
 
 }
 
-#endif // GETFOLDERS_P
-
+#endif // FUOTENFOLDER_P_H

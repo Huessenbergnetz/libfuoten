@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * generic/version.cpp
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,33 +18,32 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "version_p.h"
+#include "getfolders_p.h"
 #include "../error.h"
-#include <QJsonValue>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
 
 using namespace Fuoten;
-using namespace Generic;
 
-Version::Version(QObject *parent) :
-    Component(*new VersionPrivate, parent)
+GetFolders::GetFolders(QObject *parent) :
+    Component(* new GetFoldersPrivate, parent)
 {
-    setApiRoute(QStringLiteral("/version"));
+    setApiRoute(QStringLiteral("/folders"));
     setExpectedJSONType(Component::Object);
 }
 
 
-Version::Version(VersionPrivate &dd, QObject *parent) :
+GetFolders::GetFolders(GetFoldersPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
-    setApiRoute(QStringLiteral("/version"));
+    setApiRoute(QStringLiteral("/folders"));
     setExpectedJSONType(Component::Object);
 }
 
 
-void Version::execute()
+
+void GetFolders::execute()
 {
     if (inOperation()) {
         qWarning("Still in operation. Returning.");
@@ -54,7 +51,7 @@ void Version::execute()
     }
 
 #ifdef QT_DEBUG
-    qDebug() << "Start requesting version information from the server.";
+    qDebug() << "Start requesting folders from the server.";
 #endif
 
     setInOperation(true);
@@ -63,16 +60,16 @@ void Version::execute()
 }
 
 
-void Version::successCallback()
+void GetFolders::successCallback()
 {
-    Q_D(const Version);
-    if (configuration()) {
-        configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
+    if (storageHandler()) {
+        storageHandler()->foldersRequested(jsonResult());
     }
+
     setInOperation(false);
 
 #ifdef QT_DEBUG
-    qDebug() << "Successfully requested version information from the server.";
+    qDebug() << "Successfully requested the folder list from the server.";
 #endif
 
     Q_EMIT succeeded(jsonResult());
@@ -80,7 +77,7 @@ void Version::successCallback()
 
 
 
-void Version::extractError(QNetworkReply *reply)
+void GetFolders::extractError(QNetworkReply *reply)
 {
     setError(new Error(reply, this));
     setInOperation(false);
@@ -89,26 +86,7 @@ void Version::extractError(QNetworkReply *reply)
 
 
 
-bool Version::checkOutput()
+bool GetFolders::checkOutput()
 {
-    if (Component::checkOutput()) {
-
-        Q_D(Version);
-
-        d->resultObject = jsonResult().object();
-
-        if (!d->resultObject.contains(QStringLiteral("version"))) {
-            //% "Can not find the version information in the server reply."
-            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-not-found"), QString(), this));
-            Q_EMIT failed(error());
-            if (configuration()) { configuration()->setServerVersion(QStringLiteral("0.0.0")); }
-            return false;
-        } else {
-            return true;
-        }
-
-    } else {
-        if (configuration()) { configuration()->setServerVersion(QStringLiteral("0.0.0")); }
-        return false;
-    }
+    return Component::checkOutput();
 }

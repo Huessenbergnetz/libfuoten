@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * generic/version.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,45 +18,38 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef FUOTENGETFOLDERS_H
+#define FUOTENGETFOLDERS_H
 
 #include <QObject>
-#include "../component.h"
+#include "component.h"
 #include "../fuoten_global.h"
 
 namespace Fuoten {
-namespace Generic {
 
-class VersionPrivate;
+class GetFoldersPrivate;
 
 /*!
- * \brief Requests the installed News App version from the server.
+ * \brief Requests the lists of folders from the API.
  *
- * The version reply will only contain the version number of the installed News App.
- * To request the version information, set the \link Component::configuration configuration \endlink property and call get().
- *
- * The requested data will be written to Configuration::setServerVersion(). You can get the raw JSON response from the Component::succeeded() signal.
- *
- * \sa AccountValidator
- * \headerfile "" <Fuoten/Generic/version.h>
+ * \headerfile "" <Fuoten/API/GetFolders>
  */
-class FUOTENSHARED_EXPORT Version : public Component
+class FUOTENSHARED_EXPORT GetFolders : public Component
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Constructs a new Version object.
+     * \brief Constructs a new GetFolders object.
      */
-    Version(QObject *parent = nullptr);
+    GetFolders(QObject *parent = nullptr);
 
     /*!
-     * \brief Starts the API request.
+     * \brief Executes the API request.
      */
     Q_INVOKABLE void execute() Q_DECL_OVERRIDE;
 
 protected:
-    Version(VersionPrivate &dd, QObject *parent = nullptr);
+    GetFolders(GetFoldersPrivate &dd, QObject *parent = nullptr);
 
     void successCallback() Q_DECL_OVERRIDE;
 
@@ -67,11 +58,10 @@ protected:
     bool checkOutput() Q_DECL_OVERRIDE;
 
 private:
-    Q_DECLARE_PRIVATE(Version)
-    Q_DISABLE_COPY(Version)
+    Q_DECLARE_PRIVATE(GetFolders)
+    Q_DISABLE_COPY(GetFolders)
 };
 
 }
-}
 
-#endif // VERSION_H
+#endif // FUOTENGETFOLDERS_H

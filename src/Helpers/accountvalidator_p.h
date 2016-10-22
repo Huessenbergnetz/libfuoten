@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * Generic/accountvalidator_p.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,17 +18,15 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ACCOUNTVALIDATOR_P_H
-#define ACCOUNTVALIDATOR_P_H
+#ifndef FUOTENACCOUNTVALIDATOR_P_H
+#define FUOTENACCOUNTVALIDATOR_P_H
 
 #include "accountvalidator.h"
-#include "version.h"
-#include "status.h"
-#include "user.h"
+#include "../API/getversion.h"
+#include "../API/getstatus.h"
+#include "../API/getuser.h"
 
 namespace Fuoten {
-namespace Generic {
-
 
 class AccountValidatorPrivate
 {
@@ -63,12 +59,11 @@ public:
     bool inOperation;
     Error *error;
 
-    Version *version;
-    Status *status;
-    User *user;
+    GetVersion *version;
+    GetStatus *status;
+    GetUser *user;
 };
 
 }
-}
 
-#endif // ACCOUNTVALIDATOR_P_H
+#endif // FUOTENACCOUNTVALIDATOR_P_H

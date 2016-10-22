@@ -33,38 +33,39 @@ HEADERS += \
     src/fuoten_global.h \
     src/error.h \
     src/error_p.h \
-    src/component.h \
-    src/component_p.h \
-    src/Generic/version.h \
-    src/Generic/version_p.h \
+    src/API/component.h \
+    src/API/component_p.h \
+    src/API/getversion.h \
+    src/API/getversion_p.h \
     src/Helpers/configuration.h \
-    src/Generic/status.h \
-    src/Generic/status_p.h \
-    src/Generic/user.h \
-    src/Generic/user_p.h \
-    src/Generic/accountvalidator.h \
-    src/Generic/accountvalidator_p.h \
+    src/API/getstatus.h \
+    src/API/getstatus_p.h \
+    src/API/getuser.h \
+    src/API/getuser_p.h \
+    src/Helpers/accountvalidator.h \
+    src/Helpers/accountvalidator_p.h \
     src/fuoten.h \
     src/Helpers/versionnumber.h \
     src/baseitem.h \
     src/baseitem_p.h \
-    src/folderitem.h \
-    src/folderitem_p.h \
+    src/folder.h \
+    src/folder_p.h \
     src/Helpers/storagehandler.h \
-    src/Folders/getfolders.h \
-    src/Folders/getfolders_p.h
+    src/API/getfolders.h \
+    src/API/getfolders_p.h \
+    src/Helpers/synchronizer.h
 
 SOURCES += \
     src/error.cpp \
-    src/component.cpp \
-    src/Generic/version.cpp \
+    src/API/component.cpp \
+    src/API/getversion.cpp \
     src/Helpers/configuration.cpp \
-    src/Generic/status.cpp \
-    src/Generic/user.cpp \
-    src/Generic/accountvalidator.cpp \
+    src/API/getstatus.cpp \
+    src/API/getuser.cpp \
+    src/Helpers/accountvalidator.cpp \
     src/Helpers/versionnumber.cpp \
     src/baseitem.cpp \
-    src/folderitem.cpp \
+    src/folder.cpp \
     src/Helpers/storagehandler.cpp \
-    src/Folders/getfolders.cpp
+    src/API/getfolders.cpp
 

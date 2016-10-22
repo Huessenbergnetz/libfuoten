@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * fuoten.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -27,15 +25,24 @@
 #include <QMetaType>
 
 namespace Fuoten {
+
+/*!
+ * \brief Provides global enumerations.
+ *
+ * \headerfile "" <Fuoten/Fuoten>
+ */
 class FUOTENSHARED_EXPORT Fuoten {
     Q_GADGET
 public:
 
+    /*!
+     * \brief Object types.
+     */
     enum Type {
-        Feed    = 0,
-        Folder  = 1,
-        Starred = 2,
-        All     = 3
+        Feed    = 0,    /**< Feed */
+        Folder  = 1,    /**< Folder */
+        Starred = 2,    /**< Starred items */
+        All     = 3     /**< All items */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Type)

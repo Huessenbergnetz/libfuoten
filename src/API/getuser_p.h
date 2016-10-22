@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * folderitem_p.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,41 +18,23 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FOLDERITEM_P_H
-#define FOLDERITEM_P_H
+#ifndef FUOTENGETUSER_P_H
+#define FUOTENGETUSER_P_H
 
-#include "folderitem.h"
-#include "baseitem_p.h"
+#include "getuser.h"
+#include "component_p.h"
+#include <QJsonObject>
 
 namespace Fuoten {
 
-
-class FolderItemPrivate : public BaseItemPrivate
-{
+class GetUserPrivate : public ComponentPrivate {
 public:
-    FolderItemPrivate() :
-        BaseItemPrivate(),
-        feedCount(0),
-        unreadCount(0),
-        itemCount(0)
-    {}
+    GetUserPrivate() : ComponentPrivate() {}
 
-    FolderItemPrivate(quint64 _id, const QString &_name, uint _feedCount, uint _unreadCount, uint _itemCount) :
-        BaseItemPrivate(_id),
-        name(_name),
-        feedCount(_feedCount),
-        unreadCount(_unreadCount),
-        itemCount(_itemCount)
-    {}
-
-    QString name;
-    uint feedCount;
-    uint unreadCount;
-    uint itemCount;
-    QString newName;
-
+    QJsonObject resultObject;
 };
 
 }
 
-#endif // FOLDERITEM_P_H
+#endif // FUOTENGETUSER_P_H
+

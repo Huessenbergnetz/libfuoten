@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * generic/user_p.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,26 +18,21 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USER_P
-#define USER_P
+#ifndef FUOTENGETFOLDERS_P_H
+#define FUOTENGETFOLDERS_P_H
 
-#include "user.h"
-#include "../component_p.h"
-#include <QJsonObject>
+#include "getfolders.h"
+#include "component_p.h"
+
 
 namespace Fuoten {
-namespace Generic {
 
-class UserPrivate : public ComponentPrivate {
+class GetFoldersPrivate : public ComponentPrivate {
 public:
-    UserPrivate() : ComponentPrivate() {}
-
-    QJsonObject resultObject;
+    GetFoldersPrivate() : ComponentPrivate() {}
 };
 
 }
 
-}
-
-#endif // USER_P
+#endif // FUOTENGETFOLDERS_P_H
 

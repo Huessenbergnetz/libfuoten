@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * helpers/configuration.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -42,7 +40,7 @@ namespace Fuoten {
  * The reimplemented class will than be used on all API call classes. All of the
  * API classes have a configuration property that takes subclasses of Configuration.
  *
- * \headerfile "" <Fuoten/Helpers/configuration.h>
+ * \headerfile "" <Fuoten/Helpers/Configuration>
  */
 class FUOTENSHARED_EXPORT Configuration : public QSettings
 {

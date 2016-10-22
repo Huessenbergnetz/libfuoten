@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * error_p.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,8 +18,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ERROR_P_H
-#define ERROR_P_H
+#ifndef FUOTENERROR_P_H
+#define FUOTENERROR_P_H
 
 #include "error.h"
 #ifdef QT_DEBUG
@@ -67,4 +65,4 @@ public:
 
 }
 
-#endif // ERROR_P_H
+#endif // FUOTENERROR_P_H

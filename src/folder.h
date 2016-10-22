@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * folderitem.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,8 +18,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FOLDERITEM_H
-#define FOLDERITEM_H
+#ifndef FUOTENFOLDER_H
+#define FUOTENFOLDER_H
 
 #include <QObject>
 #include "baseitem.h"
@@ -31,14 +29,14 @@
 
 namespace Fuoten {
 
-class FolderItemPrivate;
+class FolderPrivate;
 
 /*!
  * \brief Contains information about a single folder.
  *
- * \headerfile "" <Fuoten/folderitem.h>
+ * \headerfile "" <Fuoten/Folder>
  */
-class FUOTENSHARED_EXPORT FolderItem : public BaseItem
+class FUOTENSHARED_EXPORT Folder : public BaseItem
 {
     Q_OBJECT
     /*!
@@ -87,24 +85,24 @@ class FUOTENSHARED_EXPORT FolderItem : public BaseItem
     Q_PROPERTY(uint itemCount READ itemCount NOTIFY itemCountChanged)
 public:
     /*!
-     * \brief Constructs a new empty FolderItem object.
+     * \brief Constructs a new empty Folder object.
      */
-    FolderItem(QObject *parent = nullptr);
+    Folder(QObject *parent = nullptr);
 
     /*!
-     * \brief Constructs a new FolderItem object from a QJsonDocument.
+     * \brief Constructs a new Folder object from a QJsonDocument.
      */
-    FolderItem(const QJsonDocument &json, QObject *parent = nullptr);
+    Folder(const QJsonDocument &json, QObject *parent = nullptr);
 
     /*!
-     * \brief Constructs a new FolderItem object from a QJsonObject.
+     * \brief Constructs a new Folder object from a QJsonObject.
      */
-    FolderItem(const QJsonObject &json, QObject *parent = nullptr);
+    Folder(const QJsonObject &json, QObject *parent = nullptr);
 
     /*!
-     * \brief Constructs a new FolderItem object from the given arguments.
+     * \brief Constructs a new Folder object from the given arguments.
      */
-    FolderItem(quint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent = nullptr);
+    Folder(quint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent = nullptr);
 
     QString name() const;
     uint feedCount() const;
@@ -153,15 +151,15 @@ Q_SIGNALS:
     void itemCountChanged(const uint &itemCount);
 
 protected:
-    FolderItem(FolderItemPrivate &dd, QObject *parent = nullptr);
+    Folder(FolderPrivate &dd, QObject *parent = nullptr);
 
 private:
-    Q_DISABLE_COPY(FolderItem)
-    Q_DECLARE_PRIVATE(FolderItem)
+    Q_DISABLE_COPY(Folder)
+    Q_DECLARE_PRIVATE(Folder)
 
 };
 
 }
 
 
-#endif // FOLDERITEM_H
+#endif // FUOTENFOLDER_H

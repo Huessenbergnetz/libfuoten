@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * Generic/accountvalidator.cpp
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -21,10 +19,10 @@
  */
 
 #include "accountvalidator_p.h"
-#include "../Helpers/configuration.h"
+#include "configuration.h"
 #include "../error.h"
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-#include "../Helpers/versionnumber.h"
+#include "versionnumber.h"
 #else
 #include <QVersionNumber>
 #endif
@@ -34,7 +32,6 @@
 #endif
 
 using namespace Fuoten;
-using namespace Generic;
 
 
 AccountValidator::AccountValidator(QObject *parent) :
@@ -74,7 +71,7 @@ void AccountValidator::start()
     }
 
     if (!d->version) {
-        d->version = new Version(this);
+        d->version = new GetVersion(this);
         d->version->setConfiguration(configuration());
         connect(d->version, &Component::succeeded, this, &AccountValidator::gotVersion);
         connect(d->version, &Component::failed, this, &AccountValidator::setError);
@@ -96,7 +93,7 @@ void AccountValidator::gotVersion()
     Q_D(AccountValidator);
 
     if (!d->status) {
-        d->status = new Status(this);
+        d->status = new GetStatus(this);
         d->status->setConfiguration(configuration());
         connect(d->status, &Component::succeeded, this, &AccountValidator::gotStatus);
         connect(d->status, &Component::failed, this, &AccountValidator::setError);
@@ -117,7 +114,7 @@ void AccountValidator::gotStatus()
     Q_D(AccountValidator);
 
     if (!d->user) {
-        d->user = new User(this);
+        d->user = new GetUser(this);
         d->user->setConfiguration(configuration());
         connect(d->user, &Component::succeeded, this, &AccountValidator::gotUser);
         connect(d->user, &Component::failed, this, &AccountValidator::setError);

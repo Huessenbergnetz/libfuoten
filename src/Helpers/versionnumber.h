@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * helpers/versionnumber.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,8 +18,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSIONNUMBER_H
-#define VERSIONNUMBER_H
+#ifndef FUOTENVERSIONNUMBER_H
+#define FUOTENVERSIONNUMBER_H
 
 #include <QSharedDataPointer>
 #include <QString>
@@ -55,6 +53,8 @@ public:
  *
  * This is a helper class for Qt versions prior to Qt 5.6. Qt 5.6 provides QVersionNumber that
  * makes this class obsolete.
+ *
+ * \headerfile "" <Fuoten/Helpers/VersionNumber>
  */
 class FUOTENSHARED_EXPORT VersionNumber
 {
@@ -216,4 +216,4 @@ private:
 typedef Fuoten::VersionNumber QVersionNumber;
 #endif
 
-#endif // VERSIONNUMBER_H
+#endif // FUOTENVERSIONNUMBER_H

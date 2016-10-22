@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * component_p.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,12 +18,12 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMPONENT_P_H
-#define COMPONENT_P_H
+#ifndef FUOTENCOMPONENT_P_H
+#define FUOTENCOMPONENT_P_H
 
 #include "component.h"
-#include "Helpers/configuration.h"
-#include "Helpers/storagehandler.h"
+#include "../Helpers/configuration.h"
+#include "../Helpers/storagehandler.h"
 #include <QTimer>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -95,4 +93,4 @@ public:
 
 }
 
-#endif // COMPONENT_P_H
+#endif // FUOTENCOMPONENT_P_H

@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * Generic/accountvalidator.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,8 +18,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ACCOUNTVALIDATOR_H
-#define ACCOUNTVALIDATOR_H
+#ifndef FUOTENACCOUNTVALIDATOR_H
+#define FUOTENACCOUNTVALIDATOR_H
 
 #include <QObject>
 #include "../fuoten_global.h"
@@ -31,8 +29,6 @@ namespace Fuoten {
 class Configuration;
 class Error;
 
-namespace Generic {
-
 class AccountValidatorPrivate;
 
 /*!
@@ -41,7 +37,7 @@ class AccountValidatorPrivate;
  * This should be used after the user account was setup or changed. Set the \link AccountValidator::configuration configuration \endlink property
  * and call start(). Calling start() will create and invoke Version, Status and User in a row.
  *
- * \headerfile "" <Fuoten/Generic/accountvalidator.h>
+ * \headerfile "" <Fuoten/Helpers/AccountValidator>
  * \sa Status, User, Version
  */
 class FUOTENSHARED_EXPORT AccountValidator : public QObject
@@ -133,7 +129,6 @@ private:
 };
 
 }
-}
 
 
-#endif // ACCOUNTVALIDATOR_H
+#endif // FUOTENACCOUNTVALIDATOR_H

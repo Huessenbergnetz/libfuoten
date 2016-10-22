@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * generic/status.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,37 +18,36 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STATUS_H
-#define STATUS_H
+#ifndef FUOTENGETUSER_H
+#define FUOTENGETUSER_H
 
 #include <QObject>
-#include "../component.h"
+#include "component.h"
 #include "../fuoten_global.h"
 
 namespace Fuoten {
-namespace Generic {
 
-class StatusPrivate;
+class GetUserPrivate;
 
 /*!
- * \brief Requests the status from the News App.
+ * \brief Requests the user information from the News App.
  *
- * The status reply will contain the News App version number an possible warnings about improperly configurations.
- * To request the status, set the \link Component::configuration configuration \endlink property and call get().
+ * The user reply will contain information about the authenticated user like display name, avatar and last login time.
+ * To request the user information, set the \link Component::configuration configuration \endlink property and call get().
  *
- * The requested data will be written to Configuration::setServerVersion() and Configuration::setImproperlyConfiguredCron(). You can get the raw JSON response from the Component::succeeded() signal.
+ * The requested data will be written to Configuration::setDisplayName() and Configuration::setAvatar(). You can get the raw JSON response from the Component::succeeded() signal.
  *
  * \sa AccountValidator
- * \headerfile "" <Fuoten/Generic/status.h>
+ * \headerfile "" <Fuoten/API/GetUser>
  */
-class FUOTENSHARED_EXPORT Status : public Component
+class FUOTENSHARED_EXPORT GetUser : public Component
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Constructs a new Status object.
+     * \brief Constructs a new GetUser object.
      */
-    Status(QObject *parent = nullptr);
+    GetUser(QObject *parent = nullptr);
 
     /*!
      * \brief Starts the API request.
@@ -58,7 +55,7 @@ public:
     Q_INVOKABLE void execute() Q_DECL_OVERRIDE;
 
 protected:
-    Status(StatusPrivate &dd, QObject *parent = nullptr);
+    GetUser(GetUserPrivate &dd, QObject *parent = nullptr);
 
     void successCallback() Q_DECL_OVERRIDE;
 
@@ -67,12 +64,11 @@ protected:
     bool checkOutput() Q_DECL_OVERRIDE;
 
 private:
-    Q_DECLARE_PRIVATE(Status)
-    Q_DISABLE_COPY(Status)
+    Q_DECLARE_PRIVATE(GetUser)
+    Q_DISABLE_COPY(GetUser)
 
 };
 
 }
-}
 
-#endif // STATUS_H
+#endif // FUOTENGETUSER_H

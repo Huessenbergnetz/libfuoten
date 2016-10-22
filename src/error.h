@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * error.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,8 +18,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ERROR_H
-#define ERROR_H
+#ifndef FUOTENERROR_H
+#define FUOTENERROR_H
 
 #include <QObject>
 #include "fuoten_global.h"
@@ -36,7 +34,7 @@ class ErrorPrivate;
 /*!
  * \brief Provides information about occured errors.
  *
- * \headerfile "" <Fuoten/error.h>
+ * \headerfile "" <Fuoten/Error>
  */
 class FUOTENSHARED_EXPORT Error : public QObject
 {
@@ -189,4 +187,4 @@ Q_DECLARE_METATYPE(Fuoten::Error::Severity)
 #endif
 
 
-#endif // ERROR_H
+#endif // FUOTENERROR_H

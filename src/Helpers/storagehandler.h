@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * helpers/storagehandler.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,8 +18,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STORAGEHANDLER_H
-#define STORAGEHANDLER_H
+#ifndef FUOTENSTORAGEHANDLER_H
+#define FUOTENSTORAGEHANDLER_H
 
 #include <QObject>
 #include "../fuoten_global.h"
@@ -36,7 +34,7 @@ namespace Fuoten {
  * from Component. Also BaseItem hast the BaseItem::storageHandler property for derived class,
  * that is used to set the storage handler to API classes that perfrom API actions.
  *
- * \headerfile "" <Fuoten/Helpers/storagehandler.h>
+ * \headerfile "" <Fuoten/Helpers/StorageHandler>
  */
 class FUOTENSHARED_EXPORT StorageHandler : public QObject
 {
@@ -122,4 +120,4 @@ private:
 
 }
 
-#endif // STORAGEHANDLER_H
+#endif // FUOTENSTORAGEHANDLER_H

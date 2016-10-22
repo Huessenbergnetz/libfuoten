@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * baseitem.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,8 +18,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BASEITEM_H
-#define BASEITEM_H
+#ifndef FUOTENBASEITEM_H
+#define FUOTENBASEITEM_H
 
 #include <QObject>
 #include "fuoten_global.h"
@@ -42,7 +40,7 @@ class StorageHandler;
  * Provides some basic properties used by other items. You have to derive this class and
  * implement the pure virtual funtions.
  *
- * \headerfile "" <Fuoten/baseitem.h>
+ * \headerfile "" <Fuoten/BaseItem>
  */
 class FUOTENSHARED_EXPORT BaseItem : public QObject
 {
@@ -158,4 +156,4 @@ private:
 }
 
 
-#endif // BASEITEM_H
+#endif // FUOTENBASEITEM_H

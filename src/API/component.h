@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * component.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,15 +18,15 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef FUOTENCOMPONENT_H
+#define FUOTENCOMPONENT_H
 
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QSslError>
 #include <QUrlQuery>
 #include <QJsonDocument>
-#include "fuoten_global.h"
+#include "../fuoten_global.h"
 
 class QNetworkReply;
 
@@ -144,7 +142,7 @@ class StorageHandler;
  *
  * \endcode
  *
- * \headerfile "" <Fuoten/component.h>
+ * \headerfile "" <Fuoten/API/Component>
  */
 class FUOTENSHARED_EXPORT Component : public QObject
 {
@@ -453,4 +451,4 @@ private:
 }
 
 
-#endif // COMPONENT_H
+#endif // FUOTENCOMPONENT_H

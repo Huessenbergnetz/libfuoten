@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * baseitem_p.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,11 +18,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BASEITEM_P_H
-#define BASEITEM_P_H
+#ifndef FUOTENBASEITEM_P_H
+#define FUOTENBASEITEM_P_H
 
 #include "baseitem.h"
-#include "component.h"
+#include "API/component.h"
 #include "Helpers/configuration.h"
 #include "Helpers/storagehandler.h"
 
@@ -61,4 +59,4 @@ public:
 
 }
 
-#endif // BASEITEM_P_H
+#endif // FUOTENBASEITEM_P_H

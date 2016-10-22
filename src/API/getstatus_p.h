@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * generic/version_p.h
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,26 +18,23 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_P
-#define VERSION_P
+#ifndef FUOTENGETSTATUS_P_H
+#define FUOTENGETSTATUS_P_H
 
-#include "version.h"
-#include "../component_p.h"
+#include "getstatus.h"
+#include "component_p.h"
 #include <QJsonObject>
 
 namespace Fuoten {
-namespace Generic {
 
-class VersionPrivate : public ComponentPrivate {
+class GetStatusPrivate : public ComponentPrivate {
 public:
-    VersionPrivate() : ComponentPrivate() {}
+    GetStatusPrivate() : ComponentPrivate() {}
 
     QJsonObject resultObject;
 };
 
 }
 
-}
-
-#endif // VERSION_P
+#endif // FUOTENGETSTATUS_P_H
 

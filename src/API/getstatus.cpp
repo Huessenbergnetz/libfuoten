@@ -3,8 +3,6 @@
  * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
  * https://github.com/Buschtrommel/libfuoten
  *
- * generic/user.cpp
- *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,34 +18,32 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "user_p.h"
+#include "getstatus_p.h"
 #include "../error.h"
 #include <QJsonValue>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
 
-using namespace Fuoten;
-using namespace Generic;
 
-User::User(QObject *parent) :
-    Component(*new UserPrivate, parent)
+using namespace Fuoten;
+
+GetStatus::GetStatus(QObject *parent) :
+    Component(* new GetStatusPrivate, parent)
 {
-    setApiRoute(QStringLiteral("/user"));
+    setApiRoute(QStringLiteral("/status"));
     setExpectedJSONType(Component::Object);
 }
 
-
-User::User(UserPrivate &dd, QObject *parent) :
+GetStatus::GetStatus(GetStatusPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
-    setApiRoute(QStringLiteral("/user"));
+    setApiRoute(QStringLiteral("/status"));
     setExpectedJSONType(Component::Object);
 }
 
 
-
-void User::execute()
+void GetStatus::execute()
 {
     if (inOperation()) {
         qWarning("Still in operation. Returning.");
@@ -55,7 +51,7 @@ void User::execute()
     }
 
 #ifdef QT_DEBUG
-    qDebug() << "Start requesting user information from the server.";
+    qDebug() << "Start requesting the status from the server.";
 #endif
 
     setInOperation(true);
@@ -64,32 +60,27 @@ void User::execute()
 }
 
 
-
-void User::successCallback()
+void GetStatus::successCallback()
 {
-    Q_D(const User);
+    Q_D(const GetStatus);
     if (configuration()) {
-        configuration()->setDisplayName(d->resultObject.value(QStringLiteral("displayName")).toString());
-        const QJsonObject a = d->resultObject.value(QStringLiteral("avatar")).toObject();
-        if (!a.isEmpty()) {
-            configuration()->setAvatar(a.value(QStringLiteral("data")).toString(), a.value(QStringLiteral("mime")).toString());
-        } else {
-            configuration()->setAvatar(QString(), QString());
+        configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
+        const QJsonObject w = d->resultObject.value(QStringLiteral("warnings")).toObject();
+        if (!w.isEmpty()) {
+            configuration()->setImproperlyConfiguredCron(w.value(QStringLiteral("improperlyConfiguredCron")).toBool());
         }
     }
-
     setInOperation(false);
 
 #ifdef QT_DEBUG
-    qDebug() << "Successfully requested user information from the server.";
+    qDebug() << "Successfully requested the status from the server.";
 #endif
 
     Q_EMIT succeeded(jsonResult());
 }
 
 
-
-void User::extractError(QNetworkReply *reply)
+void GetStatus::extractError(QNetworkReply *reply)
 {
     setError(new Error(reply, this));
     setInOperation(false);
@@ -97,17 +88,25 @@ void User::extractError(QNetworkReply *reply)
 }
 
 
-bool User::checkOutput()
+
+bool GetStatus::checkOutput()
 {
     if (Component::checkOutput()) {
 
-        Q_D(User);
+        Q_D(GetStatus);
 
         d->resultObject = jsonResult().object();
 
-        if (!d->resultObject.contains(QStringLiteral("displayName"))) {
-            //% "Can not find the user's display name in the server reply."
-            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-displayname-not-found"), QString(), this));
+        if (!d->resultObject.contains(QStringLiteral("version"))) {
+            //% "Can not find the version information in the server reply."
+            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-not-found"), QString(), this));
+            Q_EMIT failed(error());
+            return false;
+        }
+
+        if (!d->resultObject.contains(QStringLiteral("warnings"))) {
+            //% "Can not find the warnings information in the server reply."
+            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-warnings-not-found"), QString(), this));
             Q_EMIT failed(error());
             return false;
         }
