@@ -53,7 +53,8 @@ HEADERS += \
     src/Helpers/storagehandler.h \
     src/API/getfolders.h \
     src/API/getfolders_p.h \
-    src/Helpers/synchronizer.h
+    src/Helpers/synchronizer.h \
+    src/Helpers/synchronizer_p.h
 
 SOURCES += \
     src/error.cpp \
@@ -67,5 +68,6 @@ SOURCES += \
     src/baseitem.cpp \
     src/folder.cpp \
     src/Helpers/storagehandler.cpp \
-    src/API/getfolders.cpp
+    src/API/getfolders.cpp \
+    src/Helpers/synchronizer.cpp
 
