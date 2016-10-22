@@ -398,17 +398,17 @@ void Component::setConfiguration(Configuration *nConfiguration)
 
 
 
-StorageHandler *Component::storageHandler() const { Q_D(const Component); return d->storageHandler; }
+AbstractStorage *Component::storage() const { Q_D(const Component); return d->storage; }
 
-void Component::setStorageHandler(StorageHandler *nStorageHandler)
+void Component::setStorage(AbstractStorage *nStorageHandler)
 {
     Q_D(Component);
-    if (nStorageHandler != d->storageHandler) {
-        d->storageHandler = nStorageHandler;
+    if (nStorageHandler != d->storage) {
+        d->storage = nStorageHandler;
 #ifdef QT_DEBUG
-        qDebug() << "Changed storageHandler to" << d->storageHandler;
+        qDebug() << "Changed storage to" << d->storage;
 #endif
-        Q_EMIT storageHandlerChanged(storageHandler());
+        Q_EMIT storageChanged(storage());
     }
 }
 

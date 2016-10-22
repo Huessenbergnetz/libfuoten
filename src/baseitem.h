@@ -32,7 +32,7 @@ namespace Fuoten {
 class Error;
 class Configuration;
 class BaseItemPrivate;
-class StorageHandler;
+class AbstractStorage;
 
 /*!
  * \brief Abstract base class for FolderItem, FeedItem and NewsItem.
@@ -86,16 +86,16 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
      */
     Q_PROPERTY(Fuoten::Configuration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
     /*!
-     * \brief Pointer to a StorageHandler object.
+     * \brief Pointer to a AbstractStorage object.
      *
-     * This will be used to set the Component::storageHandler property if you perform an API action directly from the item class.
+     * This will be used to set the Component::storage property if you perform an API action directly from the item class.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>StorageHandler*</TD><TD>storageHandler() const</TD></TR><TR><TD>void</TD><TD>setStorageHandler(StorageHandler *nStorageHandler)</TD></TR></TABLE>
+     * <TABLE><TR><TD>AbstractStorage*</TD><TD>storage() const</TD></TR><TR><TD>void</TD><TD>setStorage(AbstractStorage *nStorageHandler)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>storageHandlerChanged(StorageHandler *storageHandler)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>storageChanged(AbstractStorage *storage)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Fuoten::StorageHandler *storageHandler READ storageHandler WRITE setStorageHandler NOTIFY storageHandlerChanged)
+    Q_PROPERTY(Fuoten::AbstractStorage *storage READ storage WRITE setStorage NOTIFY storageChanged)
 public:
     /*!
      * \brief Constructs a new BaseItem object.
@@ -111,7 +111,7 @@ public:
     quint64 id() const;
     Error *error() const;
     Configuration *configuration() const;
-    StorageHandler *storageHandler() const;
+    AbstractStorage *storage() const;
 
     /*!
      * \brief Sets the database ID of the item/feed/folder.
@@ -121,7 +121,7 @@ public:
     void setId(quint64 nId);
 
     void setConfiguration(Configuration *nConfiguration);
-    void setStorageHandler(StorageHandler *nStorageHandler);
+    void setStorage(AbstractStorage *nStorageHandler);
 
     /*!
      * \brief Loads the data from a JSON document into the item/feed/folder.
@@ -141,7 +141,7 @@ Q_SIGNALS:
     void idChanged(quint64 id);
     void errorChanged(Error *error);
     void configurationChanged(Configuration *configuration);
-    void storageHandlerChanged(StorageHandler *storageHandler);
+    void storageChanged(AbstractStorage *storage);
 
 protected:
     const QScopedPointer<BaseItemPrivate> d_ptr;

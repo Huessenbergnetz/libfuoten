@@ -31,7 +31,7 @@ namespace Fuoten {
  *
  * \headerfile "" <Fuoten/Fuoten>
  */
-class FUOTENSHARED_EXPORT Fuoten {
+class FUOTENSHARED_EXPORT FuotenEnums {
     Q_GADGET
 public:
 
@@ -68,14 +68,14 @@ public:
 #endif
 
 private:
-    Fuoten();
-    ~Fuoten();
+    FuotenEnums();
+    ~FuotenEnums();
 };
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Fuoten::Fuoten::Type)
-Q_DECLARE_METATYPE(Fuoten::Fuoten::SortingRole)
+Q_DECLARE_METATYPE(Fuoten::FuotenEnums::Type)
+Q_DECLARE_METATYPE(Fuoten::FuotenEnums::SortingRole)
 #endif
 
 #endif // FUOTEN

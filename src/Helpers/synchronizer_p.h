@@ -23,7 +23,7 @@
 
 #include "synchronizer.h"
 #include "configuration.h"
-#include "storagehandler.h"
+#include "../Storage/abstractstorage.h"
 #include "../API/getfolders.h"
 #include "../error.h"
 
@@ -37,7 +37,7 @@ public:
         q_ptr(parent),
         error(nullptr),
         configuration(nullptr),
-        storageHandler(nullptr),
+        storage(nullptr),
         inOperation(false),
         getFolders(nullptr)
     {}
@@ -52,7 +52,7 @@ public:
     Synchronizer * const q_ptr;
     Error *error;
     Configuration *configuration;
-    StorageHandler *storageHandler;
+    AbstractStorage *storage;
     bool inOperation;
 
     GetFolders *getFolders;

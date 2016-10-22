@@ -18,12 +18,29 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "storagehandler.h"
+#ifndef ABSTRACTSTORAGE_P_H
+#define ABSTRACTSTORAGE_P_H
 
-using namespace Fuoten;
+#include "abstractstorage.h"
+#include "../error.h"
 
-StorageHandler::StorageHandler(QObject *parent) : QObject(parent)
+namespace Fuoten {
+
+
+class AbstractStoragePrivate
 {
+public:
+    AbstractStoragePrivate() :
+        ready(false),
+        error(nullptr)
+    {}
+
+    virtual ~AbstractStoragePrivate() {}
+
+    bool ready;
+    Error *error;
+};
 
 }
 
+#endif // ABSTRACTSTORAGE_P_H

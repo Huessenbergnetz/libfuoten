@@ -50,11 +50,12 @@ HEADERS += \
     src/baseitem_p.h \
     src/folder.h \
     src/folder_p.h \
-    src/Helpers/storagehandler.h \
+    src/Storage/abstractstorage.h \
     src/API/getfolders.h \
     src/API/getfolders_p.h \
     src/Helpers/synchronizer.h \
-    src/Helpers/synchronizer_p.h
+    src/Helpers/synchronizer_p.h \
+    src/Storage/abstractstorage_p.h
 
 SOURCES += \
     src/error.cpp \
@@ -67,7 +68,6 @@ SOURCES += \
     src/Helpers/versionnumber.cpp \
     src/baseitem.cpp \
     src/folder.cpp \
-    src/Helpers/storagehandler.cpp \
+    src/Storage/abstractstorage.cpp \
     src/API/getfolders.cpp \
     src/Helpers/synchronizer.cpp
-

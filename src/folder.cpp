@@ -55,7 +55,7 @@ Folder::Folder(quint64 id, const QString &name, uint feedCount, uint unreadCount
 }
 
 
-Folder::Folder(Fuoten::FolderPrivate &dd, QObject *parent) :
+Folder::Folder(FolderPrivate &dd, QObject *parent) :
     BaseItem(dd, parent)
 {
 

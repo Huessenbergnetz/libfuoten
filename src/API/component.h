@@ -35,7 +35,7 @@ namespace Fuoten {
 class ComponentPrivate;
 class Error;
 class Configuration;
-class StorageHandler;
+class AbstractStorage;
 
 /*!
  * \brief Base class for all API requests.
@@ -104,7 +104,7 @@ class StorageHandler;
  *     const QJsonDocument r = jsonResult();
  *
  *     // operate on the result
- *     // or use a reimplementation of StorageHandler
+ *     // or use a reimplementation of AbstractStorage
  *
  *     setInOperation(false);
  *
@@ -206,17 +206,17 @@ class FUOTENSHARED_EXPORT Component : public QObject
      */
     Q_PROPERTY(Fuoten::Configuration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
     /*!
-     * \brief Pointer to a StorageHandler object.
+     * \brief Pointer to an AbstractStorage subclass.
      *
-     * Set a storage handler to store the results of API requests. You have to derive your own StorageHandler class from
+     * Set a storage handler to store the results of API requests. You have to derive your own AbstractStorage class from
      * the abstract base class.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>StorageHandler*</TD><TD>storageHandler() const</TD></TR><TR><TD>void</TD><TD>setStorageHandler(StorageHandler *nStorageHandler)</TD></TR></TABLE>
+     * <TABLE><TR><TD>AbstractStorage*</TD><TD>storage() const</TD></TR><TR><TD>void</TD><TD>setStorage(AbstractStorage *nStorageHandler)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>storageHandlerChanged(StorageHandler *storageHandler)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>storageChanged(AbstractStorage *storage)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Fuoten::StorageHandler *storageHandler READ storageHandler WRITE setStorageHandler NOTIFY storageHandlerChanged)
+    Q_PROPERTY(Fuoten::AbstractStorage *storage READ storage WRITE setStorage NOTIFY storageChanged)
 public:
     /*!
      * \brief Constructs a new Component object.
@@ -273,12 +273,12 @@ public:
     quint8 requestTimeout() const;
     Error *error() const;
     Configuration *configuration() const;
-    StorageHandler *storageHandler() const;
+    AbstractStorage *storage() const;
 
     void setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessManager);
     void setRequestTimeout(quint8 nRequestTimeout);
     void setConfiguration(Configuration *nConfiguration);
-    void setStorageHandler(StorageHandler *nStorageHandler);
+    void setStorage(AbstractStorage *nStorageHandler);
 
 Q_SIGNALS:
     void networkAccessManagerChanged(QNetworkAccessManager *networkAccessManager);
@@ -286,7 +286,7 @@ Q_SIGNALS:
     void requestTimeoutChanged(quint8 requestTimeout);
     void errorChanged(Error *error);
     void configurationChanged(Configuration *configuration);
-    void storageHandlerChanged(StorageHandler *storageHandler);
+    void storageChanged(AbstractStorage *storage);
 
     /*!
      * \brief This signal is emitted if the SSL/TLS session encountered errors during the set up.

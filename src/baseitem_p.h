@@ -24,7 +24,7 @@
 #include "baseitem.h"
 #include "API/component.h"
 #include "Helpers/configuration.h"
-#include "Helpers/storagehandler.h"
+#include "Storage/abstractstorage.h"
 
 namespace Fuoten {
 
@@ -35,7 +35,7 @@ public:
         id(0),
         error(nullptr),
         configuration(nullptr),
-        storageHandler(nullptr),
+        storage(nullptr),
         comp(nullptr)
     {}
 
@@ -43,7 +43,7 @@ public:
         id(_id),
         error(nullptr),
         configuration(nullptr),
-        storageHandler(nullptr),
+        storage(nullptr),
         comp(nullptr)
     {}
 
@@ -52,7 +52,7 @@ public:
     quint64 id;
     Error *error;
     Configuration *configuration;
-    StorageHandler *storageHandler;
+    AbstractStorage *storage;
 
     Component *comp;
 };

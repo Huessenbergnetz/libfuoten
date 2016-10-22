@@ -62,8 +62,8 @@ void GetFolders::execute()
 
 void GetFolders::successCallback()
 {
-    if (storageHandler()) {
-        storageHandler()->foldersRequested(jsonResult());
+    if (storage()) {
+        storage()->foldersRequested(jsonResult());
     }
 
     setInOperation(false);

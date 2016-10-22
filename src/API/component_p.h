@@ -23,7 +23,7 @@
 
 #include "component.h"
 #include "../Helpers/configuration.h"
-#include "../Helpers/storagehandler.h"
+#include "../Storage/abstractstorage.h"
 #include <QTimer>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -39,7 +39,7 @@ public:
         requestTimeout(120),
         error(nullptr),
         configuration(nullptr),
-        storageHandler(nullptr),
+        storage(nullptr),
         timeoutTimer(nullptr),
         reply(nullptr),
         namOperation(QNetworkAccessManager::GetOperation),
@@ -75,7 +75,7 @@ public:
     quint8 requestTimeout;
     Error *error;
     Configuration *configuration;
-    StorageHandler *storageHandler;
+    AbstractStorage *storage;
 
     quint8 retryCount;
     QHash<QByteArray, QByteArray> requestHeaders;

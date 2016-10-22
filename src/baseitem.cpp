@@ -134,16 +134,16 @@ void BaseItem::setConfiguration(Configuration *nConfiguration)
 
 
 
-StorageHandler *BaseItem::storageHandler() const { Q_D(const BaseItem); return d->storageHandler; }
+AbstractStorage *BaseItem::storage() const { Q_D(const BaseItem); return d->storage; }
 
-void BaseItem::setStorageHandler(StorageHandler *nStorageHandler)
+void BaseItem::setStorage(AbstractStorage *nStorageHandler)
 {
     Q_D(BaseItem);
-    if (nStorageHandler != d->storageHandler) {
-        d->storageHandler = nStorageHandler;
+    if (nStorageHandler != d->storage) {
+        d->storage = nStorageHandler;
 #ifdef QT_DEBUG
-        qDebug() << "Changed storageHandler to" << d->storageHandler;
+        qDebug() << "Changed storage to" << d->storage;
 #endif
-        Q_EMIT storageHandlerChanged(storageHandler());
+        Q_EMIT storageChanged(storage());
     }
 }

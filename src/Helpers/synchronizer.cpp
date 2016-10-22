@@ -69,10 +69,10 @@ void SynchronizerPrivate::start()
 {
     getFolders = new GetFolders(q_ptr);
     getFolders->setConfiguration(configuration);
-    getFolders->setStorageHandler(storageHandler);
+    getFolders->setStorage(storage);
     QObject::connect(getFolders, &Component::failed, [=] (Error *e) {setError(e);});
-    if (storageHandler) {
-        QObject::connect(storageHandler, &StorageHandler::requestedFolders, [=] () {finished();});
+    if (storage) {
+        QObject::connect(storage, &AbstractStorage::requestedFolders, [=] () {finished();});
     } else {
         QObject::connect(getFolders, &Component::succeeded, [=] () {finished();});
     }
@@ -149,17 +149,17 @@ void Synchronizer::setConfiguration(Configuration *nConfiguration)
 
 
 
-StorageHandler *Synchronizer::storageHandler() const { Q_D(const Synchronizer); return d->storageHandler; }
+AbstractStorage *Synchronizer::storage() const { Q_D(const Synchronizer); return d->storage; }
 
-void Synchronizer::setStorageHandler(StorageHandler *nStorageHandler)
+void Synchronizer::setStorage(AbstractStorage *nStorageHandler)
 {
     Q_D(Synchronizer);
-    if (nStorageHandler != d->storageHandler) {
-        d->storageHandler = nStorageHandler;
+    if (nStorageHandler != d->storage) {
+        d->storage = nStorageHandler;
 #ifdef QT_DEBUG
-        qDebug() << "Changed storageHandler to" << d->storageHandler;
+        qDebug() << "Changed storage to" << d->storage;
 #endif
-        Q_EMIT storageHandlerChanged(storageHandler());
+        Q_EMIT storageChanged(storage());
     }
 }
 
