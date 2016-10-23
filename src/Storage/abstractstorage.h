@@ -134,8 +134,11 @@ public Q_SLOTS:
 
     /*!
      * \brief Returns a list of Folder objects from the local storage.
+     *
+     * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
+     * only folders with IDs from the list will be returned.
      */
-    virtual QList<Folder*> getFolders(const QList<quint64> &ids = QList<quint64>(), FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder) = 0;
+    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<quint64> &ids = QList<quint64>()) = 0;
 
 protected:
     /*!
