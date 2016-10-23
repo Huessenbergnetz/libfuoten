@@ -5,7 +5,7 @@ VER_MAJ = 0
 VER_MIN = 0
 VER_PAT = 1
 
-QT += network
+QT += network sql
 QT -= GUI
 
 CONFIG -= console
@@ -55,7 +55,9 @@ HEADERS += \
     src/API/getfolders_p.h \
     src/Helpers/synchronizer.h \
     src/Helpers/synchronizer_p.h \
-    src/Storage/abstractstorage_p.h
+    src/Storage/abstractstorage_p.h \
+    src/Storage/sqlitestorage.h \
+    src/Storage/sqlitestorage_p.h
 
 SOURCES += \
     src/error.cpp \
@@ -70,4 +72,5 @@ SOURCES += \
     src/folder.cpp \
     src/Storage/abstractstorage.cpp \
     src/API/getfolders.cpp \
-    src/Helpers/synchronizer.cpp
+    src/Helpers/synchronizer.cpp \
+    src/Storage/sqlitestorage.cpp
