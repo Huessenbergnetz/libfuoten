@@ -21,6 +21,7 @@
 #include "error_p.h"
 #include <QNetworkReply>
 #include <QJsonParseError>
+#include <QSqlError>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -221,12 +222,43 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
 Error::Error(QJsonParseError jsonError, QObject *parent) :
     QObject(parent), d_ptr(new ErrorPrivate)
 {
+    Q_D(Error);
+
     if (jsonError.error != QJsonParseError::NoError) {
-        Q_D(Error);
         d->type = OutputError;
         d->severity = Critical;
         d->text = jsonError.errorString();
     }
+
+#ifdef QT_DEBUG
+        d->printOut();
+#endif
+}
+
+
+
+
+
+Error::Error(const QSqlError &sqlError, const QString &errorText, QObject *parent) :
+    QObject(parent), d_ptr(new ErrorPrivate)
+{
+    Q_D(Error);
+
+    if (sqlError.type() != QSqlError::NoError) {
+        d->type = StorageError;
+        d->severity = Critical;
+        if (errorText.isEmpty()) {
+            //% "An error occured while performing a SQL operation."
+            d->text = qtTrId(("err-generic-sql"));
+        } else {
+            d->text = errorText;
+        }
+        d->data = sqlError.text();
+    }
+
+#ifdef QT_DEBUG
+        d->printOut();
+#endif
 }
 
 

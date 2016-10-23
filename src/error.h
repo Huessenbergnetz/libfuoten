@@ -26,6 +26,7 @@
 
 class QNetworkReply;
 struct QJsonParseError;
+class QSqlError;
 
 namespace Fuoten {
 
@@ -86,7 +87,8 @@ public:
         InputError          = 3,    /**< An error occured while providing data to the library methods. */
         OutputError         = 4,    /**< An error occured while processing the returned data from the API. */
         ServerError         = 5,    /**< An error occured on the server. */
-        ApplicationError    = 6     /**< An error occured in the local application. */
+        ApplicationError    = 6,    /**< An error occured in the local application. */
+        StorageError        = 7     /**< An error occured on the storage layer. */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Type)
@@ -131,6 +133,11 @@ public:
      * \brief Constructs a new Error object form a QJsonParseError.
      */
     Error(QJsonParseError jsonError, QObject *parent = nullptr);
+
+    /*!
+     * \brief Constructs a new Error object from a QSqlError.
+     */
+    Error(const QSqlError &sqlError, const QString &errorText = QString(), QObject *parent = nullptr);
 
 
     /*!

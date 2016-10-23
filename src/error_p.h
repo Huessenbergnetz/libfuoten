@@ -56,7 +56,6 @@ public:
 
         if (!data.isEmpty()) {
             qDebug() << data;
-            qDebug("%s", data.toUtf8().constData());
         }
     }
 #endif
