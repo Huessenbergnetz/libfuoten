@@ -61,10 +61,33 @@ void AbstractStorage::setError(Error *nError)
 {
     Q_D(AbstractStorage);
     if (nError != d->error) {
-        d->error = nError;
+        Error *old = d->error;
+
+        if (nError->parent() == this) {
+            d->error = nError;
+        } else if ((nError->parent() == nullptr) && (nError->thread() == this->thread())) {
+            d->error = nError;
+            d->error->setParent(this);
+        } else if ((nError->parent() == nullptr) && (nError->thread() != this->thread())) {
+            nError->moveToThread(this->thread());
+            if (nError->thread() == this->thread()) {
+                nError->setParent(this);
+                d->error = nError;
+            } else {
+                d->error = nullptr;
+                delete nError;
+                qWarning("Failed to move Error object to this thread.");
+            }
+        } else {
+            d->error = new Error(nError->type(), nError->severity(), nError->text(), nError->data(), this);
+        }
 #ifdef QT_DEBUG
         qDebug() << "Changed error to" << d->error;
 #endif
         Q_EMIT errorChanged(error());
+
+        if (old && old->parent() == this) {
+            delete old;
+        }
     }
 }
