@@ -36,8 +36,11 @@ class AbstractStoragePrivate;
  *
  * Reimplement this class to store the data requested from the News App API. You can set your
  * derived class to the Component::storage property, that all classes use that derive
- * from Component. Also BaseItem hast the BaseItem::storage property for derived class,
+ * from Component. Also BaseItem hast the BaseItem::storage property for derived classes,
  * that is used to set the storage handler to API classes that perfrom API actions.
+ *
+ * If you derive from AbstractStorage, initialize the storage in init() and set setReady() to true
+ * when your storage is ready to handle data.
  *
  * \headerfile "" <Fuoten/Storage/AbstractStorage>
  */
@@ -75,7 +78,14 @@ public:
      */
     ~AbstractStorage();
 
+    /*!
+     * \brief Returns true when the storage is ready to handle data, otherwise false.
+     */
     bool ready() const;
+
+    /*!
+     * \brief Retruns a pointer to an Error object, if any error occures, otherwise returns a nullptr.
+     */
     Error *error() const;
 
     /*!
@@ -174,7 +184,14 @@ Q_SIGNALS:
      */
     void createdFolder(quint64 id, const QString &name);
 
+    /*!
+     * \brief Emitted whenever the ready property changes.
+     */
     void readyChanged(bool ready);
+
+    /*!
+     * \brief Emitted whenever the error property changes.
+     */
     void errorChanged(Error *error);
 
 
