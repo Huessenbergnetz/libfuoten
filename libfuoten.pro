@@ -57,7 +57,13 @@ HEADERS += \
     src/Helpers/synchronizer_p.h \
     src/Storage/abstractstorage_p.h \
     src/Storage/sqlitestorage.h \
-    src/Storage/sqlitestorage_p.h
+    src/Storage/sqlitestorage_p.h \
+    src/Models/basemodel_p.h \
+    src/Models/basemodel.h \
+    src/Models/abstractfoldermodel.h \
+    src/Models/abstractfoldermodel_p.h \
+    src/Models/folderlistmodel.h \
+    src/Models/folderlistmodel_p.h
 
 SOURCES += \
     src/error.cpp \
@@ -73,4 +79,7 @@ SOURCES += \
     src/Storage/abstractstorage.cpp \
     src/API/getfolders.cpp \
     src/Helpers/synchronizer.cpp \
-    src/Storage/sqlitestorage.cpp
+    src/Storage/sqlitestorage.cpp \
+    src/Models/basemodel.cpp \
+    src/Models/abstractfoldermodel.cpp \
+    src/Models/folderlistmodel.cpp
