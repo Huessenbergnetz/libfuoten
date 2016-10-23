@@ -25,6 +25,7 @@
 #include <QJsonValue>
 #include <QHash>
 #include <QSqlQuery>
+#include "../folder.h"
 
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -367,7 +368,7 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
 {
     QList<Fuoten::Folder*> folders;
 
-    if (ready()) {
+    if (!ready()) {
         qWarning("SQLite database not ready. Can not query folders from database.");
         return folders;
     }
@@ -376,10 +377,10 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
 
     QSqlQuery q(d->db);
 
-    QString qs = QStringLiteral("SELECT id, name, unreadItems, totalItems, feedCount FROM folders ORDER BY ");
+    QString qs = QStringLiteral("SELECT id, name, feedCount, unreadItems, totalItems FROM folders ORDER BY ");
 
     if (!ids.isEmpty()) {
-        qs = QStringLiteral("SELECT id, name, unreadItems, totalItems, feedCount FROM folders WHERE id IN (%1) ORDER BY ").arg(d->intListToString(ids));
+        qs = QStringLiteral("SELECT id, name, feedCount, unreadItems, totalItems FROM folders WHERE id IN (%1) ORDER BY ").arg(d->intListToString(ids));
     }
 
     switch(sortingRole) {
@@ -412,6 +413,16 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
     if (!q.exec(qs)) {
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
         return folders;
+    }
+
+    while (q.next()) {
+        folders.append(new Folder(
+                           q.value(0).toULongLong(),
+                           q.value(1).toString(),
+                           q.value(2).toUInt(),
+                           q.value(3).toUInt(),
+                           q.value(4).toUInt()
+                           ));
     }
 
     return folders;
