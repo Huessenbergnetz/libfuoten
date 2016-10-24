@@ -360,6 +360,57 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
 void SQLiteStorage::folderCreated(const QJsonDocument &json)
 {
+    if (json.isEmpty() || json.isNull()) {
+        qWarning("Can not add folder to SQLite database. JSON data is not valid.");
+        return;
+    }
+
+    QJsonArray a = json.object().value(QStringLiteral("folders")).toArray();
+
+    if (a.isEmpty()) {
+        qWarning("Can not add folder to SQLite database. JSON array is empty.");
+        return;
+    }
+
+
+    QJsonObject o = a.first().toObject();
+
+    if (o.isEmpty()) {
+        qWarning("Can not add folder to SQLite databse. JSON object is empty.");
+        return;
+    }
+
+    const quint64 id = o.value(QStringLiteral("id")).toVariant().toULongLong();
+    if (id == 0) {
+        qWarning("Can not add folder to SQLite database. Invalid ID.");
+        return;
+    }
+
+    const QString name = o.value(QStringLiteral("name")).toString();
+    if (name.isEmpty()) {
+        qWarning("Can not add folder to SQLite database. Empty name.");
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("INSERT INTO folders (id, name) VALUES (?, ?)"))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    q.addBindValue(id);
+    q.addBindValue(name);
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    Q_EMIT createdFolder(id, name);
 
 }
 
@@ -374,13 +425,13 @@ void SQLiteStorage::folderRenamed(quint64 id, const QString &newName)
     }
 
     if (newName.isEmpty()) {
-        //% "Failed to rename the folder. The new folder name is empty."
+        //% "The folder name can not be empty."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
         return;
     }
 
     if (id == 0) {
-        //% "Failed to rename the folder. The folder ID is not valid."
+        //% "The folder ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
         return;
     }

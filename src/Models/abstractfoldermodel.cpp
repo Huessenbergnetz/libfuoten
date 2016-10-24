@@ -43,9 +43,10 @@ AbstractFolderModel::AbstractFolderModel(AbstractFolderModelPrivate &dd, QObject
 void AbstractFolderModel::handleStorageChanged()
 {
     AbstractStorage *s = storage();
-    connect(s, &AbstractStorage::requestedFolders, this, &AbstractFolderModel::foldersRequested);
     connect(s, &AbstractStorage::readyChanged, this, &AbstractFolderModel::load);
+    connect(s, &AbstractStorage::requestedFolders, this, &AbstractFolderModel::foldersRequested);
     connect(s, &AbstractStorage::renamedFolder, this, &AbstractFolderModel::folderRenamed);
+    connect(s, &AbstractStorage::createdFolder, this, &AbstractFolderModel::folderCreated);
 }
 
 
@@ -117,15 +118,10 @@ void AbstractFolderModel::folderRenamed(quint64 id, const QString &newName)
 {
     if (id == 0 || newName.isEmpty()) {
         qWarning("Can not rename folder. ID is invalid or the new name is empty.");
+        return;
     }
 
     Q_D(AbstractFolderModel);
-
-//    int idx = d->rowByID(id);
-
-//    if (idx > -1) {
-//        d->folders.at(idx)->setName(newName);
-//    }
 
     QModelIndex i = findByID(id);
 
@@ -134,6 +130,25 @@ void AbstractFolderModel::folderRenamed(quint64 id, const QString &newName)
     }
 
     Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
+}
+
+
+
+
+void AbstractFolderModel::folderCreated(quint64 id, const QString &name)
+{
+    if (id == 0 || name.isEmpty()) {
+        qWarning("Can not create folder. ID is invalid or the new name is empty.");
+        return;
+    }
+
+    Q_D(AbstractFolderModel);
+
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+
+    d->folders.append(new Folder(id, name, 0, 0, 0));
+
+    endInsertRows();
 }
 
 

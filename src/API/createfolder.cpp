@@ -18,8 +18,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "renamefolder_p.h"
+#include "createfolder_p.h"
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QJsonValue>
 #include "../error.h"
 #ifdef QT_DEBUG
@@ -29,25 +30,22 @@
 using namespace Fuoten;
 
 
-RenameFolder::RenameFolder(QObject *parent) :
-    Component(* new RenameFolderPrivate, parent)
+CreateFolder::CreateFolder(QObject *parent) :
+    Component(* new CreateFolderPrivate, parent)
 {
-//    setExpectedJSONType(Component::Empty);
-//    setNetworkOperation(QNetworkAccessManager::PutOperation);
 }
 
 
-
-RenameFolder::RenameFolder(RenameFolderPrivate &dd, QObject *parent) :
+CreateFolder::CreateFolder(CreateFolderPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
-//    setExpectedJSONType(Component::Empty);
-//    setNetworkOperation(QNetworkAccessManager::PutOperation);
+
 }
 
 
 
-void RenameFolder::execute()
+
+void CreateFolder::execute()
 {
     if (inOperation()) {
         qWarning("Still in operation. Returning.");
@@ -59,16 +57,11 @@ void RenameFolder::execute()
     setError(nullptr);
 
 #ifdef QT_DEBUG
-    qDebug() << "Start renaming a folder on the server.";
+    qDebug() << "Start creating a folder on the server.";
 #endif
 
-    QStringList rl(QStringLiteral("folders"));
-    rl.append(QString::number(folderId()));
-
-    setApiRoute(rl);
-
     QJsonObject plo; // payload object
-    plo.insert(QStringLiteral("name"), QJsonValue(newName()));
+    plo.insert(QStringLiteral("name"), QJsonValue(name()));
 
     setPayload(plo);
 
@@ -76,19 +69,12 @@ void RenameFolder::execute()
 }
 
 
-bool RenameFolder::checkInput()
+
+bool CreateFolder::checkInput()
 {
     if (Component::checkInput()) {
 
-        if (folderId() == 0) {
-            //% "The folder ID is not valid."
-            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-            setInOperation(false);
-            Q_EMIT failed(error());
-            return false;
-        }
-
-        if (newName().isEmpty()) {
+        if (name().isEmpty()) {
             //% "The folder name can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
             setInOperation(false);
@@ -106,26 +92,29 @@ bool RenameFolder::checkInput()
 
 
 
-void RenameFolder::successCallback()
+bool CreateFolder::checkOutput()
 {
-    if (storage()) {
-        storage()->folderRenamed(folderId(), newName());
+    if (Component::checkOutput()) {
+
+        if (jsonResult().object().value(QStringLiteral("folders")).toArray().isEmpty()) {
+            //% "The data the server replied does not contain a \"folders\" array."
+            setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-folders-array-in-reply"), QString(), this));
+            setInOperation(false);
+            Q_EMIT failed(error());
+            return false;
+        }
+
+
+    } else {
+        setInOperation(false);
+        return false;
     }
 
-    setInOperation(false);
-
-#ifdef QT_DEBUG
-    qDebug() << "Successfully renamed the folder on the server.";
-#endif
-
-    Q_EMIT succeeded(folderId(), newName());
+    return true;
 }
 
 
-
-
-
-void RenameFolder::extractError(QNetworkReply *reply)
+void CreateFolder::extractError(QNetworkReply *reply)
 {
     int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
@@ -133,10 +122,6 @@ void RenameFolder::extractError(QNetworkReply *reply)
     case 409:
         //% "The folder name does already exist on the server."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-name-exists"), QString(), this));
-        break;
-    case 404:
-        //% "The folder was not found on the server."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-not-exists"), QString(), this));
         break;
     case 422:
         //% "The folder name is invalid (for instance empty)."
@@ -151,34 +136,35 @@ void RenameFolder::extractError(QNetworkReply *reply)
 }
 
 
-quint64 RenameFolder::folderId() const { Q_D(const RenameFolder); return d->folderId; }
 
-void RenameFolder::setFolderId(quint64 nFolderId)
+void CreateFolder::successCallback()
 {
-    Q_D(RenameFolder); 
-    if (nFolderId != d->folderId) {
-        d->folderId = nFolderId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
-#endif
-        Q_EMIT folderIdChanged(folderId());
+    if (storage()) {
+        storage()->folderCreated(jsonResult());
     }
+
+    setInOperation(false);
+
+#ifdef QT_DEBUG
+    qDebug() << "Successfully created the foler on the server.";
+#endif
+
+    Q_EMIT succeeded(jsonResult());
 }
 
 
 
+QString CreateFolder::name() const { Q_D(const CreateFolder); return d->name; }
 
-QString RenameFolder::newName() const { Q_D(const RenameFolder); return d->newName; }
-
-void RenameFolder::setNewName(const QString &nNewName)
+void CreateFolder::setName(const QString &nName)
 {
-    Q_D(RenameFolder);
-    if (nNewName.simplified() != d->newName) {
-        d->newName = nNewName.simplified();
+    Q_D(CreateFolder); 
+    if (nName.simplified() != d->name) {
+        d->name = nName.simplified();
 #ifdef QT_DEBUG
-        qDebug() << "Changed newName to" << d->newName;
+        qDebug() << "Changed name to" << d->name;
 #endif
-        Q_EMIT newNameChanged(newName());
+        Q_EMIT nameChanged(name());
     }
 }
 

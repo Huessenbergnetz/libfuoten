@@ -110,8 +110,8 @@ protected:
     /*!
      * \brief Finishes the renaming if it was successful.
      *
-     * Will store the data in the AbstractStorage, set to Component::storage, if any, will set Component::inOperation to false
-     * and emits the succeeded() signal.
+     * If Component::storage points to a valid object, it will use AbstractStorage::folderRenamed() to store the renamed folder. Afterwards
+     * it will set Component::inOperation to false and will emit the RenameFolder::succeeded() signal.
      */
     void successCallback() override;
 
@@ -124,7 +124,7 @@ protected:
     /*!
      * \brief Checks for valid folderId and newName properties.
      *
-     * Will at first perform the checks from Component::checkInput and will than check if RenameFolder::folderId is greater than zero
+     * Will at first perform the checks from Component::checkInput() and will than check if RenameFolder::folderId is greater than zero
      * and RenameFolder::newName is not empty.
      */
     bool checkInput() override;
