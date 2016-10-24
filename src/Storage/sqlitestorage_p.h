@@ -61,10 +61,10 @@ public:
     SQLiteStoragePrivate(const QString &_dbpath) : AbstractStoragePrivate()
     {
         if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
-            db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QLatin1String("fuotendb"));
+            db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
             db.setDatabaseName(_dbpath);
         } else {
-            db = QSqlDatabase::database(QLatin1String("fuotendb"));
+            db = QSqlDatabase::database(QStringLiteral("fuotendb"));
         }
     }
 

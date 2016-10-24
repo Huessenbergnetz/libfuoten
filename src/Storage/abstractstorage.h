@@ -204,7 +204,7 @@ Q_SIGNALS:
      * contain a list of databaes IDs and names of new folders, and \c deletedFolders should contain a list of database IDs
      * of deleted folders.
      */
-    void requestedFolders(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> deletedFolders);
+    void requestedFolders(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> &deletedFolders);
 
     /*!
      * \brief Emit this after a new folder has been created.

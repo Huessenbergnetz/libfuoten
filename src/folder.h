@@ -78,7 +78,7 @@ class FUOTENSHARED_EXPORT Folder : public BaseItem
      * \par Access functions:
      * <TABLE><TR><TD>uint</TD><TD>itemCount() const</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>itemCountChanged(const uint &itemCount)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>itemCountChanged(uint itemCount)</TD></TR></TABLE>
      *
      * \sa setItemCount()
      */
@@ -135,7 +135,7 @@ public:
      *
      * \sa itemCount
      */
-    void setItemCount(const uint &nItemCount);
+    void setItemCount(uint nItemCount);
 
     Q_INVOKABLE void rename(const QString &nName);
 
@@ -148,7 +148,7 @@ Q_SIGNALS:
     void nameChanged(const QString &name);
     void feedCountChanged(uint feedCount);
     void unreadCountChanged(uint unreadCount);
-    void itemCountChanged(const uint &itemCount);
+    void itemCountChanged(uint itemCount);
 
 protected:
     Folder(FolderPrivate &dd, QObject *parent = nullptr);

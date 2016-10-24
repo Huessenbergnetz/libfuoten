@@ -39,10 +39,10 @@ SQLiteStorageManager::SQLiteStorageManager(const QString &dbpath, QObject *paren
     QThread(parent), m_currentDbVersion(0)
 {
     if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
-        m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QLatin1String("fuotendb"));
+        m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
         m_db.setDatabaseName(dbpath);
     } else {
-        m_db = QSqlDatabase::database(QLatin1String("fuotendb"));
+        m_db = QSqlDatabase::database(QStringLiteral("fuotendb"));
     }
 }
 

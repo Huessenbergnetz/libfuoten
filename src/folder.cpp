@@ -115,7 +115,7 @@ void Folder::setUnreadCount(uint nUnreadCount)
 
 uint Folder::itemCount() const { Q_D(const Folder); return d->itemCount; }
 
-void Folder::setItemCount(const uint &nItemCount)
+void Folder::setItemCount(uint nItemCount)
 {
     Q_D(Folder);
     if (nItemCount != d->itemCount) {

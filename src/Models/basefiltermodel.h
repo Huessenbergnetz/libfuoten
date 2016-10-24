@@ -79,9 +79,9 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
      * \brief Defines the sort order.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>Qt::SortOrder</TD><TD>sortOrder() const</TD></TR><TR><TD>void</TD><TD>setSortOrder(const Qt::SortOrder &nSortOrder)</TD></TR></TABLE>
+     * <TABLE><TR><TD>Qt::SortOrder</TD><TD>sortOrder() const</TD></TR><TR><TD>void</TD><TD>setSortOrder(Qt::SortOrder nSortOrder)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>sortOrderChanged(const Qt::SortOrder &sortOrder)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>sortOrderChanged(Qt::SortOrder sortOrder)</TD></TR></TABLE>
      */
     Q_PROPERTY(Qt::SortOrder sortOrder READ sortOrder WRITE setSortOrder NOTIFY sortOrderChanged)
     /*!
@@ -132,7 +132,7 @@ public:
     virtual void setStorage(AbstractStorage *nStorage) = 0;
     virtual void setParentId(quint64 nParentId) = 0;
     void setSortingRole(FuotenEnums::SortingRole nSortingRole);
-    void setSortOrder(const Qt::SortOrder &nSortOrder);
+    void setSortOrder(Qt::SortOrder nSortOrder);
     void setSearch(const QString &nSearch);
     void setHideRead(bool nHideRead);
 
@@ -143,7 +143,7 @@ Q_SIGNALS:
     void storageChanged(AbstractStorage *storage);
     void parentIdChanged(quint64 parentId);
     void sortingRoleChanged(FuotenEnums::SortingRole sortingRole);
-    void sortOrderChanged(const Qt::SortOrder &sortOrder);
+    void sortOrderChanged(Qt::SortOrder sortOrder);
     void searchChanged(const QString &search);
     void hideReadChanged(bool hideRead);
 

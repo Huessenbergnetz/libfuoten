@@ -66,7 +66,7 @@ void BaseFilterModel::setSortingRole(FuotenEnums::SortingRole nSortingRole)
 
 Qt::SortOrder BaseFilterModel::sortOrder() const { Q_D(const BaseFilterModel); return d->sortOrder; }
 
-void BaseFilterModel::setSortOrder(const Qt::SortOrder &nSortOrder)
+void BaseFilterModel::setSortOrder(Qt::SortOrder nSortOrder)
 {
     Q_D(BaseFilterModel); 
     if (nSortOrder != d->sortOrder) {

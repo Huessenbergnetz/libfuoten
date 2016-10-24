@@ -138,7 +138,7 @@ void AbstractFolderModel::folderRenamed(quint64 id, const QString &newName)
 
 
 
-void AbstractFolderModel::foldersRequested(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> deletedFolders)
+void AbstractFolderModel::foldersRequested(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> &deletedFolders)
 {
     if (!storage()) {
         return;
@@ -160,6 +160,7 @@ void AbstractFolderModel::foldersRequested(const QList<QPair<quint64, QString> >
 
     if (!newFolders.isEmpty()) {
         QList<quint64> nf;
+        nf.reserve(newFolders.size());
         for (const QPair<quint64, QString> &p : newFolders) {
             nf.append(p.first);
         }

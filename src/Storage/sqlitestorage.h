@@ -43,6 +43,7 @@ class Folder;
  */
 class FUOTENSHARED_EXPORT SQLiteStorage final : public AbstractStorage
 {
+    Q_OBJECT
 public:
     /*!
      * \brief Constructs a new SQLiteStorage object using \a dbpath.

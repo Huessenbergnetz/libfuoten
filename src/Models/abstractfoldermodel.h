@@ -62,7 +62,7 @@ protected Q_SLOTS:
      *
      * handleStorageChanged() will connect AbstractStorage::requestedFolders() signal to this slot.
      */
-    void foldersRequested(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> deletedFolders);
+    void foldersRequested(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> &deletedFolders);
 
     /*!
      * \brief Taks and processes data after a folder has been renamed.
