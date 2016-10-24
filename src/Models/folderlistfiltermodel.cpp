@@ -123,13 +123,10 @@ bool FolderListFilterModel::lessThan(const QModelIndex &left, const QModelIndex 
 
 bool FolderListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-
-    return search().isEmpty() ? true : sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>()->name().contains(search(), Qt::CaseInsensitive);
-
     if (search().isEmpty() && !hideRead()) {
         return true;
     } else if (search().isEmpty() && hideRead()) {
-        return sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>()->unreadCount() > 0;
+        return (sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>()->unreadCount() > 0);
     } else if (!search().isEmpty() && !hideRead()) {
         return sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>()->name().contains(search(), Qt::CaseInsensitive);
     } else {

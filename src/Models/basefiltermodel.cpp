@@ -110,5 +110,6 @@ void BaseFilterModel::setHideRead(bool nHideRead)
         qDebug() << "Changed hideRead to" << d->hideRead;
 #endif
         Q_EMIT hideReadChanged(hideRead());
+        invalidateFilter();
     }
 }
