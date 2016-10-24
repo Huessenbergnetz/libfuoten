@@ -91,3 +91,41 @@ void AbstractStorage::setError(Error *nError)
         }
     }
 }
+
+
+
+quint16 AbstractStorage::totalUnread() const { Q_D(const AbstractStorage); return d->totalUnread; }
+
+void AbstractStorage::setTotalUnread(quint16 nTotalUnread)
+{
+    Q_D(AbstractStorage);
+    if (nTotalUnread != d->totalUnread) {
+        d->totalUnread = nTotalUnread;
+#ifdef QT_DEBUG
+        qDebug() << "Changed totalUnread to" << d->totalUnread;
+#endif
+        Q_EMIT totalUnreadChanged(totalUnread());
+    }
+}
+
+
+
+
+quint16 AbstractStorage::starred() const { Q_D(const AbstractStorage); return d->starred; }
+
+void AbstractStorage::setStarred(quint16 nStarred)
+{
+    Q_D(AbstractStorage);
+    if (nStarred != d->starred) {
+        d->starred = nStarred;
+#ifdef QT_DEBUG
+        qDebug() << "Changed starred to" << d->starred;
+#endif
+        Q_EMIT starredChanged(starred());
+    }
+}
+
+
+
+
+

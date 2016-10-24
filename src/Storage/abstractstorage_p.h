@@ -32,13 +32,17 @@ class AbstractStoragePrivate
 public:
     AbstractStoragePrivate() :
         ready(false),
-        error(nullptr)
+        error(nullptr),
+        totalUnread(0),
+        starred(0)
     {}
 
     virtual ~AbstractStoragePrivate() {}
 
     bool ready;
     Error *error;
+    quint16 totalUnread;
+    quint16 starred;
 };
 
 }

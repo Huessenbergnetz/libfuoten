@@ -65,6 +65,24 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      * <TABLE><TR><TD>void</TD><TD>errorChanged(Error *error)</TD></TR></TABLE>
      */
     Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
+    /*!
+     * \brief Total amount of unread items in the storage.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>quint16</TD><TD>totalUnread() const</TD></TR><TR><TD>void</TD><TD>setTotalUnread(quint16 nTotalUnread)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>totalUnreadChanged(quint16 totalUnread)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(quint16 totalUnread READ totalUnread WRITE setTotalUnread NOTIFY totalUnreadChanged)
+    /*!
+     * \brief Amount of starred items.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>quint16</TD><TD>starred() const</TD></TR><TR><TD>void</TD><TD>setStarred(quint16 nStarred)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>starredChanged(quint16 starred)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(quint16 starred READ starred WRITE setStarred NOTIFY starredChanged)
 public:
     /*!
      * \brief Constructs a new AbstractStorage object.
@@ -94,6 +112,12 @@ public:
      * For example, create your database layout. When finished set setReady() to \a true.
      */
     virtual void init() = 0;
+
+    virtual quint16 totalUnread() const;
+    virtual quint16 starred() const;
+
+    virtual void setTotalUnread(quint16 nTotalUnread);
+    virtual void setStarred(quint16 nStarred);
 
 public Q_SLOTS:
     /*!
@@ -194,6 +218,9 @@ Q_SIGNALS:
      * \brief Emitted whenever the error property changes.
      */
     void errorChanged(Error *error);
+
+    void totalUnreadChanged(quint16 totalUnread);
+    void starredChanged(quint16 starred);
 
 
 private:
