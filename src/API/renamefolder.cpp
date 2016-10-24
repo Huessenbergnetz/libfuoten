@@ -123,10 +123,6 @@ void RenameFolder::successCallback()
 
 
 
-//bool RenameFolder::checkOutput()
-//{
-//    return Component::checkOutput();
-//}
 
 
 void RenameFolder::extractError(QNetworkReply *reply)
@@ -139,11 +135,11 @@ void RenameFolder::extractError(QNetworkReply *reply)
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-name-exists"), QString(), this));
         break;
     case 404:
-        //% "Failed to rename the folder. The folder to rename was not found on the server.
+        //% "Failed to rename the folder. The folder to rename was not found on the server."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-not-exists"), QString(), this));
         break;
     case 422:
-        //% "Failed to rename the folder. The new folder name is invalid (for instance empty).
+        //% "Failed to rename the folder. The new folder name is invalid (for instance empty)."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-invalid-name"), QString(), this));
         break;
     default:

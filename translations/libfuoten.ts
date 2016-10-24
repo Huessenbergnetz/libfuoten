@@ -250,7 +250,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="libfuoten-err-failed-open-db">
-        <location filename="../src/Storage/sqlitestorage.cpp" line="+63"/>
+        <location filename="../src/Storage/sqlitestorage.cpp" line="+64"/>
         <location line="+95"/>
         <source>Failed to open the SQLite database.</source>
         <translation type="unfinished"></translation>
@@ -264,12 +264,13 @@
         <location line="+162"/>
         <location line="+24"/>
         <location line="+26"/>
-        <location line="+74"/>
+        <location line="+63"/>
+        <location line="+56"/>
         <source>Failed to execute database query.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-332"/>
+        <location line="-377"/>
         <location line="+196"/>
         <source>Failed to begin a database transaction.</source>
         <translation type="unfinished"></translation>
@@ -282,18 +283,51 @@
     </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
         <location line="-176"/>
+        <location line="+198"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="fuoten-failed-query-folders">
-        <location line="+30"/>
+        <location line="-168"/>
         <source>Failed to query the folders from the local database.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="fuoten-error-failed-prepare-query">
         <location line="+101"/>
         <location line="+26"/>
+        <location line="+63"/>
         <source>Failed to prepare database query.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="libfuoten-err-invalid-folder-id">
+        <location filename="../src/API/renamefolder.cpp" line="+85"/>
+        <location filename="../src/Storage/sqlitestorage.cpp" line="-10"/>
+        <source>Failed to rename the folder. The folder ID is not valid.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="libfuoten-err-empty-folder-name">
+        <location line="+8"/>
+        <location filename="../src/Storage/sqlitestorage.cpp" line="-6"/>
+        <source>Failed to rename the folder. The new folder name is empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="libfuoten-err-folder-name-exists">
+        <location line="+42"/>
+        <source>Failed to rename the folder. The new folder name does already exist on the server.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="libfuoten-err-folder-not-exists">
+        <location line="+4"/>
+        <source>Failed to rename the folder. The folder to rename was not found on the server.</source>
+        <oldsource>Failed to rename the folder. The folder to rename was not found on the server.
+</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="libfuoten-err-folder-invalid-name">
+        <location line="+4"/>
+        <source>Failed to rename the folder. The new folder name is invalid (for instance empty).</source>
+        <oldsource>Failed to rename the folder. The new folder name is invalid (for instance empty).
+</oldsource>
         <translation type="unfinished"></translation>
     </message>
 </context>

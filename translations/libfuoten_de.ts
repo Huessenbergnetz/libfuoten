@@ -245,7 +245,7 @@
         <translation>Die Server-Antwort enthält keinen Anzeigenamen des Benutzers.</translation>
     </message>
     <message id="libfuoten-err-failed-open-db">
-        <location filename="../src/Storage/sqlitestorage.cpp" line="+63"/>
+        <location filename="../src/Storage/sqlitestorage.cpp" line="+64"/>
         <location line="+95"/>
         <source>Failed to open the SQLite database.</source>
         <translation>Die SQLite-Datenbank konnte nicht geöffnet werden.</translation>
@@ -259,12 +259,13 @@
         <location line="+162"/>
         <location line="+24"/>
         <location line="+26"/>
-        <location line="+74"/>
+        <location line="+63"/>
+        <location line="+56"/>
         <source>Failed to execute database query.</source>
         <translation>Datenbankabfrage konnte nicht durchgeführt werden.</translation>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-332"/>
+        <location line="-377"/>
         <location line="+196"/>
         <source>Failed to begin a database transaction.</source>
         <translation>Datenbanktransaktion konnte nicht begonnen werden.</translation>
@@ -277,19 +278,50 @@
     </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
         <location line="-176"/>
+        <location line="+198"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation>SQLite-Datenbank nicht verfügbar. Daten können nicht verarbeitet werden.</translation>
     </message>
     <message id="fuoten-failed-query-folders">
-        <location line="+30"/>
+        <location line="-168"/>
         <source>Failed to query the folders from the local database.</source>
         <translation>Ordner konnten nicht aus der lokalen Datenbank abgefragt werden.</translation>
     </message>
     <message id="fuoten-error-failed-prepare-query">
         <location line="+101"/>
         <location line="+26"/>
+        <location line="+63"/>
         <source>Failed to prepare database query.</source>
         <translation>Datenbankabfrage konnte nicht vorbereitet werden.</translation>
+    </message>
+    <message id="libfuoten-err-invalid-folder-id">
+        <location filename="../src/API/renamefolder.cpp" line="+85"/>
+        <location filename="../src/Storage/sqlitestorage.cpp" line="-10"/>
+        <source>Failed to rename the folder. The folder ID is not valid.</source>
+        <translation>Umbenennen des Ordners fehlgeschlagen. Die Ordner-ID ist nicht gültig.</translation>
+    </message>
+    <message id="libfuoten-err-empty-folder-name">
+        <location line="+8"/>
+        <location filename="../src/Storage/sqlitestorage.cpp" line="-6"/>
+        <source>Failed to rename the folder. The new folder name is empty.</source>
+        <translation>Umbenennen des Ordners fehlgeschlagen. Der neue Ordnername ist leer.</translation>
+    </message>
+    <message id="libfuoten-err-folder-name-exists">
+        <location line="+46"/>
+        <source>Failed to rename the folder. The new folder name does already exist on the server.</source>
+        <translation>Umbenennen des Ordners fehlgeschlagen. Der neue Ordnername existiert bereits auf dem Server.</translation>
+    </message>
+    <message id="libfuoten-err-folder-not-exists">
+        <location line="+4"/>
+        <source>Failed to rename the folder. The folder to rename was not found on the server.
+</source>
+        <translation>Umbenennen des Ordners fehlgeschlagen. Der umzubenennende Ordner konnte auf der Server nicht gefunden werden.</translation>
+    </message>
+    <message id="libfuoten-err-folder-invalid-name">
+        <location line="+4"/>
+        <source>Failed to rename the folder. The new folder name is invalid (for instance empty).
+</source>
+        <translation>Umbenennen des Ordners fehlgeschlagen. Der neue Ordnername ist ungültig (bspw. leer).</translation>
     </message>
 </context>
 </TS>
