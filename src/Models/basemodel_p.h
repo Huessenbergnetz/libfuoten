@@ -31,7 +31,8 @@ public:
     BaseModelPrivate() :
         inOperation(false),
         storage(nullptr),
-        loaded(false)
+        loaded(false),
+        parentId(0)
     {}
 
     virtual ~BaseModelPrivate() {}
@@ -39,6 +40,7 @@ public:
     bool inOperation;
     AbstractStorage *storage;
     bool loaded;
+    quint64 parentId;
 };
 
 }

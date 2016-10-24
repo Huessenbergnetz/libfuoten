@@ -39,7 +39,7 @@ class FUOTENSHARED_EXPORT BaseModel : public QAbstractItemModel
 {
     Q_OBJECT
     /*!
-     * \brief Returns true while the model is loading Data.
+     * \brief Returns true while the model is loading data.
      *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>inOperation() const</TD></TR></TABLE>
@@ -58,6 +58,18 @@ class FUOTENSHARED_EXPORT BaseModel : public QAbstractItemModel
      * <TABLE><TR><TD>void</TD><TD>storageChanged(AbstractStorage *storage)</TD></TR></TABLE>
      */
     Q_PROPERTY(Fuoten::AbstractStorage *storage READ storage WRITE setStorage NOTIFY storageChanged)
+    /*!
+     * \brief Sets the parent database ID to load feeds/items for.
+     *
+     * If used on a model presenting feeds, this defines the folder, the feed belongs to. If used on a model
+     * presenting items, this defines the feed the items belong to.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>quint64</TD><TD>parentId() const</TD></TR><TR><TD>void</TD><TD>setParentId(quint64 nParentId)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>parentIdChanged(quint64 parentId)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(quint64 parentId READ parentId WRITE setParentId NOTIFY parentIdChanged)
 public:
     /*!
      * \brief Constructs a new BaseModel object.
@@ -80,8 +92,10 @@ public:
 
     bool inOperation() const;
     AbstractStorage *storage() const;
+    quint64 parentId() const;
 
     void setStorage(AbstractStorage *nStorage);
+    void setParentId(quint64 nParentId);
 
 public Q_SLOTS:
     /*!
@@ -100,6 +114,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void inOperationChanged(bool inOperation);
     void storageChanged(AbstractStorage *storage);
+    void parentIdChanged(quint64 parentId);
+
 
 protected:
     const QScopedPointer<BaseModelPrivate> d_ptr;

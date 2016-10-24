@@ -105,3 +105,18 @@ void BaseModel::setLoaded(bool loaded)
     Q_D(BaseModel);
     d->loaded = loaded;
 }
+
+
+quint64 BaseModel::parentId() const { Q_D(const BaseModel); return d->parentId; }
+
+void BaseModel::setParentId(quint64 nParentId)
+{
+    Q_D(BaseModel);
+    if (nParentId != d->parentId) {
+        d->parentId = nParentId;
+#ifdef QT_DEBUG
+        qDebug() << "Changed parentId to" << d->parentId;
+#endif
+        Q_EMIT parentIdChanged(parentId());
+    }
+}
