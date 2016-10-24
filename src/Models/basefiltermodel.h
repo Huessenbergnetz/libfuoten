@@ -93,6 +93,15 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
      * <TABLE><TR><TD>void</TD><TD>searchChanged(const QString &search)</TD></TR></TABLE>
      */
     Q_PROPERTY(QString search READ search WRITE setSearch NOTIFY searchChanged)
+    /*!
+     * \brief When true, items with no unread items will be hidden.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>bool</TD><TD>hideRead() const</TD></TR><TR><TD>void</TD><TD>setHideRead(bool nHideRead)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>hideReadChanged(bool hideRead)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(bool hideRead READ hideRead WRITE setHideRead NOTIFY hideReadChanged)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Fuoten::FuotenEnums::SortingRole)
 #else
@@ -117,12 +126,15 @@ public:
     FuotenEnums::SortingRole sortingRole() const;
     Qt::SortOrder sortOrder() const;
     QString search() const;
+    bool hideRead() const;
+
 
     virtual void setStorage(AbstractStorage *nStorage) = 0;
     virtual void setParentId(quint64 nParentId) = 0;
     void setSortingRole(FuotenEnums::SortingRole nSortingRole);
     void setSortOrder(const Qt::SortOrder &nSortOrder);
     void setSearch(const QString &nSearch);
+    void setHideRead(bool nHideRead);
 
     Q_INVOKABLE virtual void load() = 0;
 
@@ -133,6 +145,7 @@ Q_SIGNALS:
     void sortingRoleChanged(FuotenEnums::SortingRole sortingRole);
     void sortOrderChanged(const Qt::SortOrder &sortOrder);
     void searchChanged(const QString &search);
+    void hideReadChanged(bool hideRead);
 
 protected:
     const QScopedPointer<BaseFilterModelPrivate> d_ptr;

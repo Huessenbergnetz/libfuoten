@@ -30,7 +30,8 @@ class BaseFilterModelPrivate
 public:
     BaseFilterModelPrivate() :
         sortingRole(FuotenEnums::ID),
-        sortOrder(Qt::AscendingOrder)
+        sortOrder(Qt::AscendingOrder),
+        hideRead(false)
     {}
 
     virtual ~BaseFilterModelPrivate() {}
@@ -38,6 +39,7 @@ public:
     FuotenEnums::SortingRole sortingRole;
     Qt::SortOrder sortOrder;
     QString search;
+    bool hideRead;
 };
 
 }

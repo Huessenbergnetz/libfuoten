@@ -96,3 +96,19 @@ void BaseFilterModel::setSearch(const QString &nSearch)
         invalidateFilter();
     }
 }
+
+
+
+bool BaseFilterModel::hideRead() const { Q_D(const BaseFilterModel); return d->hideRead; }
+
+void BaseFilterModel::setHideRead(bool nHideRead)
+{
+    Q_D(BaseFilterModel);
+    if (nHideRead != d->hideRead) {
+        d->hideRead = nHideRead;
+#ifdef QT_DEBUG
+        qDebug() << "Changed hideRead to" << d->hideRead;
+#endif
+        emit hideReadChanged(hideRead());
+    }
+}
