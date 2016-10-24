@@ -32,6 +32,9 @@ class FolderListModelPrivate;
 /*!
  * \brief List model containing Folder objects.
  *
+ * List model with one column that contains a pointer to a Folder object. The Qt::DisplayRole (\a display in QML) returns
+ * the pointer. To use this model, you need an AbstractStorage that has to be set to the BaseModel::storage property.
+ *
  * \headerfile "" <Fuoten/Models/FolderListModel>
  */
 class FUOTENSHARED_EXPORT FolderListModel : public AbstractFolderModel
