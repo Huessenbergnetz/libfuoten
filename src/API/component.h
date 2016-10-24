@@ -415,7 +415,32 @@ protected:
     void setUrlQuery(const QUrlQuery &query);
 
     /*!
-     * \brief Reimplement this in a subclass to work on the request result.
+     * \brief Processes the request data if the request was successful.
+     *
+     * Reimplement this in a subclass to extract the data from the JSON reply and optionally
+     * use the AbtractStorage provided by Component::storage property to store the requested data.
+     *
+     * Setting the storage is optional, so you should check if it contains a valid pointer.
+     *
+     * In the successCallback you should also set inOperation to false and emit the succeeded() signal
+     * (or a custom succeeded signal).
+     *
+     * \par Implementation example
+     *
+     * \code{.cpp}
+     *
+     * void RenameFolder::successCallback()
+     * {
+     *     if (storage()) {
+     *         storage()->folderRenamed(folderId(), newName());
+     *     }
+     *
+     *     setInOperation(false);
+     *
+     *     Q_EMIT succeeded(folderId(), newName());
+     * }
+     *
+     * \endcode
      */
     virtual void successCallback() = 0;
 
@@ -425,7 +450,22 @@ protected:
     void sendRequest();
 
     /*!
-     * \brief Reimplement this in a subclass to extract errors from the request result.
+     * \brief Extracts error data from the network reply.
+     *
+     * Reimplement this in a subclass to extract errors from the request result. The simplest implementation is to create
+     * a new Error object from the QNetworkReply and set it to the Component::error property. You should than also
+     * emit the failed() signal.
+     *
+     * \par Implementation example
+     *
+     * \code{.cpp}
+     * void GetStatus::extractError(QNetworkReply *reply)
+     * {
+     *     setError(new Error(reply, this));
+     *     setInOperation(false);
+     *     Q_EMIT failed(error());
+     * }
+     * \endcode
      */
     virtual void extractError(QNetworkReply *reply) = 0;
 
