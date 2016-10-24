@@ -71,9 +71,9 @@ class AbstractStorage;
  *     void get();
  *
  * protected:
- *     void successCallback() Q_DECL_OVERRIDE;
- *     void extractError(QNetworkReply *reply) Q_DECL_OVERRIDE;
- *     bool checkOutput() Q_DECL_OVERRIDE;
+ *     void successCallback() override;
+ *     void extractError(QNetworkReply *reply) override;
+ *     bool checkOutput() override;
  *
  * private:
  *     Q_DISABLE_COPY(MyClass)

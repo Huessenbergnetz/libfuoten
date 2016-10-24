@@ -41,15 +41,15 @@ class FUOTENSHARED_EXPORT AbstractFolderModel : public BaseModel
 public:
     AbstractFolderModel(QObject *parent = nullptr);
 
-    QModelIndex findByID(quint64 id) const Q_DECL_OVERRIDE;
+    QModelIndex findByID(quint64 id) const override;
 
 public Q_SLOTS:
-    void load() Q_DECL_OVERRIDE;
+    void load() override;
 
 protected:
     AbstractFolderModel(AbstractFolderModelPrivate &dd, QObject *parent = nullptr);
 
-    void handleStorageChanged() Q_DECL_OVERRIDE;
+    void handleStorageChanged() override;
 
     /*!
      * \brief Returns the list of Folder objects.

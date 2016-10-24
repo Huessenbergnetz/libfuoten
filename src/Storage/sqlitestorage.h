@@ -55,13 +55,13 @@ public:
      *
      * This will create/check the table layout.
      */
-    void init() Q_DECL_OVERRIDE;
+    void init() override;
 
-    QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<quint64> &ids = QList<quint64>()) Q_DECL_OVERRIDE;
+    QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<quint64> &ids = QList<quint64>()) override;
 
 public Q_SLOTS:
-    void foldersRequested(const QJsonDocument &json) Q_DECL_OVERRIDE;
-    void folderCreated(const QJsonDocument &json) Q_DECL_OVERRIDE;
+    void foldersRequested(const QJsonDocument &json) override;
+    void folderCreated(const QJsonDocument &json) override;
     void folderRenamed(quint64 id, const QString &newName) override;
 
 private:

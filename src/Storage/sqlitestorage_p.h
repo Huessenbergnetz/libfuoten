@@ -44,7 +44,7 @@ private:
     void setFailed(const QSqlError &sqlError, const QString &text);
 
 protected:
-    void run() Q_DECL_OVERRIDE;
+    void run() override;
 
 Q_SIGNALS:
     void succeeded();

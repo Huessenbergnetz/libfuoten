@@ -39,20 +39,20 @@ public:
      */
     FolderListFilterModel(QObject *parent = nullptr);
 
-    bool inOperation() const Q_DECL_OVERRIDE;
-    AbstractStorage *storage() const Q_DECL_OVERRIDE;
-    quint64 parentId() const Q_DECL_OVERRIDE;
+    bool inOperation() const override;
+    AbstractStorage *storage() const override;
+    quint64 parentId() const override;
 
-    void setStorage(AbstractStorage *nStorage) Q_DECL_OVERRIDE;
-    void setParentId(quint64 nParentId) Q_DECL_OVERRIDE;
+    void setStorage(AbstractStorage *nStorage) override;
+    void setParentId(quint64 nParentId) override;
 
-    Q_INVOKABLE void load() Q_DECL_OVERRIDE;
+    Q_INVOKABLE void load() override;
 
 protected:
     FolderListFilterModel(FolderListFilterModelPrivate &dd, QObject *parent = nullptr);
 
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
 private:
     Q_DISABLE_COPY(FolderListFilterModel)

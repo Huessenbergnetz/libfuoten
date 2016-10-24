@@ -139,9 +139,9 @@ public:
 
     Q_INVOKABLE void rename(const QString &nName);
 
-    void loadFromJson(const QJsonDocument &json) Q_DECL_OVERRIDE;
+    void loadFromJson(const QJsonDocument &json) override;
 
-    void loadFromJson(const QJsonObject &json) Q_DECL_OVERRIDE;
+    void loadFromJson(const QJsonObject &json) override;
 
 
 Q_SIGNALS:

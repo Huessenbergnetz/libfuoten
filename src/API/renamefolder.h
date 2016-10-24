@@ -88,7 +88,7 @@ public:
      *
      * To perform a successful API request, RenameFolder::folderId and RenameFolder::newName have to be valid.
      */
-    Q_INVOKABLE void execute() Q_DECL_OVERRIDE;
+    Q_INVOKABLE void execute() override;
 
 
 Q_SIGNALS:
@@ -113,12 +113,12 @@ protected:
      * Will store the data in the AbstractStorage, set to Component::storage, if any, will set Component::inOperation to false
      * and emits the succeeded() signal.
      */
-    void successCallback() Q_DECL_OVERRIDE;
+    void successCallback() override;
 
     /*!
      * \brief Extracts possible errors replied by the News App API.
      */
-    void extractError(QNetworkReply *reply) Q_DECL_OVERRIDE;
+    void extractError(QNetworkReply *reply) override;
 
 
     /*!
@@ -127,7 +127,7 @@ protected:
      * Will at first perform the checks from Component::checkInput and will than check if RenameFolder::folderId is greater than zero
      * and RenameFolder::newName is not empty.
      */
-    bool checkInput() Q_DECL_OVERRIDE;
+    bool checkInput() override;
 
 private:
     Q_DISABLE_COPY(RenameFolder)

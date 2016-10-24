@@ -52,16 +52,16 @@ public:
     /*!
      * \brief Starts the API request.
      */
-    Q_INVOKABLE void execute() Q_DECL_OVERRIDE;
+    Q_INVOKABLE void execute() override;
 
 protected:
     GetVersion(GetVersionPrivate &dd, QObject *parent = nullptr);
 
-    void successCallback() Q_DECL_OVERRIDE;
+    void successCallback() override;
 
-    void extractError(QNetworkReply *reply) Q_DECL_OVERRIDE;
+    void extractError(QNetworkReply *reply) override;
 
-    bool checkOutput() Q_DECL_OVERRIDE;
+    bool checkOutput() override;
 
 private:
     Q_DECLARE_PRIVATE(GetVersion)
