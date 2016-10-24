@@ -67,7 +67,9 @@ HEADERS += \
     src/Models/basefiltermodel.h \
     src/Models/basefiltermodel_p.h \
     src/Models/folderlistfiltermodel.h \
-    src/Models/folderlistfiltermodel_p.h
+    src/Models/folderlistfiltermodel_p.h \
+    src/API/renamefolder.h \
+    src/API/renamefolder_p.h
 
 SOURCES += \
     src/error.cpp \
@@ -88,4 +90,7 @@ SOURCES += \
     src/Models/abstractfoldermodel.cpp \
     src/Models/folderlistmodel.cpp \
     src/Models/basefiltermodel.cpp \
-    src/Models/folderlistfiltermodel.cpp
+    src/Models/folderlistfiltermodel.cpp \
+    src/API/renamefolder.cpp
+
+DISTFILES +=

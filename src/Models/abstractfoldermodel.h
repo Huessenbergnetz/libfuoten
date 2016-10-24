@@ -64,6 +64,13 @@ protected Q_SLOTS:
      */
     void foldersRequested(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> deletedFolders);
 
+    /*!
+     * \brief Taks and processes data after a folder has been renamed.
+     *
+     * handleStorageChanged() will connect AbstractStorage::renamedFolder() signal to this slot.
+     */
+    void folderRenamed(quint64 id, const QString &newName);
+
 private:
     Q_DISABLE_COPY(AbstractFolderModel)
     Q_DECLARE_PRIVATE(AbstractFolderModel)

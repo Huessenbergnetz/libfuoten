@@ -167,6 +167,11 @@ public Q_SLOTS:
     virtual void folderCreated(const QJsonDocument &json) = 0;
 
     /*!
+     * \brief Receives the reply data of the RenameFolder request.
+     */
+    virtual void folderRenamed(quint64 id, const QString &newName) = 0;
+
+    /*!
      * \brief Returns a list of Folder objects from the local storage.
      *
      * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
@@ -208,6 +213,14 @@ Q_SIGNALS:
      * should contain the \c id and the \c name of the new folder.
      */
     void createdFolder(quint64 id, const QString &name);
+
+    /*!
+     * \brief Emit this after a folder has been renamed.
+     *
+     * Best location to emit this signal is your implementation of folderRenamed(). The signal
+     * should contain the \c id and the \c newName of the folder.
+     */
+    void renamedFolder(quint64 id, const QString &newName);
 
     /*!
      * \brief Emitted whenever the ready property changes.

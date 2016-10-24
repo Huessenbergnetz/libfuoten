@@ -45,6 +45,7 @@ void AbstractFolderModel::handleStorageChanged()
     AbstractStorage *s = storage();
     connect(s, &AbstractStorage::requestedFolders, this, &AbstractFolderModel::foldersRequested);
     connect(s, &AbstractStorage::readyChanged, this, &AbstractFolderModel::load);
+    connect(s, &AbstractStorage::renamedFolder, this, &AbstractFolderModel::folderRenamed);
 }
 
 
@@ -112,6 +113,31 @@ QModelIndex AbstractFolderModel::findByID(quint64 id) const
 
 
 
+void AbstractFolderModel::folderRenamed(quint64 id, const QString &newName)
+{
+    if (id == 0 || newName.isEmpty()) {
+        qWarning("Can not rename folder. ID is invalid or the new name is empty.");
+    }
+
+    Q_D(AbstractFolderModel);
+
+//    int idx = d->rowByID(id);
+
+//    if (idx > -1) {
+//        d->folders.at(idx)->setName(newName);
+//    }
+
+    QModelIndex i = findByID(id);
+
+    if (i.isValid()) {
+        d->folders.at(i.row())->setName(newName);
+    }
+
+    Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
+}
+
+
+
 void AbstractFolderModel::foldersRequested(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> deletedFolders)
 {
     if (!storage()) {
@@ -124,7 +150,11 @@ void AbstractFolderModel::foldersRequested(const QList<QPair<quint64, QString> >
     if (!updatedFolders.isEmpty()) {
 
         for (const QPair<quint64, QString> &p : updatedFolders) {
-            d->folders.at(d->rowByID(p.first))->setName(p.second);
+            QModelIndex i = findByID(p.first);
+            if (i.isValid()) {
+                d->folders.at(i.row())->setName(p.second);
+                Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
+            }
         }
     }
 

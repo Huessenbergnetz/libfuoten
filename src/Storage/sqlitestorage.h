@@ -61,6 +61,7 @@ public:
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) Q_DECL_OVERRIDE;
     void folderCreated(const QJsonDocument &json) Q_DECL_OVERRIDE;
+    void folderRenamed(quint64 id, const QString &newName) override;
 
 private:
     Q_DECLARE_PRIVATE(SQLiteStorage)
