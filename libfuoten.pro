@@ -63,7 +63,11 @@ HEADERS += \
     src/Models/abstractfoldermodel.h \
     src/Models/abstractfoldermodel_p.h \
     src/Models/folderlistmodel.h \
-    src/Models/folderlistmodel_p.h
+    src/Models/folderlistmodel_p.h \
+    src/Models/basefiltermodel.h \
+    src/Models/basefiltermodel_p.h \
+    src/Models/folderlistfiltermodel.h \
+    src/Models/folderlistfiltermodel_p.h
 
 SOURCES += \
     src/error.cpp \
@@ -82,4 +86,6 @@ SOURCES += \
     src/Storage/sqlitestorage.cpp \
     src/Models/basemodel.cpp \
     src/Models/abstractfoldermodel.cpp \
-    src/Models/folderlistmodel.cpp
+    src/Models/folderlistmodel.cpp \
+    src/Models/basefiltermodel.cpp \
+    src/Models/folderlistfiltermodel.cpp
