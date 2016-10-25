@@ -122,7 +122,7 @@ void Folder::setItemCount(uint nItemCount)
 
 
 
-void Folder::rename(const QString &nName)
+void Folder::rename(const QString &nName, Configuration *config, AbstractStorage *storage)
 {
     Q_D(Folder);
 
@@ -131,17 +131,10 @@ void Folder::rename(const QString &nName)
         return;
     }
 
-    if (!d->configuration) {
+    if (!config) {
         qWarning("Can not change the folder name. No configuration available.");
         return;
     }
-
-    if (d->comp) {
-        qWarning("Can not change the name. There is still another operation running.");
-        return;
-    }
-
-    d->newName = nName;
 }
 
 

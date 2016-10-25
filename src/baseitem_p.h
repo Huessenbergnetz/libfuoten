@@ -34,16 +34,12 @@ public:
     BaseItemPrivate() :
         id(0),
         error(nullptr),
-        configuration(nullptr),
-        storage(nullptr),
         comp(nullptr)
     {}
 
     BaseItemPrivate(quint64 _id) :
         id(_id),
         error(nullptr),
-        configuration(nullptr),
-        storage(nullptr),
         comp(nullptr)
     {}
 
@@ -51,8 +47,6 @@ public:
 
     quint64 id;
     Error *error;
-    Configuration *configuration;
-    AbstractStorage *storage;
 
     Component *comp;
 };

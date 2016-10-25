@@ -56,7 +56,7 @@ void DeleteFolder::execute()
     setError(nullptr);
 
     QStringList rl(QStringLiteral("folders"));
-    rl.append(QString::number(folderId() + 1000));
+    rl.append(QString::number(folderId()));
 
     setApiRoute(rl);
 

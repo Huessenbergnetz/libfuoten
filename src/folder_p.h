@@ -48,8 +48,6 @@ public:
     uint feedCount;
     uint unreadCount;
     uint itemCount;
-    QString newName;
-
 };
 
 }
