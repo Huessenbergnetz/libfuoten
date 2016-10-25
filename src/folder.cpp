@@ -122,7 +122,7 @@ void Folder::setItemCount(uint nItemCount)
 
 
 
-void Folder::rename(const QString &nName, Configuration *config, AbstractStorage *storage)
+void Folder::rename(const QString &newName, Configuration *config, AbstractStorage *storage)
 {
     Q_D(Folder);
 
