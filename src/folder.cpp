@@ -22,6 +22,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include "API/deletefolder.h"
+#include "API/renamefolder.h"
 #include "error.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -124,9 +125,12 @@ void Folder::setItemCount(uint nItemCount)
 
 void Folder::rename(const QString &newName, Configuration *config, AbstractStorage *storage)
 {
-    Q_D(Folder);
+    if (inOperation()) {
+        qWarning("Folder is still in operation.");
+        return;
+    }
 
-    if (d->id == 0) {
+    if (id() == 0) {
         qWarning("Can not change the folder name. No ID available.");
         return;
     }
@@ -135,17 +139,40 @@ void Folder::rename(const QString &newName, Configuration *config, AbstractStora
         qWarning("Can not change the folder name. No configuration available.");
         return;
     }
+
+    RenameFolder *rf = new RenameFolder(this);
+    rf->setConfiguration(config);
+    rf->setStorage(storage);
+    rf->setFolderId(id());
+    rf->setNewName(newName);
+    if (!storage) {
+        connect(rf, &RenameFolder::succeeded, [=] (quint64 id, const QString &newName) {
+            Q_UNUSED(id)
+            setName(newName);
+            setComponent(nullptr);
+        });
+    } else {
+        connect(rf, &RenameFolder::succeeded, [=] () {setComponent(nullptr);});
+    }
+    connect(rf, &RenameFolder::succeeded, rf, &QObject::deleteLater);
+    setComponent(rf);
+    component()->execute();
+    Q_EMIT inOperationChanged(inOperation());
 }
 
 
 
 void Folder::remove(Configuration *config, AbstractStorage *storage)
 {
+    if (inOperation()) {
+        qWarning("Folder is still in operation.");
+        return;
+    }
+
     if (!config) {
         qWarning("Can not delete the folder. No Configuration available.");
         return;
     }
-
 
     DeleteFolder *df = new DeleteFolder(this);
     df->setConfiguration(config);
