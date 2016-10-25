@@ -18,29 +18,30 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FUOTENRENAMEFOLDER_P_H
-#define FUOTENRENAMEFOLDER_P_H
+#ifndef FUOTENMARKFOLDERREAD_P_H
+#define FUOTENMARKFOLDERREAD_P_H
 
-#include "renamefolder.h"
+#include "markfolderread.h"
 #include "component_p.h"
 
 namespace Fuoten {
 
-class RenameFolderPrivate : public ComponentPrivate
+class MarkFolderReadPrivate : public ComponentPrivate
 {
 public:
-    RenameFolderPrivate() :
+    MarkFolderReadPrivate() :
         ComponentPrivate(),
-        folderId(0)
+        folderId(0),
+        newestItemId(0)
     {
         expectedJSONType = Component::Empty;
         namOperation = QNetworkAccessManager::PutOperation;
     }
 
     qint64 folderId;
-    QString newName;
+    qint64 newestItemId;
 };
 
 }
 
-#endif // FUOTENRENAMEFOLDER_P_H
+#endif // FUOTENMARKFOLDERREAD_P_H

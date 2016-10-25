@@ -61,11 +61,11 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
      * \brief Sets the parentId property of the underlying BaseModel.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint64</TD><TD>parentId() const</TD></TR><TR><TD>void</TD><TD>setParentId(quint64 nParentId)</TD></TR></TABLE>
+     * <TABLE><TR><TD>qint64</TD><TD>parentId() const</TD></TR><TR><TD>void</TD><TD>setParentId(qint64 nParentId)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>parentIdChanged(quint64 parentId)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>parentIdChanged(qint64 parentId)</TD></TR></TABLE>
      */
-    Q_PROPERTY(quint64 parentId READ parentId WRITE setParentId NOTIFY parentIdChanged)
+    Q_PROPERTY(qint64 parentId READ parentId WRITE setParentId NOTIFY parentIdChanged)
     /*!
      * \brief The property the model items should be sorted by.
      *
@@ -122,7 +122,7 @@ public:
 
     virtual bool inOperation() const = 0;
     virtual AbstractStorage *storage() const = 0;
-    virtual quint64 parentId() const = 0;
+    virtual qint64 parentId() const = 0;
     FuotenEnums::SortingRole sortingRole() const;
     Qt::SortOrder sortOrder() const;
     QString search() const;
@@ -130,7 +130,7 @@ public:
 
 
     virtual void setStorage(AbstractStorage *nStorage) = 0;
-    virtual void setParentId(quint64 nParentId) = 0;
+    virtual void setParentId(qint64 nParentId) = 0;
     void setSortingRole(FuotenEnums::SortingRole nSortingRole);
     void setSortOrder(Qt::SortOrder nSortOrder);
     void setSearch(const QString &nSearch);
@@ -141,7 +141,7 @@ public:
 Q_SIGNALS:
     void inOperationChanged(bool inOperation);
     void storageChanged(AbstractStorage *storage);
-    void parentIdChanged(quint64 parentId);
+    void parentIdChanged(qint64 parentId);
     void sortingRoleChanged(FuotenEnums::SortingRole sortingRole);
     void sortOrderChanged(Qt::SortOrder sortOrder);
     void searchChanged(const QString &search);

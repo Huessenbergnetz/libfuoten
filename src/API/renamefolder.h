@@ -55,11 +55,11 @@ class FUOTENSHARED_EXPORT RenameFolder : public Component
      * \brief ID of the folder to rename.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(quint64 nFolderId)</TD></TR></TABLE>
+     * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>folderIdChanged(quint64 folderId)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>folderIdChanged(qint64 folderId)</TD></TR></TABLE>
      */
-    Q_PROPERTY(quint64 folderId READ folderId WRITE setFolderId NOTIFY folderIdChanged)
+    Q_PROPERTY(qint64 folderId READ folderId WRITE setFolderId NOTIFY folderIdChanged)
     /*!
      * \brief The new name for the folder.
      *
@@ -77,10 +77,10 @@ public:
      */
     explicit RenameFolder(QObject *parent = nullptr);
 
-    quint64 folderId() const;
+    qint64 folderId() const;
     QString newName() const;
 
-    void setFolderId(quint64 nFolderId);
+    void setFolderId(qint64 nFolderId);
     void setNewName(const QString &nNewName);
 
     /*!
@@ -92,7 +92,7 @@ public:
 
 
 Q_SIGNALS:
-    void folderIdChanged(quint64 folderId);
+    void folderIdChanged(qint64 folderId);
     void newNameChanged(const QString &newName);
 
     /*!
@@ -102,7 +102,7 @@ Q_SIGNALS:
      *
      * \sa Component::failed()
      */
-    void succeeded(quint64 id, const QString &newName);
+    void succeeded(qint64 id, const QString &newName);
 
 protected:
     RenameFolder(RenameFolderPrivate &dd, QObject *parent = nullptr);

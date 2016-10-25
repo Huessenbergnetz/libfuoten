@@ -41,7 +41,7 @@ class FUOTENSHARED_EXPORT AbstractFolderModel : public BaseModel
 public:
     AbstractFolderModel(QObject *parent = nullptr);
 
-    QModelIndex findByID(quint64 id) const override;
+    QModelIndex findByID(qint64 id) const override;
 
 public Q_SLOTS:
     void load() override;
@@ -62,28 +62,35 @@ protected Q_SLOTS:
      *
      * handleStorageChanged() will connect AbstractStorage::requestedFolders() signal to this slot.
      */
-    void foldersRequested(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> &deletedFolders);
+    void foldersRequested(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const QList<qint64> &deletedFolders);
 
     /*!
      * \brief Takes and processes data after a folder has been renamed.
      *
      * handleStorageChanged() will connect AbstractStorage::renamedFolder() signal to this slot.
      */
-    void folderRenamed(quint64 id, const QString &newName);
+    void folderRenamed(qint64 id, const QString &newName);
 
     /*!
      * \brief Takes and processes data after a folder has been created.
      *
      * Will add the new folder to the model. handleStorageChanged() will connect AbstractStorage::createdFolder() to this slot.
      */
-    void folderCreated(quint64 id, const QString &name);
+    void folderCreated(qint64 id, const QString &name);
 
     /*!
      * \brief Takes and processes data after a folder has been delted.
      *
      * Will delete the folder identified by \a id from the model. handleStorageChanged() will connect AbstractStorage::deletedFolder() to this slot.
      */
-    void folderDeleted(quint64 id);
+    void folderDeleted(qint64 id);
+
+    /*!
+     * \brief Takes and processes data after a folder has been marked as read.
+     *
+     * Will order the model to reload the data of the folder identified by \id.
+     */
+    void folderMarkedRead(qint64 id, qint64 newestItem);
 
 private:
     Q_DISABLE_COPY(AbstractFolderModel)

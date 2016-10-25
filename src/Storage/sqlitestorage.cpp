@@ -185,19 +185,19 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     qDebug() << "Processing" << folders.size() << "folders requested from the remote server.";
 #endif
 
-    QHash<quint64, QString> reqFolders;
+    QHash<qint64, QString> reqFolders;
 
     for (const QJsonValue &f : folders) {
         QJsonObject o = f.toObject();
         if (!o.isEmpty()) {
-            reqFolders.insert(o.value(QStringLiteral("id")).toVariant().toULongLong(), o.value(QStringLiteral("name")).toString());
+            reqFolders.insert(o.value(QStringLiteral("id")).toVariant().toLongLong(), o.value(QStringLiteral("name")).toString());
         }
     }
 
     QSqlQuery q(d->db);
 
     // query the currently local available folders in the database
-    QHash<quint64, QString> currentFolders;
+    QHash<qint64, QString> currentFolders;
 
     if (!q.exec(QStringLiteral("SELECT id, name FROM folders"))) {
         //% "Failed to query the folders from the local database."
@@ -206,7 +206,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     }
 
     while (q.next()) {
-        currentFolders.insert(q.value(0).toULongLong(), q.value(1).toString());
+        currentFolders.insert(q.value(0).toLongLong(), q.value(1).toString());
     }
 
     if (reqFolders.isEmpty() && currentFolders.isEmpty()) {
@@ -216,9 +216,9 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         return;
     }
 
-    QList<quint64> deletedIds;
-    QList<QPair<quint64, QString>> newFolders;
-    QList<QPair<quint64, QString>> updatedFolders;
+    QList<qint64> deletedIds;
+    QList<QPair<qint64, QString>> newFolders;
+    QList<QPair<qint64, QString>> updatedFolders;
 
     if (currentFolders.isEmpty()) {
 
@@ -226,9 +226,9 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         qDebug() << "No local folders. Adding all requested folders as new.";
 #endif
 
-        QHash<quint64, QString>::const_iterator i = reqFolders.constBegin();
+        QHash<qint64, QString>::const_iterator i = reqFolders.constBegin();
         while (i != reqFolders.constEnd()) {
-            newFolders.append(QPair<quint64, QString>(i.key(), i.value()));
+            newFolders.append(QPair<qint64, QString>(i.key(), i.value()));
             ++i;
         }
 
@@ -246,7 +246,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         qDebug() << "Checking for updated and deleted folders.";
 #endif
 
-        for (QHash<quint64, QString>::const_iterator i = currentFolders.constBegin(); i != currentFolders.constEnd(); ++i) {
+        for (QHash<qint64, QString>::const_iterator i = currentFolders.constBegin(); i != currentFolders.constEnd(); ++i) {
             if (reqFolders.contains(i.key())) {
                 if (reqFolders.value(i.key()) != i.value()) {
                     updatedFolders.append(qMakePair(i.key(), reqFolders.value(i.key())));
@@ -259,7 +259,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 #ifdef QT_DEBUG
         qDebug() << "Checking for new folders.";
 #endif
-        for (QHash<quint64, QString>::const_iterator i = reqFolders.constBegin(); i != reqFolders.constEnd(); ++i) {
+        for (QHash<qint64, QString>::const_iterator i = reqFolders.constBegin(); i != reqFolders.constEnd(); ++i) {
             if (!currentFolders.contains(i.key())) {
                 newFolders.append(qMakePair(i.key(), i.value()));
             }
@@ -380,7 +380,7 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
         return;
     }
 
-    const quint64 id = o.value(QStringLiteral("id")).toVariant().toULongLong();
+    const qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
     if (id == 0) {
         qWarning("Can not add folder to SQLite database. Invalid ID.");
         return;
@@ -416,7 +416,7 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
 
 
 
-void SQLiteStorage::folderRenamed(quint64 id, const QString &newName)
+void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
 {
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
@@ -460,7 +460,7 @@ void SQLiteStorage::folderRenamed(quint64 id, const QString &newName)
 
 
 
-QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<quint64> &ids)
+QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids)
 {
     QList<Fuoten::Folder*> folders;
 
@@ -513,7 +513,7 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
 
     while (q.next()) {
         folders.append(new Folder(
-                           q.value(0).toULongLong(),
+                           q.value(0).toLongLong(),
                            q.value(1).toString(),
                            q.value(2).toUInt(),
                            q.value(3).toUInt(),
@@ -526,7 +526,7 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
 
 
 
-void SQLiteStorage::folderDeleted(quint64 id)
+void SQLiteStorage::folderDeleted(qint64 id)
 {
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
@@ -559,4 +559,11 @@ void SQLiteStorage::folderDeleted(quint64 id)
     }
 
     Q_EMIT deletedFolder(id);
+}
+
+
+
+void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
+{
+
 }

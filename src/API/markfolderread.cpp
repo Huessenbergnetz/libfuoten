@@ -18,8 +18,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "deletefolder_p.h"
+#include "markfolderread_p.h"
 #include "../error.h"
+#include <QJsonObject>
+#include <QJsonValue>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -27,20 +29,20 @@
 using namespace Fuoten;
 
 
-DeleteFolder::DeleteFolder(QObject *parent) :
-    Component(* new DeleteFolderPrivate, parent)
+MarkFolderRead::MarkFolderRead(QObject *parent) :
+    Component(* new MarkFolderReadPrivate, parent)
 {
 }
 
 
-DeleteFolder::DeleteFolder(DeleteFolderPrivate &dd, QObject *parent) :
+
+MarkFolderRead::MarkFolderRead(MarkFolderReadPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
 }
 
 
-
-void DeleteFolder::execute()
+void MarkFolderRead::execute()
 {
     if (inOperation()) {
         qWarning("Still in operation. Returning.");
@@ -48,7 +50,7 @@ void DeleteFolder::execute()
     }
 
 #ifdef QT_DEBUG
-    qDebug() << "Start to delete a folder on the server.";
+    qDebug() << "Start to mark all items in folder as read on server.";
 #endif
 
     setInOperation(true);
@@ -57,16 +59,19 @@ void DeleteFolder::execute()
 
     QStringList rl(QStringLiteral("folders"));
     rl.append(QString::number(folderId()));
+    rl.append(QStringLiteral("read"));
 
-    setApiRoute(rl);
+    QJsonObject plo; // payload object
+    plo.insert(QStringLiteral("newestItemId"), QJsonValue(folderId()));
+
+    setPayload(plo);
 
     sendRequest();
 }
 
 
 
-
-bool DeleteFolder::checkInput()
+bool MarkFolderRead::checkInput()
 {
     if (Component::checkInput()) {
 
@@ -87,25 +92,23 @@ bool DeleteFolder::checkInput()
 }
 
 
-void DeleteFolder::successCallback()
+void MarkFolderRead::successCallback()
 {
     if (storage()) {
-        storage()->folderDeleted(folderId());
+        storage()->folderMarkedRead(folderId(), newestItemId());
     }
 
     setInOperation(false);
 
 #ifdef QT_DEBUG
-    qDebug() << "Successfully deleted the folder on the server.";
+    qDebug() << "Successfully marked the folder as read on the server.";
 #endif
 
-    Q_EMIT succeeded(folderId());
+    Q_EMIT succeeded(folderId(), newestItemId());
 }
 
 
-
-
-void DeleteFolder::extractError(QNetworkReply *reply)
+void MarkFolderRead::extractError(QNetworkReply *reply)
 {
     if (reply) {
         if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
@@ -124,17 +127,38 @@ void DeleteFolder::extractError(QNetworkReply *reply)
 
 
 
-qint64 DeleteFolder::folderId() const { Q_D(const DeleteFolder); return d->folderId; }
+qint64 MarkFolderRead::folderId() const { Q_D(const MarkFolderRead); return d->folderId; }
 
-void DeleteFolder::setFolderId(qint64 nFolderId)
+void MarkFolderRead::setFolderId(qint64 nFolderId)
 {
-    Q_D(DeleteFolder); 
-    if (nFolderId != d->folderId) {
-        d->folderId = nFolderId;
+    if (!inOperation()) {
+        Q_D(MarkFolderRead);
+        if (nFolderId != d->folderId) {
+            d->folderId = nFolderId;
 #ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
+            qDebug() << "Changed folderId to" << d->folderId;
 #endif
-        Q_EMIT folderIdChanged(folderId());
+            Q_EMIT folderIdChanged(folderId());
+        }
+    }
+}
+
+
+
+
+qint64 MarkFolderRead::newestItemId() const { Q_D(const MarkFolderRead); return d->newestItemId; }
+
+void MarkFolderRead::setNewestItemId(qint64 nNewestItemId)
+{
+    if (!inOperation()) {
+        Q_D(MarkFolderRead);
+        if (nNewestItemId != d->newestItemId) {
+            d->newestItemId = nNewestItemId;
+#ifdef QT_DEBUG
+            qDebug() << "Changed newestItemId to" << d->newestItemId;
+#endif
+            Q_EMIT newestItemIdChanged(newestItemId());
+        }
     }
 }
 

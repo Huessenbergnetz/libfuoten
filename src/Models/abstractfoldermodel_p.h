@@ -44,7 +44,7 @@ public:
         }
     }
 
-    int rowByID(quint64 id) {
+    int rowByID(qint64 id) {
         if (folders.isEmpty()) {
             return -1;
         }

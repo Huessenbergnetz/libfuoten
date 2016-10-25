@@ -38,7 +38,7 @@ public:
     }
 
 
-    quint64 folderId;
+    qint64 folderId;
 };
 
 }

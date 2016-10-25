@@ -37,7 +37,7 @@ public:
         comp(nullptr)
     {}
 
-    BaseItemPrivate(quint64 _id) :
+    BaseItemPrivate(qint64 _id) :
         id(_id),
         error(nullptr),
         comp(nullptr)
@@ -45,7 +45,7 @@ public:
 
     virtual ~BaseItemPrivate() {}
 
-    quint64 id;
+    qint64 id;
     Error *error;
 
     Component *comp;

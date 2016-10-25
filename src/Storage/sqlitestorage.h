@@ -57,13 +57,14 @@ public:
      */
     void init() override;
 
-    QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<quint64> &ids = QList<quint64>()) override;
+    QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) override;
 
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;
-    void folderRenamed(quint64 id, const QString &newName) override;
-    void folderDeleted(quint64 id) override;
+    void folderRenamed(qint64 id, const QString &newName) override;
+    void folderDeleted(qint64 id) override;
+    void folderMarkedRead(qint64 id, qint64 newestItem);
 
 private:
     Q_DECLARE_PRIVATE(SQLiteStorage)

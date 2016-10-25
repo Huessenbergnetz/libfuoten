@@ -60,9 +60,9 @@ bool BaseItem::inOperation() const
 
 
 
-quint64 BaseItem::id() const { Q_D(const BaseItem); return d->id; }
+qint64 BaseItem::id() const { Q_D(const BaseItem); return d->id; }
 
-void BaseItem::setId(quint64 nId)
+void BaseItem::setId(qint64 nId)
 {
     Q_D(BaseItem); 
     if (nId != d->id) {

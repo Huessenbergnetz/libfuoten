@@ -84,13 +84,13 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
      * \brief Database ID of the item/feed/folder.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint64</TD><TD>id() const</TD></TR></TABLE>
+     * <TABLE><TR><TD>qint64</TD><TD>id() const</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>idChanged(quint64 id)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>idChanged(qint64 id)</TD></TR></TABLE>
      *
      * \sa setId()
      */
-    Q_PROPERTY(quint64 id READ id NOTIFY idChanged)
+    Q_PROPERTY(qint64 id READ id NOTIFY idChanged)
     /*!
      * \brief Pointer to an Error object, if an error occured, otherwise returns a nullptr.
      *
@@ -125,7 +125,7 @@ public:
      *
      * \sa BaseItem::id
      */
-    quint64 id() const;
+    qint64 id() const;
 
     /*!
      * \brief Returns a pointer to an Error object, if any error occured, otherwise a \c nullptr.
@@ -139,7 +139,7 @@ public:
      *
      * \sa id
      */
-    void setId(quint64 nId);
+    void setId(qint64 nId);
 
     Q_INVOKABLE void clearError();
 
@@ -154,7 +154,7 @@ Q_SIGNALS:
      * \brief This signal will be emitted whenever the id property changes.
      * \sa BaseItem::id
      */
-    void idChanged(quint64 id);
+    void idChanged(qint64 id);
 
     /*!
      * \brief This signal will be emitted whenever the error property changes. May return a nullptr.

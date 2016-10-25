@@ -51,11 +51,11 @@ class FUOTENSHARED_EXPORT DeleteFolder : public Component
      * Has to be set to a valid folder ID.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(quint64 nFolderId)</TD></TR></TABLE>
+     * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>folderIdChanged(quint64 folderId)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>folderIdChanged(qint64 folderId)</TD></TR></TABLE>
      */
-    Q_PROPERTY(quint64 folderId READ folderId WRITE setFolderId NOTIFY folderIdChanged)
+    Q_PROPERTY(qint64 folderId READ folderId WRITE setFolderId NOTIFY folderIdChanged)
 public:
     /*!
      * \brief Constructs a new DeleteFolder object.
@@ -66,13 +66,13 @@ public:
      * \brief Returns the ID of the folder to delete.
      * \sa folderId
      */
-    quint64 folderId() const;
+    qint64 folderId() const;
 
     /*!
      * \brief Sets the ID of the folder to delete.
      * \sa folderId
      */
-    void setFolderId(quint64 nFolderId);
+    void setFolderId(qint64 nFolderId);
 
 
     /*!
@@ -94,9 +94,9 @@ Q_SIGNALS:
      * \brief This signal is emitted when the ID of the folder to delete changes.
      * \sa folderId
      */
-    void folderIdChanged(quint64 folderId);
+    void folderIdChanged(qint64 folderId);
 
-    void succeeded(quint64 id);
+    void succeeded(qint64 id);
 
 protected:
     DeleteFolder(DeleteFolderPrivate &dd, QObject *parent = nullptr);

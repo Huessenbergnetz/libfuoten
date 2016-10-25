@@ -65,11 +65,11 @@ class FUOTENSHARED_EXPORT BaseModel : public QAbstractItemModel
      * presenting items, this defines the feed the items belong to.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint64</TD><TD>parentId() const</TD></TR><TR><TD>void</TD><TD>setParentId(quint64 nParentId)</TD></TR></TABLE>
+     * <TABLE><TR><TD>qint64</TD><TD>parentId() const</TD></TR><TR><TD>void</TD><TD>setParentId(qint64 nParentId)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>parentIdChanged(quint64 parentId)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>parentIdChanged(qint64 parentId)</TD></TR></TABLE>
      */
-    Q_PROPERTY(quint64 parentId READ parentId WRITE setParentId NOTIFY parentIdChanged)
+    Q_PROPERTY(qint64 parentId READ parentId WRITE setParentId NOTIFY parentIdChanged)
 public:
     /*!
      * \brief Constructs a new BaseModel object.
@@ -87,15 +87,15 @@ public:
      * The default implementation returns an invalid QModelIndex. Reimplement this function
      * in a subclass.
      */
-    virtual QModelIndex findByID(quint64 id) const;
+    virtual QModelIndex findByID(qint64 id) const;
 
 
     bool inOperation() const;
     AbstractStorage *storage() const;
-    quint64 parentId() const;
+    qint64 parentId() const;
 
     void setStorage(AbstractStorage *nStorage);
-    void setParentId(quint64 nParentId);
+    void setParentId(qint64 nParentId);
 
 public Q_SLOTS:
     /*!
@@ -114,7 +114,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void inOperationChanged(bool inOperation);
     void storageChanged(AbstractStorage *storage);
-    void parentIdChanged(quint64 parentId);
+    void parentIdChanged(qint64 parentId);
 
 
 protected:

@@ -85,7 +85,7 @@ void BaseModel::handleStorageChanged()
 }
 
 
-QModelIndex BaseModel::findByID(quint64 id) const
+QModelIndex BaseModel::findByID(qint64 id) const
 {
     Q_UNUSED(id)
     return QModelIndex();
@@ -107,9 +107,9 @@ void BaseModel::setLoaded(bool loaded)
 }
 
 
-quint64 BaseModel::parentId() const { Q_D(const BaseModel); return d->parentId; }
+qint64 BaseModel::parentId() const { Q_D(const BaseModel); return d->parentId; }
 
-void BaseModel::setParentId(quint64 nParentId)
+void BaseModel::setParentId(qint64 nParentId)
 {
     Q_D(BaseModel);
     if (nParentId != d->parentId) {

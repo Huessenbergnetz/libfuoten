@@ -169,16 +169,24 @@ public Q_SLOTS:
     /*!
      * \brief Receives the reply data of the RenameFolder request.
      *
-     * Will rename the folder in the local storage and emits the renamedFolder() signal.
+     * Will rename the folder identified by \a id in the local storage to \a newName and emits the renamedFolder() signal.
      */
-    virtual void folderRenamed(quint64 id, const QString &newName) = 0;
+    virtual void folderRenamed(qint64 id, const QString &newName) = 0;
 
     /*!
      * \brief Receives the reply data of the DeleteFolder request.
      *
-     * Will delete the folder in the local storage and emits the deletedFolder() signal.
+     * Will delete the folder identified by \a id in the local storage and emits the deletedFolder() signal.
      */
-    virtual void folderDeleted(quint64 id) = 0;
+    virtual void folderDeleted(qint64 id) = 0;
+
+    /*!
+     * \brief Receives the reply data of the MarkFolderRead request.
+     *
+     * Will mark all items in the folder identified by \a id that have a lower ID than \a newestItem as read in the local storage.
+     * Will than emit the markedReadFolder() signal.
+     */
+    virtual void folderMarkedRead(qint64 id, qint64 newestItem) = 0;
 
     /*!
      * \brief Returns a list of Folder objects from the local storage.
@@ -187,7 +195,7 @@ public Q_SLOTS:
      * only folders with IDs from the list will be returned. The Folder objects in the returned list will
      * have their parent set to \c nullptr.
      */
-    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<quint64> &ids = QList<quint64>()) = 0;
+    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) = 0;
 
 protected:
     /*!
@@ -213,7 +221,7 @@ Q_SIGNALS:
      * contain a list of databaes IDs and names of new folders, and \c deletedFolders should contain a list of database IDs
      * of deleted folders.
      */
-    void requestedFolders(const QList<QPair<quint64, QString> > &updatedFolders, const QList<QPair<quint64, QString> > &newFolders, const QList<quint64> &deletedFolders);
+    void requestedFolders(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const QList<qint64> &deletedFolders);
 
     /*!
      * \brief Emit this after a new folder has been created.
@@ -221,7 +229,7 @@ Q_SIGNALS:
      * Best loaction to emit this signal is your implementation of folderCreated(). The signal
      * has to contain the \a id and the \a name of the new folder.
      */
-    void createdFolder(quint64 id, const QString &name);
+    void createdFolder(qint64 id, const QString &name);
 
     /*!
      * \brief Emit this after a folder has been renamed.
@@ -229,7 +237,7 @@ Q_SIGNALS:
      * Best location to emit this signal is your implementation of folderRenamed(). The signal
      * has to contain the \a id and the \a newName of the folder.
      */
-    void renamedFolder(quint64 id, const QString &newName);
+    void renamedFolder(qint64 id, const QString &newName);
 
     /*!
      * \brief Emit this after a folder has been deleted.
@@ -237,7 +245,16 @@ Q_SIGNALS:
      * Best location to emit this signal is your implementation of folderDeleted(). The signal
      * has to contain the \a id fo the deleted folder.
      */
-    void deletedFolder(quint64 id);
+    void deletedFolder(qint64 id);
+
+    /*!
+     * \brief Emit this after a folder has been marked as read.
+     *
+     * Best location t emit this signal is your implementation of folderMarkedRead(). The signal
+     * has to contain the \a id of the folder that has been marked as read as well as the ID of
+     * the \a newestItem that has been marked as read.
+     */
+    void markedReadFolder(qint64 id, qint64 newestItem);
 
     /*!
      * \brief Emitted whenever the ready property changes.

@@ -38,7 +38,7 @@ Folder::Folder(QObject *parent) :
 
 
 
-Folder::Folder(quint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent) :
+Folder::Folder(qint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent) :
     BaseItem(* new FolderPrivate(id, name, feedCount, unreadCount, itemCount), parent)
 {
 
@@ -146,7 +146,7 @@ void Folder::rename(const QString &newName, Configuration *config, AbstractStora
     rf->setFolderId(id());
     rf->setNewName(newName);
     if (!storage) {
-        connect(rf, &RenameFolder::succeeded, [=] (quint64 id, const QString &newName) {
+        connect(rf, &RenameFolder::succeeded, [=] (qint64 id, const QString &newName) {
             Q_UNUSED(id)
             setName(newName);
             setComponent(nullptr);

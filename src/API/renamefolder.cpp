@@ -151,9 +151,9 @@ void RenameFolder::extractError(QNetworkReply *reply)
 }
 
 
-quint64 RenameFolder::folderId() const { Q_D(const RenameFolder); return d->folderId; }
+qint64 RenameFolder::folderId() const { Q_D(const RenameFolder); return d->folderId; }
 
-void RenameFolder::setFolderId(quint64 nFolderId)
+void RenameFolder::setFolderId(qint64 nFolderId)
 {
     Q_D(RenameFolder); 
     if (nFolderId != d->folderId) {

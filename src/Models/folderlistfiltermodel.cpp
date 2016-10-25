@@ -80,13 +80,13 @@ void FolderListFilterModel::setStorage(AbstractStorage *nStorage)
 }
 
 
-quint64 FolderListFilterModel::parentId() const
+qint64 FolderListFilterModel::parentId() const
 {
     Q_D(const FolderListFilterModel);
     return d->flm ? d->flm->parentId() : 0;
 }
 
-void FolderListFilterModel::setParentId(quint64 nParentId)
+void FolderListFilterModel::setParentId(qint64 nParentId)
 {
     Q_D(FolderListFilterModel);
     if (d->flm) {

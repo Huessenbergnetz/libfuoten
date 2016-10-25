@@ -41,10 +41,10 @@ public:
 
     bool inOperation() const override;
     AbstractStorage *storage() const override;
-    quint64 parentId() const override;
+    qint64 parentId() const override;
 
     void setStorage(AbstractStorage *nStorage) override;
-    void setParentId(quint64 nParentId) override;
+    void setParentId(qint64 nParentId) override;
 
     Q_INVOKABLE void load() override;
 

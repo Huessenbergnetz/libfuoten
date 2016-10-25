@@ -40,7 +40,7 @@ public:
     bool inOperation;
     AbstractStorage *storage;
     bool loaded;
-    quint64 parentId;
+    qint64 parentId;
 };
 
 }

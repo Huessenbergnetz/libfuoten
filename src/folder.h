@@ -93,7 +93,7 @@ public:
     /*!
      * \brief Constructs a new Folder object from the given arguments.
      */
-    Folder(quint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent = nullptr);
+    Folder(qint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent = nullptr);
 
     /*!
      * \brief Returns the name of the folder.

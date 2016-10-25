@@ -68,13 +68,13 @@ public:
         }
     }
 
-    QStringList intListToStringList(const QList<quint64> &ints) const
+    QStringList intListToStringList(const QList<qint64> &ints) const
     {
         QStringList sl;
 
         if (!ints.isEmpty()) {
 
-            for (quint64 i : ints) {
+            for (qint64 i : ints) {
                 sl.append(QString::number(i));
             }
 
@@ -83,7 +83,7 @@ public:
         return sl;
     }
 
-    QString intListToString(const QList<quint64> &ints) const
+    QString intListToString(const QList<qint64> &ints) const
     {
         return intListToStringList(ints).join(QChar(','));
     }
