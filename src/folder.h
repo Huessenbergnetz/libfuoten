@@ -89,24 +89,38 @@ public:
      */
     Folder(QObject *parent = nullptr);
 
-    /*!
-     * \brief Constructs a new Folder object from a QJsonDocument.
-     */
-    Folder(const QJsonDocument &json, QObject *parent = nullptr);
-
-    /*!
-     * \brief Constructs a new Folder object from a QJsonObject.
-     */
-    Folder(const QJsonObject &json, QObject *parent = nullptr);
 
     /*!
      * \brief Constructs a new Folder object from the given arguments.
      */
     Folder(quint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent = nullptr);
 
+    /*!
+     * \brief Returns the name of the folder.
+     *
+     * \sa Folder::name
+     */
     QString name() const;
+
+    /*!
+     * \brief Returns the number of feeds contained in this folder.
+     *
+     * \sa Folder::feedCount
+     */
     uint feedCount() const;
+
+    /*!
+     * \brief Returns the number of unread items in this folder.
+     *
+     * \sa Folder::unreadCount
+     */
     uint unreadCount() const;
+
+    /*!
+     * \brief Returns the total number of items in this folder.
+     *
+     * \sa Folder::itemCount
+     */
     uint itemCount() const;
 
     /*!
@@ -137,17 +151,47 @@ public:
      */
     void setItemCount(uint nItemCount);
 
-    Q_INVOKABLE void rename(const QString &nName);
+    /*!
+     * \brief Sets a new name for the folder on the remote server.
+     *
+     * Will also rename the folder in the local \a storage if a valid AbstractStorage object has been set.
+     *
+     * This function is invokable from QML.
+     */
+    Q_INVOKABLE void rename(const QString &nName, Fuoten::Configuration *config, Fuoten::AbstractStorage *storage = nullptr);
 
-    void loadFromJson(const QJsonDocument &json) override;
-
-    void loadFromJson(const QJsonObject &json) override;
-
+    /*!
+     * \brief Removes this folder from the remote server.
+     *
+     * Will also remove the folder from the local \a storage if a valid AbstractStorage object has been set.
+     *
+     * This function is invokable from QML.
+     */
+    Q_INVOKABLE void remove(Fuoten::Configuration *config, Fuoten::AbstractStorage *storage = nullptr);
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal will be emitted if the folder name changes.
+     * \sa Folder::name
+     */
     void nameChanged(const QString &name);
+
+    /*!
+     * \brief This signal will be emitted if the number of feeds in the folder changes.
+     * \sa Folder::feedCount
+     */
     void feedCountChanged(uint feedCount);
+
+    /*!
+     * \brief This signal will be emitted if the number of unread items in the folder changes.
+     * \sa Folder:unreadCount
+     */
     void unreadCountChanged(uint unreadCount);
+
+    /*!
+     * \brief This signal will be emitted if then total number of items in the folder changes.
+     * \sa Folder::itemCount
+     */
     void itemCountChanged(uint itemCount);
 
 protected:

@@ -108,42 +108,37 @@ void BaseItem::setError(Error *nError)
                 delete old;
             }
         }
-
-        if (d->error && (d->error->type() != Error::NoError) && (d->error->severity() == Error::Critical || d->error->severity() == Error::Fatal)) {
-            Q_EMIT inOperationChanged(false);
-        }
     }
 }
 
 
 
 
-Configuration *BaseItem::configuration() const { Q_D(const BaseItem); return d->configuration; }
+Component *BaseItem::component() const { Q_D(const BaseItem); return d->comp; }
 
-void BaseItem::setConfiguration(Configuration *nConfiguration)
+void BaseItem::setComponent(Component *nComp)
 {
     Q_D(BaseItem);
-    if (nConfiguration != d->configuration) {
-        d->configuration = nConfiguration;
-#ifdef QT_DEBUG
-        qDebug() << "Changed configuration to" << d->configuration;
-#endif
-        Q_EMIT configurationChanged(configuration());
+
+    Component *old = d->comp;
+    d->comp = nComp;
+
+    if (d->comp) {
+        connect(d->comp, &Component::failed, [=] (Error *nError) {setError(nError);});
+        connect(d->comp, &Component::failed, [=] () {setComponent(nullptr);});
+        connect(d->comp, &Component::failed, d->comp, &QObject::deleteLater);
     }
+
+    if (old) {
+        old->deleteLater();
+    }
+
+    Q_EMIT inOperationChanged(inOperation());
 }
 
 
 
-AbstractStorage *BaseItem::storage() const { Q_D(const BaseItem); return d->storage; }
-
-void BaseItem::setStorage(AbstractStorage *nStorageHandler)
+void BaseItem::clearError()
 {
-    Q_D(BaseItem);
-    if (nStorageHandler != d->storage) {
-        d->storage = nStorageHandler;
-#ifdef QT_DEBUG
-        qDebug() << "Changed storage to" << d->storage;
-#endif
-        Q_EMIT storageChanged(storage());
-    }
+    setError(nullptr);
 }

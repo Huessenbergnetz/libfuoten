@@ -47,6 +47,7 @@ void AbstractFolderModel::handleStorageChanged()
     connect(s, &AbstractStorage::requestedFolders, this, &AbstractFolderModel::foldersRequested);
     connect(s, &AbstractStorage::renamedFolder, this, &AbstractFolderModel::folderRenamed);
     connect(s, &AbstractStorage::createdFolder, this, &AbstractFolderModel::folderCreated);
+    connect(s, &AbstractStorage::deletedFolder, this, &AbstractFolderModel::folderDeleted);
 }
 
 
@@ -212,4 +213,31 @@ void AbstractFolderModel::foldersRequested(const QList<QPair<quint64, QString> >
 
         }
     }
+}
+
+
+
+void AbstractFolderModel::folderDeleted(quint64 id)
+{
+    if (id == 0) {
+        qWarning("Can not delete folder. Invalid folder ID.");
+        return;
+    }
+
+    Q_D(AbstractFolderModel);
+
+    int idx = d->rowByID(id);
+
+    if (idx < 0) {
+        qWarning("Can not find folder ID in the model. Can not remove folder from model.");
+        return;
+    }
+
+    beginRemoveRows(QModelIndex(), idx, idx);
+
+    Folder *f = d->folders.takeAt(idx);
+
+    endRemoveRows();
+
+    f->deleteLater();
 }

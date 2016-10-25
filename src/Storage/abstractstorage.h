@@ -168,8 +168,17 @@ public Q_SLOTS:
 
     /*!
      * \brief Receives the reply data of the RenameFolder request.
+     *
+     * Will rename the folder in the local storage and emits the renamedFolder() signal.
      */
     virtual void folderRenamed(quint64 id, const QString &newName) = 0;
+
+    /*!
+     * \brief Receives the reply data of the DeleteFolder request.
+     *
+     * Will delete the folder in the local storage and emits the deletedFolder() signal.
+     */
+    virtual void folderDeleted(quint64 id) = 0;
 
     /*!
      * \brief Returns a list of Folder objects from the local storage.
@@ -210,7 +219,7 @@ Q_SIGNALS:
      * \brief Emit this after a new folder has been created.
      *
      * Best loaction to emit this signal is your implementation of folderCreated(). The signal
-     * should contain the \c id and the \c name of the new folder.
+     * has to contain the \a id and the \a name of the new folder.
      */
     void createdFolder(quint64 id, const QString &name);
 
@@ -218,9 +227,17 @@ Q_SIGNALS:
      * \brief Emit this after a folder has been renamed.
      *
      * Best location to emit this signal is your implementation of folderRenamed(). The signal
-     * should contain the \c id and the \c newName of the folder.
+     * has to contain the \a id and the \a newName of the folder.
      */
     void renamedFolder(quint64 id, const QString &newName);
+
+    /*!
+     * \brief Emit this after a folder has been deleted.
+     *
+     * Best location to emit this signal is your implementation of folderDeleted(). The signal
+     * has to contain the \a id fo the deleted folder.
+     */
+    void deletedFolder(quint64 id);
 
     /*!
      * \brief Emitted whenever the ready property changes.

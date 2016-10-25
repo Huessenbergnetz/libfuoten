@@ -78,6 +78,13 @@ protected Q_SLOTS:
      */
     void folderCreated(quint64 id, const QString &name);
 
+    /*!
+     * \brief Takes and processes data after a folder has been delted.
+     *
+     * Will delete the folder identified by \a id from the model. handleStorageChanged() will connect AbstractStorage::deletedFolder() to this slot.
+     */
+    void folderDeleted(quint64 id);
+
 private:
     Q_DISABLE_COPY(AbstractFolderModel)
     Q_DECLARE_PRIVATE(AbstractFolderModel)

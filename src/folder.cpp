@@ -21,6 +21,8 @@
 #include "folder_p.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "API/deletefolder.h"
+#include "error.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -33,19 +35,6 @@ Folder::Folder(QObject *parent) :
 {
 }
 
-
-Folder::Folder(const QJsonDocument &json, QObject *parent) :
-    BaseItem(* new FolderPrivate, parent)
-{
-    loadFromJson(json);
-}
-
-
-Folder::Folder(const QJsonObject &json, QObject *parent) :
-    BaseItem(* new FolderPrivate, parent)
-{
-    loadFromJson(json);
-}
 
 
 Folder::Folder(quint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent) :
@@ -156,15 +145,21 @@ void Folder::rename(const QString &nName)
 }
 
 
-void Folder::loadFromJson(const QJsonDocument &json)
-{
-    loadFromJson(json.object());
-}
 
-
-void Folder::loadFromJson(const QJsonObject &json)
+void Folder::remove(Configuration *config, AbstractStorage *storage)
 {
-    if (json.isEmpty()) {
+    if (!config) {
+        qWarning("Can not delete the folder. No Configuration available.");
         return;
     }
+
+
+    DeleteFolder *df = new DeleteFolder(this);
+    df->setConfiguration(config);
+    df->setStorage(storage);
+    df->setFolderId(id());
+    connect(df, &DeleteFolder::succeeded, this, &QObject::deleteLater);
+    setComponent(df);
+    component()->execute();
+    Q_EMIT inOperationChanged(inOperation());
 }

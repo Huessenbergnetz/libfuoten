@@ -71,7 +71,9 @@ HEADERS += \
     src/API/renamefolder.h \
     src/API/renamefolder_p.h \
     src/API/createfolder_p.h \
-    src/API/createfolder.h
+    src/API/createfolder.h \
+    src/API/deletefolder_p.h \
+    src/API/deletefolder.h
 
 SOURCES += \
     src/error.cpp \
@@ -94,6 +96,7 @@ SOURCES += \
     src/Models/basefiltermodel.cpp \
     src/Models/folderlistfiltermodel.cpp \
     src/API/renamefolder.cpp \
-    src/API/createfolder.cpp
+    src/API/createfolder.cpp \
+    src/API/deletefolder.cpp
 
 DISTFILES +=

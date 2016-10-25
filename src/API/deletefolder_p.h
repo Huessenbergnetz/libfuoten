@@ -18,52 +18,29 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FUOTENABSTRACTFOLDERMODEL_P_H
-#define FUOTENABSTRACTFOLDERMODEL_P_H
+#ifndef FUOTENDELETEFOLDER_P_H
+#define FUOTENDELETEFOLDER_P_H
 
-#include "abstractfoldermodel.h"
-#include "basemodel_p.h"
-#include "../folder.h"
+#include "deletefolder.h"
+#include "component_p.h"
 
 namespace Fuoten {
-class AbstractFolderModelPrivate : public BaseModelPrivate
+
+class DeleteFolderPrivate : public ComponentPrivate
 {
 public:
-    AbstractFolderModelPrivate() :
-        BaseModelPrivate()
-    {}
-
-    ~AbstractFolderModelPrivate() {
-        while (!folders.isEmpty()) {
-            Folder *f = folders.takeFirst();
-            if (f->inOperation()) {
-                f->deleteLater();
-            } else {
-                delete f;
-            }
-        }
+    DeleteFolderPrivate() :
+        ComponentPrivate(),
+        folderId(0)
+    {
+        expectedJSONType = Component::Empty;
+        namOperation = QNetworkAccessManager::DeleteOperation;
     }
 
-    int rowByID(quint64 id) {
-        if (folders.isEmpty()) {
-            return -1;
-        }
 
-        int idx = -1;
-
-        for (int i = 0; i < folders.count(); ++i) {
-            if (folders.at(i)->id() == id) {
-                idx = i;
-                break;
-            }
-        }
-
-        return idx;
-    }
-
-    QList<Folder*> folders;
+    quint64 folderId;
 };
+
 }
 
-#endif // FUOTENABSTRACTFOLDERMODEL_P_H
-
+#endif // FUOTENDELETEFOLDER_P_H
