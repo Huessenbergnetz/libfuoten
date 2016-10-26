@@ -136,10 +136,19 @@ public:
      * \brief Returns a list of Folder objects from the local storage.
      *
      * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
-     * only folders with IDs from the list will be returned. The Folder objects in the returned list will
-     * have their parent set to \c nullptr.
+     * only folders with IDs of \a idType from the list will be returned. The \a idType specifies the
+     * id the folder is compared with. If the \a idType is not one of out of the table below, it will
+     * be treated as FuotenEnums::Folder.
+     *
+     * <TABLE>
+     * <TR><TD>FuotenEnums::Folder</TD><TD>Only folders with and ID in \a ids will be returned</TD></TR>
+     * <TR><TD>FuotenEnums::Feed</TD><TD>Only folders will be returned that contain feeds with an ID in \a ids</TD></TR>
+     * <TR><TD>FuotenEnums::Item</TD><TD>Only folders will be returned that contain items with an ID in \a ids</TD></TR>
+     * </TABLE>
+     *
+     * The Folder objects in the returned list will have their parent set to \c nullptr.
      */
-    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) = 0;
+    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Folder) = 0;
     
     /*!
      * \brief Returns a list of Feed objects from the local storage.

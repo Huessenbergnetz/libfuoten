@@ -61,7 +61,7 @@ public:
     /*!
      * \brief Returns a list of Folder objects from the \a folders table.
      */
-    QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) override;
+    QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Folder) override;
 
     /*!
      * \brief Returns a list of Feed objects from the \a feed table.

@@ -591,7 +591,7 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
 
 
 
-QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids)
+QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, Fuoten::FuotenEnums::Type idType)
 {
     QList<Fuoten::Folder*> folders;
 
@@ -607,7 +607,11 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
     QString qs = QStringLiteral("SELECT id, name, feedCount, unreadCount FROM folders ORDER BY ");
 
     if (!ids.isEmpty()) {
-        qs = QStringLiteral("SELECT id, name, feedCount, unreadCount FROM folders WHERE id IN (%1) ORDER BY ").arg(d->intListToString(ids));
+        if (idType == FuotenEnums::Feed) {
+            qs = QStringLiteral("SELECT id, name, feedCount, unreadCount FROM folders WHERE id IN (SELECT folderId FROM feeds WHERE id IN (%1))").arg(d->intListToString(ids));
+        } else {
+            qs = QStringLiteral("SELECT id, name, feedCount, unreadCount FROM folders WHERE id IN (%1) ORDER BY ").arg(d->intListToString(ids));
+        }
     }
 
     switch(sortingRole) {
