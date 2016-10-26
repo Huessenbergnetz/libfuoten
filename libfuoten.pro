@@ -75,7 +75,9 @@ HEADERS += \
     src/API/deletefolder_p.h \
     src/API/deletefolder.h \
     src/API/markfolderread_p.h \
-    src/API/markfolderread.h
+    src/API/markfolderread.h \
+    src/feed_p.h \
+    src/feed.h
 
 SOURCES += \
     src/error.cpp \
@@ -100,6 +102,7 @@ SOURCES += \
     src/API/renamefolder.cpp \
     src/API/createfolder.cpp \
     src/API/deletefolder.cpp \
-    src/API/markfolderread.cpp
+    src/API/markfolderread.cpp \
+    src/feed.cpp
 
 DISTFILES +=
