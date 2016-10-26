@@ -74,7 +74,7 @@ class FUOTENSHARED_EXPORT Folder : public BaseItem
     Q_PROPERTY(uint unreadCount READ unreadCount NOTIFY unreadCountChanged)
 public:
     /*!
-     * \brief Constructs a new empty Folder object.
+     * \brief Constructs a new empty Folder object with the given \a parent.
      */
     explicit Folder(QObject *parent = nullptr);
 
