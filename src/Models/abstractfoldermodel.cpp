@@ -49,6 +49,12 @@ void AbstractFolderModel::handleStorageChanged()
     connect(s, &AbstractStorage::createdFolder, this, &AbstractFolderModel::folderCreated);
     connect(s, &AbstractStorage::deletedFolder, this, &AbstractFolderModel::folderDeleted);
     connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFolderModel::folderMarkedRead);
+
+    connect(s, &AbstractStorage::requestedFeeds, this, &AbstractFolderModel::feedsRequested);
+    connect(s, &AbstractStorage::createdFeed, this, &AbstractFolderModel::feedCreatedOrMarkedRead);
+    connect(s, &AbstractStorage::deletedFeed, this, &AbstractFolderModel::updateCountValues);
+    connect(s, &AbstractStorage::movedFeed, this, &AbstractFolderModel::updateCountValues);
+    connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFolderModel::feedCreatedOrMarkedRead);
 }
 
 
@@ -255,5 +261,102 @@ void AbstractFolderModel::folderMarkedRead(qint64 id, qint64 newestItem)
         Q_D(AbstractFolderModel);
         d->folders.at(i.row())->setUnreadCount(0);
         Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
+    }
+}
+
+
+
+void AbstractFolderModel::feedsRequested(QList<qint64> &updatedFeeds, QList<qint64> &newFeeds, QList<qint64> &deletedFeeds)
+{
+    if (!storage()) {
+        qWarning("Can not update folders, no storage available.");
+        return;
+    }
+
+    QList<qint64> ids;
+
+    if (!updatedFeeds.isEmpty()) {
+        ids.append(updatedFeeds);
+    }
+
+    if (!newFeeds.isEmpty()) {
+        ids.append(newFeeds);
+    }
+
+    if (!deletedFeeds.isEmpty()) {
+        ids.append(deletedFeeds);
+    }
+
+    if (!ids.isEmpty()) {
+
+        const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder, ids, FuotenEnums::Feed);
+
+        if (!fs.isEmpty()) {
+            Q_D(AbstractFolderModel);
+            for (const Folder *f : fs) {
+                QModelIndex i = findByID(f->id());
+                if (i.isValid()) {
+                    Folder *mf = d->folders.at(i.row());
+                    mf->setFeedCount(f->feedCount());
+                    mf->setUnreadCount(f->unreadCount());
+                    Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
+                }
+                delete f;
+            }
+        }
+    }
+}
+
+
+
+
+void AbstractFolderModel::feedCreatedOrMarkedRead(qint64 id)
+{
+    if (!storage()) {
+        qWarning("Can not update folders, no storage available.");
+        return;
+    }
+
+    QList<qint64> l;
+    l.append(id);
+
+    const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder, l, FuotenEnums::Feed);
+
+    if (!fs.isEmpty()) {
+        Folder *f = fs.first();
+        QModelIndex i = findByID(f->id());
+        if (i.isValid()) {
+            Q_D(AbstractFolderModel);
+            Folder *mf = d->folders.at(i.row());
+            mf->setFeedCount(f->feedCount());
+            mf->setUnreadCount(f->unreadCount());
+            Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
+        }
+    }
+}
+
+
+
+void AbstractFolderModel::updateCountValues()
+{
+    if (!storage()) {
+        qWarning("Can not update folders, no storage available.");
+        return;
+    }
+
+    const QList<Folder*> fs = storage()->getFolders();
+
+    if (!fs.isEmpty()) {
+        Q_D(AbstractFolderModel);
+        for (const Folder *f : fs) {
+            int i = d->rowByID(f->id());
+            if (i > -1) {
+                Folder *mf = d->folders.at(i);
+                mf->setFeedCount(f->feedCount());
+                mf->setUnreadCount(f->unreadCount());
+            }
+            delete f;
+        }
+        Q_EMIT dataChanged(index(0, 0), index(rowCount()-1 ,0), QVector<int>(1, Qt::DisplayRole));
     }
 }
