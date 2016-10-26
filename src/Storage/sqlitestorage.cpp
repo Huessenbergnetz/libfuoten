@@ -25,6 +25,7 @@
 #include <QJsonValue>
 #include <QHash>
 #include <QSqlQuery>
+#include <QDateTime>
 #include "../folder.h"
 
 #ifdef QT_DEBUG
@@ -95,16 +96,145 @@ void SQLiteStorageManager::run()
 
     if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS folders "
                                "(id INTEGER PRIMARY KEY NOT NULL, "
-                               "parent_id INTEGER, "
-                               "name VARCHAR NOT NULL, "
-                               "unreadItems INTEGER DEFAULT 0, "
-                               "totalItems INTEGER DEFAULT 0, "
+                               "name TEXT NOT NULL, "
+                               "unreadCount INTEGER DEFAULT 0, "
                                "feedCount INTEGER DEFAULT 0)"
                                ))) {
         //% "Failed to execute database query."
         setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
         return;
     }
+
+    if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS feeds "
+                               "(id INTEGER PRIMARY KEY NOT NULL, "
+                               "folderId INTEGER NOT NULL, "
+                               "title TEXT NOT NULL, "
+                               "url TEXT NOT NULL, "
+                               "link TEXT NOT NULL, "
+                               "added INTEGER NOT NULL, "
+                               "unreadCount INTEGER DEFAULT 0, "
+                               "ordering INTEGER NOT NULL, "
+                               "pinned INTEGER NOT NULL, "
+                               "updateErrorCount INTEGER NOT NULL, "
+                               "lastUpdateError TEXT, "
+                               "faviconLink TEXT, "
+                               "FOREIGN KEY(folderId) REFERENCES folders(id) ON DELETE CASCADE)"
+                               ))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS items "
+                               "(id INTEGER PRIMARY KEY NOT NULL, "
+                               "feedId INTEGER NOT NULL, "
+                               "guid TEXT NOT NULL, "
+                               "guidHash TEXT NOT NULL, "
+                               "url TEXT NOT NULL, "
+                               "title TEXT NOT NULL, "
+                               "author TEXT NOT NULL, "
+                               "pubDate TEXT NOT NULL, "
+                               "body TEXT NOT NULL, "
+                               "enclosureMime TEXT, "
+                               "enclosureLink TEXT, "
+                               "unread INTEGER NOT NULL, "
+                               "starred INTEGER NOT NULL, "
+                               "lastModified INTEGER NOT NULL, "
+                               "fingerprint TEXT NOT NULL, "
+                               "FOREIGN KEY(feedId) REFERENCES feeds(id) ON DELETE CASCADE)"
+                               ))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS feeds_folder_id_index ON feeds (folderId)"))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS items_item_guid ON items (guidHash, feedId)"))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS items_feed_id_index ON items (feedId)"))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_update_item AFTER UPDATE OF unread ON items "
+                               "BEGIN "
+                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = old.feedId) WHERE id = old.feedId; "
+                               "END"
+                               ))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_delete_item AFTER DELETE ON items "
+                               "BEGIN "
+                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = old.feedId) WHERE id = old.feedId; "
+                               "END"
+                               ))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_insert_item AFTER INSERT ON items "
+                               "BEGIN "
+                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = new.feedId) WHERE id = new.feedId; "
+                               "END"
+                               ))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_update_feed AFTER UPDATE OF unreadCount ON feeds "
+                               "BEGIN "
+                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+                               "END"
+                               ))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_delete_feed AFTER DELETE ON feeds "
+                               "BEGIN "
+                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+                               "END"))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_insert_feed AFTER INSERT ON feeds "
+                               "BEGIN "
+                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
+                               "END"
+                               ))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_move_feed AFTER UPDATE OF folderId ON feeds "
+                               "BEGIN "
+                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
+                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+                               "END"))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
 
     if (!m_db.commit()) {
         //% "Failed to commit a database transaction."
@@ -473,10 +603,10 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
 
     QSqlQuery q(d->db);
 
-    QString qs = QStringLiteral("SELECT id, name, feedCount, unreadItems, totalItems FROM folders ORDER BY ");
+    QString qs = QStringLiteral("SELECT id, name, feedCount, unreadCount FROM folders ORDER BY ");
 
     if (!ids.isEmpty()) {
-        qs = QStringLiteral("SELECT id, name, feedCount, unreadItems, totalItems FROM folders WHERE id IN (%1) ORDER BY ").arg(d->intListToString(ids));
+        qs = QStringLiteral("SELECT id, name, feedCount, unreadCount FROM folders WHERE id IN (%1) ORDER BY ").arg(d->intListToString(ids));
     }
 
     switch(sortingRole) {
@@ -487,10 +617,7 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
         qs.append(QStringLiteral("id"));
         break;
     case FuotenEnums::UnreadCount:
-        qs.append(QStringLiteral("unreadItems"));
-        break;
-    case FuotenEnums::ItemCount:
-        qs.append(QStringLiteral("totalItems"));
+        qs.append(QStringLiteral("unreadCount"));
         break;
     case FuotenEnums::FeedCount:
         qs.append(QStringLiteral("feedCount"));
@@ -516,8 +643,7 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
                            q.value(0).toLongLong(),
                            q.value(1).toString(),
                            q.value(2).toUInt(),
-                           q.value(3).toUInt(),
-                           q.value(4).toUInt()
+                           q.value(3).toUInt()
                            ));
     }
 
@@ -534,7 +660,7 @@ void SQLiteStorage::folderDeleted(qint64 id)
         return;
     }
 
-    if (id == 0) {
+    if (id <= 0) {
         //% "The folder ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
         return;
@@ -565,5 +691,38 @@ void SQLiteStorage::folderDeleted(qint64 id)
 
 void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
 {
+    Q_D(SQLiteStorage);
 
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("SELECT id FROM feeds WHERE folderId = ?"))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    q.addBindValue(id);
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    QStringList fids;
+
+    while(q.next()) {
+        fids.append(q.value(0).toString());
+    }
+
+    if (!fids.isEmpty()) {
+
+        if (!q.exec(QStringLiteral("UPDATE items SET unread = 0, lastModified = %1 WHERE feedId IN (%2)").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t()), fids.join(QChar(','))))) {
+            //% "Failed to execute database query."
+            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+            return;
+        }
+    }
+
+    Q_EMIT markedReadFolder(id, newestItem);
 }
