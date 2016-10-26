@@ -219,12 +219,12 @@ class FUOTENSHARED_EXPORT Component : public QObject
     Q_PROPERTY(Fuoten::AbstractStorage *storage READ storage WRITE setStorage NOTIFY storageChanged)
 public:
     /*!
-     * \brief Constructs a new Component object.
+     * \brief Constructs a component with the given \a parent.
      */
     Component(QObject *parent = nullptr);
 
     /*!
-     * \brief Deconstructs the Component object.
+     * \brief Destroys the component.
      */
     ~Component();
 
@@ -268,24 +268,114 @@ public:
      */
     Q_INVOKABLE virtual void execute() = 0;
 
+    /*!
+     * \brief Returns a pointer to the currently set QNetworkAccessManager.
+     *
+     * \sa networkAccessManager
+     */
     QNetworkAccessManager *networkAccessManager() const;
+
+    /*!
+     * \brief Returns true while the API request is running.
+     *
+     * This might also include the local storage operation, if Component::storage is set to a valid AbstractStorage sublcass.
+     */
     bool inOperation() const;
+
+    /*!
+     * \brief Returns the currently set request timeout.
+     */
     quint8 requestTimeout() const;
+
+    /*!
+     * \brief Returns a pointer to an Error object, if any error occured.
+     *
+     * Will return a \c nullptr if no error occured.
+     *
+     * \sa error
+     */
     Error *error() const;
+
+    /*!
+     * \brief Returns a pointer to the Configuration that is currently set.
+     *
+     * \sa configuration
+     */
     Configuration *configuration() const;
+
+    /*!
+     * \brief Returns a pointer to the local storage that is currently set.
+     *
+     * \sa storage
+     */
     AbstractStorage *storage() const;
 
+    /*!
+     * \brief Sets a pointer to a QNetworkAccessManager to use for the API request.
+     *
+     * If no network manager has been set, one will created internally.
+     *
+     * \sa networkAccessManager
+     */
     void setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessManager);
-    void setRequestTimeout(quint8 nRequestTimeout);
+
+    /*!
+     * \brief Sets the timeout for the API request in seconds.
+     *
+     * \sa requestTimeout
+     */
+    void setRequestTimeout(quint8 seconds);
+
+    /*!
+     * \brief Sets a pointer to a Configuration to use for the API request.
+     *
+     * \sa configuration
+     */
     void setConfiguration(Configuration *nConfiguration);
-    void setStorage(AbstractStorage *nStorageHandler);
+
+    /*!
+     * \brief Sets a pointer to a local storage handler to save the API result.
+     *
+     * \sa storage
+     */
+    void setStorage(AbstractStorage *localStorage);
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted when the pointer to the network access manager changes.
+     * \sa networkAccessManager
+     */
     void networkAccessManagerChanged(QNetworkAccessManager *networkAccessManager);
+
+    /*!
+     * \brief This signal is emitted when the in operation status changes.
+     * \sa inOperation
+     */
     void inOperationChanged(bool inOperation);
+
+    /*!
+     * \brief This signal is emitte when the timeout for the request changes.
+     * \sa requestTimeout
+     */
     void requestTimeoutChanged(quint8 requestTimeout);
+
+    /*!
+     * \brief This signal is emitted when the pointer to the Error object changes.
+     * \a error will be a nullptr if no error occured or the current error has been reset.
+     * \sa error
+     */
     void errorChanged(Error *error);
+
+    /*!
+     * \brief This signal is emitted when the pointer to the Configuration object changes.
+     * \sa configuration
+     */
     void configurationChanged(Configuration *configuration);
+
+    /*!
+     * \brief This signal is emitted when the pointer to the local storage object changes.
+     * \sa storage
+     */
     void storageChanged(AbstractStorage *storage);
 
     /*!
@@ -302,6 +392,7 @@ Q_SIGNALS:
 
     /*!
      * \brief Emit this signal in a subclass when the request failed for some reason.
+     * \sa error
      */
     void failed(Error *error);
 

@@ -20,6 +20,9 @@
 
 #include "getfolders_p.h"
 #include "../error.h"
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonDocument>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -88,5 +91,21 @@ void GetFolders::extractError(QNetworkReply *reply)
 
 bool GetFolders::checkOutput()
 {
-    return Component::checkOutput();
+    if (Component::checkOutput()) {
+
+        if (!jsonResult().object().value(QStringLiteral("folders")).isArray()) {
+            //% "The data the server replied does not contain a \"folders\" array."
+            setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-folders-array-in-reply"), QString(), this));
+            setInOperation(false);
+            Q_EMIT failed(error());
+            return false;
+        }
+
+
+    } else {
+        setInOperation(false);
+        return false;
+    }
+
+    return true;
 }

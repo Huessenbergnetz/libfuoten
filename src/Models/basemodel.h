@@ -90,11 +90,34 @@ public:
     virtual QModelIndex findByID(qint64 id) const;
 
 
+    /*!
+     * \brief Returns true while the model is loading data.
+     * \sa inOperation
+     */
     bool inOperation() const;
+
+    /*!
+     * \brief Returns the pointer to the currently set local storage.
+     * \sa storage
+     */
     AbstractStorage *storage() const;
+
+    /*!
+     * \brief Returns the currently set parent ID.
+     * \sa parentId
+     */
     qint64 parentId() const;
 
+    /*!
+     * \brief Sets the pointer to the local storage handler.
+     * \sa storage
+     */
     void setStorage(AbstractStorage *nStorage);
+
+    /*!
+     * \brief Set the parent ID.
+     * \sa parentId
+     */
     void setParentId(qint64 nParentId);
 
 public Q_SLOTS:
@@ -106,14 +129,58 @@ public Q_SLOTS:
      * has loaded the initial data, should be done by signals and slots without reloading the full
      * model.
      *
-     * Additionally you could use the inOperation property in this function to indicate, that the model
+     * Additionally you could use the \link BaseModel::inOperation inOperation \endlink property in this function to indicate, that the model
      * is loading its data.
+     *
+     * \par Example implementation
+     *
+     * \code{.cpp}
+     *
+     * void AbstractFolderModel::load()
+     * {
+     *     if (!storage()) {
+     *         return;
+     *     }
+     *
+     *     if (!storage()->ready() || loaded()) {
+     *         return;
+     *     }
+     *
+     *     setInOperation(true);
+     *
+     *     Q_D(AbstractFolderModel);
+     *
+     *     const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder);
+     *     if (!fs.isEmpty()) {
+     *         beginInsertRows(QModelIndex(), 0, fs.count() - 1);
+     *         d->folders = fs;
+     *         endInsertRows();
+     *     }
+     *
+     *     setLoaded(true);
+     *     setInOperation(false);
+     * }
+     * \endcode
      */
     virtual void load() = 0;
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted if the operational state of the model changes.
+     * \sa inOperatoin
+     */
     void inOperationChanged(bool inOperation);
+
+    /*!
+     * \brief This signal is emitted if the poiner to the local storage changes.
+     * \sa storage
+     */
     void storageChanged(AbstractStorage *storage);
+
+    /*!
+     * \brief This signal is emitted if the parent ID changes.
+     * \sa parentId
+     */
     void parentIdChanged(qint64 parentId);
 
 
@@ -131,7 +198,25 @@ protected:
     /*!
      * \brief Will be called by setStorage() whenever the storage changes.
      *
-     * The default implementation does nothing.
+     * The default implementation does nothing. You should use this to connect
+     * signals from the AbstractStorage to slots in the model implementation that
+     * updates the model data after the local data has been changed.
+     *
+     * \par Example implementation
+     *
+     * \code{.cpp}
+     * void AbstractFolderModel::handleStorageChanged()
+     * {
+     *     AbstractStorage *s = storage();
+     *     connect(s, &AbstractStorage::readyChanged, this, &AbstractFolderModel::load);
+     *     connect(s, &AbstractStorage::requestedFolders, this, &AbstractFolderModel::foldersRequested);
+     *     connect(s, &AbstractStorage::renamedFolder, this, &AbstractFolderModel::folderRenamed);
+     *     connect(s, &AbstractStorage::createdFolder, this, &AbstractFolderModel::folderCreated);
+     *     connect(s, &AbstractStorage::deletedFolder, this, &AbstractFolderModel::folderDeleted);
+     *     connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFolderModel::folderMarkedRead);
+     * }
+     *
+     * \endcode
      */
     virtual void handleStorageChanged();
 

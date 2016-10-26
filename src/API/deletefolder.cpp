@@ -70,7 +70,7 @@ bool DeleteFolder::checkInput()
 {
     if (Component::checkInput()) {
 
-        if (folderId() == 0) {
+        if (folderId() <= 0) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
             setInOperation(false);
@@ -128,13 +128,15 @@ qint64 DeleteFolder::folderId() const { Q_D(const DeleteFolder); return d->folde
 
 void DeleteFolder::setFolderId(qint64 nFolderId)
 {
-    Q_D(DeleteFolder); 
-    if (nFolderId != d->folderId) {
-        d->folderId = nFolderId;
+    if (!inOperation()) {
+        Q_D(DeleteFolder);
+        if (nFolderId != d->folderId) {
+            d->folderId = nFolderId;
 #ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
+            qDebug() << "Changed folderId to" << d->folderId;
 #endif
-        Q_EMIT folderIdChanged(folderId());
+            Q_EMIT folderIdChanged(folderId());
+        }
     }
 }
 

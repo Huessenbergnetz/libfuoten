@@ -30,7 +30,14 @@ namespace Fuoten {
 class MarkFolderReadPrivate;
 
 /*!
- * \brief Marks all articles in a folder as read.
+ * \brief Marks all articles in a folder as read on the News App server.
+ *
+ * To mark an entire folder as read, you have to set valid values to MarkFolderRead::folderId, MarkFolderRead::newestItemId and Component::configuration. After
+ * setting the mandatory properties, call execute() to perform the API request.
+ *
+ * If a valid AbstractStorage object is set to the Component::storage property, AbstractStorage::folderMarkedRead() will be called in the successCallback() to
+ * update the local storage. If the request succeeded, the MarkFolderRead::succeeded() signal will be emitted, containing the \a folderId and the \a newestItemId.
+ * If something failed, the Component::failed() signal will be emitted and Component::error will contain a valid pointer to an Error object.
  *
  * \par Mandatory properties
  * MarkFolderRead::folderId, MarkFolderRead::newestItemId, Component::configuration
@@ -58,6 +65,8 @@ class FUOTENSHARED_EXPORT MarkFolderRead : public Component
     /*!
      * \brief The ID of the newest item in the folder.
      *
+     * Will mark all items with IDs lower than equal that ID as read. This is mean to prevent marking items as read which the client does not yet know of.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>newestItemId() const</TD></TR><TR><TD>void</TD><TD>setNewestItemId(qint64 nNewestItemId)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -66,7 +75,7 @@ class FUOTENSHARED_EXPORT MarkFolderRead : public Component
     Q_PROPERTY(qint64 newestItemId READ newestItemId WRITE setNewestItemId NOTIFY newestItemIdChanged)
 public:
     /*!
-     * \brief Constructs a new MarkFolderRead object.
+     * \brief Constructs an API request object with the given \a parent to mark an entire folder as read on the remote server.
      */
     explicit MarkFolderRead(QObject *parent = nullptr);
 
@@ -119,6 +128,8 @@ Q_SIGNALS:
      *
      * Will contain the \a id of the folder that has been marked as read as well as the ID of the \a newestItem
      * that has been marked as read in this folder.
+     *
+     * \sa Component::failed()
      */
     void succeeded(qint64 id, qint64 newestItem);
 
@@ -134,8 +145,16 @@ protected:
      */
     void successCallback() override;
 
+    /*!
+     * \brief Will check for valid \a folderId and \a newestItemId.
+     *
+     * Will at first perform the checks of Component::checkInput(). Will than simply check if the IDs are not lower or equal to \c 0.
+     */
     bool checkInput() override;
 
+    /*!
+     * \brief Extracts possible errors replied by the News App API.
+     */
     void extractError(QNetworkReply *reply) override;
 
 private:

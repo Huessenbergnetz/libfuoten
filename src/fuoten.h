@@ -29,7 +29,7 @@ namespace Fuoten {
 /*!
  * \brief Provides global enumerations.
  *
- * \headerfile "" <Fuoten/Fuoten>
+ * \headerfile "" <Fuoten/FuotenEnums>
  */
 class FUOTENSHARED_EXPORT FuotenEnums {
     Q_GADGET

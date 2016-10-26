@@ -75,9 +75,17 @@ bool MarkFolderRead::checkInput()
 {
     if (Component::checkInput()) {
 
-        if (folderId() == 0) {
+        if (folderId() <= 0) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+            setInOperation(false);
+            Q_EMIT failed(error());
+            return false;
+        }
+
+        if (newestItemId() <= 0) {
+            //% "The item ID is not valid."
+            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
             setInOperation(false);
             Q_EMIT failed(error());
             return false;

@@ -85,11 +85,9 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
     Q_PROPERTY(quint16 starred READ starred WRITE setStarred NOTIFY starredChanged)
 public:
     /*!
-     * \brief Constructs a new AbstractStorage object.
-     *
-     * SotrageHandler is an abstract class, you can not instantiate it. You have to create a derived class.
+     * \brief Constructs a new abstract local storage with the given \a parent.
      */
-    AbstractStorage(QObject *parent = nullptr);
+    explicit AbstractStorage(QObject *parent = nullptr);
 
     /*!
      * \brief Deconstructs the AbstractStorage object.
@@ -113,10 +111,27 @@ public:
      */
     virtual void init() = 0;
 
+    /*!
+     * \brief Returns the total number of unread articles.
+     * \sa totalUnread
+     */
     virtual quint16 totalUnread() const;
+
+    /*!
+     * \brief Returns the total number of starred articles.
+     * \sa starred
+     */
     virtual quint16 starred() const;
 
+    /*!
+     * \brief Sets the total number of unread articles.
+     * \sa totalUnread
+     */
     virtual void setTotalUnread(quint16 nTotalUnread);
+
+    /*!
+     * \brief Sets the total number of starred articles.
+     */
     virtual void setStarred(quint16 nStarred);
 
 public Q_SLOTS:
@@ -266,7 +281,16 @@ Q_SIGNALS:
      */
     void errorChanged(Error *error);
 
+    /*!
+     * \brief This signal is emitted if the amount of total unread articles changes.
+     * \sa totalUnread
+     */
     void totalUnreadChanged(quint16 totalUnread);
+
+    /*!
+     * \brief This signal is emitted if the amount of total starred articles changes.
+     * \sa starred
+     */
     void starredChanged(quint16 starred);
 
 

@@ -40,6 +40,9 @@ class RenameFolderPrivate;
  * the RenameFolder::succeeded() signal will be emitted. If something failed, the Component::failed() signal will be emitted and Component::error will contain
  * a valid pointer to an Error object.
  *
+ * \par Mandatory properties
+ * RenameFolder::folderId, RenameFolder::newName
+ *
  * \par API route
  * /folders/{folderId}
  *
@@ -54,6 +57,8 @@ class FUOTENSHARED_EXPORT RenameFolder : public Component
     /*!
      * \brief ID of the folder to rename.
      *
+     * Can not be changed while the request is active and Component::inOperation returns true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -65,6 +70,8 @@ class FUOTENSHARED_EXPORT RenameFolder : public Component
      *
      * When setting this property, the input string will be simplified. See QString::simplified().
      *
+     * Can not be changed while the request is active and Component::inOperation returns true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>QString</TD><TD>newName() const</TD></TR><TR><TD>void</TD><TD>setNewName(const QString &nNewName)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -73,26 +80,55 @@ class FUOTENSHARED_EXPORT RenameFolder : public Component
     Q_PROPERTY(QString newName READ newName WRITE setNewName NOTIFY newNameChanged)
 public:
     /*!
-     * \brief Constructs a new RenameFolder object.
+     * \brief Constructs an API request object with the given \a parent to rename a folder on the remote server.
      */
     explicit RenameFolder(QObject *parent = nullptr);
 
+    /*!
+     * \brief Returns the currently set ID of the folder that should be renamed.
+     * \sa folderId
+     */
     qint64 folderId() const;
+
+    /*!
+     * \brief Returns the currently set new name for the folder.
+     * \sa name
+     */
     QString newName() const;
 
+    /*!
+     * \brief Sets the ID of the folder that should be renamed.
+     * \sa folderId
+     */
     void setFolderId(qint64 nFolderId);
+
+    /*!
+     * \brief Sets the new name for the folder.
+     * \sa newName
+     */
     void setNewName(const QString &nNewName);
 
     /*!
      * \brief Executes the API request.
      *
      * To perform a successful API request, RenameFolder::folderId and RenameFolder::newName have to be valid.
+     *
+     * Execution will not run while Component::inOperation returns \c true and will itself set that property to \c true when the request starts.
      */
     Q_INVOKABLE void execute() override;
 
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted when the ID of the folder changes.
+     * \sa folderId
+     */
     void folderIdChanged(qint64 folderId);
+
+    /*!
+     * \brief This signal is emitted when the new name for the folder changes.
+     * \sa newName
+     */
     void newNameChanged(const QString &newName);
 
     /*!

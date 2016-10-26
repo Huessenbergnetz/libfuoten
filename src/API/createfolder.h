@@ -36,9 +36,9 @@ class CreateFolderPrivate;
  * Optionally set the Component::storage property to save the newly created folder in a local storage. After setting the mandatory properties,
  * call execute() to perform the API request.
  *
- * If an valid AbstractStorage object is set to the Component::storage property, AbstractStorage::folderCreated() will be called in the successCallback() to
+ * If a valid AbstractStorage object is set to the Component::storage property, AbstractStorage::folderCreated() will be called in the successCallback() to
  * save the new folder in the local storage. If the request succeeded, the Component::succeeded() signal will be emitted, containing the JSON API reply.
- * If something failed, the Component::failed() signal will be emitted and Componentn::error will contain a valid pointer to an Error object.
+ * If something failed, the Component::failed() signal will be emitted and Component::error will contain a valid pointer to an Error object.
  *
  * \par Mandatory properties
  * CreateFolder::name, Component::configuration
@@ -67,7 +67,7 @@ class FUOTENSHARED_EXPORT CreateFolder : public Component
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 public:
     /*!
-     * \brief Constructs a new CreateFolder object.
+     * \brief Constructs an API request object with the given \a parent to create a new folder on the remote server.
      */
     explicit CreateFolder(QObject *parent = nullptr);
 
@@ -91,7 +91,7 @@ public:
      * To perform a successful API request, CreateFolder::name has to be valid and there has to be a Configuration object set to
      * Component::configuration.
      *
-     * Execution will not run if Component::inOperation returns true and will itself set that property to true when start to perform
+     * Execution will not run if Component::inOperation returns \c true and will itself set that property to \c true when start to perform
      * the request.
      */
     Q_INVOKABLE void execute() override;
@@ -128,7 +128,7 @@ protected:
     bool checkInput() override;
 
     /*!
-     * \brief Checks for a non-empty \a folders arry in the replied JSON object.
+     * \brief Checks for a non-empty \a folders array in the replied JSON object.
      *
      * Will at first perform the checks fo Component::checkOutput(). Returns \c true if the checks pass, otherwise false.
      */

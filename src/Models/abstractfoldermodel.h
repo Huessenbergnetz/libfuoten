@@ -39,20 +39,34 @@ class FUOTENSHARED_EXPORT AbstractFolderModel : public BaseModel
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief Constructs a new empty abstract folder model with the given \a parent.
+     */
     AbstractFolderModel(QObject *parent = nullptr);
 
+    /*!
+     * \brief Returns the model index of the folder identified by \a id.
+     */
     QModelIndex findByID(qint64 id) const override;
 
 public Q_SLOTS:
+    /*!
+     * \brief Populates the mode with data from the local storage.
+     *
+     * Uses AbstractStorage::getFolders() to get Folder objects from the local storage that will be added to the model.
+     */
     void load() override;
 
 protected:
     AbstractFolderModel(AbstractFolderModelPrivate &dd, QObject *parent = nullptr);
 
+    /*!
+     * \brief Connetcs the folder related signals of AbstractStorage to the model's slots.
+     */
     void handleStorageChanged() override;
 
     /*!
-     * \brief Returns the list of Folder objects.
+     * \brief Returns the list of Folder objects in the model.
      */
     QList<Folder*> folders() const;
 
@@ -88,7 +102,7 @@ protected Q_SLOTS:
     /*!
      * \brief Takes and processes data after a folder has been marked as read.
      *
-     * Will order the model to reload the data of the folder identified by \id.
+     * Will set the \link Folder::unreadCount unreadCount \endlink of the folder identified by \id to \c 0. handleStorageChanged() will connect AbstractStorage::markedReadFolder() to this slot.
      */
     void folderMarkedRead(qint64 id, qint64 newestItem);
 

@@ -346,11 +346,11 @@ void Component::setInOperation(bool nInOperation)
 
 quint8 Component::requestTimeout() const { Q_D(const Component); return d->requestTimeout; }
 
-void Component::setRequestTimeout(quint8 nRequestTimeout)
+void Component::setRequestTimeout(quint8 seconds)
 {
     Q_D(Component); 
-    if (nRequestTimeout != d->requestTimeout) {
-        d->requestTimeout = nRequestTimeout;
+    if (seconds != d->requestTimeout) {
+        d->requestTimeout = seconds;
 #ifdef QT_DEBUG
         qDebug() << "Changed requestTimeout to" << d->requestTimeout;
 #endif
@@ -400,11 +400,11 @@ void Component::setConfiguration(Configuration *nConfiguration)
 
 AbstractStorage *Component::storage() const { Q_D(const Component); return d->storage; }
 
-void Component::setStorage(AbstractStorage *nStorageHandler)
+void Component::setStorage(AbstractStorage *localStorage)
 {
     Q_D(Component);
-    if (nStorageHandler != d->storage) {
-        d->storage = nStorageHandler;
+    if (localStorage != d->storage) {
+        d->storage = localStorage;
 #ifdef QT_DEBUG
         qDebug() << "Changed storage to" << d->storage;
 #endif

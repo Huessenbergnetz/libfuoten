@@ -32,7 +32,10 @@ class Configuration;
 class AbstractStorage;
 
 /*!
- * \brief Combines updating of folders, feeds and items.
+ * \brief Combines updating of folders, feeds and articles.
+ *
+ * \par Mandatory properties
+ * Synchronizer::configuration
  *
  * \headerfile "" <Fuoten/Helpers/Synchronizer>
  */
@@ -40,7 +43,7 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
 {
     Q_OBJECT
     /*!
-     * \brief Pointer to an Error object, if an error occured. Otherwise a nullptr.
+     * \brief Pointer to an Error object, if an error occured. Otherwise a \c nullptr.
      *
      * \par Access functions:
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
@@ -51,7 +54,7 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
     /*!
      * \brief Pointer to a Configuration object.
      *
-     * You have to set a valid configuration object in order to start an update.
+     * You have to set a valid Configuration object in order to start a synchronization.
      *
      * \par Access functions:
      * <TABLE><TR><TD>Configuration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(Configuration *nConfiguration)</TD></TR></TABLE>
@@ -60,7 +63,7 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
      */
     Q_PROPERTY(Fuoten::Configuration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
     /*!
-     * \brief Pointer to a AbstractStorage derived object.
+     * \brief Pointer to aa AbstractStorage derived object.
      *
      * \par Access functions:
      * <TABLE><TR><TD>AbstractStorage*</TD><TD>storage() const</TD></TR><TR><TD>void</TD><TD>setStorage(AbstractStorage *nStorageHandler)</TD></TR></TABLE>
@@ -79,7 +82,7 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
     Q_PROPERTY(bool inOperation READ inOperation NOTIFY inOperationChanged)
 public:
     /*!
-     * \brief Constructs a new Synchronizer object.
+     * \brief Constructs a new Synchronizer object with the given \a parent.
      */
     explicit Synchronizer(QObject *parent = nullptr);
 
@@ -88,12 +91,39 @@ public:
      */
     ~Synchronizer();
 
+    /*!
+     * \brief Returns a pointer to an Error object if any error occured, otherwise a \c nullptr.
+     * \sa error
+     */
     Error *error() const;
+
+    /*!
+     * \brief Returns the pointer to the currently set Configuration object.
+     * \sa configuration
+     */
     Configuration *configuration() const;
+
+    /*!
+     * \brief Returns the pointer to the currently set AbstractStorage object, if any, otherwise a \c nullptr.
+     */
     AbstractStorage *storage() const;
+
+    /*!
+     * \brief Returns true while the synchronization is active.
+     * \sa inOperation
+     */
     bool inOperation() const;
 
+    /*!
+     * \brief Sets the pointer to a Configuration object.
+     * \sa configuration
+     */
     void setConfiguration(Configuration *nConfiguration);
+
+    /*!
+     * \brief Sets the pointer to an AbstractStorage object.
+     * \sa storage
+     */
     void setStorage(AbstractStorage *nStorageHandler);
 
     /*!
@@ -105,12 +135,43 @@ public:
 
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted if the pointer to an Error object changes.
+     *
+     * Maybe a \c nullptr if the Error object was reset.
+     *
+     * \sa error
+     */
     void errorChanged(Error *error);
+
+    /*!
+     * \brief This signal is emitted if the pointer to the Configuration object changes.
+     * \sa configuration
+     */
     void configurationChanged(Configuration *configuration);
+
+    /*!
+     * \brief This signall is emitted if the pointer to the AbstractStorage object changes.
+     * \sa storage
+     */
     void storageChanged(AbstractStorage *storage);
+
+    /*!
+     * \brief This signal is emitted if the oprational state changes.
+     * \sa inOperation
+     */
     void inOperationChanged(bool inOperation);
 
+    /*!
+     * \brief This signal is emitted if the synchronization process was successful.
+     * \sa failed()
+     */
     void succeeded();
+
+    /*!
+     * \brief This signal is emitted if the synchonization process failed for some reason.
+     * \sa succeeded(), error
+     */
     void failed(Error *error);
 
 protected:

@@ -42,7 +42,7 @@ class FUOTENSHARED_EXPORT FolderListModel : public AbstractFolderModel
     Q_OBJECT
 public:
     /*!
-     * \brief Constructs a new empty FolderListModel.
+     * \brief Constructs a new empty folder list model with the given \a parent.
      */
     FolderListModel(QObject *parent = nullptr);
 

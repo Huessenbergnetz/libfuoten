@@ -57,7 +57,7 @@ class FUOTENSHARED_EXPORT Error : public QObject
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>typeChanged(Type type)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Type type READ type NOTIFY typeChanged)
+    Q_PROPERTY(Fuoten::Error::Type type READ type NOTIFY typeChanged)
     /*!
      * \brief Additional error data.
      *
@@ -75,7 +75,7 @@ class FUOTENSHARED_EXPORT Error : public QObject
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>severityChanged(Severity severity)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Severity severity READ severity NOTIFY severityChanged)
+    Q_PROPERTY(Fuoten::Error::Severity severity READ severity NOTIFY severityChanged)
 public:
     /*!
      * \brief Defines the error type.
@@ -145,36 +145,72 @@ public:
      */
     ~Error();
 
+    /*!
+     * \brief Returns the error text.
+     * \sa text
+     */
     QString text() const;
+    /*!
+     * \brief Returns the error type.
+     * \sa type
+     */
     Type type() const;
+    /*!
+     * \brief Returns additional error data.
+     * \sa data
+     */
     QString data() const;
+    /*!
+     * \brief Returns the error severity.
+     * \sa severity
+     */
     Severity severity() const;
 
     /*!
      * \brief Sets the human readable text.
+     * \sa text
      */
     void setText(const QString &nText);
 
     /*!
      * \brief Sets the error type.
+     * \sa type
      */
     void setType(Type nType);
 
     /*!
      * \brief Sets additional error data.
+     * \sa data
      */
     void setData(const QString &nData);
 
     /*!
      * \brief Sets the error severity.
+     * \sa severity
      */
     void setSeverity(Severity nSeverity);
 
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted if the error text changes.
+     * \ſa text
+     */
     void textChanged(const QString &text);
+    /*!
+     * \brief This signal is emitted if the error type changes.
+     * \sa type
+     */
     void typeChanged(Type type);
+    /*!
+     * \brief This signal is emitted if the additional data changes.
+     * \sa data
+     */
     void dataChanged(const QString &data);
+    /*!
+     * \brief This signal is emitted if the severity changes.
+     * \sa severity
+     */
     void severityChanged(Severity severity);
 
 protected:

@@ -31,7 +31,14 @@ namespace Fuoten {
 class DeleteFolderPrivate;
 
 /*!
- * \brief Deletes a folder on the server.
+ * \brief Deletes a folder on the News App server.
+ *
+ * To delete a folder on the server, set DeleteFolder::folderId to a valid ID and set a Configuration to Component::configuration.
+ *
+ * If a valid AbstractStorage object is set to the Component::storage property, AbstractStorage::folderDeleted() will be called in the
+ * successCallback() to delete the folder in the local storage. If the request succeeded, the succeed() signal will be emitted in the successCallback()
+ * and it will contain the \a id of the deleted folder. If the request failed, Component::faild() will be emitted and Component::error contains a valid
+ * pointer to an Error object.
  *
  * \par Mandatory properties
  * DeleteFolder::folderId, Component::configuration
@@ -48,7 +55,7 @@ class FUOTENSHARED_EXPORT DeleteFolder : public Component
     /*!
      * \brief ID of the folder to delete.
      *
-     * Has to be set to a valid folder ID.
+     * Has to be set to a valid folder ID. Can not be changed while the request is active and Component::inOperation returns true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>
@@ -58,7 +65,7 @@ class FUOTENSHARED_EXPORT DeleteFolder : public Component
     Q_PROPERTY(qint64 folderId READ folderId WRITE setFolderId NOTIFY folderIdChanged)
 public:
     /*!
-     * \brief Constructs a new DeleteFolder object.
+     * \brief Constructs an API request object with the given \a parent to delete a folder on the remote server.
      */
     explicit DeleteFolder(QObject *parent = nullptr);
 
@@ -96,6 +103,10 @@ Q_SIGNALS:
      */
     void folderIdChanged(qint64 folderId);
 
+    /*!
+     * \brief Will be emitted in the success callback function and contains the ID of the deleted folder.
+     * \sa Component::failed()
+     */
     void succeeded(qint64 id);
 
 protected:
@@ -106,8 +117,17 @@ protected:
      */
     void successCallback() override;
 
+    /*!
+     * \brief Checks for a valid folder ID.
+     *
+     * This will at first perform the checks of Component::checkInput() and will
+     * than simply check if the folder id is greater than zero.
+     */
     bool checkInput() override;
 
+    /*!
+     * \brief Extracts possible errors replied by the News App API.
+     */
     void extractError(QNetworkReply *reply) override;
 
 private:

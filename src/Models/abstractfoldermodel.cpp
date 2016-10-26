@@ -58,11 +58,7 @@ void AbstractFolderModel::load()
         return;
     }
 
-    if (!storage()->ready()) {
-        return;
-    }
-
-    if (loaded()) {
+    if (!storage()->ready() || loaded()) {
         return;
     }
 

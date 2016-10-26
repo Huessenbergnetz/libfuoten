@@ -32,7 +32,7 @@ class BaseFilterModelPrivate;
 class AbstractStorage;
 
 /*!
- * \brief Base filter model for all other filter models.
+ * \brief Abstract base filter model for other filter models.
  *
  * \headerfile "" <Fuoten/Model/BaseFilterModel>
  */
@@ -111,7 +111,7 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
 #endif
 public:
     /*!
-     * \brief Constructs a new BaseFilterModel object.
+     * \brief Constructs a new base filter model with the given \a parent.
      *
      * QSortFilterProxyModel::isSortLocaleAware will be set to true.
      */
@@ -122,31 +122,137 @@ public:
      */
     ~BaseFilterModel();
 
+    /*!
+     * \brief Returns true while the underlying model is in operational mode.
+     *
+     * Reimplement this in a derived class.
+     * \sa inOperation
+     */
     virtual bool inOperation() const = 0;
+
+    /*!
+     * \brief Returns the local storage that is currently set to the underlying model.
+     *
+     * Reimplement this in a derived class.
+     * \sa storage
+     */
     virtual AbstractStorage *storage() const = 0;
+
+    /*!
+     * \brief Returns the parent ID that is currently set to the underlyiing model.
+     * Reimplement this in a derived class.
+     * \sa parentId
+     */
     virtual qint64 parentId() const = 0;
+
+    /*!
+     * \brief Returns the currently set sorting role.
+     * \sa sortingRole
+     */
     FuotenEnums::SortingRole sortingRole() const;
+
+    /*!
+     * \brief Returns the currently set sort order.
+     * \sa sortOrder
+     */
     Qt::SortOrder sortOrder() const;
+
+    /*!
+     * \brief Returns the currently set serach string.
+     * \sa serach
+     */
     QString search() const;
+
+    /*!
+     * \brief Returns true if model items with no unread items or unread articles should be hidden.
+     */
     bool hideRead() const;
 
 
+    /*!
+     * \brief Sets the local storage handler for the underlying model.
+     * \sa storage
+     */
     virtual void setStorage(AbstractStorage *nStorage) = 0;
+
+    /*!
+     * \brief Sets the parent ID for the underlying model.
+     * \sa parentId
+     */
     virtual void setParentId(qint64 nParentId) = 0;
+
+    /*!
+     * \brief Sets the sorting role.
+     * \sa sortingRole
+     */
     void setSortingRole(FuotenEnums::SortingRole nSortingRole);
+
+    /*!
+     * \brief Sets the sort order.
+     * \sa sortOrder
+     */
     void setSortOrder(Qt::SortOrder nSortOrder);
+
+    /*!
+     * \brief Sets the search string.
+     * \sa search
+     */
     void setSearch(const QString &nSearch);
+
+    /*!
+     * \brief Set this to true to hide items with no unread content or read articles.
+     * \sa hideRead
+     */
     void setHideRead(bool nHideRead);
 
+    /*!
+     * \brief Loads the data in the underlying model.
+     *
+     * Reimplement this in a subclass and call the underlying model's BaseModel::load() function.
+     */
     Q_INVOKABLE virtual void load() = 0;
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted when the operational state of the underlying model changes.
+     * \sa inOperation
+     */
     void inOperationChanged(bool inOperation);
+
+    /*!
+     * \brief This signal is emitted when the pointer to the local storage handler changes in the underlying model.
+     * \sa storage
+     */
     void storageChanged(AbstractStorage *storage);
+
+    /*!
+     * \brief This signal is emitted when the parent ID property changed in the underlying model.
+     * \sa parentId
+     */
     void parentIdChanged(qint64 parentId);
+
+    /*!
+     * \brief This signal is emitted if the sorting role changes.
+     * \sa sortingRole
+     */
     void sortingRoleChanged(FuotenEnums::SortingRole sortingRole);
+
+    /*!
+     * \brief This signal is emitted if the sort order changes.
+     * \sa sortOrder
+     */
     void sortOrderChanged(Qt::SortOrder sortOrder);
+
+    /*!
+     * \brief This signal is emitted if the search string changes.
+     * \sa search
+     */
     void searchChanged(const QString &search);
+
+    /*!
+     * \brief This signal is emitted if the hideRead property changes.
+     * \sa hideRead
+     */
     void hideReadChanged(bool hideRead);
 
 protected:

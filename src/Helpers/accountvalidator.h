@@ -38,7 +38,9 @@ class AccountValidatorPrivate;
  * and call start(). Calling start() will create and invoke Version, Status and User in a row.
  *
  * \headerfile "" <Fuoten/Helpers/AccountValidator>
- * \sa Status, User, Version
+ * \par Mandatory properties
+ * AccountValidator::configuration
+ * \sa GetStatus, GetUser, GetVersion
  */
 class FUOTENSHARED_EXPORT AccountValidator : public QObject
 {
@@ -64,7 +66,7 @@ class FUOTENSHARED_EXPORT AccountValidator : public QObject
      */
     Q_PROPERTY(bool inOperation READ inOperation NOTIFY inOperationChanged)
     /*!
-     * \brief Contains a pointer to a Error object, if any error occured.
+     * \brief Pointer to an Error object, if any error occured, otherwise a \c nullptr.
      *
      * \par Access functions:
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
@@ -74,7 +76,7 @@ class FUOTENSHARED_EXPORT AccountValidator : public QObject
     Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
 public:
     /*!
-     * \brief Constructs a new AccountValidator object.
+     * \brief Constructs a new AccountValidator object with the given \a parent.
      */
     explicit AccountValidator(QObject *parent = nullptr);
 
@@ -85,29 +87,61 @@ public:
 
     /*!
      * \brief Starts the account validation.
+     *
+     * Will not start the validation process if inOperation returns \c true and will set it to \c true when it starts.
      */
     Q_INVOKABLE void start();
 
+    /*!
+     * \brief Returns a pointer to the currently set Configuration object.
+     * \sa configuration
+     */
     Configuration *configuration() const;
+
+    /*!
+     * \brief Returns \c true while the validation process is active.
+     * \sa inOpertion
+     */
     bool inOperation() const;
+
+    /*!
+     * \brief Returns a pointer to an Error object, if any error occures, otherwise a \c nullptr.
+     * \sa error
+     */
     Error *error() const;
 
+    /*!
+     * \brief Sets the pointer to a Configuration object.
+     * \sa configuration
+     */
     void setConfiguration(Configuration *nConfiguration);
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted when the pointer to a Configuration object changes.
+     * \sa configuration
+     */
     void configurationChanged(Configuration *configuration);
+    /*!
+     * \brief This signal is emitted when the operational status changes.
+     * \sa inOperation
+     */
     void inOperationChanged(bool inOperation);
+    /*!
+     * \brief This signal is emitted when the pointer to an Error object changes.
+     * \sa error
+     */
     void errorChanged(Error *error);
 
     /*!
-     * \brief This signal will be emitted if the account validation has been succeeded.
+     * \brief This signal is emitted if the account validation has been succeeded.
      *
      * Will be emitted if at least the News App version can be queried.
      */
     void succeeded();
 
     /*!
-     * \brief This signal will be emitted if an error occured.
+     * \brief This signal is emitted if an error occured.
      *
      * \sa \link AccountValidator::error error \endlink
      */

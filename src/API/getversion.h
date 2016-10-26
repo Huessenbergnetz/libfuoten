@@ -33,9 +33,19 @@ class GetVersionPrivate;
  * \brief Requests the installed News App version from the server.
  *
  * The version reply will only contain the version number of the installed News App.
- * To request the version information, set the \link Component::configuration configuration \endlink property and call get().
+ * To request the version information, set the \link Component::configuration configuration \endlink property and call execute().
  *
  * The requested data will be written to Configuration::setServerVersion(). You can get the raw JSON response from the Component::succeeded() signal.
+ * If something failed, the Component::failed() signal will be emitted and Component::error will contain a valid pointer to an Error object.
+ *
+ * \par Mandatory properties
+ * Component::configuration
+ *
+ * \par API route
+ * /version
+ *
+ * \par Method
+ * GET
  *
  * \sa AccountValidator
  * \headerfile "" <Fuoten/API/GetVersion>
@@ -45,22 +55,41 @@ class FUOTENSHARED_EXPORT GetVersion : public Component
     Q_OBJECT
 public:
     /*!
-     * \brief Constructs a new GetVersion object.
+     * \brief Constructs an API request object with the given \a parent to query the News App version from the remote server.
      */
     GetVersion(QObject *parent = nullptr);
 
     /*!
-     * \brief Starts the API request.
+     * \brief Executes the API request.
+     *
+     * To perform a successful API request, Component::configuration has to be set to a valid Configuration object.
+     *
+     * Execution will not run if Component::inOperation returns \c true and will itself set that property to \c true when start to perform
+     * the request.
      */
     Q_INVOKABLE void execute() override;
 
 protected:
     GetVersion(GetVersionPrivate &dd, QObject *parent = nullptr);
 
+    /*!
+     * \brief Finishes the version request if it was successful.
+     *
+     * Will use Configuration::setServerVersion() to store the reply. Afterwards it will
+     * set Component::inOperation to \c false and emits the Component::succeeded() signal.
+     */
     void successCallback() override;
 
+    /*!
+     * \brief Extracts possible errors replied by the News App API.
+     */
     void extractError(QNetworkReply *reply) override;
 
+    /*!
+     * \brief Checks for \a version in the replied JSON object.
+     *
+     * Will at first perform the checks from Component::checkOutput().
+     */
     bool checkOutput() override;
 
 private:

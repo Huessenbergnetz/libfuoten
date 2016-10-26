@@ -46,6 +46,9 @@ class FUOTENSHARED_EXPORT Configuration : public QSettings
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief Constructs a new AbstractConfiguration object with the given \a parent.
+     */
     explicit Configuration(QObject *parent = nullptr);
 
     /*!

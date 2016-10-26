@@ -46,7 +46,7 @@ class FUOTENSHARED_EXPORT SQLiteStorage final : public AbstractStorage
     Q_OBJECT
 public:
     /*!
-     * \brief Constructs a new SQLiteStorage object using \a dbpath.
+     * \brief Constructs a new SQLiteStorage object with given \a dbpath and \a parent.
      */
     SQLiteStorage(const QString &dbpath, QObject *parent = nullptr);
 
@@ -57,6 +57,9 @@ public:
      */
     void init() override;
 
+    /*!
+     * \brief Returns a list of Folder objects from the \a folders table.
+     */
     QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) override;
 
 public Q_SLOTS:

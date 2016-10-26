@@ -32,8 +32,6 @@ using namespace Fuoten;
 RenameFolder::RenameFolder(QObject *parent) :
     Component(* new RenameFolderPrivate, parent)
 {
-//    setExpectedJSONType(Component::Empty);
-//    setNetworkOperation(QNetworkAccessManager::PutOperation);
 }
 
 
@@ -41,8 +39,6 @@ RenameFolder::RenameFolder(QObject *parent) :
 RenameFolder::RenameFolder(RenameFolderPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
-//    setExpectedJSONType(Component::Empty);
-//    setNetworkOperation(QNetworkAccessManager::PutOperation);
 }
 
 
@@ -155,13 +151,15 @@ qint64 RenameFolder::folderId() const { Q_D(const RenameFolder); return d->folde
 
 void RenameFolder::setFolderId(qint64 nFolderId)
 {
-    Q_D(RenameFolder); 
-    if (nFolderId != d->folderId) {
-        d->folderId = nFolderId;
+    if (!inOperation()) {
+        Q_D(RenameFolder);
+        if (nFolderId != d->folderId) {
+            d->folderId = nFolderId;
 #ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
+            qDebug() << "Changed folderId to" << d->folderId;
 #endif
-        Q_EMIT folderIdChanged(folderId());
+            Q_EMIT folderIdChanged(folderId());
+        }
     }
 }
 
@@ -172,13 +170,15 @@ QString RenameFolder::newName() const { Q_D(const RenameFolder); return d->newNa
 
 void RenameFolder::setNewName(const QString &nNewName)
 {
-    Q_D(RenameFolder);
-    if (nNewName.simplified() != d->newName) {
-        d->newName = nNewName.simplified();
+    if (!inOperation()) {
+        Q_D(RenameFolder);
+        if (nNewName.simplified() != d->newName) {
+            d->newName = nNewName.simplified();
 #ifdef QT_DEBUG
-        qDebug() << "Changed newName to" << d->newName;
+            qDebug() << "Changed newName to" << d->newName;
 #endif
-        Q_EMIT newNameChanged(newName());
+            Q_EMIT newNameChanged(newName());
+        }
     }
 }
 

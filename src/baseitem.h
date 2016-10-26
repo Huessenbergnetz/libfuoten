@@ -81,7 +81,7 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
      */
     Q_PROPERTY(bool inOperation READ inOperation NOTIFY inOperationChanged)
     /*!
-     * \brief Database ID of the item/feed/folder.
+     * \brief Database ID of the Article, Feed or Folder.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>id() const</TD></TR></TABLE>
@@ -92,7 +92,7 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
      */
     Q_PROPERTY(qint64 id READ id NOTIFY idChanged)
     /*!
-     * \brief Pointer to an Error object, if an error occured, otherwise returns a nullptr.
+     * \brief Pointer to an Error object, if an error occured, otherwise returns a \c nullptr.
      *
      * \par Access functions:
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
@@ -104,12 +104,12 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
     Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
 public:
     /*!
-     * \brief Constructs a new BaseItem object.
+     * \brief Constructs an empty base item with the given \a parent.
      */
     BaseItem(QObject *parent = nullptr);
 
     /*!
-     * \brief Deconstructs the BaseItem object.
+     * \brief Deconstructs the base item.
      */
     ~BaseItem();
 
@@ -141,6 +141,9 @@ public:
      */
     void setId(qint64 nId);
 
+    /*!
+     * \brief Removes the current Error object and sets a \c nullptr.
+     */
     Q_INVOKABLE void clearError();
 
 Q_SIGNALS:
