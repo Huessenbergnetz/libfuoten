@@ -41,8 +41,9 @@ public:
     enum Type {
         Feed    = 0,    /**< Feed */
         Folder  = 1,    /**< Folder */
-        Starred = 2,    /**< Starred items */
-        All     = 3     /**< All items */
+        Starred = 2,    /**< Starred items/articles */
+        All     = 3,    /**< All items/articles */
+        Item    = 4     /**< Item/Article */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Type)
