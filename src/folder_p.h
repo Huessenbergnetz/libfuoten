@@ -32,22 +32,19 @@ public:
     FolderPrivate() :
         BaseItemPrivate(),
         feedCount(0),
-        unreadCount(0),
-        itemCount(0)
+        unreadCount(0)
     {}
 
-    FolderPrivate(qint64 _id, const QString &_name, uint _feedCount, uint _unreadCount, uint _itemCount) :
+    FolderPrivate(qint64 _id, const QString &_name, uint _feedCount, uint _unreadCount) :
         BaseItemPrivate(_id),
         name(_name),
         feedCount(_feedCount),
-        unreadCount(_unreadCount),
-        itemCount(_itemCount)
+        unreadCount(_unreadCount)
     {}
 
     QString name;
     uint feedCount;
     uint unreadCount;
-    uint itemCount;
 };
 
 }

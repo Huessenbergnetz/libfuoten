@@ -72,17 +72,6 @@ class FUOTENSHARED_EXPORT Folder : public BaseItem
      * \sa setUnreadCount()
      */
     Q_PROPERTY(uint unreadCount READ unreadCount NOTIFY unreadCountChanged)
-    /*!
-     * \brief Returns the number of items in this folder.
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>uint</TD><TD>itemCount() const</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>itemCountChanged(uint itemCount)</TD></TR></TABLE>
-     *
-     * \sa setItemCount()
-     */
-    Q_PROPERTY(uint itemCount READ itemCount NOTIFY itemCountChanged)
 public:
     /*!
      * \brief Constructs a new empty Folder object.
@@ -93,7 +82,7 @@ public:
     /*!
      * \brief Constructs a new Folder object from the given arguments.
      */
-    Folder(qint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent = nullptr);
+    Folder(qint64 id, const QString &name, uint feedCount, uint unreadCount, QObject *parent = nullptr);
 
     /*!
      * \brief Returns the name of the folder.
@@ -116,12 +105,6 @@ public:
      */
     uint unreadCount() const;
 
-    /*!
-     * \brief Returns the total number of items in this folder.
-     *
-     * \sa Folder::itemCount
-     */
-    uint itemCount() const;
 
     /*!
      * \brief Sets the name of the folder.
@@ -143,13 +126,6 @@ public:
      * \sa unreadCount
      */
     void setUnreadCount(uint nUnreadCount);
-
-    /*!
-     * \brief Sets the total number of items in this folder.
-     *
-     * \sa itemCount
-     */
-    void setItemCount(uint nItemCount);
 
     /*!
      * \brief Sets a new name for the folder on the remote server.
@@ -187,12 +163,6 @@ Q_SIGNALS:
      * \sa Folder:unreadCount
      */
     void unreadCountChanged(uint unreadCount);
-
-    /*!
-     * \brief This signal will be emitted if then total number of items in the folder changes.
-     * \sa Folder::itemCount
-     */
-    void itemCountChanged(uint itemCount);
 
 protected:
     Folder(FolderPrivate &dd, QObject *parent = nullptr);

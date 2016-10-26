@@ -38,8 +38,8 @@ Folder::Folder(QObject *parent) :
 
 
 
-Folder::Folder(qint64 id, const QString &name, uint feedCount, uint unreadCount, uint itemCount, QObject *parent) :
-    BaseItem(* new FolderPrivate(id, name, feedCount, unreadCount, itemCount), parent)
+Folder::Folder(qint64 id, const QString &name, uint feedCount, uint unreadCount, QObject *parent) :
+    BaseItem(* new FolderPrivate(id, name, feedCount, unreadCount), parent)
 {
 
 }
@@ -99,26 +99,6 @@ void Folder::setUnreadCount(uint nUnreadCount)
         Q_EMIT unreadCountChanged(unreadCount());
     }
 }
-
-
-
-
-uint Folder::itemCount() const { Q_D(const Folder); return d->itemCount; }
-
-void Folder::setItemCount(uint nItemCount)
-{
-    Q_D(Folder);
-    if (nItemCount != d->itemCount) {
-        d->itemCount = nItemCount;
-#ifdef QT_DEBUG
-        qDebug() << "Changed itemCount to" << d->itemCount;
-#endif
-        Q_EMIT itemCountChanged(itemCount());
-    }
-}
-
-
-
 
 
 
