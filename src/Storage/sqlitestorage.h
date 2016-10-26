@@ -30,6 +30,7 @@ namespace Fuoten {
 
 class SQLiteStoragePrivate;
 class Folder;
+class Feed;
 
 /*!
  * \brief Storage using a local SQLite database.
@@ -62,12 +63,24 @@ public:
      */
     QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) override;
 
+    /*!
+     * \brief Returns a list of Feed objects from the \a feed table.
+     */
+    QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) override;
+
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;
     void folderRenamed(qint64 id, const QString &newName) override;
     void folderDeleted(qint64 id) override;
     void folderMarkedRead(qint64 id, qint64 newestItem) override;
+
+    void feedsRequested(const QJsonDocument &json) override;
+    void feedCreated(const QJsonDocument &json) override;
+    void feedDeleted(qint64 id) override;
+    void feedMoved(qint64 id, qint64 targetFolder) override;
+    void feedRenamed(qint64 id, const QString &newTitle) override;
+    void feedMarkedRead(qint64 id, qint64 newestItem) override;
 
 private:
     Q_DECLARE_PRIVATE(SQLiteStorage)

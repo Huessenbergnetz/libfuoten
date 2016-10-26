@@ -27,6 +27,7 @@
 #include <QSqlQuery>
 #include <QDateTime>
 #include "../folder.h"
+#include "../feed.h"
 
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -725,4 +726,52 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
     }
 
     Q_EMIT markedReadFolder(id, newestItem);
+}
+
+
+
+QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids)
+{
+
+}
+
+
+
+void SQLiteStorage::feedsRequested(const QJsonDocument &json)
+{
+
+}
+
+
+
+void SQLiteStorage::feedCreated(const QJsonDocument &json)
+{
+
+}
+
+
+
+void SQLiteStorage::feedDeleted(qint64 id)
+{
+
+}
+
+
+
+void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
+{
+
+}
+
+
+void SQLiteStorage::feedRenamed(qint64 id, const QString &newTitle)
+{
+
+}
+
+
+
+void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
+{
+
 }
