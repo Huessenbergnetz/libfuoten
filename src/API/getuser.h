@@ -57,7 +57,7 @@ public:
     /*!
      * \brief Constructs an API request object with the given \a parent to query information about the authenticated user from the remote server.
      */
-    GetUser(QObject *parent = nullptr);
+    explicit GetUser(QObject *parent = nullptr);
 
     /*!
      * \brief Executes the API request.

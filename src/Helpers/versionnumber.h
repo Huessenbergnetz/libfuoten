@@ -74,7 +74,7 @@ public:
      *
      * String has to be in format "0.2.4".
      */
-    VersionNumber(const QString &versionString);
+    explicit VersionNumber(const QString &versionString);
 
     /*!
      * \brief Constructs a copy of \a other.

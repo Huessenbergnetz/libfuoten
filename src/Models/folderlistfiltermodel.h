@@ -44,7 +44,7 @@ public:
     /*!
      * \brief Constructs a new folder list filter model with the given \a parent.
      */
-    FolderListFilterModel(QObject *parent = nullptr);
+    explicit FolderListFilterModel(QObject *parent = nullptr);
 
     /*!
      * \brief Returns true while the underlying FolderListModel is loading.

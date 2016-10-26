@@ -87,7 +87,7 @@ public:
     /*!
      * \brief Constructs a new empty Folder object.
      */
-    Folder(QObject *parent = nullptr);
+    explicit Folder(QObject *parent = nullptr);
 
 
     /*!

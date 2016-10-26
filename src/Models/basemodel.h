@@ -74,7 +74,7 @@ public:
     /*!
      * \brief Constructs a new BaseModel object.
      */
-    BaseModel(QObject *parent = nullptr);
+    explicit BaseModel(QObject *parent = nullptr);
 
     /*!
      * \brief Deconstructs the BaseModel object.

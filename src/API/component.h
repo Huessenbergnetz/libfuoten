@@ -221,7 +221,7 @@ public:
     /*!
      * \brief Constructs a component with the given \a parent.
      */
-    Component(QObject *parent = nullptr);
+    explicit Component(QObject *parent = nullptr);
 
     /*!
      * \brief Destroys the component.

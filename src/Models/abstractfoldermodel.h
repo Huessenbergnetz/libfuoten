@@ -42,7 +42,7 @@ public:
     /*!
      * \brief Constructs a new empty abstract folder model with the given \a parent.
      */
-    AbstractFolderModel(QObject *parent = nullptr);
+    explicit AbstractFolderModel(QObject *parent = nullptr);
 
     /*!
      * \brief Returns the model index of the folder identified by \a id.

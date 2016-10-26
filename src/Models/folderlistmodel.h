@@ -44,7 +44,7 @@ public:
     /*!
      * \brief Constructs a new empty folder list model with the given \a parent.
      */
-    FolderListModel(QObject *parent = nullptr);
+    explicit FolderListModel(QObject *parent = nullptr);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;

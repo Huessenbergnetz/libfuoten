@@ -57,7 +57,7 @@ public:
     /*!
      * \brief Constructs an API request object with the given \a parent to query the status from the remote server.
      */
-    GetStatus(QObject *parent = nullptr);
+    explicit GetStatus(QObject *parent = nullptr);
 
     /*!
      * \brief Executes the API request.

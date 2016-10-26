@@ -60,7 +60,7 @@ public:
     /*!
      * \brief Constructs an API request object with the given \a parent to query folders from the remote server.
      */
-    GetFolders(QObject *parent = nullptr);
+    explicit GetFolders(QObject *parent = nullptr);
 
     /*!
      * \brief Executes the API request.

@@ -57,7 +57,7 @@ public:
     /*!
      * \brief Constructs an API request object with the given \a parent to query the News App version from the remote server.
      */
-    GetVersion(QObject *parent = nullptr);
+    explicit GetVersion(QObject *parent = nullptr);
 
     /*!
      * \brief Executes the API request.

@@ -106,7 +106,7 @@ public:
     /*!
      * \brief Constructs an empty base item with the given \a parent.
      */
-    BaseItem(QObject *parent = nullptr);
+    explicit BaseItem(QObject *parent = nullptr);
 
     /*!
      * \brief Deconstructs the base item.
