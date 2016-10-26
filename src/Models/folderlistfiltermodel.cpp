@@ -110,8 +110,6 @@ bool FolderListFilterModel::lessThan(const QModelIndex &left, const QModelIndex 
         }
     case FuotenEnums::UnreadCount:
         return sortOrder() == Qt::AscendingOrder ? l->unreadCount()< r->unreadCount() : l->unreadCount() > r->unreadCount();
-    case FuotenEnums::ItemCount:
-        return sortOrder() == Qt::AscendingOrder ? l->itemCount() < r->itemCount() : l->itemCount() > r->itemCount();
     case FuotenEnums::FeedCount:
         return sortOrder() == Qt::AscendingOrder ? l->feedCount() < r->feedCount() : l->feedCount() > r->feedCount();
     default:
