@@ -28,6 +28,7 @@
 namespace Fuoten {
 
 class Folder;
+class Feed;
 class Error;
 class AbstractStoragePrivate;
 
@@ -54,6 +55,8 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      * <TABLE><TR><TD>bool</TD><TD>ready() const</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>readyChanged(bool ready)</TD></TR></TABLE>
+     *
+     * \sa setReady()
      */
     Q_PROPERTY(bool ready READ ready NOTIFY readyChanged)
     /*!
@@ -63,26 +66,32 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>errorChanged(Error *error)</TD></TR></TABLE>
+     *
+     * \sa setError()
      */
     Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
     /*!
      * \brief Total amount of unread items in the storage.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint16</TD><TD>totalUnread() const</TD></TR><TR><TD>void</TD><TD>setTotalUnread(quint16 nTotalUnread)</TD></TR></TABLE>
+     * <TABLE><TR><TD>quint16</TD><TD>totalUnread() const</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>totalUnreadChanged(quint16 totalUnread)</TD></TR></TABLE>
+     *
+     * \sa setTotalUnread()
      */
-    Q_PROPERTY(quint16 totalUnread READ totalUnread WRITE setTotalUnread NOTIFY totalUnreadChanged)
+    Q_PROPERTY(quint16 totalUnread READ totalUnread NOTIFY totalUnreadChanged)
     /*!
      * \brief Amount of starred items.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint16</TD><TD>starred() const</TD></TR><TR><TD>void</TD><TD>setStarred(quint16 nStarred)</TD></TR></TABLE>
+     * <TABLE><TR><TD>quint16</TD><TD>starred() const</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>starredChanged(quint16 starred)</TD></TR></TABLE>
+     *
+     * \sa setStarred()
      */
-    Q_PROPERTY(quint16 starred READ starred WRITE setStarred NOTIFY starredChanged)
+    Q_PROPERTY(quint16 starred READ starred NOTIFY starredChanged)
 public:
     /*!
      * \brief Constructs a new abstract local storage with the given \a parent.
@@ -122,17 +131,24 @@ public:
      * \sa starred
      */
     virtual quint16 starred() const;
-
+    
     /*!
-     * \brief Sets the total number of unread articles.
-     * \sa totalUnread
+     * \brief Returns a list of Folder objects from the local storage.
+     *
+     * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
+     * only folders with IDs from the list will be returned. The Folder objects in the returned list will
+     * have their parent set to \c nullptr.
      */
-    virtual void setTotalUnread(quint16 nTotalUnread);
-
+    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) = 0;
+    
     /*!
-     * \brief Sets the total number of starred articles.
+     * \brief Returns a list of Feed objects from the local storage.
+     *
+     * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
+     * only folders with IDs from the list will be returned. The Feed objects in the returned list will
+     * have their parent set to \c nullptr.
      */
-    virtual void setStarred(quint16 nStarred);
+    virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) = 0;
 
 public Q_SLOTS:
     /*!
@@ -204,24 +220,121 @@ public Q_SLOTS:
     virtual void folderMarkedRead(qint64 id, qint64 newestItem) = 0;
 
     /*!
-     * \brief Returns a list of Folder objects from the local storage.
+     * \brief Receives the reply data of the GetFeeds request.
      *
-     * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
-     * only folders with IDs from the list will be returned. The Folder objects in the returned list will
-     * have their parent set to \c nullptr.
+     * Implement this in a derived class to store feed data, for example in a local SQL database.
+     * You may want to emit requestedFeeds() in your implementation after you processed the data.
+     *
+     * \par Example JSON response data
+     *
+     * \code{.json}
+     * {
+     *   "feeds": [
+     *     {
+     *       "id": 39,
+     *       "url": "http://feeds.feedburner.com/oatmealfeed",
+     *       "title": "The Oatmeal - Comics, Quizzes, & Stories",
+     *       "faviconLink": "http://theoatmeal.com/favicon.ico",
+     *       "added": 1367063790,
+     *       "folderId": 4,
+     *       "unreadCount": 9,
+     *       "ordering": 0, // 0 means no special ordering, 1 means oldest first, 2 newest first, new in 5.1.0
+     *       "link": "http://theoatmeal.com/",
+     *       "pinned": true // if a feed should be sorted before other feeds, added in 6.0.3,
+     *       "updateErrorCount": 0,
+     *       "lastUpdateError": "error message here"
+     *     }, // etc
+     *   ],
+     *   "starredCount": 2,
+     *   "newestItemId": 3443  // only sent if there are items
+     * }
+     * \endcode
      */
-    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) = 0;
+    virtual void feedsRequested(const QJsonDocument &json) = 0;
+
+    /*!
+     * \brief Receives the reply data of the CreateFeed request.
+     *
+     * Implement this in a derived class to store new feed data, for example in a local SQL databse.
+     * You my want to emit createdFeed() in your implementation after you processed the data.
+     *
+     * \par Example JSON response data
+     *
+     * \code{.json}
+     * {
+     *   "feeds": [
+     *     {
+     *       "id": 39,
+     *       "url": "http://feeds.feedburner.com/oatmealfeed",
+     *       "title": "The Oatmeal - Comics, Quizzes, & Stories",
+     *       "faviconLink": "http://theoatmeal.com/favicon.ico",
+     *       "added": 1367063790,
+     *       "folderId": 4,
+     *       "unreadCount": 9,
+     *       "ordering": 0, // 0 means no special ordering, 1 means oldest first, 2 newest first, new in 5.1.0
+     *       "link": "http://theoatmeal.com/",
+     *       "pinned": true // if a feed should be sorted before other feeds, added in 6.0.3
+     *     }
+     *   ],
+     *   "newestItemId": 23 // only sent if there are items
+     * }
+     * \endcode
+     */
+    virtual void feedCreated(const QJsonDocument &json) = 0;
+
+    /*!
+     * \brief Receives the reply data of the DeleteFeed request.
+     *
+     * Will delete the feed identified by \a id in the local storage and emits the deletedFeed() signal.
+     */
+    virtual void feedDeleted(qint64 id) = 0;
+
+    /*!
+     * \brief Receives the reply data of the MoveFeed request.
+     *
+     * Will move the feed identified by \a id to the \a targetFolder id and emits the movedFeed() signal.
+     */
+    virtual void feedMoved(qint64 id, qint64 targetFolder) = 0;
+
+    /*!
+     * \brief Receives the reply data of the RenameFeed request.
+     *
+     * Will rename the feed identified by \a id to the \a newTitle and emits the renamedFeed() signal.
+     */
+    virtual void feedRenamed(qint64 id, const QString &newTitle) = 0;
+
+    /*!
+     * \brief Receives the reply data of the MarkFeedRead request.
+     *
+     * Will mark all items in the feed identified by \a id that have a lower ID than \a newestItem as read in the local storage.
+     * Will than emit the markedReadFeed() signal.
+     */
+    virtual void feedMarkedRead(qint64 id, qint64 newestItem) = 0;
 
 protected:
     /*!
      * \brief Set this to \a true when the storage has finished it's initialization.
+     * \sa ready
      */
     void setReady(bool nReady);
 
     /*!
      * \brief Sets the Error object.
+     * \sa error
      */
     void setError(Error *nError);
+
+    /*!
+     * \brief Sets the total number of unread articles.
+     * \sa totalUnread
+     */
+    virtual void setTotalUnread(quint16 nTotalUnread);
+
+    /*!
+     * \brief Sets the total number of starred articles.
+     * \sa starred
+     */
+    virtual void setStarred(quint16 nStarred);
 
     const QScopedPointer<AbstractStoragePrivate> d_ptr;
     AbstractStorage(AbstractStoragePrivate &dd, QObject *parent = nullptr);
@@ -265,7 +378,7 @@ Q_SIGNALS:
     /*!
      * \brief Emit this after a folder has been marked as read.
      *
-     * Best location t emit this signal is your implementation of folderMarkedRead(). The signal
+     * Best location to emit this signal is your implementation of folderMarkedRead(). The signal
      * has to contain the \a id of the folder that has been marked as read as well as the ID of
      * the \a newestItem that has been marked as read.
      */
@@ -292,6 +405,56 @@ Q_SIGNALS:
      * \sa starred
      */
     void starredChanged(quint16 starred);
+
+    /*!
+     * \brief Emit this after have have been received and processed.
+     *
+     * Best location to emit this signal is your implementation of feedsRequested().
+     *
+     * Every argument of the signal should contain a list of feed IDs that are either updated, new or deleted.
+     */
+    void requestedFeeds(QList<qint64> &updatedFeeds, QList<qint64> &newFeeds, QList<qint64> &deletedFeeds);
+
+    /*!
+     * \brief Emit this after a new feed has been created.
+     *
+     * Best loaction to emit this signal is your implementation of feedCreated(). The signal
+     * has to contain the \a id of the new feed.
+     */
+    void createdFeed(qint64 id);
+
+    /*!
+     * \brief Emit this after a feed has been deleted.
+     *
+     * Best location to emit this signal is your implementation of feedDeleted(). The signal
+     * has to contain the \a id fo the deleted feed.
+     */
+    void deletedFeed(qint64 id);
+
+    /*!
+     * \brief Emit this signal after a feed has been moved to another folder.
+     *
+     * Best location to emit this signal is your implementation of feedMoved(). The signal
+     * has to contain the \a id of the moved feed and the \a targetFolder id.
+     */
+    void movedFeed(qint64 id, qint64 targetFolder);
+
+    /*!
+     * \brief Emit this signal after a feed has been renamed.
+     *
+     * Best location to emit this signal is your implementation of feedRename(). The signal
+     * has to contain the \a id of the renamed feed and the \a newName.
+     */
+    void renamedFeed(qint64 id, const QString &newName);
+
+    /*!
+     * \brief Emit this after a feed has been marked as read.
+     *
+     * Best location to emit this signal is your implementation of feedMarkedRead(). The signal
+     * has to contain the \a id of the feed that has been marked as read as well as the ID of
+     * the \a newestItem that has been marked as read.
+     */
+    void markedReadFeed(qint64 id, qint64 newestItem);
 
 
 private:
