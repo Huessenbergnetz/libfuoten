@@ -64,7 +64,7 @@ public Q_SLOTS:
     void folderCreated(const QJsonDocument &json) override;
     void folderRenamed(qint64 id, const QString &newName) override;
     void folderDeleted(qint64 id) override;
-    void folderMarkedRead(qint64 id, qint64 newestItem);
+    void folderMarkedRead(qint64 id, qint64 newestItem) override;
 
 private:
     Q_DECLARE_PRIVATE(SQLiteStorage)

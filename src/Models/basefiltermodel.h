@@ -103,7 +103,9 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
      */
     Q_PROPERTY(bool hideRead READ hideRead WRITE setHideRead NOTIFY hideReadChanged)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+#ifndef CLAZY
     Q_ENUM(Fuoten::FuotenEnums::SortingRole)
+#endif
 #else
     Q_ENUMS(Fuoten::FuotenEnums::SortingRole)
 #endif
