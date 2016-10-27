@@ -2,7 +2,7 @@
 <context>
     <name/>
     <message id="invalid-api-url">
-        <location filename="../src/API/component.cpp" line="+94"/>
+        <location filename="../Fuoten/API/component.cpp" line="+94"/>
         <source>Invalid API URL</source>
         <translation>Ungültige API-URL</translation>
     </message>
@@ -13,7 +13,7 @@
     </message>
     <message id="id-err-no-config">
         <location line="+24"/>
-        <location filename="../src/Helpers/accountvalidator.cpp" line="+68"/>
+        <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+68"/>
         <source>No configuration available.</source>
         <translation>Keine Konfiguration verfügbar.</translation>
     </message>
@@ -53,7 +53,7 @@
         <translation>In der Antwort wurde ein JSON-Objekt erwartet, aber es wurde etwas anderes geliefert.</translation>
     </message>
     <message id="err-net-reply-1">
-        <location filename="../src/error.cpp" line="+68"/>
+        <location filename="../Fuoten/error.cpp" line="+68"/>
         <source>The remote server at %1 refused the connection.</source>
         <translation>Der Server unter %1 hat die Verbindung verweigert.</translation>
     </message>
@@ -219,18 +219,18 @@
         <translation>Es wurde ein unbekannter Fehler im Zusammenhang mit der Server-Antwort festgestellt.</translation>
     </message>
     <message id="id-err-version-low-status-user">
-        <location filename="../src/Helpers/accountvalidator.cpp" line="+21"/>
+        <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+21"/>
         <source>The version of your News App is lower than 5.2.4. Status and user information can not be queried.</source>
         <translation>Die Version Ihrer News App ist kleiner als 5.2.4. Status und Benutzerinformationen können nicht abgefragt werden.</translation>
     </message>
     <message id="id-err-version-low-user">
-        <location line="+21"/>
+        <location line="+22"/>
         <source>The version of your News App is lower than 6.0.5. User information can not be queried.</source>
         <translation>Die Version Ihrer News App ist kleiner als 6.0.5. Benutzerinformationen können nicht abgefragt werden.</translation>
     </message>
     <message id="err-version-not-found">
-        <location filename="../src/API/getstatus.cpp" line="+102"/>
-        <location filename="../src/API/getversion.cpp" line="+99"/>
+        <location filename="../Fuoten/API/getstatus.cpp" line="+102"/>
+        <location filename="../Fuoten/API/getversion.cpp" line="+99"/>
         <source>Can not find the version information in the server reply.</source>
         <translation>Die Server-Antwort enthält keine Versionsinformation.</translation>
     </message>
@@ -240,101 +240,139 @@
         <translation>Die Server-Antwort enthält keine Warnhinweise.</translation>
     </message>
     <message id="err-displayname-not-found">
-        <location filename="../src/API/getuser.cpp" line="+107"/>
+        <location filename="../Fuoten/API/getuser.cpp" line="+107"/>
         <source>Can not find the user&apos;s display name in the server reply.</source>
         <translation>Die Server-Antwort enthält keinen Anzeigenamen des Benutzers.</translation>
     </message>
     <message id="libfuoten-err-failed-open-db">
-        <location filename="../src/Storage/sqlitestorage.cpp" line="+64"/>
-        <location line="+95"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+66"/>
+        <location line="+228"/>
         <source>Failed to open the SQLite database.</source>
         <translation>Die SQLite-Datenbank konnte nicht geöffnet werden.</translation>
     </message>
     <message id="fuoten-error-failed-execute-query">
-        <location line="-83"/>
+        <location line="-216"/>
         <location line="+16"/>
-        <location line="+13"/>
+        <location line="+11"/>
+        <location line="+20"/>
+        <location line="+23"/>
+        <location line="+6"/>
+        <location line="+6"/>
+        <location line="+6"/>
+        <location line="+10"/>
+        <location line="+10"/>
+        <location line="+10"/>
+        <location line="+10"/>
+        <location line="+10"/>
+        <location line="+11"/>
+        <location line="+12"/>
         <location line="+16"/>
         <location line="+7"/>
-        <location line="+162"/>
+        <location line="+86"/>
+        <location line="+16"/>
+        <location line="+136"/>
         <location line="+24"/>
         <location line="+26"/>
         <location line="+69"/>
         <location line="+45"/>
-        <location line="+56"/>
+        <location line="+57"/>
+        <location line="+46"/>
+        <location line="+25"/>
         <source>Failed to execute database query.</source>
         <translation>Datenbankabfrage konnte nicht durchgeführt werden.</translation>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-428"/>
-        <location line="+196"/>
+        <location line="-708"/>
+        <location line="+404"/>
         <source>Failed to begin a database transaction.</source>
         <translation>Datenbanktransaktion konnte nicht begonnen werden.</translation>
     </message>
     <message id="fuoten-error-transaction-commit">
-        <location line="-167"/>
-        <location line="+239"/>
+        <location line="-243"/>
+        <location line="+315"/>
         <source>Failed to commit a database transaction.</source>
         <translation>Datenbanktransaktion konnte nicht abgeschlossen werden.</translation>
     </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
-        <location line="-176"/>
+        <location line="-251"/>
+        <location line="+75"/>
         <location line="+249"/>
+        <location line="+110"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation>SQLite-Datenbank nicht verfügbar. Daten können nicht verarbeitet werden.</translation>
     </message>
+    <message id="libfuoten-err-invalid-feed-id">
+        <location line="-422"/>
+        <source>The feed ID is not valid.</source>
+        <translation>Die Feed-ID ist ungültig.</translation>
+    </message>
     <message id="fuoten-failed-query-folders">
-        <location line="-219"/>
+        <location line="+93"/>
         <source>Failed to query the folders from the local database.</source>
         <translation>Ordner konnten nicht aus der lokalen Datenbank abgefragt werden.</translation>
     </message>
     <message id="fuoten-error-failed-prepare-query">
-        <location line="+101"/>
+        <location line="-58"/>
+        <location line="+159"/>
         <location line="+26"/>
         <location line="+69"/>
         <location line="+45"/>
+        <location line="+104"/>
+        <location line="+25"/>
         <source>Failed to prepare database query.</source>
         <translation>Datenbankabfrage konnte nicht vorbereitet werden.</translation>
     </message>
     <message id="libfuoten-err-invalid-folder-id">
-        <location filename="../src/API/renamefolder.cpp" line="+85"/>
-        <location filename="../src/Storage/sqlitestorage.cpp" line="-10"/>
+        <location filename="../Fuoten/API/deletefolder.cpp" line="+75"/>
+        <location filename="../Fuoten/API/markfolderread.cpp" line="+81"/>
+        <location filename="../Fuoten/API/renamefolder.cpp" line="+81"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-469"/>
+        <location line="+330"/>
+        <location line="+104"/>
         <source>The folder ID is not valid.</source>
         <oldsource>Failed to rename the folder. The folder ID is not valid.</oldsource>
         <translation>Die Ordner-ID ist ungültig.</translation>
     </message>
     <message id="libfuoten-err-empty-folder-name">
-        <location filename="../src/API/createfolder.cpp" line="+79"/>
-        <location filename="../src/API/renamefolder.cpp" line="+8"/>
-        <location filename="../src/Storage/sqlitestorage.cpp" line="-6"/>
+        <location filename="../Fuoten/API/createfolder.cpp" line="+79"/>
+        <location filename="../Fuoten/API/renamefolder.cpp" line="+8"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-110"/>
         <source>The folder name can not be empty.</source>
         <oldsource>Failed to rename the folder. The new folder name is empty.</oldsource>
         <translation>Der Ordnername darf nicht leer sein.</translation>
     </message>
     <message id="libfuoten-err-no-folders-array-in-reply">
         <location line="+22"/>
+        <location filename="../Fuoten/API/getfolders.cpp" line="+98"/>
         <source>The data the server replied does not contain a &quot;folders&quot; array.</source>
         <translation>Die vom Server erhaltenen Daten enthalten kein &quot;folders&quot; Array.</translation>
     </message>
     <message id="libfuoten-err-folder-name-exists">
         <location line="+23"/>
-        <location filename="../src/API/renamefolder.cpp" line="+42"/>
+        <location filename="../Fuoten/API/renamefolder.cpp" line="+42"/>
         <source>The folder name does already exist on the server.</source>
         <oldsource>Failed to rename the folder. The new folder name does already exist on the server.</oldsource>
         <translation>Der Ordnername existiert auf dem Server bereits.</translation>
     </message>
     <message id="libfuoten-err-folder-not-exists">
-        <location filename="../src/API/renamefolder.cpp" line="+4"/>
+        <location filename="../Fuoten/API/deletefolder.cpp" line="+38"/>
+        <location filename="../Fuoten/API/markfolderread.cpp" line="+44"/>
+        <location filename="../Fuoten/API/renamefolder.cpp" line="+4"/>
         <source>The folder was not found on the server.</source>
         <oldsource>Failed to rename the folder. The folder to rename was not found on the server.</oldsource>
         <translation>Der Ordner wurde auf dem Server nicht gefunden.</translation>
     </message>
     <message id="libfuoten-err-folder-invalid-name">
-        <location filename="../src/API/createfolder.cpp" line="+4"/>
-        <location filename="../src/API/renamefolder.cpp" line="+4"/>
+        <location filename="../Fuoten/API/createfolder.cpp" line="+4"/>
+        <location filename="../Fuoten/API/renamefolder.cpp" line="+4"/>
         <source>The folder name is invalid (for instance empty).</source>
         <oldsource>Failed to rename the folder. The new folder name is invalid (for instance empty).</oldsource>
         <translation>Der Ordnername ist ungültig (bspw. leer).</translation>
+    </message>
+    <message id="libfuoten-err-invalid-item-id">
+        <location filename="../Fuoten/API/markfolderread.cpp" line="-36"/>
+        <source>The item ID is not valid.</source>
+        <translation>Die Artikel-ID ist ungültig.</translation>
     </message>
 </context>
 </TS>
