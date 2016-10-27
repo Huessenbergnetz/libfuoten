@@ -4,6 +4,7 @@ TEMPLATE = lib
 VER_MAJ = 0
 VER_MIN = 0
 VER_PAT = 1
+VERSION = $${VER_MAJ}.$${VER_MIN}.$${VER_PAT}
 
 QT += network sql
 QT -= GUI
@@ -18,8 +19,84 @@ DEFINES += FUOTEN_LIBRARY
 
 DEFINES += VERSION_STRING=\"\\\"$${VERSION}\\\"\"
 
+isEmpty(PREFIX): PREFIX = $$[QT_INSTALL_PREFIX]
 isEmpty(INSTALL_LIB_DIR): INSTALL_LIB_DIR = $$[QT_INSTALL_LIBS]
 isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRANSLATIONS]
+
+!contains(CONFIG, no_install_dev_files) {
+    isEmpty(INSTALL_HEADERS_DIR): INSTALL_HEADERS_DIR = $$[QT_INSTALL_HEADERS]
+    INSTALL_HEADERS += \
+        Fuoten/Helpers/synchronizer.h \
+        Fuoten/Helpers/AbstractConfiguration \
+        Fuoten/Helpers/Synchronizer \
+        Fuoten/Helpers/VersionNumber \
+        Fuoten/Helpers/AccountValidator \
+        Fuoten/Helpers/accountvalidator.h \
+        Fuoten/Helpers/abstractconfiguration.h \
+        Fuoten/Helpers/versionnumber.h \
+        Fuoten/folder.h \
+        Fuoten/Storage/SQLiteStorage \
+        Fuoten/Storage/abstractstorage.h \
+        Fuoten/Storage/sqlitestorage.h \
+        Fuoten/Storage/AbstractStorage \
+        Fuoten/error.h \
+        Fuoten/fuoten_global.h \
+        Fuoten/fuoten.h \
+        Fuoten/Models/abstractfoldermodel.h \
+        Fuoten/Models/BaseFilterModel \
+        Fuoten/Models/folderlistfiltermodel.h \
+        Fuoten/Models/FolderListFilterModel \
+        Fuoten/Models/BaseModel \
+        Fuoten/Models/AbstractFolderModel \
+        Fuoten/Models/basemodel.h \
+        Fuoten/Models/basefiltermodel.h \
+        Fuoten/Models/FolderListModel \
+        Fuoten/Models/folderlistmodel.h \
+        Fuoten/BaseItem \
+        Fuoten/Folder \
+        Fuoten/feed.h \
+        Fuoten/API/GetVersion \
+        Fuoten/API/CreateFolder \
+        Fuoten/API/markfolderread.h \
+        Fuoten/API/renamefolder.h \
+        Fuoten/API/MarkFolderRead \
+        Fuoten/API/getuser.h \
+        Fuoten/API/deletefolder.h \
+        Fuoten/API/RenameFolder \
+        Fuoten/API/getversion.h \
+        Fuoten/API/getstatus.h \
+        Fuoten/API/GetUser \
+        Fuoten/API/component.h \
+        Fuoten/API/GetStatus \
+        Fuoten/API/GetFolders \
+        Fuoten/API/DeleteFolder \
+        Fuoten/API/Component \
+        Fuoten/API/createfolder.h \
+        Fuoten/API/getfolders.h \
+        Fuoten/Error \
+        Fuoten/Feed \
+        Fuoten/FuotenEnums \
+        Fuoten/baseitem.h
+
+    basePath = $${dirname(PWD)}
+    for(header, INSTALL_HEADERS) {
+        relPath = $${relative_path($$header, $$basePath)}
+        path = $${INSTALL_HEADERS_DIR}/$${dirname(relPath)}
+        eval(headers_$${path}.files += $$relPath)
+        eval(headers_$${path}.path = $$path)
+        eval(INSTALLS *= headers_$${path})
+    }
+
+    pkgconfigfile.input = fuoten.pc.in
+    pkgconfigfile.output = fuoten.pc
+    pkgconfigfile.path = $$[QT_INSTALL_LIBS]/pkgconfig
+    pkgconfigfile.files = $$pkgconfigfile.output
+
+    QMAKE_SUBSTITUTES += pkgconfigfile
+
+    INSTALLS += pkgconfigfile
+
+}
 
 target = $$TARGET
 target.path = $$INSTALL_LIB_DIR
@@ -105,4 +182,5 @@ SOURCES += \
     Fuoten/feed.cpp \
     Fuoten/Helpers/abstractconfiguration.cpp
 
-DISTFILES +=
+DISTFILES += \
+    fuoten.pc.in
