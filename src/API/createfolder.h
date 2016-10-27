@@ -88,7 +88,7 @@ public:
     /*!
      * \brief Executes the API request.
      *
-     * To perform a successful API request, CreateFolder::name has to be valid and there has to be a Configuration object set to
+     * To perform a successful API request, CreateFolder::name has to be valid and there has to be a AbstractConfiguration object set to
      * Component::configuration.
      *
      * Execution will not run if Component::inOperation returns \c true and will itself set that property to \c true when start to perform

@@ -34,7 +34,7 @@ namespace Fuoten {
 
 class ComponentPrivate;
 class Error;
-class Configuration;
+class AbstractConfiguration;
 class AbstractStorage;
 
 /*!
@@ -195,16 +195,16 @@ class FUOTENSHARED_EXPORT Component : public QObject
      */
     Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
     /*!
-     * \brief Pointer to a Configuration object.
+     * \brief Pointer to a AbstractConfiguration object.
      *
      * It is mandatory for all calls to set this property to a valid object that contains the authentication information for the server.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>Configuration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(Configuration *nConfiguration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>configurationChanged(Configuration *configuration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>configurationChanged(AbstractConfiguration *configuration)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Fuoten::Configuration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
+    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setAbstractConfiguration NOTIFY configurationChanged)
     /*!
      * \brief Pointer to an AbstractStorage subclass.
      *
@@ -297,11 +297,11 @@ public:
     Error *error() const;
 
     /*!
-     * \brief Returns a pointer to the Configuration that is currently set.
+     * \brief Returns a pointer to the AbstractConfiguration that is currently set.
      *
      * \sa configuration
      */
-    Configuration *configuration() const;
+    AbstractConfiguration *configuration() const;
 
     /*!
      * \brief Returns a pointer to the local storage that is currently set.
@@ -327,11 +327,11 @@ public:
     void setRequestTimeout(quint8 seconds);
 
     /*!
-     * \brief Sets a pointer to a Configuration to use for the API request.
+     * \brief Sets a pointer to a AbstractConfiguration to use for the API request.
      *
      * \sa configuration
      */
-    void setConfiguration(Configuration *nConfiguration);
+    void setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration);
 
     /*!
      * \brief Sets a pointer to a local storage handler to save the API result.
@@ -367,10 +367,10 @@ Q_SIGNALS:
     void errorChanged(Error *error);
 
     /*!
-     * \brief This signal is emitted when the pointer to the Configuration object changes.
+     * \brief This signal is emitted when the pointer to the AbstractConfiguration object changes.
      * \sa configuration
      */
-    void configurationChanged(Configuration *configuration);
+    void configurationChanged(AbstractConfiguration *configuration);
 
     /*!
      * \brief This signal is emitted when the pointer to the local storage object changes.
@@ -381,7 +381,7 @@ Q_SIGNALS:
     /*!
      * \brief This signal is emitted if the SSL/TLS session encountered errors during the set up.
      *
-     * Will only be emitted if Configuration::getIgnoreSSLErrors() returns \c false (the default).
+     * Will only be emitted if AbstractConfiguration::getIgnoreSSLErrors() returns \c false (the default).
      */
     void sslErrors(QNetworkReply *reply, const QList<QSslError> &errors);
 

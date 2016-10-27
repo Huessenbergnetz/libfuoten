@@ -68,7 +68,7 @@ void SynchronizerPrivate::setError(Error *nError)
 void SynchronizerPrivate::start()
 {
     getFolders = new GetFolders(q_ptr);
-    getFolders->setConfiguration(configuration);
+    getFolders->setAbstractConfiguration(configuration);
     getFolders->setStorage(storage);
     QObject::connect(getFolders, &Component::failed, [=] (Error *e) {setError(e);});
     if (storage) {
@@ -132,13 +132,13 @@ Error *Synchronizer::error() const { Q_D(const Synchronizer); return d->error; }
 
 
 
-Configuration *Synchronizer::configuration() const { Q_D(const Synchronizer); return d->configuration; }
+AbstractConfiguration *Synchronizer::configuration() const { Q_D(const Synchronizer); return d->configuration; }
 
-void Synchronizer::setConfiguration(Configuration *nConfiguration)
+void Synchronizer::setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
     Q_D(Synchronizer);
-    if (nConfiguration != d->configuration) {
-        d->configuration = nConfiguration;
+    if (nAbstractConfiguration != d->configuration) {
+        d->configuration = nAbstractConfiguration;
 #ifdef QT_DEBUG
         qDebug() << "Changed configuration to" << d->configuration;
 #endif

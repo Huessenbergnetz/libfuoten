@@ -18,66 +18,66 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "configuration.h"
+#include "abstractconfiguration.h"
 
 using namespace Fuoten;
 
-Configuration::Configuration(QObject *parent) : QSettings(parent)
+AbstractConfiguration::AbstractConfiguration(QObject *parent) : QSettings(parent)
 {
 
 }
 
 
 
-void Configuration::checkAccountValidity()
+void AbstractConfiguration::checkAccountValidity()
 {
     setIsAccountValid((!getUsername().isEmpty() && !getPassword().isEmpty() && !getHost().isEmpty() && !getServerVersion().isNull()));
 }
 
 
-QString Configuration::getUserAgent() const
+QString AbstractConfiguration::getUserAgent() const
 {
     return QStringLiteral("Libfuoten %1").arg(QStringLiteral(VERSION_STRING));
 }
 
 
 
-bool Configuration::getUseSSL() const
+bool AbstractConfiguration::getUseSSL() const
 {
     return true;
 }
 
 
 
-int Configuration::getServerPort() const
+int AbstractConfiguration::getServerPort() const
 {
     return 0;
 }
 
 
 
-bool Configuration::getIgnoreSSLErrors() const
+bool AbstractConfiguration::getIgnoreSSLErrors() const
 {
     return false;
 }
 
 
 
-void Configuration::setAvatar(const QString &data, const QString &mime)
+void AbstractConfiguration::setAvatar(const QString &data, const QString &mime)
 {
     Q_UNUSED(data)
     Q_UNUSED(mime)
 }
 
 
-void Configuration::setDisplayName(const QString &nDisplayName)
+void AbstractConfiguration::setDisplayName(const QString &nDisplayName)
 {
     Q_UNUSED(nDisplayName)
 }
 
 
 
-void Configuration::setImproperlyConfiguredCron(bool nImproperlyConfiguredCron)
+void AbstractConfiguration::setImproperlyConfiguredCron(bool nImproperlyConfiguredCron)
 {
     Q_UNUSED(nImproperlyConfiguredCron)
 }

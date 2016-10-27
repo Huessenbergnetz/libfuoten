@@ -33,7 +33,7 @@ class DeleteFolderPrivate;
 /*!
  * \brief Deletes a folder on the News App server.
  *
- * To delete a folder on the server, set DeleteFolder::folderId to a valid ID and set a Configuration to Component::configuration.
+ * To delete a folder on the server, set DeleteFolder::folderId to a valid ID and set a AbstractConfiguration to Component::configuration.
  *
  * If a valid AbstractStorage object is set to the Component::storage property, AbstractStorage::folderDeleted() will be called in the
  * successCallback() to delete the folder in the local storage. If the request succeeded, the succeed() signal will be emitted in the successCallback()
@@ -86,7 +86,7 @@ public:
      * \brief Executes the API request.
      *
      * To perform a successful API request to delete a folder, DeleteFolder::folderId has to be a valid folder ID and there
-     * has to be a Configuration object set to Component::configuration.
+     * has to be a AbstractConfiguration object set to Component::configuration.
      *
      * Execution will not run while Component::inOperation returns \c true and will itself set that property to \c true when the
      * request starts.

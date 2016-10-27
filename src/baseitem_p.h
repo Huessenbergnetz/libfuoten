@@ -23,7 +23,7 @@
 
 #include "baseitem.h"
 #include "API/component.h"
-#include "Helpers/configuration.h"
+#include "Helpers/abstractconfiguration.h"
 #include "Storage/abstractstorage.h"
 
 namespace Fuoten {

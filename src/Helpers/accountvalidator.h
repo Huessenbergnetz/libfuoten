@@ -26,7 +26,7 @@
 
 namespace Fuoten {
 
-class Configuration;
+class AbstractConfiguration;
 class Error;
 
 class AccountValidatorPrivate;
@@ -46,16 +46,16 @@ class FUOTENSHARED_EXPORT AccountValidator : public QObject
 {
     Q_OBJECT
     /*!
-     * \brief Pointer to a Configuration object.
+     * \brief Pointer to a AbstractConfiguration object.
      *
      * It is mandatory to set this property to a valid object that contains the authantication data and server configuration.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>Configuration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(Configuration *nConfiguration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>configurationChanged(Configuration *configuration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>configurationChanged(AbstractConfiguration *configuration)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Fuoten::Configuration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
+    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setAbstractConfiguration NOTIFY configurationChanged)
     /*!
      * \brief Returns true while the validation is in operation.
      *
@@ -93,10 +93,10 @@ public:
     Q_INVOKABLE void start();
 
     /*!
-     * \brief Returns a pointer to the currently set Configuration object.
+     * \brief Returns a pointer to the currently set AbstractConfiguration object.
      * \sa configuration
      */
-    Configuration *configuration() const;
+    AbstractConfiguration *configuration() const;
 
     /*!
      * \brief Returns \c true while the validation process is active.
@@ -111,17 +111,17 @@ public:
     Error *error() const;
 
     /*!
-     * \brief Sets the pointer to a Configuration object.
+     * \brief Sets the pointer to a AbstractConfiguration object.
      * \sa configuration
      */
-    void setConfiguration(Configuration *nConfiguration);
+    void setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration);
 
 Q_SIGNALS:
     /*!
-     * \brief This signal is emitted when the pointer to a Configuration object changes.
+     * \brief This signal is emitted when the pointer to a AbstractConfiguration object changes.
      * \sa configuration
      */
-    void configurationChanged(Configuration *configuration);
+    void configurationChanged(AbstractConfiguration *configuration);
     /*!
      * \brief This signal is emitted when the operational status changes.
      * \sa inOperation

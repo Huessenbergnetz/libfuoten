@@ -28,7 +28,7 @@ namespace Fuoten {
 
 class SynchronizerPrivate;
 class Error;
-class Configuration;
+class AbstractConfiguration;
 class AbstractStorage;
 
 /*!
@@ -52,16 +52,16 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
      */
     Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
     /*!
-     * \brief Pointer to a Configuration object.
+     * \brief Pointer to a AbstractConfiguration object.
      *
-     * You have to set a valid Configuration object in order to start a synchronization.
+     * You have to set a valid AbstractConfiguration object in order to start a synchronization.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>Configuration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(Configuration *nConfiguration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>configurationChanged(Configuration *configuration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>configurationChanged(AbstractConfiguration *configuration)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Fuoten::Configuration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
+    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setAbstractConfiguration NOTIFY configurationChanged)
     /*!
      * \brief Pointer to aa AbstractStorage derived object.
      *
@@ -98,10 +98,10 @@ public:
     Error *error() const;
 
     /*!
-     * \brief Returns the pointer to the currently set Configuration object.
+     * \brief Returns the pointer to the currently set AbstractConfiguration object.
      * \sa configuration
      */
-    Configuration *configuration() const;
+    AbstractConfiguration *configuration() const;
 
     /*!
      * \brief Returns the pointer to the currently set AbstractStorage object, if any, otherwise a \c nullptr.
@@ -115,10 +115,10 @@ public:
     bool inOperation() const;
 
     /*!
-     * \brief Sets the pointer to a Configuration object.
+     * \brief Sets the pointer to a AbstractConfiguration object.
      * \sa configuration
      */
-    void setConfiguration(Configuration *nConfiguration);
+    void setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration);
 
     /*!
      * \brief Sets the pointer to an AbstractStorage object.
@@ -145,10 +145,10 @@ Q_SIGNALS:
     void errorChanged(Error *error);
 
     /*!
-     * \brief This signal is emitted if the pointer to the Configuration object changes.
+     * \brief This signal is emitted if the pointer to the AbstractConfiguration object changes.
      * \sa configuration
      */
-    void configurationChanged(Configuration *configuration);
+    void configurationChanged(AbstractConfiguration *configuration);
 
     /*!
      * \brief This signall is emitted if the pointer to the AbstractStorage object changes.

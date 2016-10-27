@@ -103,7 +103,7 @@ void Folder::setUnreadCount(uint nUnreadCount)
 
 
 
-void Folder::rename(const QString &newName, Configuration *config, AbstractStorage *storage)
+void Folder::rename(const QString &newName, AbstractConfiguration *config, AbstractStorage *storage)
 {
     if (inOperation()) {
         qWarning("Folder is still in operation.");
@@ -121,7 +121,7 @@ void Folder::rename(const QString &newName, Configuration *config, AbstractStora
     }
 
     RenameFolder *rf = new RenameFolder(this);
-    rf->setConfiguration(config);
+    rf->setAbstractConfiguration(config);
     rf->setStorage(storage);
     rf->setFolderId(id());
     rf->setNewName(newName);
@@ -142,7 +142,7 @@ void Folder::rename(const QString &newName, Configuration *config, AbstractStora
 
 
 
-void Folder::remove(Configuration *config, AbstractStorage *storage)
+void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
 {
     if (inOperation()) {
         qWarning("Folder is still in operation.");
@@ -150,12 +150,12 @@ void Folder::remove(Configuration *config, AbstractStorage *storage)
     }
 
     if (!config) {
-        qWarning("Can not delete the folder. No Configuration available.");
+        qWarning("Can not delete the folder. No AbstractConfiguration available.");
         return;
     }
 
     DeleteFolder *df = new DeleteFolder(this);
-    df->setConfiguration(config);
+    df->setAbstractConfiguration(config);
     df->setStorage(storage);
     df->setFolderId(id());
     connect(df, &DeleteFolder::succeeded, this, &QObject::deleteLater);

@@ -134,7 +134,7 @@ public:
      *
      * This function is invokable from QML.
      */
-    Q_INVOKABLE void rename(const QString &newName, Fuoten::Configuration *config, Fuoten::AbstractStorage *storage = nullptr);
+    Q_INVOKABLE void rename(const QString &newName, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
     /*!
      * \brief Removes this folder from the remote server.
@@ -143,7 +143,7 @@ public:
      *
      * This function is invokable from QML.
      */
-    Q_INVOKABLE void remove(Fuoten::Configuration *config, Fuoten::AbstractStorage *storage = nullptr);
+    Q_INVOKABLE void remove(Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
 Q_SIGNALS:
     /*!

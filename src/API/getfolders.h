@@ -32,7 +32,7 @@ class GetFoldersPrivate;
 /*!
  * \brief Requests the list of folders from the News App API.
  *
- * To request the folder list, the Component::configuration property has to be set to a valid Configuration object. After setting it,
+ * To request the folder list, the Component::configuration property has to be set to a valid AbstractConfiguration object. After setting it,
  * call execute() to perform the API request.
  *
  * If a valid AbstractStorage object is set to the Component::storage property, AbstractStorage::foldersRequested will be called in the successCallback()
@@ -65,7 +65,7 @@ public:
     /*!
      * \brief Executes the API request.
      *
-     * To perform a successful API request, Component::configuration has to be set to a valid Configuration object.
+     * To perform a successful API request, Component::configuration has to be set to a valid AbstractConfiguration object.
      *
      * Execution will not run if Component::inOperation returns \c true and will itself set that property to \c true when start to perform
      * the request.

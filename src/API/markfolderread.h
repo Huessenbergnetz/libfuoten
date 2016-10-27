@@ -103,7 +103,7 @@ public:
      * \brief Executes the API request.
      *
      * To perform a successful API request to mark a folder as read, MarkFolderRead::folderId and MarkFolderRead::newestItemId have to be valid IDs
-     * and there has to be a Configuration object set to Component::configuration.
+     * and there has to be a AbstractConfiguration object set to Component::configuration.
      *
      * Execution will not run while Component::inOperation returns \c true and will itself set that property to \c true when the request starts.
      */

@@ -35,7 +35,7 @@ class GetUserPrivate;
  * The user reply will contain information about the authenticated user like display name, avatar and last login time.
  * To request the user information, set the \link Component::configuration configuration \endlink property and call execute().
  *
- * The requested data will be written to Configuration::setDisplayName() and Configuration::setAvatar(). You can get the raw JSON response from the Component::succeeded() signal.
+ * The requested data will be written to AbstractConfiguration::setDisplayName() and AbstractConfiguration::setAvatar(). You can get the raw JSON response from the Component::succeeded() signal.
  * If something failed, the Component::failed() signal will be emitted and Component::error will contain a valid pointer to an Error object.
  *
  * \par Mandatory properties
@@ -62,7 +62,7 @@ public:
     /*!
      * \brief Executes the API request.
      *
-     * To perform a successful API request, Component::configuration has to be set to a valid Configuration object.
+     * To perform a successful API request, Component::configuration has to be set to a valid AbstractConfiguration object.
      *
      * Execution will not run if Component::inOperation returns \c true and will itself set that property to \c true when start to perform
      * the request.
@@ -75,7 +75,7 @@ protected:
     /*!
      * \brief Finishes the user request if it was successful.
      *
-     * Will use Configuration::setDisplayName() and Configuration::setAvatar() to store the reply. Afterwards it will
+     * Will use AbstractConfiguration::setDisplayName() and AbstractConfiguration::setAvatar() to store the reply. Afterwards it will
      * set Component::inOperation to \c false and emits the Component::succeeded() signal.
      */
     void successCallback() override;

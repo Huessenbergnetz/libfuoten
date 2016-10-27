@@ -19,7 +19,7 @@
  */
 
 #include "accountvalidator_p.h"
-#include "configuration.h"
+#include "abstractconfiguration.h"
 #include "../error.h"
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
 #include "versionnumber.h"
@@ -72,7 +72,7 @@ void AccountValidator::start()
 
     if (!d->version) {
         d->version = new GetVersion(this);
-        d->version->setConfiguration(configuration());
+        d->version->setAbstractConfiguration(configuration());
         connect(d->version, &Component::succeeded, this, &AccountValidator::gotVersion);
         connect(d->version, &Component::failed, this, &AccountValidator::setError);
     }
@@ -95,7 +95,7 @@ void AccountValidator::gotVersion()
 
     if (!d->status) {
         d->status = new GetStatus(this);
-        d->status->setConfiguration(configuration());
+        d->status->setAbstractConfiguration(configuration());
         connect(d->status, &Component::succeeded, this, &AccountValidator::gotStatus);
         connect(d->status, &Component::failed, this, &AccountValidator::setError);
     }
@@ -117,7 +117,7 @@ void AccountValidator::gotStatus()
 
     if (!d->user) {
         d->user = new GetUser(this);
-        d->user->setConfiguration(configuration());
+        d->user->setAbstractConfiguration(configuration());
         connect(d->user, &Component::succeeded, this, &AccountValidator::gotUser);
         connect(d->user, &Component::failed, this, &AccountValidator::setError);
     }
@@ -140,13 +140,13 @@ void AccountValidator::gotUser()
 
 
 
-Configuration *AccountValidator::configuration() const { Q_D(const AccountValidator); return d->configuration; }
+AbstractConfiguration *AccountValidator::configuration() const { Q_D(const AccountValidator); return d->configuration; }
 
-void AccountValidator::setConfiguration(Configuration *nConfiguration)
+void AccountValidator::setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
     Q_D(AccountValidator); 
-    if (nConfiguration != d->configuration) {
-        d->configuration = nConfiguration;
+    if (nAbstractConfiguration != d->configuration) {
+        d->configuration = nAbstractConfiguration;
 #ifdef QT_DEBUG
         qDebug() << "Changed configuration to" << d->configuration;
 #endif

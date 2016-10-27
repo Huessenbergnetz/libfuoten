@@ -382,13 +382,13 @@ void Component::setError(Error *nError)
 
 
 
-Configuration *Component::configuration() const { Q_D(const Component); return d->configuration; }
+AbstractConfiguration *Component::configuration() const { Q_D(const Component); return d->configuration; }
 
-void Component::setConfiguration(Configuration *nConfiguration)
+void Component::setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
     Q_D(Component);
-    if (nConfiguration != d->configuration) {
-        d->configuration = nConfiguration;
+    if (nAbstractConfiguration != d->configuration) {
+        d->configuration = nAbstractConfiguration;
 #ifdef QT_DEBUG
         qDebug() << "Changed configuration to" << d->configuration;
 #endif

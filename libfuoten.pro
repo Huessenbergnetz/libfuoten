@@ -37,7 +37,6 @@ HEADERS += \
     src/API/component_p.h \
     src/API/getversion.h \
     src/API/getversion_p.h \
-    src/Helpers/configuration.h \
     src/API/getstatus.h \
     src/API/getstatus_p.h \
     src/API/getuser.h \
@@ -77,13 +76,13 @@ HEADERS += \
     src/API/markfolderread_p.h \
     src/API/markfolderread.h \
     src/feed_p.h \
-    src/feed.h
+    src/feed.h \
+    src/Helpers/abstractconfiguration.h
 
 SOURCES += \
     src/error.cpp \
     src/API/component.cpp \
     src/API/getversion.cpp \
-    src/Helpers/configuration.cpp \
     src/API/getstatus.cpp \
     src/API/getuser.cpp \
     src/Helpers/accountvalidator.cpp \
@@ -103,6 +102,7 @@ SOURCES += \
     src/API/createfolder.cpp \
     src/API/deletefolder.cpp \
     src/API/markfolderread.cpp \
-    src/feed.cpp
+    src/feed.cpp \
+    src/Helpers/abstractconfiguration.cpp
 
 DISTFILES +=

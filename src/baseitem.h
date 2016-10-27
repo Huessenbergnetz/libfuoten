@@ -30,7 +30,7 @@ class QJsonObject;
 namespace Fuoten {
 
 class Error;
-class Configuration;
+class AbstractConfiguration;
 class BaseItemPrivate;
 class AbstractStorage;
 class Component;
@@ -188,16 +188,16 @@ protected:
      * \par Example
      *
      * \code{.cpp}
-     * void Folder::remove(Configuration *config, AbstractStorage *storage)
+     * void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
      * {
      *     if (!config) {
-     *         qWarning("Can not delete the folder. No Configuration available.");
+     *         qWarning("Can not delete the folder. No AbstractConfiguration available.");
      *         return;
      *     }
      *
      *
      *     DeleteFolder *df = new DeleteFolder(this);
-     *     df->setConfiguration(config);
+     *     df->setAbstractConfiguration(config);
      *     df->setStorage(storage);
      *     df->setFolderId(id());
      *     connect(df, &DeleteFolder::succeeded, this, &QObject::deleteLater);

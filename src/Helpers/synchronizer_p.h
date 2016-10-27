@@ -22,7 +22,7 @@
 #define FUOTENSYNCHRONIZER_P_H
 
 #include "synchronizer.h"
-#include "configuration.h"
+#include "abstractconfiguration.h"
 #include "../Storage/abstractstorage.h"
 #include "../API/getfolders.h"
 #include "../error.h"
@@ -51,7 +51,7 @@ public:
 
     Synchronizer * const q_ptr;
     Error *error;
-    Configuration *configuration;
+    AbstractConfiguration *configuration;
     AbstractStorage *storage;
     bool inOperation;
 

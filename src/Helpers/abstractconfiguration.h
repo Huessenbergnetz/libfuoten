@@ -38,18 +38,18 @@ namespace Fuoten {
  * virtual functions that provide the necessary data to perform API requests.
  *
  * The reimplemented class will than be used on all API call classes. All of the
- * API classes have a configuration property that takes subclasses of Configuration.
+ * API classes have a configuration property that takes subclasses of AbstractConfiguration.
  *
- * \headerfile "" <Fuoten/Helpers/Configuration>
+ * \headerfile "" <Fuoten/Helpers/AbstractConfiguration>
  */
-class FUOTENSHARED_EXPORT Configuration : public QSettings
+class FUOTENSHARED_EXPORT AbstractConfiguration : public QSettings
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Constructs a new AbstractConfiguration object with the given \a parent.
+     * \brief Constructs a new AbstractAbstractConfiguration object with the given \a parent.
      */
-    explicit Configuration(QObject *parent = nullptr);
+    explicit AbstractConfiguration(QObject *parent = nullptr);
 
     /*!
      * \brief Returns the user name used for authentication.
@@ -180,7 +180,7 @@ protected:
     virtual void setIsAccountValid(bool nIsAccountValid) = 0;
 
 private:
-    Q_DISABLE_COPY(Configuration)
+    Q_DISABLE_COPY(AbstractConfiguration)
 
 };
 

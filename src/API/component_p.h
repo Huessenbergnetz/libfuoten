@@ -22,7 +22,7 @@
 #define FUOTENCOMPONENT_P_H
 
 #include "component.h"
-#include "../Helpers/configuration.h"
+#include "../Helpers/abstractconfiguration.h"
 #include "../Storage/abstractstorage.h"
 #include <QTimer>
 #include <QNetworkReply>
@@ -74,7 +74,7 @@ public:
     bool inOperation;
     quint8 requestTimeout;
     Error *error;
-    Configuration *configuration;
+    AbstractConfiguration *configuration;
     AbstractStorage *storage;
 
     quint8 retryCount;

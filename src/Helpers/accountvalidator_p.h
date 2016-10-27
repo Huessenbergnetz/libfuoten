@@ -55,7 +55,7 @@ public:
     AccountValidator * const q_ptr;
     Q_DECLARE_PUBLIC(AccountValidator)
 
-    Configuration *configuration;
+    AbstractConfiguration *configuration;
     bool inOperation;
     Error *error;
 
