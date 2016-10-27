@@ -384,7 +384,7 @@ void Component::setError(Error *nError)
 
 AbstractConfiguration *Component::configuration() const { Q_D(const Component); return d->configuration; }
 
-void Component::setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)
+void Component::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
     Q_D(Component);
     if (nAbstractConfiguration != d->configuration) {

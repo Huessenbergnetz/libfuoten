@@ -51,11 +51,11 @@ class FUOTENSHARED_EXPORT AccountValidator : public QObject
      * It is mandatory to set this property to a valid object that contains the authantication data and server configuration.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>configurationChanged(AbstractConfiguration *configuration)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setAbstractConfiguration NOTIFY configurationChanged)
+    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
     /*!
      * \brief Returns true while the validation is in operation.
      *
@@ -114,7 +114,7 @@ public:
      * \brief Sets the pointer to a AbstractConfiguration object.
      * \sa configuration
      */
-    void setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration);
+    void setConfiguration(AbstractConfiguration *nAbstractConfiguration);
 
 Q_SIGNALS:
     /*!

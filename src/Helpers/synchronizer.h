@@ -57,11 +57,11 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
      * You have to set a valid AbstractConfiguration object in order to start a synchronization.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>configurationChanged(AbstractConfiguration *configuration)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setAbstractConfiguration NOTIFY configurationChanged)
+    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
     /*!
      * \brief Pointer to aa AbstractStorage derived object.
      *
@@ -118,7 +118,7 @@ public:
      * \brief Sets the pointer to a AbstractConfiguration object.
      * \sa configuration
      */
-    void setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration);
+    void setConfiguration(AbstractConfiguration *nAbstractConfiguration);
 
     /*!
      * \brief Sets the pointer to an AbstractStorage object.

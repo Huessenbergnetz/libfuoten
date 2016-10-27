@@ -72,7 +72,7 @@ void AccountValidator::start()
 
     if (!d->version) {
         d->version = new GetVersion(this);
-        d->version->setAbstractConfiguration(configuration());
+        d->version->setConfiguration(configuration());
         connect(d->version, &Component::succeeded, this, &AccountValidator::gotVersion);
         connect(d->version, &Component::failed, this, &AccountValidator::setError);
     }
@@ -95,7 +95,7 @@ void AccountValidator::gotVersion()
 
     if (!d->status) {
         d->status = new GetStatus(this);
-        d->status->setAbstractConfiguration(configuration());
+        d->status->setConfiguration(configuration());
         connect(d->status, &Component::succeeded, this, &AccountValidator::gotStatus);
         connect(d->status, &Component::failed, this, &AccountValidator::setError);
     }
@@ -117,7 +117,7 @@ void AccountValidator::gotStatus()
 
     if (!d->user) {
         d->user = new GetUser(this);
-        d->user->setAbstractConfiguration(configuration());
+        d->user->setConfiguration(configuration());
         connect(d->user, &Component::succeeded, this, &AccountValidator::gotUser);
         connect(d->user, &Component::failed, this, &AccountValidator::setError);
     }
@@ -142,7 +142,7 @@ void AccountValidator::gotUser()
 
 AbstractConfiguration *AccountValidator::configuration() const { Q_D(const AccountValidator); return d->configuration; }
 
-void AccountValidator::setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)
+void AccountValidator::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
     Q_D(AccountValidator); 
     if (nAbstractConfiguration != d->configuration) {

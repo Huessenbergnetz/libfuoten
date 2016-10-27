@@ -200,11 +200,11 @@ class FUOTENSHARED_EXPORT Component : public QObject
      * It is mandatory for all calls to set this property to a valid object that contains the authentication information for the server.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
+     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>configurationChanged(AbstractConfiguration *configuration)</TD></TR></TABLE>
      */
-    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setAbstractConfiguration NOTIFY configurationChanged)
+    Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
     /*!
      * \brief Pointer to an AbstractStorage subclass.
      *
@@ -331,7 +331,7 @@ public:
      *
      * \sa configuration
      */
-    void setAbstractConfiguration(AbstractConfiguration *nAbstractConfiguration);
+    void setConfiguration(AbstractConfiguration *nAbstractConfiguration);
 
     /*!
      * \brief Sets a pointer to a local storage handler to save the API result.

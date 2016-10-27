@@ -121,7 +121,7 @@ void Folder::rename(const QString &newName, AbstractConfiguration *config, Abstr
     }
 
     RenameFolder *rf = new RenameFolder(this);
-    rf->setAbstractConfiguration(config);
+    rf->setConfiguration(config);
     rf->setStorage(storage);
     rf->setFolderId(id());
     rf->setNewName(newName);
@@ -155,7 +155,7 @@ void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
     }
 
     DeleteFolder *df = new DeleteFolder(this);
-    df->setAbstractConfiguration(config);
+    df->setConfiguration(config);
     df->setStorage(storage);
     df->setFolderId(id());
     connect(df, &DeleteFolder::succeeded, this, &QObject::deleteLater);

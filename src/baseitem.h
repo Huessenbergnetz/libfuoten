@@ -197,7 +197,7 @@ protected:
      *
      *
      *     DeleteFolder *df = new DeleteFolder(this);
-     *     df->setAbstractConfiguration(config);
+     *     df->setConfiguration(config);
      *     df->setStorage(storage);
      *     df->setFolderId(id());
      *     connect(df, &DeleteFolder::succeeded, this, &QObject::deleteLater);
