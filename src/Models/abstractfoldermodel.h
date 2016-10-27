@@ -123,7 +123,13 @@ protected Q_SLOTS:
     /*!
      * \brief Will reload feedCount and unreadCount for every folder.
      *
-     * handleStorageChanged() will connect AbstractStorage::deletedFeed() and AbstractStorage::movedFeed() to this slot.
+     * handleStorageChanged() will connect the following signals to this slot:
+     * \li AbstractStorage::deletedFeed()
+     * \li AbstractStorage::movedFeed()
+     * \li AbstractStorage::requestedItems()
+     * \li AbstractStorage::updatedItems()
+     * \li AbstractStorage::markedItems()
+     * \li AbstractStorage::starredItems()
      */
     void updateCountValues();
 
