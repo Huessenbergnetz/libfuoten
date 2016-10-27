@@ -131,6 +131,16 @@ public:
      * \sa starred
      */
     virtual quint16 starred() const;
+
+    /*!
+     * \brief Returns the newest item/article ID for the given type.
+     *
+     * Supported Types: FuotenEnums::Feed, FuotenEnums::Folder, FuotenEnums::All. For folder and feed type
+     * a valid \a id has be provided that identifieds the folder or feed.
+     *
+     * If the type does not match one of the supported or if there are not items, \c -1 is returned.
+     */
+    virtual qint64 getNewestItemId(FuotenEnums::Type type = FuotenEnums::All, qint64 id = -1) = 0;
     
     /*!
      * \brief Returns a list of Folder objects from the local storage.

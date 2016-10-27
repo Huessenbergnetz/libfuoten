@@ -68,6 +68,16 @@ public:
      */
     QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>()) override;
 
+    /*!
+     * \brief Returns the newest/highest item/article ID fo the given \a type.
+     *
+     * Supported Types: FuotenEnums::Feed, FuotenEnums::Folder, FuotenEnums::All. For folder and feed type
+     * a valid \a id has be provided that identifieds the folder or feed.
+     *
+     * If the type does not match one of the supported or if there are not items, \c -1 is returned.
+     */
+    qint64 getNewestItemId(FuotenEnums::Type type = FuotenEnums::All, qint64 id = -1) override;
+
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;

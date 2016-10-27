@@ -300,6 +300,81 @@ void SQLiteStorage::init()
 }
 
 
+
+
+qint64 SQLiteStorage::getNewestItemId(FuotenEnums::Type type, qint64 id)
+{
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return -1;
+    }
+
+    if ((type == FuotenEnums::Folder) && (id <= 0)) {
+        //% "The folder ID is not valid."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        return -1;
+    }
+
+    if ((type == FuotenEnums::Feed) && (id <= 0)) {
+        //% "The feed ID is not valid."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        return -1;
+    }
+
+    QString qs;
+
+    switch (type) {
+    case FuotenEnums::Feed:
+        qs = QStringLiteral("SELECT id FROM items WHERE feedId = ? ORDER BY id DESC LIMIT 1");
+        break;
+    case FuotenEnums::All:
+        qs = QStringLiteral("SELECT id FROM items ORDER BY id DESC LIMIT 1");
+    case FuotenEnums::Folder:
+        qs = QStringLiteral("SELECT id FROM items WHERE feedId IN (SELECT id FROM feeds WHERE folderId = ?) ORDER BY id DESC LIMIT 1");
+        break;
+    default:
+        return -1;
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (type == FuotenEnums::All) {
+
+        if (!q.exec(qs)) {
+            //% "Failed to execute database query."
+            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+            return -1;
+        }
+
+    } else {
+
+        if (!q.prepare(qs)) {
+            //% "Failed to prepare database query."
+            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+            return -1;
+        }
+
+        q.addBindValue(id);
+
+        if (!q.exec()) {
+            //% "Failed to execute database query."
+            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+            return -1;
+        }
+    }
+
+    if (q.next()) {
+        return q.value(0).toLongLong();
+    } else {
+        return -1;
+    }
+}
+
+
+
 void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 {
     Q_D(SQLiteStorage);
