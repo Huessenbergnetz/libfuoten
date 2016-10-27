@@ -60,9 +60,10 @@ void MarkFolderRead::execute()
     QStringList rl(QStringLiteral("folders"));
     rl.append(QString::number(folderId()));
     rl.append(QStringLiteral("read"));
+    setApiRoute(rl);
 
     QJsonObject plo; // payload object
-    plo.insert(QStringLiteral("newestItemId"), QJsonValue(folderId()));
+    plo.insert(QStringLiteral("newestItemId"), QJsonValue(newestItemId()));
 
     setPayload(plo);
 
