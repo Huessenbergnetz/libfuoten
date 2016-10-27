@@ -704,33 +704,18 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("SELECT id FROM feeds WHERE folderId = ?"))) {
+    if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId IN (SELECT id FROM feeds WHERE folderId = ?)"))) {
         //% "Failed to prepare database query."
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
         return;
     }
-
+    q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
     q.addBindValue(id);
 
     if (!q.exec()) {
         //% "Failed to execute database query."
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
         return;
-    }
-
-    QStringList fids;
-
-    while(q.next()) {
-        fids.append(q.value(0).toString());
-    }
-
-    if (!fids.isEmpty()) {
-
-        if (!q.exec(QStringLiteral("UPDATE items SET unread = 0, lastModified = %1 WHERE feedId IN (%2)").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t()), fids.join(QChar(','))))) {
-            //% "Failed to execute database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return;
-        }
     }
 
     Q_EMIT markedReadFolder(id, newestItem);
