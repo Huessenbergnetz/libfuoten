@@ -23,6 +23,7 @@
 #include <QJsonObject>
 #include "API/deletefolder.h"
 #include "API/renamefolder.h"
+#include "API/markfolderread.h"
 #include "error.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -162,4 +163,35 @@ void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
     setComponent(df);
     component()->execute();
     Q_EMIT inOperationChanged(inOperation());
+}
+
+
+
+void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage)
+{
+    if (inOperation()) {
+        qWarning("Folder is still in operation.");
+        return;
+    }
+
+    if (!config || !storage) {
+        qWarning("Can not delete the folder. No configuration and no storage available.");
+        return;
+    }
+
+    const qint64 newestItemId = storage->getNewestItemId(FuotenEnums::Folder, id());
+
+    MarkFolderRead *mfr = new MarkFolderRead(this);
+    mfr->setConfiguration(config);
+    mfr->setStorage(storage);
+    mfr->setFolderId(id());
+    mfr->setNewestItemId(newestItemId);
+    connect(mfr, &MarkFolderRead::succeeded, [=] () {
+        setUnreadCount(0);
+        setComponent(nullptr);
+    });
+    connect(mfr, &MarkFolderRead::succeeded, mfr, &QObject::deleteLater);
+    setComponent(mfr);
+    component()->execute();
+    Q_EMIT inOperationChanged(true);
 }

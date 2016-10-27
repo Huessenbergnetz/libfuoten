@@ -145,6 +145,11 @@ public:
      */
     Q_INVOKABLE void remove(Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
+    /*!
+     * \brief Marks the complete folders as read on the remote server and local.
+     */
+    Q_INVOKABLE void markAsRead(Fuoten::AbstractConfiguration * config, Fuoten::AbstractStorage *storage);
+
 Q_SIGNALS:
     /*!
      * \brief This signal will be emitted if the folder name changes.
