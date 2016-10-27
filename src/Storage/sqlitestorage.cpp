@@ -134,7 +134,7 @@ void SQLiteStorageManager::run()
                                "url TEXT NOT NULL, "
                                "title TEXT NOT NULL, "
                                "author TEXT NOT NULL, "
-                               "pubDate TEXT NOT NULL, "
+                               "pubDate INTEGER NOT NULL, "
                                "body TEXT NOT NULL, "
                                "enclosureMime TEXT, "
                                "enclosureLink TEXT, "
@@ -207,18 +207,20 @@ void SQLiteStorageManager::run()
         return;
     }
 
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_delete_feed AFTER DELETE ON feeds "
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_delete_feed AFTER DELETE ON feeds "
                                "BEGIN "
                                "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
                                "END"))) {
         //% "Failed to execute database query."
         setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
         return;
     }
 
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_insert_feed AFTER INSERT ON feeds "
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_insert_feed AFTER INSERT ON feeds "
                                "BEGIN "
                                "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
+                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
                                "END"
                                ))) {
         //% "Failed to execute database query."
@@ -226,16 +228,17 @@ void SQLiteStorageManager::run()
         return;
     }
 
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_move_feed AFTER UPDATE OF folderId ON feeds "
+    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_move_feed AFTER UPDATE OF folderId ON feeds "
                                "BEGIN "
                                "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
                                "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
+                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
                                "END"))) {
         //% "Failed to execute database query."
         setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
         return;
     }
-
 
     if (!m_db.commit()) {
         //% "Failed to commit a database transaction."
@@ -284,6 +287,7 @@ void SQLiteStorage::init()
     SQLiteStorageManager *sm = new SQLiteStorageManager(d->db.databaseName(), this);
     connect(sm, &SQLiteStorageManager::succeeded, [=] () {
         if (d->db.open()) {
+            QSqlQuery(QStringLiteral("PRAGMA foreign_keys = ON"), d->db);
             setReady(true);
         } else {
             //% "Failed to open the SQLite database."
