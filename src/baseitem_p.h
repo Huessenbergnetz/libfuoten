@@ -37,7 +37,7 @@ public:
         comp(nullptr)
     {}
 
-    BaseItemPrivate(qint64 _id) :
+    explicit BaseItemPrivate(qint64 _id) :
         id(_id),
         error(nullptr),
         comp(nullptr)

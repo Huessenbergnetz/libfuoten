@@ -142,7 +142,7 @@ void Feed::setUnreadCount(uint nUnreadCount)
 
 Feed::FeedOrdering Feed::ordering() const { Q_D(const Feed); return d->ordering; }
 
-void Feed::setOrdering(const FeedOrdering &nOrdering)
+void Feed::setOrdering(FeedOrdering nOrdering)
 {
     Q_D(Feed); 
     if (nOrdering != d->ordering) {

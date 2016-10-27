@@ -31,7 +31,7 @@ namespace Fuoten {
 class AccountValidatorPrivate
 {
 public:
-    AccountValidatorPrivate(AccountValidator *parent) :
+    explicit AccountValidatorPrivate(AccountValidator *parent) :
         q_ptr(parent),
         configuration(nullptr),
         inOperation(false),

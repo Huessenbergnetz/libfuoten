@@ -33,7 +33,7 @@ class SynchronizerPrivate
 {
     Q_DECLARE_PUBLIC(Synchronizer)
 public:
-    SynchronizerPrivate(Synchronizer *parent) :
+    explicit SynchronizerPrivate(Synchronizer *parent) :
         q_ptr(parent),
         error(nullptr),
         configuration(nullptr),

@@ -33,7 +33,7 @@ namespace Fuoten {
 class ErrorPrivate;
 
 /*!
- * \brief Provides information about occured errors.
+ * \brief Provides information about occurred errors.
  *
  * \headerfile "" <Fuoten/Error>
  */
@@ -81,14 +81,14 @@ public:
      * \brief Defines the error type.
      */
     enum Type {
-        NoError             = 0,    /**< No error has occured. */
+        NoError             = 0,    /**< No error has occurred. */
         RequestError        = 1,    /**< The request was not setup correctly. */
         JSONParsingError    = 2,    /**< Failed to parse JSON data. */
-        InputError          = 3,    /**< An error occured while providing data to the library methods. */
-        OutputError         = 4,    /**< An error occured while processing the returned data from the API. */
-        ServerError         = 5,    /**< An error occured on the server. */
-        ApplicationError    = 6,    /**< An error occured in the local application. */
-        StorageError        = 7     /**< An error occured on the storage layer. */
+        InputError          = 3,    /**< An error occurred while providing data to the library methods. */
+        OutputError         = 4,    /**< An error occurred while processing the returned data from the API. */
+        ServerError         = 5,    /**< An error occurred on the server. */
+        ApplicationError    = 6,    /**< An error occurred in the local application. */
+        StorageError        = 7     /**< An error occurred on the storage layer. */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Type)
@@ -101,10 +101,10 @@ public:
      * \brief Defines the severity of the error.
      */
     enum Severity {
-        Nothing     = 0,    /**< No error has occured */
+        Nothing     = 0,    /**< No error has occurred */
         Warning     = 1,    /**< Only a warning, but operation was perfmormed */
-        Critical    = 2,    /**< A critical error has occured, the operation has been canceled */
-        Fatal       = 3     /**< A fatal error has occured, the application will be exited */
+        Critical    = 2,    /**< A critical error has occurred, the operation has been canceled */
+        Fatal       = 3     /**< A fatal error has occurred, the application will be exited */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Severity)
@@ -127,7 +127,7 @@ public:
     /*!
      * \brief Constructs a new Error object from a QNetworkReply.
      */
-    Error(QNetworkReply *reply, QObject *parent = nullptr);
+    explicit Error(QNetworkReply *reply, QObject *parent = nullptr);
 
     /*!
      * \brief Constructs a new Error object form a QJsonParseError.

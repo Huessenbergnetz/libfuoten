@@ -36,7 +36,7 @@ namespace Fuoten {
 class SQLiteStorageManager : public QThread {
     Q_OBJECT
 public:
-    SQLiteStorageManager(const QString &dbpath, QObject *parent = nullptr);
+    explicit SQLiteStorageManager(const QString &dbpath, QObject *parent = nullptr);
 
 private:
     QSqlDatabase m_db;

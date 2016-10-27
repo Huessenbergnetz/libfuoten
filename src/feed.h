@@ -97,9 +97,9 @@ class FUOTENSHARED_EXPORT Feed : public BaseItem
      * \brief The ordering of the articles in this feed on the server.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>FeedOrdering</TD><TD>ordering() const</TD></TR><TR><TD>void</TD><TD>setOrdering(const FeedOrdering &nOrdering)</TD></TR></TABLE>
+     * <TABLE><TR><TD>FeedOrdering</TD><TD>ordering() const</TD></TR><TR><TD>void</TD><TD>setOrdering(FeedOrdering nOrdering)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>orderingChanged(const FeedOrdering &ordering)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>orderingChanged(FeedOrdering ordering)</TD></TR></TABLE>
      */
     Q_PROPERTY(Fuoten::Feed::FeedOrdering ordering READ ordering WRITE setOrdering NOTIFY orderingChanged)
     /*!
@@ -262,7 +262,7 @@ public:
      * \brief Sets the ordering of the items in this feed on the server.
      * \sa ordering
      */
-    void setOrdering(const FeedOrdering &nOrdering);
+    void setOrdering(Fuoten::Feed::FeedOrdering nOrdering);
     /*!
      * \brief Sets the URL to the feed's homepage.
      * \sa link
@@ -325,7 +325,7 @@ Q_SIGNALS:
      * \brief This signal is emitted if the server side ordering of this feed changes.
      * \sa ordering
      */
-    void orderingChanged(const FeedOrdering &ordering);
+    void orderingChanged(FeedOrdering ordering);
     /*!
      * \brief This signal is emitted if the URL of the homepage of this feed changes.
      * \sa link

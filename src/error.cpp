@@ -248,7 +248,7 @@ Error::Error(const QSqlError &sqlError, const QString &errorText, QObject *paren
         d->type = StorageError;
         d->severity = Critical;
         if (errorText.isEmpty()) {
-            //% "An error occured while performing a SQL operation."
+            //% "An error occurred while performing a SQL operation."
             d->text = qtTrId(("err-generic-sql"));
         } else {
             d->text = errorText;

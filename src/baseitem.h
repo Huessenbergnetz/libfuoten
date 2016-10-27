@@ -92,7 +92,7 @@ class FUOTENSHARED_EXPORT BaseItem : public QObject
      */
     Q_PROPERTY(qint64 id READ id NOTIFY idChanged)
     /*!
-     * \brief Pointer to an Error object, if an error occured, otherwise returns a \c nullptr.
+     * \brief Pointer to an Error object, if an error occurred, otherwise returns a \c nullptr.
      *
      * \par Access functions:
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
@@ -128,7 +128,7 @@ public:
     qint64 id() const;
 
     /*!
-     * \brief Returns a pointer to an Error object, if any error occured, otherwise a \c nullptr.
+     * \brief Returns a pointer to an Error object, if any error occurred, otherwise a \c nullptr.
      *
      * \sa BaseItem::error
      */

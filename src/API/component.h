@@ -184,9 +184,9 @@ class FUOTENSHARED_EXPORT Component : public QObject
      */
     Q_PROPERTY(quint8 requestTimeout READ requestTimeout WRITE setRequestTimeout NOTIFY requestTimeoutChanged)
     /*!
-     * \brief Pointer to an error object, if any error occured.
+     * \brief Pointer to an error object, if any error occurred.
      *
-     * If no error occured, it will return a \c nullptr. The error is set internally by setError().
+     * If no error occurred, it will return a \c nullptr. The error is set internally by setError().
      *
      * \par Access functions:
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
@@ -288,9 +288,9 @@ public:
     quint8 requestTimeout() const;
 
     /*!
-     * \brief Returns a pointer to an Error object, if any error occured.
+     * \brief Returns a pointer to an Error object, if any error occurred.
      *
-     * Will return a \c nullptr if no error occured.
+     * Will return a \c nullptr if no error occurred.
      *
      * \sa error
      */
@@ -361,7 +361,7 @@ Q_SIGNALS:
 
     /*!
      * \brief This signal is emitted when the pointer to the Error object changes.
-     * \a error will be a nullptr if no error occured or the current error has been reset.
+     * \a error will be a nullptr if no error occurred or the current error has been reset.
      * \sa error
      */
     void errorChanged(Error *error);

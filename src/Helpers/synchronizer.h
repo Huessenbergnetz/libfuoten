@@ -43,7 +43,7 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
 {
     Q_OBJECT
     /*!
-     * \brief Pointer to an Error object, if an error occured. Otherwise a \c nullptr.
+     * \brief Pointer to an Error object, if an error occurred. Otherwise a \c nullptr.
      *
      * \par Access functions:
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
@@ -92,7 +92,7 @@ public:
     ~Synchronizer();
 
     /*!
-     * \brief Returns a pointer to an Error object if any error occured, otherwise a \c nullptr.
+     * \brief Returns a pointer to an Error object if any error occurred, otherwise a \c nullptr.
      * \sa error
      */
     Error *error() const;

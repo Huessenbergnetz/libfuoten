@@ -32,10 +32,10 @@ class Error;
 class AccountValidatorPrivate;
 
 /*!
- * \brief Helper class to request News App version, status and user information in once.
+ * \brief Combines the requests of GetVersion, GetStatus and GetUser.
  *
  * This should be used after the user account was setup or changed. Set the \link AccountValidator::configuration configuration \endlink property
- * and call start(). Calling start() will create and invoke Version, Status and User in a row.
+ * and call start(). Calling start() will create and invoke GetVersion, GetStatus and GetUser in a row.
  *
  * \headerfile "" <Fuoten/Helpers/AccountValidator>
  * \par Mandatory properties
@@ -66,7 +66,7 @@ class FUOTENSHARED_EXPORT AccountValidator : public QObject
      */
     Q_PROPERTY(bool inOperation READ inOperation NOTIFY inOperationChanged)
     /*!
-     * \brief Pointer to an Error object, if any error occured, otherwise a \c nullptr.
+     * \brief Pointer to an Error object, if any error occurred, otherwise a \c nullptr.
      *
      * \par Access functions:
      * <TABLE><TR><TD>Error*</TD><TD>error() const</TD></TR></TABLE>
@@ -141,7 +141,7 @@ Q_SIGNALS:
     void succeeded();
 
     /*!
-     * \brief This signal is emitted if an error occured.
+     * \brief This signal is emitted if an error occurred.
      *
      * \sa \link AccountValidator::error error \endlink
      */

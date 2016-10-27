@@ -740,7 +740,7 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
 
 QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids)
 {
-
+    return QList<Feed*>();
 }
 
 
