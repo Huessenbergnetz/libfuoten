@@ -82,6 +82,11 @@ public Q_SLOTS:
     void feedRenamed(qint64 id, const QString &newTitle) override;
     void feedMarkedRead(qint64 id, qint64 newestItem) override;
 
+    void itemsRequested(const QJsonDocument &json) override;
+    void itemsUpdated(const QJsonDocument &json) override;
+    void itemsMarked(QList<qint64> &idsMarkedRead, QList<qint64> &idsMarkedUnread) override;
+    void itemsStarred(QList<QPair<qint64, QString>> &articlesStarred, QList<QPair<qint64, QString>> &articlesUnstarred) override;
+
 private:
     Q_DECLARE_PRIVATE(SQLiteStorage)
     Q_DISABLE_COPY(SQLiteStorage)

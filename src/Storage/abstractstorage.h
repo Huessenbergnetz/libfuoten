@@ -320,6 +320,66 @@ public Q_SLOTS:
      */
     virtual void feedMarkedRead(qint64 id, qint64 newestItem) = 0;
 
+    /*!
+     * \brief Receives the reply data of the GetItems request.
+     *
+     * Implement this in a derived class to store item data, for example in a local SQL database.
+     * You may want to emit requestedItems() in your implementation after you processed the data.
+     *
+     * \par Example JSON response data
+     * {
+     *    "items": [
+     *       {
+     *          "id": 3443,
+     *          "guid": "http://grulja.wordpress.com/?p=76",
+     +          "guidHash": "3059047a572cd9cd5d0bf645faffd077",
+     *          "url": "http://grulja.wordpress.com/2013/04/29/plasma-nm-after-the-solid-sprint/",
+     *          "title": "Plasma-nm after the solid sprint",
+     *          "author": "Jan Grulich (grulja)",
+     *          "pubDate": 1367270544,
+     *          "body": "<p>At first I have to say...</p>",
+     *          "enclosureMime": null,
+     *          "enclosureLink": null,
+     *          "feedId": 67,
+     *          "unread": true,
+     *          "starred": false,
+     *          "lastModified": 1367273003,
+     *          "fingerprint": "aeaae2123"
+     *       }, // etc
+     *    ]
+     * }
+     * \code{.json}
+     *
+     * \endcode
+     */
+    virtual void itemsRequested(const QJsonDocument &json) = 0;
+
+    /*!
+     * \brief Receives the reply data fo the UpdateItems request.
+     *
+     * Implement this in a derived class to store item data, for example in a local SQL databs.
+     * You should emit updatedItems() in your implementation after you processed the data to update connected models.
+     *
+     * For an example of the JSON response see itemsRequested().
+     */
+    virtual void itemsUpdated(const QJsonDocument &json) = 0;
+
+    /*!
+     * \brief Receives the reply data for the MarkItems request.
+     *
+     * Will mark the items identified by their \a id in the lists either as read or as unread.
+     * You should emit markedItems() in your implementation after you processed the data to update connected models.
+     */
+    virtual void itemsMarked(QList<qint64> &idsMarkedRead, QList<qint64> &idsMarkedUnread) = 0;
+
+    /*!
+     * \brief Receives the reply data for the StarItems request.
+     *
+     * The lists contains the item/article IDs and the guid hash of the items/articles that have been either starred or unstarred.
+     * You should emit starredItems() in your implementation after you processed the data to update connected models.
+     */
+    virtual void itemsStarred(QList<QPair<qint64, QString>> &articlesStarred, QList<QPair<qint64, QString>> &articlesUnstarred) = 0;
+
 protected:
     /*!
      * \brief Set this to \a true when the storage has finished it's initialization.
@@ -416,7 +476,7 @@ Q_SIGNALS:
     void starredChanged(quint16 starred);
 
     /*!
-     * \brief Emit this after have have been received and processed.
+     * \brief Emit this after feeds have been received and processed.
      *
      * Best location to emit this signal is your implementation of feedsRequested().
      *
@@ -464,6 +524,40 @@ Q_SIGNALS:
      * the \a newestItem that has been marked as read.
      */
     void markedReadFeed(qint64 id, qint64 newestItem);
+
+    /*!
+     * \brief Emit this after items/articles have been received and processed.
+     *
+     * Best location to emit this signal is your implementation of itemsRequested().
+     *
+     * Every argument of the signal should contain a list of item IDs that are either updated, new or deleted.
+     */
+    void requestedItems(QList<qint64> &updatedItems, QList<qint64> &newItems, QList<qint64> &deletedItems);
+
+    /*!
+     * \brief Emit this after items/articles have been received and processed.
+     *
+     * Best location to emit this signal is your implementation of itemsUpdated().
+     *
+     * Every argument of the signal should contain a list of item IDs that are either updated, new or deleted.
+     */
+    void updatedItems(QList<qint64> &updatedItems, QList<qint64> &newItems, QList<qint64> &deletedItems);
+
+    /*!
+     * \brief Emit this after items/articles have been marked as read or unread.
+     *
+     * Best location to emit this signal is your implementation of itemsMarked().
+     *
+     * The lists have to conatin the item/article IDs that haven been marked as read or unread.
+     */
+    void markedItems(QList<qint64> &idsMarkedRead, QList<qint64> &idsMarkedUnread);
+
+    /*!
+     * \brief Emit this after items/articles have been starred or unstarred.
+     *
+     * Best location to emit this signal is your implementation of itemsStarred().
+     */
+    void starredItems(QList<QPair<qint64, QString>> &articlesStarred, QList<QPair<qint64, QString>> &articlesUnstarred);
 
 
 private:

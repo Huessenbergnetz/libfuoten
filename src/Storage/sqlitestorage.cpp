@@ -779,3 +779,27 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
 {
 
 }
+
+
+void SQLiteStorage::itemsRequested(const QJsonDocument &json)
+{
+
+}
+
+
+void SQLiteStorage::itemsUpdated(const QJsonDocument &json)
+{
+
+}
+
+
+void SQLiteStorage::itemsMarked(QList<qint64> &idsMarkedRead, QList<qint64> &idsMarkedUnread)
+{
+
+}
+
+
+void SQLiteStorage::itemsStarred(QList<QPair<qint64, QString> > &articlesStarred, QList<QPair<qint64, QString> > &articlesUnstarred)
+{
+
+}
