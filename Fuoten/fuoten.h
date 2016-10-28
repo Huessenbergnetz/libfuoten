@@ -59,8 +59,9 @@ public:
         Name        = 1,    /**< Sort by name/title */
         Time        = 2,    /**< Sort by time */
         UnreadCount = 3,    /**< Sort by unread item count */
-        FeedCount   = 4,    /**< Sort by feed count */
-        PinnedName  = 5     /**< Sort feeds by pinned status first, than by name */
+        FeedCount   = 4,    /**< Sort by feed count (only applicable to folders) */
+        PinnedName  = 5,    /**< Sort feeds by pinned status first, than by name */
+        FolderName  = 6     /**< Sort by foler name (only applicable to feeds) */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(SortingRole)
