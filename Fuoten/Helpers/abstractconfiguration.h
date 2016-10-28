@@ -22,6 +22,7 @@
 #define FUOTEN_CONFIG_H
 
 #include <QSettings>
+#include <QDateTime>
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
 #include "versionnumber.h"
 #else
@@ -157,6 +158,26 @@ public:
      * The default implementation does nothing.
      */
     virtual void setAvatar(const QString &data, const QString &mime);
+
+    /*!
+     * \brief Returns the last date and time a successful snychronization has been performed.
+     *
+     * Reimplement this in a subclass if you want let the Synchronizer save the last sync time.
+     * The default implementation returns a invalid QDateTime;
+     *
+     * \sa setLastSync()
+     */
+    virtual QDateTime getLastSync() const;
+
+    /*!
+     * \brief Sets the data and time the last successfule synchronization has been performed.
+     *
+     * Reimplement this in a subclass if you want let the Synchronizer save the last sync time.
+     * The default implementation does nothing.
+     *
+     * \sa getLastSync()
+     */
+    virtual void setLastSync(const QDateTime &syncTime);
 
 protected:
     /*!

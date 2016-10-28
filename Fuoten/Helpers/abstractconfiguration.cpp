@@ -81,3 +81,16 @@ void AbstractConfiguration::setImproperlyConfiguredCron(bool nImproperlyConfigur
 {
     Q_UNUSED(nImproperlyConfiguredCron)
 }
+
+
+
+void AbstractConfiguration::setLastSync(const QDateTime &syncTime)
+{
+    Q_UNUSED(syncTime);
+}
+
+
+QDateTime AbstractConfiguration::getLastSync() const
+{
+    return QDateTime();
+}

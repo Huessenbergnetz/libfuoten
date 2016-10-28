@@ -86,6 +86,7 @@ void SynchronizerPrivate::finished()
 {
     Q_Q(Synchronizer);
     inOperation = false;
+    configuration->setLastSync(QDateTime::currentDateTimeUtc());
     Q_EMIT q->inOperationChanged(false);
     Q_EMIT q->succeeded();
     getFolders->deleteLater();
