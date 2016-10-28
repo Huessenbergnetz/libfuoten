@@ -32,10 +32,18 @@ Feed::Feed(QObject *parent) :
 }
 
 
+Feed::Feed(qint64 id, qint64 folderId, const QString &title, const QUrl &url, const QUrl &link, const QDateTime &added, uint unreadCount, Feed::FeedOrdering ordering, bool pinned, uint updateErrorCount, const QString &lastUpdateError, const QUrl &faviconLink, const QString &folderName, QObject *parent) :
+    BaseItem(* new FeedPrivate(id, folderId, title, url, link, added, unreadCount, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink, folderName), parent)
+{
+
+}
+
+
 Feed::Feed(FeedPrivate &dd, QObject *parent) :
     BaseItem(dd, parent)
 {
 }
+
 
 
 QUrl Feed::url() const { Q_D(const Feed); return d->url; }

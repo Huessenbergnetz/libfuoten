@@ -18,18 +18,34 @@ public:
         updateErrorCount(0)
     {}
 
-    QUrl url;
-    QString title;
-    QDateTime added;
+    FeedPrivate(qint64 _id, qint64 _folderId, const QString &_title, const QUrl &_url, const QUrl &_link, const QDateTime &_added, uint _unreadCount, Feed::FeedOrdering _ordering, bool _pinned, uint _updateErrorCount, const QString &_lastUpdateError, const QUrl &_faviconLink, const QString &_folderName) :
+        BaseItemPrivate(_id),
+        folderId(_folderId),
+        title(_title),
+        url(_url),
+        link(_link),
+        added(_added),
+        unreadCount(_unreadCount),
+        ordering(_ordering),
+        pinned(_pinned),
+        updateErrorCount(_updateErrorCount),
+        lastUpdateError(_lastUpdateError),
+        faviconLink(_faviconLink),
+        folderName(_folderName)
+    {}
+
     qint64 folderId;
-    QString folderName;
+    QString title;
+    QUrl url;
+    QUrl link;
+    QDateTime added;
     uint unreadCount;
     Feed::FeedOrdering ordering;
-    QUrl link;
     bool pinned;
     uint updateErrorCount;
     QString lastUpdateError;
     QUrl faviconLink;
+    QString folderName;
 };
 
 }

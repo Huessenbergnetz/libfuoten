@@ -149,11 +149,6 @@ class FUOTENSHARED_EXPORT Feed : public BaseItem
     Q_PROPERTY(QUrl faviconLink READ faviconLink WRITE setFaviconLink NOTIFY faviconLinkChanged)
 public:
     /*!
-     * \brief Constructs a new empty Feed object with the given \a parent.
-     */
-    explicit Feed(QObject *parent = nullptr);
-
-    /*!
      * \brief Type of the article ordering in this feed on the server.
      */
     enum FeedOrdering {
@@ -166,6 +161,19 @@ public:
 #else
     Q_ENUMS(FeedOrdering)
 #endif
+
+
+    /*!
+     * \brief Constructs a new empty Feed object with the given \a parent.
+     */
+    explicit Feed(QObject *parent = nullptr);
+
+
+    /*!
+     * \brief Constructs a new Feed object with the given arguments.
+     */
+    Feed(qint64 id, qint64 folderId, const QString &title, const QUrl &url, const QUrl &link, const QDateTime &added, uint unreadCount, Feed::FeedOrdering ordering, bool pinned, uint updateErrorCount, const QString &lastUpdateError, const QUrl &faviconLink, const QString &folderName, QObject *parent = nullptr);
+
 
     /*!
      * \brief Returns the URL of the feed.
