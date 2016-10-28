@@ -158,7 +158,11 @@ HEADERS += \
     Fuoten/feed.h \
     Fuoten/Helpers/abstractconfiguration.h \
     Fuoten/API/getfeeds.h \
-    Fuoten/API/getfeeds_p.h
+    Fuoten/API/getfeeds_p.h \
+    Fuoten/Models/abstractfeedmodel.h \
+    Fuoten/Models/abstractfeedmodel_p.h \
+    Fuoten/Models/feedlistmodel.h \
+    Fuoten/Models/feedlistmodel_p.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -185,7 +189,9 @@ SOURCES += \
     Fuoten/API/markfolderread.cpp \
     Fuoten/feed.cpp \
     Fuoten/Helpers/abstractconfiguration.cpp \
-    Fuoten/API/getfeeds.cpp
+    Fuoten/API/getfeeds.cpp \
+    Fuoten/Models/abstractfeedmodel.cpp \
+    Fuoten/Models/feedlistmodel.cpp
 
 DISTFILES += \
     fuoten.pc.in
