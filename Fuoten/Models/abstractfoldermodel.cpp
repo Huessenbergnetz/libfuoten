@@ -278,23 +278,9 @@ void AbstractFolderModel::feedsRequested(QList<qint64> &updatedFeeds, QList<qint
         return;
     }
 
-    QList<qint64> ids;
+    if (!updatedFeeds.isEmpty() || !newFeeds.isEmpty() || !deletedFeeds.isEmpty()) {
 
-    if (!updatedFeeds.isEmpty()) {
-        ids.append(updatedFeeds);
-    }
-
-    if (!newFeeds.isEmpty()) {
-        ids.append(newFeeds);
-    }
-
-    if (!deletedFeeds.isEmpty()) {
-        ids.append(deletedFeeds);
-    }
-
-    if (!ids.isEmpty()) {
-
-        const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder, ids, FuotenEnums::Feed);
+        const QList<Folder*> fs = storage()->getFolders(FuotenEnums::ID);
 
         if (!fs.isEmpty()) {
             Q_D(AbstractFolderModel);
