@@ -89,6 +89,14 @@ public:
      */
     virtual QModelIndex findByID(qint64 id) const;
 
+    /*!
+     * \brief Returns a hash-table containing IDs and their model index fount in the model.
+     *
+     * The default implementation return an empty QHash<qint64, QModelIndex>. Reimplement this
+     * function in a subclass.
+     */
+    virtual QHash<qint64, QModelIndex> findByIDs(const QList<qint64> ids) const;
+
 
     /*!
      * \brief Returns true while the model is loading data.
