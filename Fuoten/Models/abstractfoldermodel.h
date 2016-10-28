@@ -111,7 +111,7 @@ protected Q_SLOTS:
      *
      * handleStorageChanged() will connect the AbstractStorage::requestedFeeds() signal to this slot.
      */
-    void feedsRequested(QList<qint64> &updatedFeeds, QList<qint64> &newFeeds, QList<qint64> &deletedFeeds);
+    void feedsRequested(const QList<qint64> &updatedFeeds, const QList<qint64> &newFeeds, const QList<qint64> &deletedFeeds);
 
     /*!
      * \brief Takes and processes data after a new feed has been created.

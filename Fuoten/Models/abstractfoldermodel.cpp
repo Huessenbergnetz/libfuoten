@@ -271,7 +271,7 @@ void AbstractFolderModel::folderMarkedRead(qint64 id, qint64 newestItem)
 
 
 
-void AbstractFolderModel::feedsRequested(QList<qint64> &updatedFeeds, QList<qint64> &newFeeds, QList<qint64> &deletedFeeds)
+void AbstractFolderModel::feedsRequested(const QList<qint64> &updatedFeeds, const QList<qint64> &newFeeds, const QList<qint64> &deletedFeeds)
 {
     if (!storage()) {
         qWarning("Can not update folders, no storage available.");
