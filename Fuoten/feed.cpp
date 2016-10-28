@@ -250,3 +250,24 @@ void Feed::setFaviconLink(const QUrl &nFaviconLink)
 
 
 
+void Feed::copy(Fuoten::BaseItem *other)
+{
+    Feed *o = qobject_cast<Feed*>(other);
+
+    if (o) {
+        setAdded(o->added());
+        setFaviconLink(o->faviconLink());
+        setFolderId(o->folderId());
+        setFolderName(o->folderName());
+        setLastUpdateError(o->lastUpdateError());
+        setLink(o->link());
+        setOrdering(o->ordering());
+        setPinned(o->pinned());
+        setTitle(o->title());
+        setUnreadCount(o->unreadCount());
+        setUpdateErrorCount(o->updateErrorCount());
+        setUrl(o->url());
+    } else {
+        qCritical("Failed to cast BaseItem to Feed when trying to create a deep copy!");
+    }
+}

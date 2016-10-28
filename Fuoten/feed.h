@@ -174,7 +174,6 @@ public:
      */
     Feed(qint64 id, qint64 folderId, const QString &title, const QUrl &url, const QUrl &link, const QDateTime &added, uint unreadCount, Feed::FeedOrdering ordering, bool pinned, uint updateErrorCount, const QString &lastUpdateError, const QUrl &faviconLink, const QString &folderName, QObject *parent = nullptr);
 
-
     /*!
      * \brief Returns the URL of the feed.
      * \sa url
@@ -296,6 +295,13 @@ public:
      * \sa faviconLink
      */
     void setFaviconLink(const QUrl &nFaviconLink);
+
+    /*!
+     * \brief Maked a deep copy of \a other.
+     *
+     * \a other has to be a Feed object.
+     */
+    void copy(BaseItem *other) override;
 
 
 Q_SIGNALS:

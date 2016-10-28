@@ -146,6 +146,13 @@ public:
      */
     Q_INVOKABLE void clearError();
 
+    /*!
+     * \brief Makes a deep copy of \a other into this object.
+     *
+     * The default implementation does nothing. When reimplementing, do a qobject_cast to the derived type.
+     */
+    virtual void copy(BaseItem *other);
+
 Q_SIGNALS:
     /*!
      * \brief This signal will be emitted whenever the inOperation property changes.

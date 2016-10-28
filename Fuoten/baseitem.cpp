@@ -142,3 +142,9 @@ void BaseItem::clearError()
 {
     setError(nullptr);
 }
+
+
+void BaseItem::copy(BaseItem *other)
+{
+    Q_UNUSED(other);
+}
