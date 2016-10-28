@@ -32,7 +32,7 @@ public:
         inOperation(false),
         storage(nullptr),
         loaded(false),
-        parentId(0)
+        parentId(-1)
     {}
 
     virtual ~BaseModelPrivate() {}
