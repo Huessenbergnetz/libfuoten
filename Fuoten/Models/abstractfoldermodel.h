@@ -114,11 +114,18 @@ protected Q_SLOTS:
     void feedsRequested(QList<qint64> &updatedFeeds, QList<qint64> &newFeeds, QList<qint64> &deletedFeeds);
 
     /*!
+     * \brief Takes and processes data after a new feed has been created.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::createdFeed() signal to this slot.
+     */
+    void feedCreated(qint64 feedId, qint64 folderId);
+
+    /*!
      * \brief Takes and processes data after a feed has been created.
      *
-     * handleStorageChanged() will connectthe AbstractStorage::createdFeed() and the AbstractStorage::markedReadFeed() signal to this slot.
+     * handleStorageChanged() will connect the AbstractStorage::markedReadFeed() signal to this slot.
      */
-    void feedCreatedOrMarkedRead(qint64 id);
+    void feedMarkedRead(qint64 id);
 
     /*!
      * \brief Will reload feedCount and unreadCount for every folder.

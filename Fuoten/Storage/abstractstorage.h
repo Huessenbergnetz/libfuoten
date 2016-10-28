@@ -507,9 +507,9 @@ Q_SIGNALS:
      * \brief Emit this after a new feed has been created.
      *
      * Best loaction to emit this signal is your implementation of feedCreated(). The signal
-     * has to contain the \a id of the new feed.
+     * has to contain the \a id of the new feed it's parent \a folderId.
      */
-    void createdFeed(qint64 id);
+    void createdFeed(qint64 id, qint64 folderId);
 
     /*!
      * \brief Emit this after a feed has been deleted.

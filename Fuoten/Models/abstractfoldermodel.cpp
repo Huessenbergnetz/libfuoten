@@ -51,10 +51,10 @@ void AbstractFolderModel::handleStorageChanged()
     connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFolderModel::folderMarkedRead);
 
     connect(s, &AbstractStorage::requestedFeeds, this, &AbstractFolderModel::feedsRequested);
-    connect(s, &AbstractStorage::createdFeed, this, &AbstractFolderModel::feedCreatedOrMarkedRead);
+    connect(s, &AbstractStorage::createdFeed, this, &AbstractFolderModel::feedCreated);
     connect(s, &AbstractStorage::deletedFeed, this, &AbstractFolderModel::updateCountValues);
     connect(s, &AbstractStorage::movedFeed, this, &AbstractFolderModel::updateCountValues);
-    connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFolderModel::feedCreatedOrMarkedRead);
+    connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFolderModel::feedMarkedRead);
 
     connect(s, &AbstractStorage::requestedItems, this, &AbstractFolderModel::updateCountValues);
     connect(s, &AbstractStorage::updatedItems, this, &AbstractFolderModel::updateCountValues);
@@ -301,7 +301,7 @@ void AbstractFolderModel::feedsRequested(QList<qint64> &updatedFeeds, QList<qint
 
 
 
-void AbstractFolderModel::feedCreatedOrMarkedRead(qint64 id)
+void AbstractFolderModel::feedMarkedRead(qint64 id)
 {
     if (!storage()) {
         qWarning("Can not update folders, no storage available.");
@@ -312,6 +312,35 @@ void AbstractFolderModel::feedCreatedOrMarkedRead(qint64 id)
     l.append(id);
 
     const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder, l, FuotenEnums::Feed);
+
+    if (!fs.isEmpty()) {
+        Folder *f = fs.first();
+        QModelIndex i = findByID(f->id());
+        if (i.isValid()) {
+            Q_D(AbstractFolderModel);
+            Folder *mf = d->folders.at(i.row());
+            mf->setFeedCount(f->feedCount());
+            mf->setUnreadCount(f->unreadCount());
+            Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
+        }
+    }
+}
+
+
+
+void AbstractFolderModel::feedCreated(qint64 feedId, qint64 folderId)
+{
+    if (!storage()) {
+        qWarning("Can not update folders, no storage available.");
+        return;
+    }
+
+    Q_UNUSED(feedId);
+
+    QList<qint64> l;
+    l.append(folderId);
+
+    const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder, l);
 
     if (!fs.isEmpty()) {
         Folder *f = fs.first();
