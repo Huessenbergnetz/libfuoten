@@ -73,6 +73,8 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/API/Component \
         Fuoten/API/createfolder.h \
         Fuoten/API/getfolders.h \
+        Fuoten/API/getfeeds.h \
+        Fuoten/API/GetFeeds \
         Fuoten/Error \
         Fuoten/Feed \
         Fuoten/FuotenEnums \
@@ -154,7 +156,9 @@ HEADERS += \
     Fuoten/API/markfolderread.h \
     Fuoten/feed_p.h \
     Fuoten/feed.h \
-    Fuoten/Helpers/abstractconfiguration.h
+    Fuoten/Helpers/abstractconfiguration.h \
+    Fuoten/API/getfeeds.h \
+    Fuoten/API/getfeeds_p.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -180,7 +184,8 @@ SOURCES += \
     Fuoten/API/deletefolder.cpp \
     Fuoten/API/markfolderread.cpp \
     Fuoten/feed.cpp \
-    Fuoten/Helpers/abstractconfiguration.cpp
+    Fuoten/Helpers/abstractconfiguration.cpp \
+    Fuoten/API/getfeeds.cpp
 
 DISTFILES += \
     fuoten.pc.in

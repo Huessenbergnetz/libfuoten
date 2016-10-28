@@ -18,50 +18,23 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FUOTENSYNCHRONIZER_P_H
-#define FUOTENSYNCHRONIZER_P_H
+#ifndef FUOTENGETFEEDS_P_H
+#define FUOTENGETFEEDS_P_H
 
-#include "synchronizer.h"
-#include "abstractconfiguration.h"
-#include "../Storage/abstractstorage.h"
-#include "../API/getfolders.h"
-#include "../API/getfeeds.h"
-#include "../error.h"
+#include "getfeeds.h"
+#include "component_p.h"
 
 namespace Fuoten {
 
-class SynchronizerPrivate
-{
-    Q_DECLARE_PUBLIC(Synchronizer)
+class GetFeedsPrivate : public ComponentPrivate {
 public:
-    explicit SynchronizerPrivate(Synchronizer *parent) :
-        q_ptr(parent),
-        error(nullptr),
-        configuration(nullptr),
-        storage(nullptr),
-        inOperation(false),
-        getFolders(nullptr)
-    {}
-
-    ~SynchronizerPrivate() {}
-
-    void setError(Error *nError);
-    void start();
-    void requestFeeds();
-    void finished();
-
-
-    Synchronizer * const q_ptr;
-    Error *error;
-    AbstractConfiguration *configuration;
-    AbstractStorage *storage;
-    bool inOperation;
-
-    GetFolders *getFolders;
-    GetFeeds *getFeeds;
-
+    GetFeedsPrivate() : ComponentPrivate()
+    {
+        apiRoute = QStringLiteral("/feeds");
+        expectedJSONType = Component::Object;
+    }
 };
 
 }
 
-#endif // FUOTENSYNCHRONIZER_P_H
+#endif // FUOTENGETFEEDS_P_H

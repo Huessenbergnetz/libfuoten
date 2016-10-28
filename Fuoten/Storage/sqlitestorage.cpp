@@ -807,7 +807,10 @@ QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::S
 
 void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 {
-
+    QList<qint64> updatedFeedIds;
+    QList<qint64> newFeedIds;
+    QList<qint64> deletedFeedIds;
+    Q_EMIT requestedFeeds(updatedFeedIds, newFeedIds, deletedFeedIds);
 }
 
 

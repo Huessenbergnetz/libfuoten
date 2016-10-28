@@ -71,14 +71,34 @@ void SynchronizerPrivate::start()
     getFolders->setConfiguration(configuration);
     getFolders->setStorage(storage);
     QObject::connect(getFolders, &Component::failed, [=] (Error *e) {setError(e);});
+    QObject::connect(getFolders, &Component::failed, getFolders, &QObject::deleteLater);
     if (storage) {
-        QObject::connect(storage, &AbstractStorage::requestedFolders, [=] () {finished();});
+        QObject::connect(storage, &AbstractStorage::requestedFolders, [=] () {requestFeeds();});
+        QObject::connect(storage, &AbstractStorage::requestedFolders, getFolders, &QObject::deleteLater);
     } else {
-        QObject::connect(getFolders, &Component::succeeded, [=] () {finished();});
+        QObject::connect(getFolders, &Component::succeeded, [=] () {requestFeeds();});
+        QObject::connect(getFolders, &Component::succeeded, getFolders, &QObject::deleteLater);
     }
     getFolders->execute();
 }
 
+
+void SynchronizerPrivate::requestFeeds()
+{
+    getFeeds = new GetFeeds(q_ptr);
+    getFeeds->setConfiguration(configuration);
+    getFeeds->setStorage(storage);
+    QObject::connect(getFeeds, &Component::failed, [=] (Error *e) {setError(e);});
+    QObject::connect(getFeeds, &Component::failed, getFeeds, &QObject::deleteLater);
+    if (storage) {
+        QObject::connect(storage, &AbstractStorage::requestedFeeds, [=] () {finished();});
+        QObject::connect(storage, &AbstractStorage::requestedFeeds, getFeeds, &QObject::deleteLater);
+    } else {
+        QObject::connect(getFolders, &Component::succeeded, [=] () {finished();});
+        QObject::connect(getFeeds, &Component::succeeded, getFeeds, &QObject::deleteLater);
+    }
+    getFeeds->execute();
+}
 
 
 
@@ -89,8 +109,8 @@ void SynchronizerPrivate::finished()
     configuration->setLastSync(QDateTime::currentDateTimeUtc());
     Q_EMIT q->inOperationChanged(false);
     Q_EMIT q->succeeded();
-    getFolders->deleteLater();
-    getFolders = nullptr;
+//    getFolders->deleteLater();
+//    getFolders = nullptr;
 }
 
 
