@@ -66,7 +66,7 @@ public:
     /*!
      * \brief Returns a list of Feed objects from the \a feed table.
      */
-    QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed) override;
+    QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1) override;
 
     /*!
      * \brief Returns the newest/highest item/article ID fo the given \a type.

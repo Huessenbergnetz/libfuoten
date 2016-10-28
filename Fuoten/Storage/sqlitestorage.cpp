@@ -798,7 +798,7 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
 
 
 
-QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType)
+QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, qint64 folderId)
 {
     QList<Fuoten::Feed*> feeds;
 
@@ -811,31 +811,39 @@ QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::S
 
     QSqlQuery q(d->db);
 
-    QString qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId ORDER BY ");
+    QString qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId");
+
+    if ((folderId > -1) && ids.isEmpty()) {
+        qs.append(QLatin1String(" WHERE fe.folderId = ")).append(QString::number(folderId));
+    }
 
     if (!ids.isEmpty()) {
         if (idType == FuotenEnums::Folder) {
-            qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.folderId IN (%1) ORDER BY ").arg(d->intListToString(ids));
+            qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.folderId IN (%1)").arg(d->intListToString(ids));
         } else {
-            qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.id IN (%1) ORDER BY").arg(d->intListToString(ids));
+            qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.id IN (%1)").arg(d->intListToString(ids));
+        }
+
+        if ((folderId > -1) && (idType != FuotenEnums::Folder)) {
+            qs.append(QLatin1String(" AND fe.folderId = ")).append(QString::number(folderId));
         }
     }
 
     switch(sortingRole) {
     case FuotenEnums::Name:
-        qs.append(QLatin1String("fe.title"));
+        qs.append(QLatin1String(" ORDER BY fe.title"));
         break;
     case FuotenEnums::FolderName:
-        qs.append(QLatin1String("fo.name"));
+        qs.append(QLatin1String(" ORDER BY fo.name"));
         break;
     case FuotenEnums::ID:
-        qs.append(QLatin1String("fe.id"));
+        qs.append(QLatin1String(" ORDER BY fe.id"));
         break;
     case FuotenEnums::UnreadCount:
-        qs.append(QLatin1String("fe.unreadCount"));
+        qs.append(QLatin1String(" ORDER BY fe.unreadCount"));
         break;
     default:
-        qs.append(QLatin1String("fe.title"));
+        qs.append(QLatin1String(" ORDER BY fe.title"));
         break;
     }
 

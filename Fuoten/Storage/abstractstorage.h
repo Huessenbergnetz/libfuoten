@@ -174,9 +174,12 @@ public:
      * <TR><TD>FuotenEnums::Item</TD><TD>Only feeds will be returned that contain items with an ID in \a ids</TD></TR>
      * </TABLE>
      *
+     * If you specify a \a folderId > \c -1, only feeds will be returned that are part of that Folder. Setting this greater than \c -1
+     * make only sense if you do not specify a list of \a ids or if you set \a idType to a different value than FuotenEnums::Folder.
+     *
      * The Feed objects in the returned list will have their parent set to \c nullptr.
      */
-    virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed) = 0;
+    virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1) = 0;
 
 public Q_SLOTS:
     /*!
@@ -501,7 +504,7 @@ Q_SIGNALS:
      *
      * Every argument of the signal should contain a list of feed IDs that are either updated, new or deleted.
      */
-    void requestedFeeds(QList<qint64> &updatedFeeds, QList<qint64> &newFeeds, QList<qint64> &deletedFeeds);
+    void requestedFeeds(const QList<qint64> &updatedFeeds, const QList<qint64> &newFeeds, const QList<qint64> &deletedFeeds);
 
     /*!
      * \brief Emit this after a new feed has been created.
