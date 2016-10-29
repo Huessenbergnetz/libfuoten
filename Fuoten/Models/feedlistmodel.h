@@ -29,10 +29,21 @@ namespace Fuoten {
 
 class FeedListModelPrivate;
 
+/*!
+ * \brief List model containing Feed objects.
+ *
+ * List model with one column that contains a pointer to a Feed object. The Qt::DisplayRole (\a display in QML) returns
+ * the pointer. To use this mode, you need an AbstractStorage derived class that has to be set to the BaseModel::storage property.
+ *
+ * \headerfile "" <Fuoten/Models/FeedListModel>
+ */
 class FUOTENSHARED_EXPORT FeedListModel : public AbstractFeedModel
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief Constructs a new empty feed list model with the given \a parent.
+     */
     explicit FeedListModel(QObject *parent = nullptr);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
