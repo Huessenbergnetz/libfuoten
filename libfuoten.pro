@@ -162,7 +162,9 @@ HEADERS += \
     Fuoten/Models/abstractfeedmodel.h \
     Fuoten/Models/abstractfeedmodel_p.h \
     Fuoten/Models/feedlistmodel.h \
-    Fuoten/Models/feedlistmodel_p.h
+    Fuoten/Models/feedlistmodel_p.h \
+    Fuoten/Models/feedlistfiltermodel.h \
+    Fuoten/Models/feedlistfiltermodel_p.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -191,7 +193,8 @@ SOURCES += \
     Fuoten/Helpers/abstractconfiguration.cpp \
     Fuoten/API/getfeeds.cpp \
     Fuoten/Models/abstractfeedmodel.cpp \
-    Fuoten/Models/feedlistmodel.cpp
+    Fuoten/Models/feedlistmodel.cpp \
+    Fuoten/Models/feedlistfiltermodel.cpp
 
 DISTFILES += \
     fuoten.pc.in
