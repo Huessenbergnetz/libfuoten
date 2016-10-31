@@ -670,7 +670,7 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
 
 
 
-QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, Fuoten::FuotenEnums::Type idType)
+QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, Fuoten::FuotenEnums::Type idType, int limit)
 {
     QList<Fuoten::Folder*> folders;
 
@@ -715,6 +715,10 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
         qs.append(QStringLiteral(" ASC"));
     } else {
         qs.append(QStringLiteral(" DESC"));
+    }
+
+    if (limit > 0) {
+        qs.append(QLatin1String(" LIMIT ")).append(QString::number(limit));
     }
 
     if (!q.exec(qs)) {
@@ -798,7 +802,7 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
 
 
 
-QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, qint64 folderId)
+QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, qint64 folderId, int limit)
 {
     QList<Fuoten::Feed*> feeds;
 
@@ -851,6 +855,10 @@ QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::S
         qs.append(QLatin1String(" ASC"));
     } else {
         qs.append(QLatin1String(" DESC"));
+    }
+
+    if (limit > 0) {
+        qs.append(QLatin1String(" LIMIT ")).append(QString::number(limit));
     }
 
     if (!q.exec(qs)) {

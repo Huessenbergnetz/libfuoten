@@ -156,9 +156,11 @@ public:
      * <TR><TD>FuotenEnums::Item</TD><TD>Only folders will be returned that contain items with an ID in \a ids</TD></TR>
      * </TABLE>
      *
+     * Setting \a limit > \c 0 returns only the amount of items up to that limit.
+     *
      * The Folder objects in the returned list will have their parent set to \c nullptr.
      */
-    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Folder) = 0;
+    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) = 0;
     
     /*!
      * \brief Returns a list of Feed objects from the local storage.
@@ -175,11 +177,18 @@ public:
      * </TABLE>
      *
      * If you specify a \a folderId > \c -1, only feeds will be returned that are part of that Folder. Setting this greater than \c -1
-     * make only sense if you do not specify a list of \a ids or if you set \a idType to a different value than FuotenEnums::Folder.
+     * makes only sense if you do not specify a list of \a ids or if you set \a idType to a different value than FuotenEnums::Folder.
+     * Setting \a limit > \c 0 returns only the amount of items up to that limit.
      *
      * The Feed objects in the returned list will have their parent set to \c nullptr.
+     *
+     * \par Examples
+     *
+     * \code{.cpp}
+     *
+     * \endcode
      */
-    virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1) = 0;
+    virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) = 0;
 
 public Q_SLOTS:
     /*!
