@@ -106,6 +106,12 @@ void SQLiteStorageManager::run()
         return;
     }
 
+    if (!q.exec(QStringLiteral("INSERT OR IGNORE INTO folders (id, name) VALUES (0, '')"))) {
+        //% "Failed to execute database query."
+        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+        return;
+    }
+
     if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS feeds "
                                "(id INTEGER PRIMARY KEY NOT NULL, "
                                "folderId INTEGER NOT NULL, "
@@ -395,7 +401,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     qDebug() << "Processing" << folders.size() << "folders requested from the remote server.";
 #endif
 
-    QHash<qint64, QString> reqFolders;
+    QHash<qint64, QString> reqFolders({{0, QStringLiteral("")}});
 
     for (const QJsonValue &f : folders) {
         QJsonObject o = f.toObject();
@@ -727,12 +733,15 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
     }
 
     while (q.next()) {
-        folders.append(new Folder(
-                           q.value(0).toLongLong(),
-                           q.value(1).toString(),
-                           q.value(2).toUInt(),
-                           q.value(3).toUInt()
-                           ));
+        qint64 id = q.value(0).toLongLong();
+        if (id > 0) {
+            folders.append(new Folder(
+                               q.value(0).toLongLong(),
+                               q.value(1).toString(),
+                               q.value(2).toUInt(),
+                               q.value(3).toUInt()
+                               ));
+        }
     }
 
     return folders;
