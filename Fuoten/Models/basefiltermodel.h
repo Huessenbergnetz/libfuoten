@@ -205,8 +205,10 @@ public:
      * \brief Loads the data in the underlying model.
      *
      * Reimplement this in a subclass and call the underlying model's BaseModel::load() function.
+     * If \a locale is not an empty string, the default locale will be set to the defined locale.
+     * \sa QLocale::setDefault()
      */
-    Q_INVOKABLE virtual void load() = 0;
+    Q_INVOKABLE virtual void load(const QString &locale = QString()) = 0;
 
 Q_SIGNALS:
     /*!

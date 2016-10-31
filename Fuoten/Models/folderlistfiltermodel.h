@@ -74,7 +74,7 @@ public:
     /*!
      * \brief Loads the data in the underlyinf FolderListModel.
      */
-    Q_INVOKABLE void load() override;
+    Q_INVOKABLE void load(const QString &locale = QString()) override;
 
 protected:
     FolderListFilterModel(FolderListFilterModelPrivate &dd, QObject *parent = nullptr);

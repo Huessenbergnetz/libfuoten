@@ -21,6 +21,7 @@
 #include "folderlistfiltermodel_p.h"
 #include "../Storage/abstractstorage.h"
 #include "../folder.h"
+#include <QLocale>
 
 using namespace Fuoten;
 
@@ -46,8 +47,12 @@ FolderListFilterModel::FolderListFilterModel(FolderListFilterModelPrivate &dd, Q
 }
 
 
-void FolderListFilterModel::load()
+void FolderListFilterModel::load(const QString &locale)
 {
+    if (!locale.isEmpty()) {
+        QLocale::setDefault(QLocale(locale));
+    }
+
     Q_D(FolderListFilterModel);
     if (d->flm) {
         d->flm->load();

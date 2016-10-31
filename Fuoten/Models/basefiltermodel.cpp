@@ -29,14 +29,14 @@ using namespace Fuoten;
 BaseFilterModel::BaseFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent), d_ptr(new BaseFilterModelPrivate)
 {
-    setSortLocaleAware(true);
+//    setSortLocaleAware(true);
 }
 
 
 BaseFilterModel::BaseFilterModel(BaseFilterModelPrivate &dd, QObject *parent) :
     QSortFilterProxyModel(parent), d_ptr(&dd)
 {
-    setSortLocaleAware(true);
+//    setSortLocaleAware(true);
 }
 
 
