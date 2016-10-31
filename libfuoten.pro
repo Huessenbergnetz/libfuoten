@@ -164,7 +164,9 @@ HEADERS += \
     Fuoten/Models/feedlistmodel.h \
     Fuoten/Models/feedlistmodel_p.h \
     Fuoten/Models/feedlistfiltermodel.h \
-    Fuoten/Models/feedlistfiltermodel_p.h
+    Fuoten/Models/feedlistfiltermodel_p.h \
+    Fuoten/API/renamefeed.h \
+    Fuoten/API/renamefeed_p.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -194,7 +196,8 @@ SOURCES += \
     Fuoten/API/getfeeds.cpp \
     Fuoten/Models/abstractfeedmodel.cpp \
     Fuoten/Models/feedlistmodel.cpp \
-    Fuoten/Models/feedlistfiltermodel.cpp
+    Fuoten/Models/feedlistfiltermodel.cpp \
+    Fuoten/API/renamefeed.cpp
 
 DISTFILES += \
     fuoten.pc.in

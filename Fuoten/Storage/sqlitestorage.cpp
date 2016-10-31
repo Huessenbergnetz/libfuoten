@@ -1173,7 +1173,45 @@ void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
 
 void SQLiteStorage::feedRenamed(qint64 id, const QString &newTitle)
 {
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
 
+    if (newTitle.isEmpty()) {
+        //% "The feed name can not be empty."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-feed-name"), QString(), this));
+        return;
+    }
+
+    if (id == 0) {
+        //% "The feed ID is not valid."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        return;
+    }
+
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("UPDATE feeds SET title = ? WHERE id = ?"))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    q.addBindValue(newTitle);
+    q.addBindValue(id);
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    Q_EMIT renamedFeed(id, newTitle);
 }
 
 

@@ -248,8 +248,18 @@ void AbstractFeedModel::feedDeleted(qint64 id)
 }
 
 void AbstractFeedModel::feedRenamed(qint64 id, const QString &newName)
-{
+{    
+    QModelIndex idx = findByID(id);
 
+    if (idx.isValid()) {
+
+        Q_D(AbstractFeedModel);
+
+        d->feeds.at(idx.row())->setTitle(newName);
+
+        Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+
+    }
 }
 
 

@@ -246,14 +246,15 @@
     </message>
     <message id="libfuoten-err-failed-open-db">
         <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+66"/>
-        <location line="+228"/>
+        <location line="+234"/>
         <source>Failed to open the SQLite database.</source>
         <translation>Die SQLite-Datenbank konnte nicht geöffnet werden.</translation>
     </message>
     <message id="fuoten-error-failed-execute-query">
-        <location line="-216"/>
+        <location line="-222"/>
         <location line="+16"/>
         <location line="+11"/>
+        <location line="+6"/>
         <location line="+20"/>
         <location line="+23"/>
         <location line="+6"/>
@@ -275,39 +276,65 @@
         <location line="+26"/>
         <location line="+69"/>
         <location line="+45"/>
-        <location line="+57"/>
-        <location line="+46"/>
+        <location line="+61"/>
+        <location line="+49"/>
         <location line="+25"/>
+        <location line="+69"/>
+        <location line="+76"/>
+        <location line="+44"/>
+        <location line="+70"/>
+        <location line="+43"/>
+        <location line="+25"/>
+        <location line="+78"/>
         <source>Failed to execute database query.</source>
         <translation>Datenbankabfrage konnte nicht durchgeführt werden.</translation>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-708"/>
-        <location line="+404"/>
+        <location line="-1126"/>
+        <location line="+410"/>
+        <location line="+468"/>
+        <location line="+62"/>
         <source>Failed to begin a database transaction.</source>
         <translation>Datenbanktransaktion konnte nicht begonnen werden.</translation>
     </message>
     <message id="fuoten-error-transaction-commit">
-        <location line="-243"/>
+        <location line="-773"/>
         <location line="+315"/>
+        <location line="+437"/>
+        <location line="+138"/>
         <source>Failed to commit a database transaction.</source>
         <translation>Datenbanktransaktion konnte nicht abgeschlossen werden.</translation>
     </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
-        <location line="-251"/>
+        <location line="-826"/>
         <location line="+75"/>
         <location line="+249"/>
-        <location line="+110"/>
+        <location line="+117"/>
+        <location line="+151"/>
+        <location line="+271"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation>SQLite-Datenbank nicht verfügbar. Daten können nicht verarbeitet werden.</translation>
     </message>
     <message id="libfuoten-err-invalid-feed-id">
-        <location line="-422"/>
+        <location filename="../Fuoten/API/renamefeed.cpp" line="+114"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-851"/>
+        <location line="+863"/>
         <source>The feed ID is not valid.</source>
         <translation>Die Feed-ID ist ungültig.</translation>
     </message>
+    <message id="libfuoten-err-empty-feed-name">
+        <location line="+8"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-6"/>
+        <source>The feed name can not be empty.</source>
+        <translation>Der Fee-Titel darf nicht leer sein.</translation>
+    </message>
+    <message id="libfuoten-err-feed-not-exists">
+        <location line="+42"/>
+        <source>The feed was not found on the server.</source>
+        <translation>Der Feed wurde auf dem Server nicht gefunden.</translation>
+    </message>
     <message id="fuoten-failed-query-folders">
-        <location line="+93"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-764"/>
         <source>Failed to query the folders from the local database.</source>
         <translation>Ordner konnten nicht aus der lokalen Datenbank abgefragt werden.</translation>
     </message>
@@ -317,8 +344,12 @@
         <location line="+26"/>
         <location line="+69"/>
         <location line="+45"/>
-        <location line="+104"/>
+        <location line="+111"/>
         <location line="+25"/>
+        <location line="+178"/>
+        <location line="+70"/>
+        <location line="+47"/>
+        <location line="+109"/>
         <source>Failed to prepare database query.</source>
         <translation>Datenbankabfrage konnte nicht vorbereitet werden.</translation>
     </message>
@@ -326,9 +357,9 @@
         <location filename="../Fuoten/API/deletefolder.cpp" line="+75"/>
         <location filename="../Fuoten/API/markfolderread.cpp" line="+81"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+81"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-469"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-880"/>
         <location line="+330"/>
-        <location line="+104"/>
+        <location line="+111"/>
         <source>The folder ID is not valid.</source>
         <oldsource>Failed to rename the folder. The folder ID is not valid.</oldsource>
         <translation>Die Ordner-ID ist ungültig.</translation>
@@ -336,7 +367,7 @@
     <message id="libfuoten-err-empty-folder-name">
         <location filename="../Fuoten/API/createfolder.cpp" line="+79"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-110"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-117"/>
         <source>The folder name can not be empty.</source>
         <oldsource>Failed to rename the folder. The new folder name is empty.</oldsource>
         <translation>Der Ordnername darf nicht leer sein.</translation>
@@ -373,6 +404,11 @@
         <location filename="../Fuoten/API/markfolderread.cpp" line="-36"/>
         <source>The item ID is not valid.</source>
         <translation>Die Artikel-ID ist ungültig.</translation>
+    </message>
+    <message id="libfuoten-err-no-feeds-array-in-reply">
+        <location filename="../Fuoten/API/getfeeds.cpp" line="+95"/>
+        <source>The data the server replied does not contain a &quot;feeds&quot; array.</source>
+        <translation>Die vom Server gelieferten Daten enthalten kein Feeds-Array.</translation>
     </message>
 </context>
 </TS>

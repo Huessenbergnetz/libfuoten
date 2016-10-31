@@ -19,6 +19,7 @@
  */
 
 #include "feed_p.h"
+#include "API/renamefeed.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -270,4 +271,38 @@ void Feed::copy(Fuoten::BaseItem *other)
     } else {
         qCritical("Failed to cast BaseItem to Feed when trying to create a deep copy!");
     }
+}
+
+
+
+void Feed::rename(const QString &newName, AbstractConfiguration *config, AbstractStorage *storage)
+{
+    if (inOperation()) {
+        qWarning("Folder is still in operation.");
+        return;
+    }
+
+    if (!config) {
+        qWarning("Can not change the folder name. No configuration available.");
+        return;
+    }
+
+    RenameFeed *rf = new RenameFeed(this);
+    rf->setConfiguration(config);
+    rf->setStorage(storage);
+    rf->setFeedId(id());
+    rf->setNewName(newName);
+    if (!storage) {
+        connect(rf, &RenameFeed::succeeded, [=] (qint64 id, const QString &newName) {
+            Q_UNUSED(id)
+            setTitle(newName);
+            setComponent(nullptr);
+        });
+    } else {
+        connect(rf, &RenameFeed::succeeded, [=] () {setComponent(nullptr);});
+    }
+    connect(rf, &RenameFeed::succeeded, rf, &QObject::deleteLater);
+    setComponent(rf);
+    component()->execute();
+    Q_EMIT inOperationChanged(inOperation());
 }

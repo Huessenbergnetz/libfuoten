@@ -304,6 +304,18 @@ public:
     void copy(BaseItem *other) override;
 
 
+    /*!
+     * \brief Sets a new name for the feed on the remote server.
+     *
+     * Will also rename the feed in the local \a storage if a valid AbstractStorage object has been set.
+     *
+     * \param newName the new name for the feed
+     * \param config pointer to an AbstractConfiguration subclass
+     * \param storage pointer to an AbstractStorage subclass
+     */
+    Q_INVOKABLE void rename(const QString &newName, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
+
+
 Q_SIGNALS:
     /*!
      * \brief This signal is emitted if the feed's URL changes.
