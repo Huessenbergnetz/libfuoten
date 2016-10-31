@@ -102,6 +102,15 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
      * <TABLE><TR><TD>void</TD><TD>hideReadChanged(bool hideRead)</TD></TR></TABLE>
      */
     Q_PROPERTY(bool hideRead READ hideRead WRITE setHideRead NOTIFY hideReadChanged)
+    /*!
+     * \brief Stores the parent ID as double to make it accesseable from QML.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>double</TD><TD>doubleParentId() const</TD></TR><TR><TD>void</TD><TD>setDoubleParentId(double nDoubleParentId)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>doubleParentIdChanged(double doubleParentId)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(double doubleParentId READ doubleParentId WRITE setDoubleParentId NOTIFY doubleParentIdChanged)
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
     Q_ENUMS(Fuoten::FuotenEnums::SortingRole)
 #endif
@@ -210,6 +219,11 @@ public:
      */
     Q_INVOKABLE virtual void load(const QString &locale = QString()) = 0;
 
+
+    double doubleParentId() const;
+
+    void setDoubleParentId(double nDoubleParentId);
+
 Q_SIGNALS:
     /*!
      * \brief This signal is emitted when the operational state of the underlying model changes.
@@ -252,6 +266,8 @@ Q_SIGNALS:
      * \sa hideRead
      */
     void hideReadChanged(bool hideRead);
+
+    void doubleParentIdChanged(double doubleParentId);
 
 protected:
     const QScopedPointer<BaseFilterModelPrivate> d_ptr;

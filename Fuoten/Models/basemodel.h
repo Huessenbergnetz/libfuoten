@@ -70,6 +70,20 @@ class FUOTENSHARED_EXPORT BaseModel : public QAbstractItemModel
      * <TABLE><TR><TD>void</TD><TD>parentIdChanged(qint64 parentId)</TD></TR></TABLE>
      */
     Q_PROPERTY(qint64 parentId READ parentId WRITE setParentId NOTIFY parentIdChanged)
+    /*!
+     * \brief Stores the parent ID as double to make it accesseable from QML.
+     *
+     * This uses the same data as parentId, but converts it between double and qint64. This is a convenience property for use in QML
+     * that does not support 64bit integers. As JavaScript and JSON are storing number values according to IEEE 754, there might happen
+     * an overflow, if setting values greater than the limit of qint64. Under normal circumstances we simply assume, that there will hardly
+     * be greater database IDs than what fits in qint64.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>double</TD><TD>doubleParentId() const</TD></TR><TR><TD>void</TD><TD>setDoubleParentId(double nDoubleParentId)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>doubleParentIdChanged(double doubleParentId)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(double doubleParentId READ doubleParentId WRITE setDoubleParentId NOTIFY doubleParentIdChanged)
 public:
     /*!
      * \brief Constructs a new BaseModel object.
@@ -117,6 +131,14 @@ public:
     qint64 parentId() const;
 
     /*!
+     * \brief Returns the currently set parent ID as double.
+     * This function is for use in QML, that does not support 64bit integers. It performs a static cast from
+     * the saved qint64 parent ID to double.
+     * \sa doubleParentId
+     */
+    double doubleParentId() const;
+
+    /*!
      * \brief Sets the pointer to the local storage handler.
      * \sa storage
      */
@@ -127,6 +149,14 @@ public:
      * \sa parentId
      */
     void setParentId(qint64 nParentId);
+
+    /*!
+     * \brief Sets the parent ID via a double.
+     * This function is for use in QML, that does not support 64bit integers. It performs a static cast from
+     * the double to a qint64 to save it.
+     * \sa doubleParentId
+     */
+    void setDoubleParentId(double nDoubleParentId);
 
 public Q_SLOTS:
     /*!
@@ -190,6 +220,12 @@ Q_SIGNALS:
      * \sa parentId
      */
     void parentIdChanged(qint64 parentId);
+
+    /*!
+     * \brief This signal is emitted if the parent ID changes.
+     * \sa doubleParentId
+     */
+    void doubleParentIdChanged(double doubleParentId);
 
 
 protected:

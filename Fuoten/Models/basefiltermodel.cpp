@@ -29,14 +29,14 @@ using namespace Fuoten;
 BaseFilterModel::BaseFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent), d_ptr(new BaseFilterModelPrivate)
 {
-//    setSortLocaleAware(true);
+
 }
 
 
 BaseFilterModel::BaseFilterModel(BaseFilterModelPrivate &dd, QObject *parent) :
     QSortFilterProxyModel(parent), d_ptr(&dd)
 {
-//    setSortLocaleAware(true);
+
 }
 
 
@@ -112,4 +112,12 @@ void BaseFilterModel::setHideRead(bool nHideRead)
         Q_EMIT hideReadChanged(hideRead());
         invalidateFilter();
     }
+}
+
+
+double BaseFilterModel::doubleParentId() const { Q_D(const BaseFilterModel); return static_cast<double>(parentId()); }
+
+void BaseFilterModel::setDoubleParentId(double nDoubleParentId)
+{
+    setParentId(static_cast<qint64>(nDoubleParentId));
 }

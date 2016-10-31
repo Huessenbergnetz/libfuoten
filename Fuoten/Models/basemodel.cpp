@@ -125,5 +125,15 @@ void BaseModel::setParentId(qint64 nParentId)
         qDebug() << "Changed parentId to" << d->parentId;
 #endif
         Q_EMIT parentIdChanged(parentId());
+        Q_EMIT doubleParentIdChanged(doubleParentId());
     }
+}
+
+
+
+double BaseModel::doubleParentId() const { Q_D(const BaseModel); return static_cast<double>(d->parentId); }
+
+void BaseModel::setDoubleParentId(double nDoubleParentId)
+{
+    setParentId(static_cast<qint64>(nDoubleParentId));
 }

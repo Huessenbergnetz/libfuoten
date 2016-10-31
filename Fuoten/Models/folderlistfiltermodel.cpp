@@ -32,6 +32,7 @@ FolderListFilterModel::FolderListFilterModel(QObject *parent) :
     connect(d->flm.data(), &FolderListModel::inOperationChanged, this, &FolderListFilterModel::inOperationChanged);
     connect(d->flm.data(), &FolderListModel::storageChanged, this, &FolderListFilterModel::storageChanged);
     connect(d->flm.data(), &FolderListModel::parentIdChanged, this, &FolderListFilterModel::parentIdChanged);
+    connect(d->flm.data(), &FolderListModel::doubleParentIdChanged, this, &FolderListFilterModel::doubleParentIdChanged);
     setSourceModel(d->flm.data());
 }
 
@@ -43,6 +44,7 @@ FolderListFilterModel::FolderListFilterModel(FolderListFilterModelPrivate &dd, Q
     connect(d->flm.data(), &FolderListModel::inOperationChanged, this, &FolderListFilterModel::inOperationChanged);
     connect(d->flm.data(), &FolderListModel::storageChanged, this, &FolderListFilterModel::storageChanged);
     connect(d->flm.data(), &FolderListModel::parentIdChanged, this, &FolderListFilterModel::parentIdChanged);
+    connect(d->flm.data(), &FolderListModel::doubleParentIdChanged, this, &FolderListFilterModel::doubleParentIdChanged);
     setSourceModel(d->flm.data());
 }
 
@@ -95,7 +97,10 @@ void FolderListFilterModel::setParentId(qint64 nParentId)
 {
     Q_D(FolderListFilterModel);
     if (d->flm) {
-        d->flm->setParentId(nParentId);
+        if (d->flm->parentId() != nParentId) {
+            d->flm->setParentId(nParentId);
+            Q_EMIT doubleParentIdChanged(doubleParentId());
+        }
     }
 }
 

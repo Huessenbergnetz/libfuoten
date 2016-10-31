@@ -35,6 +35,7 @@ FeedListFilterModel::FeedListFilterModel(QObject *parent) :
     connect(d->flm.data(), &FeedListModel::inOperationChanged, this, &FeedListFilterModel::inOperationChanged);
     connect(d->flm.data(), &FeedListModel::storageChanged, this, &FeedListFilterModel::storageChanged);
     connect(d->flm.data(), &FeedListModel::parentIdChanged, this, &FeedListFilterModel::parentIdChanged);
+    connect(d->flm.data(), &FeedListModel::doubleParentIdChanged, this, &FeedListFilterModel::doubleParentIdChanged);
     setSourceModel(d->flm.data());
 }
 
@@ -46,6 +47,7 @@ FeedListFilterModel::FeedListFilterModel(FeedListFilterModelPrivate &dd, QObject
     connect(d->flm.data(), &FeedListModel::inOperationChanged, this, &FeedListFilterModel::inOperationChanged);
     connect(d->flm.data(), &FeedListModel::storageChanged, this, &FeedListFilterModel::storageChanged);
     connect(d->flm.data(), &FeedListModel::parentIdChanged, this, &FeedListFilterModel::parentIdChanged);
+    connect(d->flm.data(), &FeedListModel::doubleParentIdChanged, this, &FeedListFilterModel::doubleParentIdChanged);
     setSourceModel(d->flm.data());
 }
 
@@ -101,7 +103,10 @@ void FeedListFilterModel::setParentId(qint64 nParentId)
 {
     Q_D(FeedListFilterModel);
     if (d->flm) {
-        d->flm->setParentId(nParentId);
+        if (d->flm->parentId() != nParentId) {
+            d->flm->setParentId(nParentId);
+            Q_EMIT doubleParentIdChanged(doubleParentId());
+        }
     }
 }
 
@@ -237,7 +242,3 @@ void FeedListFilterModel::setSortByFolder(bool nSortByFolder)
         invalidate();
     }
 }
-
-
-
-
