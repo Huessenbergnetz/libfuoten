@@ -72,9 +72,7 @@ void AbstractFeedModel::load()
     if (parentId() < 0) {
         fs = storage()->getFeeds();
     } else {
-        QList<qint64> l;
-        l.append(parentId());
-        fs = storage()->getFeeds(FuotenEnums::Name, Qt::AscendingOrder, l, FuotenEnums::Folder);
+        fs = storage()->getFeeds(FuotenEnums::Name, Qt::AscendingOrder, QList<qint64>(), FuotenEnums::Folder, parentId());
     }
 
     if (!fs.isEmpty()) {
