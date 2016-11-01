@@ -27,7 +27,6 @@
 
 namespace Fuoten {
 
-
 class DeleteFeedPrivate;
 
 /*!
@@ -48,8 +47,10 @@ class DeleteFeedPrivate;
  *
  * \par Method
  * DELETE
+ *
+ * \headerfile "" <Fuoten/API/DeleteFeed>
  */
-class DeleteFeed : public Component
+class FUOTENSHARED_EXPORT DeleteFeed : public Component
 {
     Q_OBJECT
     /*!
