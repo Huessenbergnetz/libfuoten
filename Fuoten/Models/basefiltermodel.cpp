@@ -115,7 +115,7 @@ void BaseFilterModel::setHideRead(bool nHideRead)
 }
 
 
-double BaseFilterModel::doubleParentId() const { Q_D(const BaseFilterModel); return static_cast<double>(parentId()); }
+double BaseFilterModel::doubleParentId() const { return static_cast<double>(parentId()); }
 
 void BaseFilterModel::setDoubleParentId(double nDoubleParentId)
 {

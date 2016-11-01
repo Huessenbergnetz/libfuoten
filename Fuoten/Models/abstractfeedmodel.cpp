@@ -20,6 +20,9 @@
 
 #include "abstractfeedmodel_p.h"
 #include "../Storage/abstractstorage.h"
+#ifdef QT_DEBUG
+#include <QtDebug>
+#endif
 
 using namespace Fuoten;
 
@@ -148,6 +151,10 @@ void AbstractFeedModel::feedsRequested(const QList<qint64> &updatedFeeds, const 
         return;
     }
 
+#ifdef QT_DEBUG
+    qDebug() << "Feeds requested. Updating feeds model.";
+#endif
+
     Q_D(AbstractFeedModel);
 
     if (!updatedFeeds.isEmpty()) {
@@ -164,16 +171,19 @@ void AbstractFeedModel::feedsRequested(const QList<qint64> &updatedFeeds, const 
 
             for (Feed *f : ufs) {
                 QModelIndex idx = updIxs.value(f->id());
-                Feed *mf = d->feeds.at(idx.row());
 
-                if ((parentId() < 0) || (f->folderId() == parentId())) {
-                    // the feed has not moved, let's copy the new data
-                    mf->copy(f);
-                } else {
-                    // the feed is not longer part of this folder
-                    movedIds.append(f->id());
+                if (idx.isValid()) {
+                    Feed *mf = d->feeds.at(idx.row());
+
+                    if ((parentId() < 0) || (f->folderId() == parentId())) {
+                        // the feed has not moved, let's copy the new data
+                        mf->copy(f);
+                    } else {
+                        // the feed is not longer part of this folder
+                        movedIds.append(f->id());
+                    }
+                    Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
                 }
-                Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
             }
             qDeleteAll(ufs);
 

@@ -85,7 +85,13 @@ public:
 
     QString intListToString(const QList<qint64> &ints) const
     {
-        return intListToStringList(ints).join(QChar(','));
+        if (ints.isEmpty()) {
+            return QString();
+        } else if (ints.count() == 1) {
+            return QString::number(ints.first());
+        } else {
+            return intListToStringList(ints).join(QChar(','));
+        }
     }
 
     QSqlDatabase db;
