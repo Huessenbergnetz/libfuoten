@@ -316,6 +316,14 @@ public:
     Q_INVOKABLE void rename(const QString &newName, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
 
+    /*!
+     * \brief Removes this feed from the remote server.
+     *
+     * Will also remove the feed from the local \a storage if a valid AbstractStorage object has been set.
+     */
+    Q_INVOKABLE void remove(Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
+
+
 Q_SIGNALS:
     /*!
      * \brief This signal is emitted if the feed's URL changes.

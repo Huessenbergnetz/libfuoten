@@ -20,6 +20,7 @@
 
 #include "feed_p.h"
 #include "API/renamefeed.h"
+#include "API/deletefeed.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -303,6 +304,31 @@ void Feed::rename(const QString &newName, AbstractConfiguration *config, Abstrac
     }
     connect(rf, &RenameFeed::succeeded, rf, &QObject::deleteLater);
     setComponent(rf);
+    component()->execute();
+    Q_EMIT inOperationChanged(inOperation());
+}
+
+
+
+
+void Feed::remove(AbstractConfiguration *config, AbstractStorage *storage)
+{
+    if (inOperation()) {
+        qWarning("Feed is still in operation.");
+        return;
+    }
+
+    if (!config) {
+        qWarning("Can not delete the folder. No AbstractConfiguration available.");
+        return;
+    }
+
+    DeleteFeed *df = new DeleteFeed(this);
+    df->setConfiguration(config);
+    df->setStorage(storage);
+    df->setFeedId(id());
+    connect(df, &DeleteFeed::succeeded, this, &QObject::deleteLater);
+    setComponent(df);
     component()->execute();
     Q_EMIT inOperationChanged(inOperation());
 }

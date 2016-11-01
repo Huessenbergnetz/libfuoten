@@ -254,8 +254,24 @@ void AbstractFeedModel::feedCreated(qint64 id, qint64 folderId)
 
 void AbstractFeedModel::feedDeleted(qint64 id)
 {
+    Q_D(AbstractFeedModel);
 
+    int row = d->rowByID(id);
+
+    if (row > -1) {
+
+        beginRemoveRows(QModelIndex(), row, row);
+
+        Feed *f = d->feeds.takeAt(row);
+
+        endRemoveRows();
+
+        f->deleteLater();
+    }
 }
+
+
+
 
 void AbstractFeedModel::feedRenamed(qint64 id, const QString &newName)
 {    
