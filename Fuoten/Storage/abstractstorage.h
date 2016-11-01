@@ -190,6 +190,13 @@ public:
      */
     virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) = 0;
 
+    /*!
+     * \brief Returns the Feed identified by \a id.
+     *
+     * Return a \c nullptr if the Feed can not be fount.
+     */
+    virtual Feed *getFeed(qint64 id) = 0;
+
 public Q_SLOTS:
     /*!
      * \brief Receives the reply data of the GetFolders request.
