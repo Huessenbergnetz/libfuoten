@@ -1087,7 +1087,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 #endif
                         updatedFeedIds.append(id);
 
-                        if (!q.prepare(QStringLiteral("UPDATE feeds SET folderId = ?, title = ?, link = ?, ordering = ?, pinned = ?, updateErrorCount = ?, lastUpdateError = ? WHERE id = ?"))) {
+                        if (!q.prepare(QStringLiteral("UPDATE feeds SET folderId = ?, title = ?, link = ?, ordering = ?, pinned = ?, updateErrorCount = ?, lastUpdateError = ?, faviconLink = ? WHERE id = ?"))) {
                             //% "Failed to prepare database query."
                             setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
                             return;
@@ -1100,6 +1100,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                         q.addBindValue(rPinned);
                         q.addBindValue(rUpdateErrorCount);
                         q.addBindValue(rLastUpdateError);
+                        q.addBindValue(rFaviconLink.toString());
                         q.addBindValue(id);
 
                         if (!q.exec()) {
