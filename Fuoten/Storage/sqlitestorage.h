@@ -69,6 +69,13 @@ public:
     QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) override;
 
     /*!
+     * \brief Returns the Feed identified by \a id.
+     *
+     * Returns a \c nullptr if the Feed can not be found.
+     */
+    Feed *getFeed(qint64 id) override;
+
+    /*!
      * \brief Returns the newest/highest item/article ID fo the given \a type.
      *
      * Supported Types: FuotenEnums::Feed, FuotenEnums::Folder, FuotenEnums::All. For folder and feed type

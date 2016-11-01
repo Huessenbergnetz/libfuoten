@@ -360,6 +360,7 @@ void AbstractFolderModel::feedCreated(qint64 feedId, qint64 folderId)
             mf->setUnreadCount(f->unreadCount());
             Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
         }
+        delete f;
     }
 }
 

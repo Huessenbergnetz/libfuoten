@@ -248,7 +248,26 @@ void AbstractFeedModel::feedsRequested(const QList<qint64> &updatedFeeds, const 
 
 void AbstractFeedModel::feedCreated(qint64 id, qint64 folderId)
 {
+    if (!storage()) {
+        qWarning("Can not add feed, no storage available.");
+        return;
+    }
 
+    if (parentId() < 0 || parentId() == folderId) {
+
+        Feed *f = storage()->getFeed(id);
+
+        if (f) {
+
+            Q_D(AbstractFeedModel);
+
+            beginInsertRows(QModelIndex(), rowCount(), rowCount());
+
+            d->feeds.append(f);
+
+            endInsertRows();
+        }
+    }
 }
 
 

@@ -898,6 +898,61 @@ QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::S
 
 
 
+
+Feed *SQLiteStorage::getFeed(qint64 id)
+{
+    if (!ready()) {
+        qWarning("SQLite database not ready. Can not query folders from database.");
+        return nullptr;
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.id = ?"))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return nullptr;
+    }
+
+    q.addBindValue(id);
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return nullptr;
+    }
+
+
+    if (q.next()) {
+        Feed *f = new Feed(
+                        q.value(0).toLongLong(),
+                        q.value(1).toLongLong(),
+                        q.value(2).toString(),
+                        QUrl(q.value(3).toString()),
+                        QUrl(q.value(4).toString()),
+                        QDateTime::fromTime_t(q.value(5).toUInt()),
+                        q.value(6).toUInt(),
+                        (Feed::FeedOrdering)q.value(7).toInt(),
+                        q.value(8).toBool(),
+                        q.value(9).toUInt(),
+                        q.value(10).toString(),
+                        QUrl(q.value(11).toString()),
+                        q.value(12).toString()
+                        );
+        return f;
+
+    } else {
+
+        qWarning("Can not find the the feed in the local SQLite database.");
+        return nullptr;
+
+    }
+}
+
+
+
 void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 {
     Q_D(SQLiteStorage);
@@ -1154,7 +1209,67 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
 void SQLiteStorage::feedCreated(const QJsonDocument &json)
 {
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
 
+    if (json.isEmpty() || json.isNull()) {
+        qWarning("Can not add folder to SQLite database. JSON data is not valid.");
+        return;
+    }
+
+    QJsonArray a = json.object().value(QStringLiteral("feeds")).toArray();
+
+    if (a.isEmpty()) {
+        qWarning("Can not add feed to SQLite database. JSON array is empty.");
+        return;
+    }
+
+
+    QJsonObject o = a.first().toObject();
+
+    if (o.isEmpty()) {
+        qWarning("Can not add feed to SQLite databse. JSON object is empty.");
+        return;
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
+                                  "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                                  ))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
+    qint64 folderId = o.value(QStringLiteral("folderId")).toVariant().toLongLong();
+
+    q.addBindValue(id);
+    q.addBindValue(folderId);
+    q.addBindValue(o.value(QStringLiteral("title")).toString());
+    q.addBindValue(o.value(QStringLiteral("url")).toString());
+    q.addBindValue(o.value(QStringLiteral("link")).toString());
+    q.addBindValue(o.value(QStringLiteral("added")).toVariant().toUInt());
+    q.addBindValue(o.value(QStringLiteral("ordering")).toInt());
+    q.addBindValue(o.value(QStringLiteral("pinned")).toBool());
+    q.addBindValue(o.value(QStringLiteral("updateErrorCount")).toInt());
+    q.addBindValue(o.value(QStringLiteral("lastUpdateError")).toString());
+    q.addBindValue(o.value(QStringLiteral("faviconLink")).toString());
+
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    Q_EMIT createdFeed(id, folderId);
 }
 
 

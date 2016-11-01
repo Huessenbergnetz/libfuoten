@@ -285,39 +285,42 @@
         <location line="+49"/>
         <location line="+25"/>
         <location line="+69"/>
-        <location line="+76"/>
+        <location line="+49"/>
+        <location line="+82"/>
         <location line="+44"/>
         <location line="+70"/>
         <location line="+44"/>
         <location line="+25"/>
-        <location line="+57"/>
+        <location line="+80"/>
+        <location line="+37"/>
         <location line="+51"/>
         <source>Failed to execute database query.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-1157"/>
+        <location line="-1272"/>
         <location line="+410"/>
-        <location line="+468"/>
+        <location line="+523"/>
         <location line="+62"/>
         <source>Failed to begin a database transaction.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="fuoten-error-transaction-commit">
-        <location line="-773"/>
+        <location line="-828"/>
         <location line="+315"/>
-        <location line="+437"/>
+        <location line="+492"/>
         <location line="+139"/>
         <source>Failed to commit a database transaction.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
-        <location line="-827"/>
+        <location line="-882"/>
         <location line="+75"/>
         <location line="+249"/>
         <location line="+117"/>
-        <location line="+151"/>
-        <location line="+259"/>
+        <location line="+206"/>
+        <location line="+252"/>
+        <location line="+67"/>
         <location line="+43"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation type="unfinished"></translation>
@@ -325,8 +328,8 @@
     <message id="libfuoten-err-invalid-feed-id">
         <location filename="../Fuoten/API/deletefeed.cpp" line="+91"/>
         <location filename="../Fuoten/API/renamefeed.cpp" line="+114"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-882"/>
-        <location line="+845"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-997"/>
+        <location line="+960"/>
         <location line="+49"/>
         <source>The feed ID is not valid.</source>
         <translation type="unfinished"></translation>
@@ -344,7 +347,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="fuoten-failed-query-folders">
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-795"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-910"/>
         <source>Failed to query the folders from the local database.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -356,23 +359,41 @@
         <location line="+45"/>
         <location line="+111"/>
         <location line="+25"/>
-        <location line="+178"/>
+        <location line="+118"/>
+        <location line="+115"/>
         <location line="+70"/>
         <location line="+47"/>
-        <location line="+90"/>
+        <location line="+99"/>
+        <location line="+51"/>
         <location line="+50"/>
         <source>Failed to prepare database query.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="libfuoten-err-invalid-feed-url">
+        <location filename="../Fuoten/API/createfeed.cpp" line="+81"/>
+        <source>The URL of the feed is not valid.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="libfuoten-err-invalid-folder-id">
+        <location line="+8"/>
         <location filename="../Fuoten/API/deletefolder.cpp" line="+75"/>
         <location filename="../Fuoten/API/markfolderread.cpp" line="+81"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+81"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-911"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1026"/>
         <location line="+330"/>
         <location line="+111"/>
         <source>The folder ID is not valid.</source>
         <oldsource>Failed to rename the folder. The folder ID is not valid.</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="libfuoten-err-feed-exists">
+        <location line="+45"/>
+        <source>The feed does already exist on the server.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="libfuoten-err-feed-unreadable">
+        <location line="+4"/>
+        <source>The feed can not be read (most likely contains errors).</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="libfuoten-err-empty-folder-name">
@@ -417,6 +438,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message id="libfuoten-err-no-feeds-array-in-reply">
+        <location filename="../Fuoten/API/createfeed.cpp" line="-27"/>
         <location filename="../Fuoten/API/getfeeds.cpp" line="+95"/>
         <source>The data the server replied does not contain a &quot;feeds&quot; array.</source>
         <translation type="unfinished"></translation>

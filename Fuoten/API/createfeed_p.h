@@ -18,49 +18,30 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FUOTENABSTRACTFEEDMODEL_P_H
-#define FUOTENABSTRACTFEEDMODEL_P_H
+#ifndef FUOTENCREATEFEED_P_H
+#define FUOTENCREATEFEED_P_H
 
-#include "abstractfeedmodel.h"
-#include "basemodel_p.h"
-#include "../feed.h"
+#include "createfeed.h"
+#include "component_p.h"
 
 namespace Fuoten {
 
-class AbstractFeedModelPrivate : public BaseModelPrivate
+class CreateFeedPrivate : public ComponentPrivate
 {
 public:
-    AbstractFeedModelPrivate() : BaseModelPrivate() {}
-
-    ~AbstractFeedModelPrivate() {
-        while (!feeds.isEmpty()) {
-            Feed *f = feeds.takeFirst();
-            if (!f->inOperation()) {
-                delete f;
-            }
-        }
+    CreateFeedPrivate() :
+        ComponentPrivate(),
+        folderId(0)
+    {
+        expectedJSONType = Component::Object;
+        namOperation = QNetworkAccessManager::PostOperation;
+        apiRoute = QStringLiteral("/feeds");
     }
 
-    int rowByID(qint64 id) {
-        if (feeds.isEmpty()) {
-            return -1;
-        }
-
-        int idx = -1;
-
-        for (int i = 0; i < feeds.count(); ++i) {
-            if (feeds.at(i)->id() == id) {
-                idx = i;
-                break;
-            }
-        }
-
-        return idx;
-    }
-
-    QList<Feed*> feeds;
+    QUrl url;
+    qint64 folderId;
 };
 
 }
 
-#endif // FUOTENABSTRACTFEEDMODEL_P_H
+#endif // FUOTENCREATEFEED_P_H
