@@ -316,5 +316,50 @@ void AbstractFeedModel::feedMarkedRead(qint64 id, qint64 newestItemId)
 
 void AbstractFeedModel::feedMoved(qint64 id, qint64 targetFolderId)
 {
+    if (!storage()) {
+        qWarning("Can not move feed, no storage available.");
+        return;
+    }
 
+    Feed *f = storage()->getFeed(id);
+
+    if (!f) {
+        qWarning("Can not find feed in local storage.");
+        return;
+    }
+
+    QModelIndex idx = findByID(id);
+
+    Q_D(AbstractFeedModel);
+
+    if (idx.isValid() && (parentId() < 0)) {
+
+        d->feeds.at(idx.row())->setFolderId(f->folderId());
+        d->feeds.at(idx.row())->setFolderName(f->folderName());
+
+        Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+
+        delete f;
+
+    } else if (idx.isValid() && (parentId() != targetFolderId)) {
+
+        beginRemoveRows(QModelIndex(), idx.row(), idx.row());
+
+        Feed *movedFeed = d->feeds.takeAt(idx.row());
+
+        endRemoveRows();
+
+        movedFeed->deleteLater();
+
+        delete f;
+
+    } else if (!idx.isValid() && (parentId() == targetFolderId)) {
+
+        beginInsertRows(QModelIndex(), rowCount(), rowCount());
+
+        d->feeds.append(f);
+
+        endInsertRows();
+
+    }
 }

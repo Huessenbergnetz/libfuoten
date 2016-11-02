@@ -21,6 +21,7 @@
 #include "feed_p.h"
 #include "API/renamefeed.h"
 #include "API/deletefeed.h"
+#include "API/movefeed.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -329,6 +330,40 @@ void Feed::remove(AbstractConfiguration *config, AbstractStorage *storage)
     df->setFeedId(id());
     connect(df, &DeleteFeed::succeeded, this, &QObject::deleteLater);
     setComponent(df);
+    component()->execute();
+    Q_EMIT inOperationChanged(inOperation());
+}
+
+
+
+void Feed::move(qint64 targetFolderId, AbstractConfiguration *config, AbstractStorage *storage)
+{
+    if (inOperation()) {
+        qWarning("Feed is still in operation.");
+        return;
+    }
+
+    if (!config) {
+        qWarning("Can not delete the folder. No AbstractConfiguration available.");
+        return;
+    }
+
+    MoveFeed *mf = new MoveFeed(this);
+    mf->setConfiguration(config);
+    mf->setStorage(storage);
+    mf->setFeedId(id());
+    mf->setFolderId(targetFolderId);
+    if (!storage) {
+        connect(mf, &MoveFeed::succeeded, [=] (qint64 id, qint64 targetFolder) {
+            Q_UNUSED(id)
+            setFolderId(targetFolder);
+            setComponent(nullptr);
+        });
+    } else {
+        connect(mf, &MoveFeed::succeeded, [=] () {setComponent(nullptr);});
+    }
+    connect(mf, &MoveFeed::succeeded, mf, &QObject::deleteLater);
+    setComponent(mf);
     component()->execute();
     Q_EMIT inOperationChanged(inOperation());
 }

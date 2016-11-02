@@ -324,6 +324,18 @@ public:
     Q_INVOKABLE void remove(Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
 
+    /*!
+     * \brief Moves this feed to a different folder on the remote server.
+     *
+     * Will also move the feed in the local, \a storage if a valid AbstractStorage object has been set.
+     *
+     * \param targetFolderId    ID of the folder the feed should be moved to
+     * \param config            pointer to an AbstractConfiguration subclass
+     * \param storage           pointer to an AbstractStorage subclass
+     */
+    Q_INVOKABLE void move(qint64 targetFolderId, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
+
+
 Q_SIGNALS:
     /*!
      * \brief This signal is emitted if the feed's URL changes.

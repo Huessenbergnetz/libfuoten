@@ -170,7 +170,9 @@ HEADERS += \
     Fuoten/API/deletefeed_p.h \
     Fuoten/API/deletefeed.h \
     Fuoten/API/createfeed_p.h \
-    Fuoten/API/createfeed.h
+    Fuoten/API/createfeed.h \
+    Fuoten/API/movefeed_p.h \
+    Fuoten/API/movefeed.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -203,7 +205,8 @@ SOURCES += \
     Fuoten/Models/feedlistfiltermodel.cpp \
     Fuoten/API/renamefeed.cpp \
     Fuoten/API/deletefeed.cpp \
-    Fuoten/API/createfeed.cpp
+    Fuoten/API/createfeed.cpp \
+    Fuoten/API/movefeed.cpp
 
 DISTFILES += \
     fuoten.pc.in
