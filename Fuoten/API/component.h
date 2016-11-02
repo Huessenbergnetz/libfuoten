@@ -279,11 +279,13 @@ public:
      * \brief Returns true while the API request is running.
      *
      * This might also include the local storage operation, if Component::storage is set to a valid AbstractStorage sublcass.
+     * \sa inOperation
      */
     bool inOperation() const;
 
     /*!
      * \brief Returns the currently set request timeout.
+     * \sa requestTimeout
      */
     quint8 requestTimeout() const;
 
@@ -382,17 +384,22 @@ Q_SIGNALS:
      * \brief This signal is emitted if the SSL/TLS session encountered errors during the set up.
      *
      * Will only be emitted if AbstractConfiguration::getIgnoreSSLErrors() returns \c false (the default).
+     *
+     * \param reply     the network reply that cause the SSL error
+     * \param errors    list of occured SSL errors
      */
     void sslErrors(QNetworkReply *reply, const QList<QSslError> &errors);
 
     /*!
      * \brief Emit this signal in a subclass when the request was successful.
+     * \param result JSON data replied by the server as result of an API request
      */
     void succeeded(const QJsonDocument &result);
 
     /*!
      * \brief Emit this signal in a subclass when the request failed for some reason.
      * \sa error
+     * \param error pointer to an Error object
      */
     void failed(Error *error);
 
@@ -404,6 +411,7 @@ protected:
      * \brief Sets the value of the \link Component::inOperation inOperation \endlink property.
      *
      * Use this in subclasses of Component to indicate, that the request is still running or has been finished.
+     * \sa inOperation
      */
     void setInOperation(bool nInOperation);
 
@@ -411,6 +419,7 @@ protected:
      * \brief Sets the pointer of the \link Component::error error \endlink property.
      *
      * If there was already an error set, the old Error will be deleted.
+     * \sa error
      */
     void setError(Error *nError);
 
@@ -418,11 +427,15 @@ protected:
      * \brief Sets the expected JSON type for initial output check.
      *
      * Default: Empty
+     *
+     * \sa expetedJSONType()
      */
     void setExpectedJSONType(ExpectedJSONType type);
 
     /*!
      * \brief Sets the API route.
+     * \sa apiRoute()
+     * \param route complete API route starting with \c "/"
      */
     void setApiRoute(const QString &route);
 
@@ -430,6 +443,10 @@ protected:
      * \brief Sets the API route constructed from a route part list.
      *
      * The parts in the QStringList will be joind with a '/' into the API route path.
+     *
+     * \sa apiRoute()
+     *
+     * \param routeParts list of route parts that will be joined with a '/'.
      */
     void setApiRoute(const QStringList &routeParts);
 
@@ -459,6 +476,8 @@ protected:
      * \brief Sets the operation the network manager should perform for this call.
      *
      * Default: QNetworkAccessManager::GetOperation
+     *
+     * \param operation the type of the nework operation
      */
     void setNetworkOperation(QNetworkAccessManager::Operation operation);
 
@@ -473,6 +492,8 @@ protected:
      * \brief Sets the headers to use for the HTTP request.
      *
      * \sa requestHeaders(), addRequestHeader(), addRequestHeaders()
+     *
+     * \param headers dictionary with \a key as header name and \a value as header value
      */
     void setRequestHeaders(const QHash<QByteArray, QByteArray> &headers);
 
@@ -480,6 +501,9 @@ protected:
      * \brief Adds a header to the HTTP request.
      *
      * \sa addRequestHeaders(), setRequestHeaders(), requestHeaders()
+     *
+     * \param headerName    the name of the header entry
+     * \param headerValue   the value of the header entry
      */
     void addRequestHeader(const QByteArray & headerName, const QByteArray &headerValue);
 
@@ -487,21 +511,29 @@ protected:
      * \brief Adds headers to the HTTP request.
      *
      * \sa addRequestHeader(), setRequestHeaders(), requestHeaders()
+     *
+     * \param headers dictionary with \a key as header name and \a value as header value
      */
     void addRequestHeaders(const QHash<QByteArray, QByteArray> &headers);
 
     /*!
      * \brief Sets the payload for the request.
+     *
+     * \param payload the JSON payload to send with the request
      */
     void setPayload(const QByteArray &payload);
 
     /*!
      * \brief Sets the payload for the request.
+     *
+     * \param payload the JSON payload to send with the request
      */
     void setPayload(const QJsonObject &payload);
 
     /*!
      * \brief Sets the URL query for the request.
+     *
+     * \param query the query to append to the request URL
      */
     void setUrlQuery(const QUrlQuery &query);
 
