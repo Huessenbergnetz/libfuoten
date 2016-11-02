@@ -2,8 +2,8 @@ TARGET = fuoten
 TEMPLATE = lib
 
 VER_MAJ = 0
-VER_MIN = 1
-VER_PAT = 2
+VER_MIN = 2
+VER_PAT = 0
 VERSION = $${VER_MAJ}.$${VER_MIN}.$${VER_PAT}
 
 QT += network sql
@@ -42,12 +42,18 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/error.h \
         Fuoten/fuoten_global.h \
         Fuoten/fuoten.h \
+        Fuoten/Models/feedlistmodel.h \
         Fuoten/Models/abstractfoldermodel.h \
+        Fuoten/Models/AbstractFeedModel \
         Fuoten/Models/BaseFilterModel \
+        Fuoten/Models/FeedListModel \
         Fuoten/Models/folderlistfiltermodel.h \
         Fuoten/Models/FolderListFilterModel \
         Fuoten/Models/BaseModel \
         Fuoten/Models/AbstractFolderModel \
+        Fuoten/Models/FeedListFilterModel \
+        Fuoten/Models/abstractfeedmodel.h \
+        Fuoten/Models/feedlistfiltermodel.h \
         Fuoten/Models/basemodel.h \
         Fuoten/Models/basefiltermodel.h \
         Fuoten/Models/FolderListModel \
@@ -56,24 +62,34 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/Folder \
         Fuoten/feed.h \
         Fuoten/API/GetVersion \
+        Fuoten/API/markfeedread.h \
         Fuoten/API/CreateFolder \
         Fuoten/API/markfolderread.h \
+        Fuoten/API/createfeed.h \
+        Fuoten/API/RenameFeed \
         Fuoten/API/renamefolder.h \
         Fuoten/API/MarkFolderRead \
         Fuoten/API/getuser.h \
+        Fuoten/API/renamefeed.h \
         Fuoten/API/deletefolder.h \
+        Fuoten/API/MarkFeedRead \
         Fuoten/API/RenameFolder \
+        Fuoten/API/MoveFeed \
         Fuoten/API/getversion.h \
+        Fuoten/API/CreateFeed \
         Fuoten/API/getstatus.h \
         Fuoten/API/GetUser \
         Fuoten/API/component.h \
+        Fuoten/API/movefeed.h \
         Fuoten/API/GetStatus \
+        Fuoten/API/getfeeds.h \
+        Fuoten/API/deletefeed.h \
         Fuoten/API/GetFolders \
+        Fuoten/API/DeleteFeed \
         Fuoten/API/DeleteFolder \
         Fuoten/API/Component \
         Fuoten/API/createfolder.h \
         Fuoten/API/getfolders.h \
-        Fuoten/API/getfeeds.h \
         Fuoten/API/GetFeeds \
         Fuoten/Error \
         Fuoten/Feed \

@@ -9,6 +9,8 @@ more in the [API documentation](https://www.buschmann23.de/docs/libfuoten) of li
 * account validation (request version, status and user)
 * folder management (synchronization, adding, deleting, renaming, marking as read)
 * folder list model and filtering
+* feeds management (synchronization, adding, deleting, renaming, marking as read, moving)
+* feeds list model and filtering
 * SQLite storage class
 
 ## Goals
@@ -21,6 +23,9 @@ more in the [API documentation](https://www.buschmann23.de/docs/libfuoten) of li
 ## Contributing
 The source code is available on [Github](https://github.com/Buschtrommel/libfuoten), feel free to clone or branch according to the LGPLv3.
 Translation is done on [Transifex](https://www.transifex.com/buschtrommel/libfuoten).
+
+## Getting libfuoten
+* [openSUSE](https://software.opensuse.org/package/libfuoten)
 
 ## Building libfuoten
 Either clone the git repository or download one of the [release](https://github.com/Buschtrommel/libfuoten/releases) tarballs. Qt 5.2 or newer
