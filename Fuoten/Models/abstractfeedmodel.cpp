@@ -118,7 +118,7 @@ QModelIndex AbstractFeedModel::findByID(qint64 id) const
 
 
 
-QHash<qint64, QModelIndex> AbstractFeedModel::findByIDs(const QList<qint64> ids) const
+QHash<qint64, QModelIndex> AbstractFeedModel::findByIDs(const QList<qint64> &ids) const
 {
     Q_D(const AbstractFeedModel);
 
@@ -390,7 +390,9 @@ void AbstractFeedModel::folderMarkedRead(qint64 folderId, qint64 newestItemId)
 
     if (folderId == parentId()) {
 
-        for (Feed *f : feeds()) {
+        const QList<Feed*> fs = feeds();
+
+        for (Feed *f : fs) {
             f->setUnreadCount(0);
         }
 
@@ -440,7 +442,9 @@ void AbstractFeedModel::folderDeleted(qint64 folderId)
 
 
         QList<qint64> rmFeedIds;
-        for (Feed *f : feeds()) {
+
+        const QList<Feed*> fs = feeds();
+        for (Feed *f : fs) {
 
             if (f->folderId() == folderId) {
                 rmFeedIds.append(f->id());

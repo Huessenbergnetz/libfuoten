@@ -996,6 +996,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         qDebug() << "All feeds have been deleted on the server. Deleting local ones.";
 #endif
 
+        deletedFeedIds.reserve(currentFeeds.size());
         for (Feed *f : currentFeeds) {
             deletedFeedIds.append(f->id());
         }

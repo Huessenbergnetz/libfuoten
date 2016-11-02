@@ -92,7 +92,7 @@ QModelIndex BaseModel::findByID(qint64 id) const
 }
 
 
-QHash<qint64, QModelIndex> BaseModel::findByIDs(const QList<qint64> ids) const
+QHash<qint64, QModelIndex> BaseModel::findByIDs(const QList<qint64> &ids) const
 {
     Q_UNUSED(ids)
     return QHash<qint64, QModelIndex>();

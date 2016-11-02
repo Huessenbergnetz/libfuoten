@@ -58,7 +58,7 @@ public:
      *
      * \param ids list of feed IDs to find in the model
      */
-    QHash<qint64, QModelIndex> findByIDs(const QList<qint64> ids) const override;
+    QHash<qint64, QModelIndex> findByIDs(const QList<qint64> &ids) const override;
 
 public Q_SLOTS:
     /*!
