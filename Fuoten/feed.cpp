@@ -22,6 +22,7 @@
 #include "API/renamefeed.h"
 #include "API/deletefeed.h"
 #include "API/movefeed.h"
+#include "API/markfeedread.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -364,6 +365,37 @@ void Feed::move(qint64 targetFolderId, AbstractConfiguration *config, AbstractSt
     }
     connect(mf, &MoveFeed::succeeded, mf, &QObject::deleteLater);
     setComponent(mf);
+    component()->execute();
+    Q_EMIT inOperationChanged(inOperation());
+}
+
+
+
+void Feed::markAsRead(AbstractConfiguration *config, AbstractStorage *storage)
+{
+    if (inOperation()) {
+        qWarning("Folder is still in operation.");
+        return;
+    }
+
+    if (!config || !storage) {
+        qWarning("Can not delete the folder. No configuration and no storage available.");
+        return;
+    }
+
+    const qint64 newestItemId = storage->getNewestItemId(FuotenEnums::Feed, id());
+
+    MarkFeedRead *mfr = new MarkFeedRead(this);
+    mfr->setConfiguration(config);
+    mfr->setStorage(storage);
+    mfr->setFeedId(id());
+    mfr->setNewestItemId(newestItemId);
+    connect(mfr, &MarkFeedRead::succeeded, [=] () {
+        setUnreadCount(0);
+        setComponent(nullptr);
+    });
+    connect(mfr, &MarkFeedRead::succeeded, mfr, &QObject::deleteLater);
+    setComponent(mfr);
     component()->execute();
     Q_EMIT inOperationChanged(inOperation());
 }

@@ -310,7 +310,18 @@ void AbstractFeedModel::feedRenamed(qint64 id, const QString &newName)
 
 void AbstractFeedModel::feedMarkedRead(qint64 id, qint64 newestItemId)
 {
+    Q_UNUSED(newestItemId)
 
+    QModelIndex idx = findByID(id);
+
+    if (idx.isValid()) {
+
+        Q_D(AbstractFeedModel);
+
+        d->feeds.at(idx.row())->setUnreadCount(0);
+
+        Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+    }
 }
 
 

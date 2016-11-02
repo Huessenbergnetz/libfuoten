@@ -319,7 +319,7 @@ void AbstractFolderModel::feedMarkedRead(qint64 id)
     QList<qint64> l;
     l.append(id);
 
-    const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder, l, FuotenEnums::Feed);
+    const QList<Folder*> fs = storage()->getFolders(FuotenEnums::ID, Qt::AscendingOrder, l, FuotenEnums::Feed);
 
     if (!fs.isEmpty()) {
         Folder *f = fs.first();
@@ -331,6 +331,7 @@ void AbstractFolderModel::feedMarkedRead(qint64 id)
             mf->setUnreadCount(f->unreadCount());
             Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
         }
+        delete f;
     }
 }
 

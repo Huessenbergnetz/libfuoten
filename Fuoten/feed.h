@@ -310,8 +310,8 @@ public:
      * Will also rename the feed in the local \a storage if a valid AbstractStorage object has been set.
      *
      * \param newName the new name for the feed
-     * \param config pointer to an AbstractConfiguration subclass
-     * \param storage pointer to an AbstractStorage subclass
+     * \param config pointer to an AbstractConfiguration subclass to get the account configuration
+     * \param storage pointer to an AbstractStorage subclass to rename the feed in the local storage
      */
     Q_INVOKABLE void rename(const QString &newName, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
@@ -320,6 +320,9 @@ public:
      * \brief Removes this feed from the remote server.
      *
      * Will also remove the feed from the local \a storage if a valid AbstractStorage object has been set.
+     *
+     * \param config    pointer to an AbstractConfiguration subclass to get the account configuration
+     * \param storage   pointer to an AbstractStorage subclass to remove the feed from the local storage
      */
     Q_INVOKABLE void remove(Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
@@ -330,11 +333,19 @@ public:
      * Will also move the feed in the local, \a storage if a valid AbstractStorage object has been set.
      *
      * \param targetFolderId    ID of the folder the feed should be moved to
-     * \param config            pointer to an AbstractConfiguration subclass
-     * \param storage           pointer to an AbstractStorage subclass
+     * \param config            pointer to an AbstractConfiguration subclass to get the account configuration
+     * \param storage           pointer to an AbstractStorage subclass to move the feed in the local storage
      */
     Q_INVOKABLE void move(qint64 targetFolderId, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
+
+    /*!
+     * \brief Marks the complete feed as read on the remote server and local.
+     *
+     * \param config    pointer to an AbstractConfiguration subclass to get the account configuration
+     * \param storage   pointer to an AbstractStorage subclass to query the newest item ID in the feed and update the local storage
+     */
+    Q_INVOKABLE void markAsRead(Fuoten::AbstractConfiguration * config, Fuoten::AbstractStorage *storage);
 
 Q_SIGNALS:
     /*!
