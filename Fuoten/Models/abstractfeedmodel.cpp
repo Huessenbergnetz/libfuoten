@@ -46,6 +46,9 @@ void AbstractFeedModel::handleStorageChanged()
     AbstractStorage *s = storage();
     connect(s, &AbstractStorage::readyChanged, this, &AbstractFeedModel::load);
 
+    connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFeedModel::folderMarkedRead);
+    connect(s, &AbstractStorage::deletedFolder, this, &AbstractFeedModel::folderDeleted);
+
     connect(s, &AbstractStorage::requestedFeeds, this, &AbstractFeedModel::feedsRequested);
     connect(s, &AbstractStorage::createdFeed, this, &AbstractFeedModel::feedCreated);
     connect(s, &AbstractStorage::deletedFeed, this, &AbstractFeedModel::feedDeleted);
@@ -371,6 +374,98 @@ void AbstractFeedModel::feedMoved(qint64 id, qint64 targetFolderId)
         d->feeds.append(f);
 
         endInsertRows();
+
+    }
+}
+
+
+
+void AbstractFeedModel::folderMarkedRead(qint64 folderId, qint64 newestItemId)
+{
+    Q_UNUSED(newestItemId)
+
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    if (folderId == parentId()) {
+
+        for (Feed *f : feeds()) {
+            f->setUnreadCount(0);
+        }
+
+        Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>(1, Qt::DisplayRole));
+
+    } else if (parentId() < 0) {
+
+        Q_D(AbstractFeedModel);
+
+        for (int i = 0; i < d->feeds.count(); ++i) {
+
+            Feed *f = d->feeds.at(i);
+
+            if (f->folderId() == folderId) {
+
+                QModelIndex idx = index(i, 0);
+
+                f->setUnreadCount(0);
+
+                Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+            }
+
+        }
+    }
+}
+
+
+
+void AbstractFeedModel::folderDeleted(qint64 folderId)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    Q_D(AbstractFeedModel);
+
+    if (folderId == parentId()) {
+
+        beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+
+        qDeleteAll(d->feeds);
+        d->feeds.clear();
+
+        endRemoveRows();
+
+    } else if (parentId() < 0) {
+
+
+        QList<qint64> rmFeedIds;
+        for (Feed *f : feeds()) {
+
+            if (f->folderId() == folderId) {
+                rmFeedIds.append(f->id());
+            }
+        }
+
+        if (!rmFeedIds.isEmpty()) {
+
+            for (int i = 0; i < rmFeedIds.count(); ++i) {
+
+                int row = d->rowByID(rmFeedIds.at(i));
+
+                if (row > -1) {
+
+                    beginRemoveRows(QModelIndex(), row, row);
+
+                    delete d->feeds.takeAt(row);
+
+                    endRemoveRows();
+
+                }
+
+            }
+
+        }
 
     }
 }
