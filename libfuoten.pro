@@ -194,7 +194,9 @@ HEADERS += \
     Fuoten/API/markfeedread.h \
     Fuoten/API/markfeedread_p.h \
     Fuoten/article_p.h \
-    Fuoten/article.h
+    Fuoten/article.h \
+    Fuoten/Models/abstractarticlemodel.h \
+    Fuoten/Models/abstractarticlemodel_p.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -230,7 +232,8 @@ SOURCES += \
     Fuoten/API/createfeed.cpp \
     Fuoten/API/movefeed.cpp \
     Fuoten/API/markfeedread.cpp \
-    Fuoten/article.cpp
+    Fuoten/article.cpp \
+    Fuoten/Models/abstractarticlemodel.cpp
 
 DISTFILES += \
     fuoten.pc.in
