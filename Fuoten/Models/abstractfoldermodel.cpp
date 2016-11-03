@@ -61,7 +61,7 @@ void AbstractFolderModel::handleStorageChanged()
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFolderModel::feedMarkedRead);
 
     connect(s, &AbstractStorage::requestedItems, this, &AbstractFolderModel::updateCountValues);
-    connect(s, &AbstractStorage::updatedItems, this, &AbstractFolderModel::updateCountValues);
+//    connect(s, &AbstractStorage::updatedItems, this, &AbstractFolderModel::updateCountValues);
     connect(s, &AbstractStorage::markedItems, this, &AbstractFolderModel::updateCountValues);
     connect(s, &AbstractStorage::starredItems, this, &AbstractFolderModel::updateCountValues);
 }
