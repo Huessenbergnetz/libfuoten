@@ -94,7 +94,9 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/Error \
         Fuoten/Feed \
         Fuoten/FuotenEnums \
-        Fuoten/baseitem.h
+        Fuoten/baseitem.h \
+        Fuoten/Article \
+        Fuoten/article.h
 
     basePath = $${dirname(PWD)}
     for(header, INSTALL_HEADERS) {
@@ -190,7 +192,9 @@ HEADERS += \
     Fuoten/API/movefeed_p.h \
     Fuoten/API/movefeed.h \
     Fuoten/API/markfeedread.h \
-    Fuoten/API/markfeedread_p.h
+    Fuoten/API/markfeedread_p.h \
+    Fuoten/article_p.h \
+    Fuoten/article.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -225,7 +229,8 @@ SOURCES += \
     Fuoten/API/deletefeed.cpp \
     Fuoten/API/createfeed.cpp \
     Fuoten/API/movefeed.cpp \
-    Fuoten/API/markfeedread.cpp
+    Fuoten/API/markfeedread.cpp \
+    Fuoten/article.cpp
 
 DISTFILES += \
     fuoten.pc.in
