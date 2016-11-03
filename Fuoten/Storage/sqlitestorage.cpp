@@ -1447,7 +1447,7 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
 
 
 
-Article *SQLiteStorage::getArticle(qint64 id)
+Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
 {
     if (!ready()) {
         qWarning("SQLite database not ready. Can not query article from database.");
@@ -1472,6 +1472,14 @@ Article *SQLiteStorage::getArticle(qint64 id)
         return nullptr;
     }
 
+    QString body;
+
+    if (bodyLimit == 0) {
+        body = q.value(9).toString();
+    } else if (bodyLimit > 0) {
+        body = limitBody(q.value(9).toString(), bodyLimit);
+    }
+
 
     if (q.next()) {
         Article *a = new Article(q.value(0).toLongLong(),
@@ -1483,7 +1491,7 @@ Article *SQLiteStorage::getArticle(qint64 id)
                                  q.value(6).toString(),
                                  q.value(7).toString(),
                                  QDateTime::fromTime_t(q.value(8).toUInt()),
-                                 q.value(9).toString(),
+                                 body,
                                  q.value(10).toString(),
                                  QUrl(q.value(11).toString()),
                                  q.value(12).toBool(),
@@ -1505,7 +1513,7 @@ Article *SQLiteStorage::getArticle(qint64 id)
 
 
 
-QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, bool unreadOnly, int limit)
+QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, bool unreadOnly, int limit, int bodyLimit)
 {
     QList<Article*> articles;
 
@@ -1568,6 +1576,14 @@ QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole,
         return articles;
     }
 
+    QString body;
+
+    if (bodyLimit == 0) {
+        body = q.value(9).toString();
+    } else if (bodyLimit > 0) {
+        body = limitBody(q.value(9).toString(), bodyLimit);
+    }
+
     while (q.next()) {
         articles.append(new Article(q.value(0).toLongLong(),
                                  q.value(1).toLongLong(),
@@ -1578,7 +1594,7 @@ QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole,
                                  q.value(6).toString(),
                                  q.value(7).toString(),
                                  QDateTime::fromTime_t(q.value(8).toUInt()),
-                                 q.value(9).toString(),
+                                 body,
                                  q.value(10).toString(),
                                  QUrl(q.value(11).toString()),
                                  q.value(12).toBool(),

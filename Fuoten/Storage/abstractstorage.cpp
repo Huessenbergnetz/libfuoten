@@ -19,6 +19,7 @@
  */
 
 #include "abstractstorage_p.h"
+#include <QRegularExpression>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -129,3 +130,14 @@ void AbstractStorage::setStarred(quint16 nStarred)
 
 
 
+QString AbstractStorage::limitBody(const QString &body, int limit) const
+{
+    if (body.isEmpty() || body.length() < limit) {
+        return body;
+    }
+
+    QString s = body.left(2*limit);
+    s.remove(QRegularExpression(QStringLiteral("<[^>]*>")));
+    s = s.simplified();
+    return s.left(limit);
+}

@@ -215,6 +215,10 @@ public:
      * If \a unreadOnly is set to \c true, only unread articles will be returned. Setting a \a limit > \c 0 returns only the amount of
      * articles up to that limit.
      *
+     * \a bodyLimit limits the size of the body text in number of characters. Values lower than \c 0 will return no body text,
+     * \c 0 will return the full body text, any other positive value will return a body stripped from HTML tags and limited to the amount of
+     * characters.
+     *
      * The Article objects in the returned list will have their parent set to \c nullptr.
      *
      * \par Examples
@@ -223,7 +227,7 @@ public:
      *
      * \endcode
      */
-    virtual QList<Article*> getArticles(FuotenEnums::SortingRole sortingRole = FuotenEnums::Time, Qt::SortOrder sortOrder = Qt::DescendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, bool unreadOnly = false, int limit = 0) = 0;
+    virtual QList<Article*> getArticles(FuotenEnums::SortingRole sortingRole = FuotenEnums::Time, Qt::SortOrder sortOrder = Qt::DescendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, bool unreadOnly = false, int limit = 0, int bodyLimit = -1) = 0;
 
 
 
@@ -237,9 +241,13 @@ public:
     /*!
      * \brief Returns the Article identified by \a id.
      *
+     * \a bodyLimit limits the size of the body text in number of characters. Values lower than \c 0 will return no body text,
+     * \c 0 will return the full body text, any other positive value will return a body stripped from HTML tags and limited to the amount of
+     * characters.
+     *
      * Returns a \c nullptr if the Article can not be found.
      */
-    virtual Article *getArticle(qint64 id) = 0;
+    virtual Article *getArticle(qint64 id, int bodyLimit = 0) = 0;
 
 public Q_SLOTS:
     /*!
@@ -513,6 +521,8 @@ protected:
      * \sa starred
      */
     virtual void setStarred(quint16 nStarred);
+
+    virtual QString limitBody(const QString &body, int limit) const;
 
     const QScopedPointer<AbstractStoragePrivate> d_ptr;
     AbstractStorage(AbstractStoragePrivate &dd, QObject *parent = nullptr);
