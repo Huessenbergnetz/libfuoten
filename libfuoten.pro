@@ -98,7 +98,9 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/Article \
         Fuoten/article.h \
         Fuoten/Models/abstractarticlemodel.h \
-        Fuoten/Models/AbstractArticleModel
+        Fuoten/Models/AbstractArticleModel \
+        Fuoten/API/GetItems \
+        Fuoten/API/getitems.h
 
     basePath = $${dirname(PWD)}
     for(header, INSTALL_HEADERS) {
@@ -198,7 +200,9 @@ HEADERS += \
     Fuoten/article_p.h \
     Fuoten/article.h \
     Fuoten/Models/abstractarticlemodel.h \
-    Fuoten/Models/abstractarticlemodel_p.h
+    Fuoten/Models/abstractarticlemodel_p.h \
+    Fuoten/API/getitems_p.h \
+    Fuoten/API/getitems.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -235,7 +239,8 @@ SOURCES += \
     Fuoten/API/movefeed.cpp \
     Fuoten/API/markfeedread.cpp \
     Fuoten/article.cpp \
-    Fuoten/Models/abstractarticlemodel.cpp
+    Fuoten/Models/abstractarticlemodel.cpp \
+    Fuoten/API/getitems.cpp
 
 DISTFILES += \
     fuoten.pc.in
