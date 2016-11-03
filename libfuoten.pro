@@ -96,7 +96,9 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/FuotenEnums \
         Fuoten/baseitem.h \
         Fuoten/Article \
-        Fuoten/article.h
+        Fuoten/article.h \
+        Fuoten/Models/abstractarticlemodel.h \
+        Fuoten/Models/AbstractArticleModel
 
     basePath = $${dirname(PWD)}
     for(header, INSTALL_HEADERS) {
