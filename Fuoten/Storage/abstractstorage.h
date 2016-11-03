@@ -30,6 +30,7 @@ namespace Fuoten {
 class Folder;
 class Feed;
 class Error;
+class Article;
 class AbstractStoragePrivate;
 
 /*!
@@ -159,6 +160,12 @@ public:
      * Setting \a limit > \c 0 returns only the amount of items up to that limit.
      *
      * The Folder objects in the returned list will have their parent set to \c nullptr.
+     *
+     * \par Examples
+     *
+     * \code{.cpp}
+     *
+     * \endcode
      */
     virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) = 0;
     
@@ -190,12 +197,49 @@ public:
      */
     virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) = 0;
 
+
+    /*!
+     * \brief Returns a list of Article objects from the local storage.
+     *
+     * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
+     * only articles with IDs of \a idType from the list will be returned. The \a idType specifies the
+     * ID the article is compared with. If the \a idType is not one of out of the table below, it will
+     * be treated as FuotenEnums::Feed.
+     *
+     * <TABLE>
+     * <TR><TD>FuotenEnums::Folder</TD><TD>Only feeds will be returned that are part of a folder with an ID in \a ids</TD></TR>
+     * <TR><TD>FuotenEnums::Feed</TD><TD>Only feeds with an ID in \a ids will be returned</TD></TR>
+     * <TR><TD>FuotenEnums::Item</TD><TD>Only feeds will be returned that contain items with an ID in \a ids</TD></TR>
+     * </TABLE>
+     *
+     * If \a unreadOnly is set to \c true, only unread articles will be returned. Setting a \a limit > \c 0 returns only the amount of
+     * articles up to that limit.
+     *
+     * The Article objects in the returned list will have their parent set to \c nullptr.
+     *
+     * \par Examples
+     *
+     * \code{.cpp}
+     *
+     * \endcode
+     */
+    virtual QList<Article*> getArticles(FuotenEnums::SortingRole sortingRole = FuotenEnums::Time, Qt::SortOrder sortOrder = Qt::DescendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, bool unreadOnly = false, int limit = 0) = 0;
+
+
+
     /*!
      * \brief Returns the Feed identified by \a id.
      *
-     * Return a \c nullptr if the Feed can not be fount.
+     * Returns a \c nullptr if the Feed can not be found.
      */
     virtual Feed *getFeed(qint64 id) = 0;
+
+    /*!
+     * \brief Returns the Article identified by \a id.
+     *
+     * Returns a \c nullptr if the Article can not be found.
+     */
+    virtual Article *getArticle(qint64 id) = 0;
 
 public Q_SLOTS:
     /*!
@@ -392,31 +436,58 @@ public Q_SLOTS:
      */
     virtual void itemsRequested(const QJsonDocument &json) = 0;
 
-    /*!
-     * \brief Receives the reply data fo the UpdateItems request.
-     *
-     * Implement this in a derived class to store item data, for example in a local SQL databs.
-     * You should emit updatedItems() in your implementation after you processed the data to update connected models.
-     *
-     * For an example of the JSON response see itemsRequested().
-     */
-    virtual void itemsUpdated(const QJsonDocument &json) = 0;
+//    /*!
+//     * \brief Receives the reply data fo the UpdateItems request.
+//     *
+//     * Implement this in a derived class to store item data, for example in a local SQL databs.
+//     * You should emit updatedItems() in your implementation after you processed the data to update connected models.
+//     *
+//     * For an example of the JSON response see itemsRequested().
+//     */
+//    virtual void itemsUpdated(const QJsonDocument &json) = 0;
 
     /*!
      * \brief Receives the reply data for the MarkItems request.
      *
      * Will mark the items identified by their \a id in the lists either as read or as unread.
      * You should emit markedItems() in your implementation after you processed the data to update connected models.
+     *
+     * \param idsMarkedRead     IDs of items that have been marked as read
+     * \param idsMarkedUnread   IDs of items that have been marked as unread
      */
-    virtual void itemsMarked(QList<qint64> &idsMarkedRead, QList<qint64> &idsMarkedUnread) = 0;
+    virtual void itemsMarked(const QList<qint64> &idsMarkedRead, const QList<qint64> &idsMarkedUnread) = 0;
 
     /*!
      * \brief Receives the reply data for the StarItems request.
      *
      * The lists contains the item/article IDs and the guid hash of the items/articles that have been either starred or unstarred.
      * You should emit starredItems() in your implementation after you processed the data to update connected models.
+     *
+     * \param articlesStarred   list of pairs of article ID and guid hash of starred articles
+     * \param articlesUnstarred list of pairs of article ID and guid hash of unstarred articles
      */
-    virtual void itemsStarred(QList<QPair<qint64, QString>> &articlesStarred, QList<QPair<qint64, QString>> &articlesUnstarred) = 0;
+    virtual void itemsStarred(const QList<QPair<qint64, QString>> &articlesStarred, const QList<QPair<qint64, QString>> &articlesUnstarred) = 0;
+
+    /*!
+     * \brief Receives the reply data for the MarkItem request.
+     *
+     * Will mark the item identified by \a itemId in the local storage as read or unread.
+     *
+     * \param itemId    ID of the item/article that has been marked
+     * \param unread    \c true if the item has been marked as unread, \c false if marked as read
+     */
+    virtual void itemMarked(qint64 itemId, bool unread) = 0;
+
+    /*!
+     * \brief Receives the reply data fro the StarItem request.
+     *
+     * Will star or unstar the item/article identified by \a itemId and \a guidHash in the local storage.
+     *
+     * \param itemId    ID of the item/article that has been starred or unstarred
+     * \param guidHash  global unique ID hash of the item/article that has been starred or unstarred
+     * \param starred   \c true if the article has been starred, \c false if it has been unstarred
+     */
+    virtual void itemStarred(qint64 itemId, const QString &guidHash, bool starred) = 0;
 
 protected:
     /*!
@@ -569,17 +640,25 @@ Q_SIGNALS:
      * Best location to emit this signal is your implementation of itemsRequested().
      *
      * Every argument of the signal should contain a list of item IDs that are either updated, new or deleted.
+     *
+     * \param updatedItems  list of IDs from items that have been updated
+     * \param newItems      list of IDs from items that are new in the local storage
+     * \param deletedItems  list of IDs from items that have been remove from the local storage
      */
-    void requestedItems(QList<qint64> &updatedItems, QList<qint64> &newItems, QList<qint64> &deletedItems);
+    void requestedItems(const QList<qint64> &updatedItems, const QList<qint64> &newItems, const QList<qint64> &deletedItems);
 
-    /*!
-     * \brief Emit this after items/articles have been received and processed.
-     *
-     * Best location to emit this signal is your implementation of itemsUpdated().
-     *
-     * Every argument of the signal should contain a list of item IDs that are either updated, new or deleted.
-     */
-    void updatedItems(QList<qint64> &updatedItems, QList<qint64> &newItems, QList<qint64> &deletedItems);
+//    /*!
+//     * \brief Emit this after items/articles have been received and processed.
+//     *
+//     * Best location to emit this signal is your implementation of itemsUpdated().
+//     *
+//     * Every argument of the signal should contain a list of item IDs that are either updated, new or deleted.
+//     *
+//     * \param updatedItems  list of IDs from items that have been updated
+//     * \param newItems      list of IDs from items that are new in the local storage
+//     * \param deletedItems  list of IDs from items that have been remove from the local storage
+//     */
+//    void updatedItems(QList<qint64> &updatedItems, QList<qint64> &newItems, QList<qint64> &deletedItems);
 
     /*!
      * \brief Emit this after items/articles have been marked as read or unread.
@@ -587,15 +666,42 @@ Q_SIGNALS:
      * Best location to emit this signal is your implementation of itemsMarked().
      *
      * The lists have to conatin the item/article IDs that haven been marked as read or unread.
+     *
+     * \param idsMarkedRead     IDs of items that have been marked as read
+     * \param idsMarkedUnread   IDs of items that have been marked as unread
      */
-    void markedItems(QList<qint64> &idsMarkedRead, QList<qint64> &idsMarkedUnread);
+    void markedItems(const QList<qint64> &idsMarkedRead, const QList<qint64> &idsMarkedUnread);
 
     /*!
      * \brief Emit this after items/articles have been starred or unstarred.
      *
      * Best location to emit this signal is your implementation of itemsStarred().
+     *
+     * \param articlesStarred   list of pairs of article ID and guid hash of starred articles
+     * \param articlesUnstarred list of pairs of article ID and guid hash of unstarred articles
      */
-    void starredItems(QList<QPair<qint64, QString>> &articlesStarred, QList<QPair<qint64, QString>> &articlesUnstarred);
+    void starredItems(const QList<QPair<qint64, QString>> &articlesStarred, const QList<QPair<qint64, QString>> &articlesUnstarred);
+
+    /*!
+     * \brief Emit this after an item/article has been marked read or unread.
+     *
+     * Best location to emit this signal is your implementation of itemMarked().
+     *
+     * \param itemId    the ID of the item/article that has been marked as read or unread
+     * \param unread    \c true if the article has been marked as unread, \c false if marked as read
+     */
+    void markedItem(qint64 itemId, bool unread);
+
+    /*!
+     * \brief Emit this after an item/article has been starred or unstarred.
+     *
+     * Best location to emit this signal is your implementation of itemStarred().
+     *
+     * \param itemId    the ID of the item/article that has been starred or unstarred
+     * \param guidHash  the global unique ID hash of the article that has been starred or unstarred
+     * \param starred   \c true if the item has been starred, \c false if it has been unstarred
+     */
+    void starredItem(qint64 itemId, const QString &guidHash, bool starred);
 
 
 private:

@@ -31,6 +31,7 @@ namespace Fuoten {
 class SQLiteStoragePrivate;
 class Folder;
 class Feed;
+class Article;
 
 /*!
  * \brief Storage using a local SQLite database.
@@ -69,11 +70,23 @@ public:
     QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) override;
 
     /*!
+     * \brief Returns a list of Article objects from the \a items table.
+     */
+    virtual QList<Article*> getArticles(FuotenEnums::SortingRole sortingRole = FuotenEnums::Time, Qt::SortOrder sortOrder = Qt::DescendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, bool unreadOnly = false, int limit = 0) override;
+
+    /*!
      * \brief Returns the Feed identified by \a id.
      *
      * Returns a \c nullptr if the Feed can not be found.
      */
     Feed *getFeed(qint64 id) override;
+
+    /*!
+     * \brief Returns the Article identified by \a id.
+     *
+     * Returns a \c nullptr if the Article can not be found.
+     */
+    Article *getArticle(qint64 id) override;
 
     /*!
      * \brief Returns the newest/highest item/article ID fo the given \a type.
@@ -100,9 +113,11 @@ public Q_SLOTS:
     void feedMarkedRead(qint64 id, qint64 newestItem) override;
 
     void itemsRequested(const QJsonDocument &json) override;
-    void itemsUpdated(const QJsonDocument &json) override;
-    void itemsMarked(QList<qint64> &idsMarkedRead, QList<qint64> &idsMarkedUnread) override;
-    void itemsStarred(QList<QPair<qint64, QString>> &articlesStarred, QList<QPair<qint64, QString>> &articlesUnstarred) override;
+//    void itemsUpdated(const QJsonDocument &json) override;
+    void itemsMarked(const QList<qint64> &idsMarkedRead, const QList<qint64> &idsMarkedUnread) override;
+    void itemsStarred(const QList<QPair<qint64, QString>> &articlesStarred, const QList<QPair<qint64, QString>> &articlesUnstarred) override;
+    void itemMarked(qint64 itemId, bool unread) override;
+    void itemStarred(qint64 itemId, const QString &guidHash, bool starred) override;
 
 private:
     Q_DECLARE_PRIVATE(SQLiteStorage)
