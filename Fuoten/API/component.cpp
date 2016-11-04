@@ -180,7 +180,7 @@ void Component::_requestFinished()
 
 #ifdef QT_DEBUG
 //    qDebug() << "Request result:" << d->result;
-    fprintf(stderr, "Request result: \n%s\n", d->result.constData());
+//    fprintf(stderr, "Request result: \n%s\n", d->result.constData());
 #endif
 
     if (d->reply->error() == QNetworkReply::NoError) {
