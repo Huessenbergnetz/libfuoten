@@ -163,7 +163,8 @@ public:
      * \brief Returns the last date and time in UTC a successful snychronization has been performed.
      *
      * Reimplement this in a subclass if you want let the Synchronizer save the last sync time.
-     * The default implementation returns a invalid QDateTime;
+     * The default implementation returns a invalid QDateTime. Your implementation should also
+     * return an invalid QDateTime if there has been no last sync.
      *
      * \sa setLastSync()
      */
