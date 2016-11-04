@@ -26,6 +26,7 @@
 #include "../Storage/abstractstorage.h"
 #include "../API/getfolders.h"
 #include "../API/getfeeds.h"
+#include "../API/getitems.h"
 #include "../error.h"
 
 namespace Fuoten {
@@ -40,7 +41,10 @@ public:
         configuration(nullptr),
         storage(nullptr),
         inOperation(false),
-        getFolders(nullptr)
+        getFolders(nullptr),
+        getFeeds(nullptr),
+        getUnread(nullptr),
+        getStarred(nullptr)
     {}
 
     ~SynchronizerPrivate() {}
@@ -48,6 +52,8 @@ public:
     void setError(Error *nError);
     void start();
     void requestFeeds();
+    void requestUnread();
+    void requestStarred();
     void finished();
 
 
@@ -59,7 +65,8 @@ public:
 
     GetFolders *getFolders;
     GetFeeds *getFeeds;
-
+    GetItems *getUnread;
+    GetItems *getStarred;
 };
 
 }

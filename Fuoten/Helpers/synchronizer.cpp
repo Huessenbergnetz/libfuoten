@@ -56,6 +56,10 @@ void SynchronizerPrivate::setError(Error *nError)
         }
 
         if (error && (error->type() != Error::NoError) && (error->severity() == Error::Critical || error->severity() == Error::Fatal)) {
+            getFolders = nullptr;
+            getFeeds = nullptr;
+            getStarred = nullptr;
+            getUnread = nullptr;
             inOperation = false;
             Q_EMIT q->inOperationChanged(false);
             Q_EMIT q->failed(error);
@@ -67,37 +71,103 @@ void SynchronizerPrivate::setError(Error *nError)
 
 void SynchronizerPrivate::start()
 {
-    getFolders = new GetFolders(q_ptr);
-    getFolders->setConfiguration(configuration);
-    getFolders->setStorage(storage);
-    QObject::connect(getFolders, &Component::failed, [=] (Error *e) {setError(e);});
-    QObject::connect(getFolders, &Component::failed, getFolders, &QObject::deleteLater);
-    if (storage) {
-        QObject::connect(storage, &AbstractStorage::requestedFolders, [=] () {requestFeeds();});
-        QObject::connect(storage, &AbstractStorage::requestedFolders, getFolders, &QObject::deleteLater);
-    } else {
-        QObject::connect(getFolders, &Component::succeeded, [=] () {requestFeeds();});
-        QObject::connect(getFolders, &Component::succeeded, getFolders, &QObject::deleteLater);
+    Q_Q(Synchronizer);
+    inOperation = true;
+    Q_EMIT q->inOperationChanged(true);
+    if (!getFolders) {
+#ifdef QT_DEBUG
+        qDebug() << "Getting folders";
+#endif
+        getFolders = new GetFolders(q_ptr);
+        getFolders->setConfiguration(configuration);
+        getFolders->setStorage(storage);
+        QObject::connect(getFolders, &Component::failed, [=] (Error *e) {setError(e);});
+        QObject::connect(getFolders, &Component::failed, getFolders, &QObject::deleteLater);
+        if (storage) {
+            QObject::connect(storage, &AbstractStorage::requestedFolders, [=] () {requestFeeds();});
+            QObject::connect(storage, &AbstractStorage::requestedFolders, getFolders, &QObject::deleteLater);
+        } else {
+            QObject::connect(getFolders, &Component::succeeded, [=] () {requestFeeds();});
+            QObject::connect(getFolders, &Component::succeeded, getFolders, &QObject::deleteLater);
+        }
+        getFolders->execute();
     }
-    getFolders->execute();
 }
 
 
 void SynchronizerPrivate::requestFeeds()
 {
-    getFeeds = new GetFeeds(q_ptr);
-    getFeeds->setConfiguration(configuration);
-    getFeeds->setStorage(storage);
-    QObject::connect(getFeeds, &Component::failed, [=] (Error *e) {setError(e);});
-    QObject::connect(getFeeds, &Component::failed, getFeeds, &QObject::deleteLater);
-    if (storage) {
-        QObject::connect(storage, &AbstractStorage::requestedFeeds, [=] () {finished();});
-        QObject::connect(storage, &AbstractStorage::requestedFeeds, getFeeds, &QObject::deleteLater);
-    } else {
-        QObject::connect(getFolders, &Component::succeeded, [=] () {finished();});
-        QObject::connect(getFeeds, &Component::succeeded, getFeeds, &QObject::deleteLater);
+    if (!getFeeds) {
+#ifdef QT_DEBUG
+        qDebug() << "Getting feeds";
+#endif
+        getFeeds = new GetFeeds(q_ptr);
+        getFeeds->setConfiguration(configuration);
+        getFeeds->setStorage(storage);
+        QObject::connect(getFeeds, &Component::failed, [=] (Error *e) {setError(e);});
+        QObject::connect(getFeeds, &Component::failed, getFeeds, &QObject::deleteLater);
+        if (storage) {
+            QObject::connect(storage, &AbstractStorage::requestedFeeds, [=] () {requestUnread();});
+            QObject::connect(storage, &AbstractStorage::requestedFeeds, getFeeds, &QObject::deleteLater);
+        } else {
+            QObject::connect(getFeeds, &Component::succeeded, [=] () {requestUnread();});
+            QObject::connect(getFeeds, &Component::succeeded, getFeeds, &QObject::deleteLater);
+        }
+        getFeeds->execute();
     }
-    getFeeds->execute();
+}
+
+
+
+void SynchronizerPrivate::requestUnread()
+{
+    if (!getUnread) {
+#ifdef QT_DEBUG
+        qDebug() << "Getting unread items";
+#endif
+        getUnread = new GetItems(q_ptr);
+        getUnread->setConfiguration(configuration);
+        getUnread->setStorage(storage);
+        getUnread->setType(FuotenEnums::All);
+        getUnread->setGetRead(false);
+        getUnread->setBatchSize(-1);
+        QObject::connect(getUnread, &Component::failed, [=] (Error *e) {setError(e);});
+        QObject::connect(getUnread, &Component::failed, getUnread, &QObject::deleteLater);
+        if (storage) {
+            QObject::connect(storage, &AbstractStorage::requestedItems, [=] () {requestStarred();});
+            QObject::connect(storage, &AbstractStorage::requestedItems, getUnread, &QObject::deleteLater);
+        } else {
+            QObject::connect(getUnread, &Component::succeeded, [=] () {requestStarred();});
+            QObject::connect(getUnread, &Component::succeeded, getUnread, &QObject::deleteLater);
+        }
+        getUnread->execute();
+    }
+}
+
+
+void SynchronizerPrivate::requestStarred()
+{
+    if (!getStarred) {
+#ifdef QT_DEBUG
+        qDebug() << "Getting starred items";
+#endif
+        getStarred = new GetItems(q_ptr);
+        getStarred->setConfiguration(configuration);
+        getStarred->setStorage(storage);
+        getStarred->setType(FuotenEnums::Starred);
+        getStarred->setGetRead(true);
+        getStarred->setBatchSize(-1);
+        QObject::connect(getStarred, &Component::failed, [=] (Error *e) {setError(e);});
+        QObject::connect(getStarred, &Component::failed, getStarred, &QObject::deleteLater);
+        if (storage) {
+            QObject::connect(storage, &AbstractStorage::requestedItems, [=] () {finished();});
+            QObject::connect(storage, &AbstractStorage::requestedItems, getStarred, &QObject::deleteLater);
+        } else {
+            QObject::connect(getStarred, &Component::succeeded, [=] () {finished();});
+            QObject::connect(getStarred, &Component::succeeded, getStarred, &QObject::deleteLater);
+        }
+        getStarred->execute();
+    }
 }
 
 
@@ -109,8 +179,14 @@ void SynchronizerPrivate::finished()
     configuration->setLastSync(QDateTime::currentDateTimeUtc());
     Q_EMIT q->inOperationChanged(false);
     Q_EMIT q->succeeded();
-//    getFolders->deleteLater();
-//    getFolders = nullptr;
+    getFolders = nullptr;
+    getFeeds = nullptr;
+    getStarred = nullptr;
+    getUnread = nullptr;
+
+#ifdef QT_DEBUG
+        qDebug() << "Finished synchronizing";
+#endif
 }
 
 
@@ -144,6 +220,11 @@ void Synchronizer::start()
         qWarning("Still in operation. Returning.");
         return;
     }
+
+#ifdef QT_DEBUG
+        qDebug() << "Start synchronizing";
+#endif
+
 
     d->start();
 }
