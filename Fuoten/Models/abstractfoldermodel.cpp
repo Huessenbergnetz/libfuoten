@@ -390,3 +390,19 @@ void AbstractFolderModel::updateCountValues()
         Q_EMIT dataChanged(index(0, 0), index(rowCount()-1 ,0), QVector<int>(1, Qt::DisplayRole));
     }
 }
+
+
+void AbstractFolderModel::clear()
+{
+    Q_D(AbstractFolderModel);
+
+    if (!d->folders.isEmpty()) {
+
+        beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+
+        qDeleteAll(d->folders);
+        d->folders.clear();
+
+        endRemoveRows();
+    }
+}

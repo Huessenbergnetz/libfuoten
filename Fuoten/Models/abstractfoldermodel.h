@@ -70,6 +70,11 @@ protected:
      */
     QList<Folder*> folders() const;
 
+    /*!
+     * \brief Clears the complete model and will destroy all Folder objects.
+     */
+    void clear() override;
+
 protected Q_SLOTS:
     /*!
      * \brief Takes and processes data after folders have been requested.

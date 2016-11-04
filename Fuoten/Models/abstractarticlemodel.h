@@ -104,6 +104,11 @@ protected:
      */
     QList<Article*> articles() const;
 
+    /*!
+     * \brief Clears the model and destroy all Article objects.
+     */
+    void clear() override;
+
 private:
     Q_DECLARE_PRIVATE(AbstractArticleModel)
     Q_DISABLE_COPY(AbstractArticleModel)

@@ -202,6 +202,13 @@ public Q_SLOTS:
      */
     virtual void load() = 0;
 
+    /*!
+     * \brief Reloads the complete model.
+     *
+     * Will call clear(), will than set loaded() to false and will then call load().
+     */
+    virtual void reload();
+
 Q_SIGNALS:
     /*!
      * \brief This signal is emitted if the operational state of the model changes.
@@ -280,6 +287,11 @@ protected:
      * \sa loaded()
      */
     void setLoaded(bool loaded);
+
+    /*!
+     * \brief Clears the model and removes all model data.
+     */
+    virtual void clear() = 0;
 
 private:
     Q_DISABLE_COPY(BaseModel)

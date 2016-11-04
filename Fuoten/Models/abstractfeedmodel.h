@@ -162,6 +162,11 @@ protected:
      */
     QList<Feed*> feeds() const;
 
+    /*!
+     * \brief Clears the complete model and will destroy all Feed object.
+     */
+    void clear() override;
+
 private:
     Q_DISABLE_COPY(AbstractFeedModel)
     Q_DECLARE_PRIVATE(AbstractFeedModel)

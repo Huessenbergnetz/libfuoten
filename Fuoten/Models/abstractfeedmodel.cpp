@@ -473,3 +473,19 @@ void AbstractFeedModel::folderDeleted(qint64 folderId)
 
     }
 }
+
+
+void AbstractFeedModel::clear()
+{
+    Q_D(AbstractFeedModel);
+
+    if (!d->feeds.isEmpty()) {
+
+        beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+
+        qDeleteAll(d->feeds);
+        d->feeds.clear();
+
+        endRemoveRows();
+    }
+}

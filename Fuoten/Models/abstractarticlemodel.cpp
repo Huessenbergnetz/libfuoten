@@ -136,3 +136,19 @@ QList<Article*> AbstractArticleModel::articles() const
 }
 
 
+
+
+void AbstractArticleModel::clear()
+{
+    Q_D(AbstractArticleModel);
+
+    if (!d->articles.isEmpty()) {
+
+        beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+
+        qDeleteAll(d->articles);
+        d->articles.clear();
+
+        endRemoveRows();
+    }
+}

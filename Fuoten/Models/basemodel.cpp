@@ -137,3 +137,14 @@ void BaseModel::setDoubleParentId(double nDoubleParentId)
 {
     setParentId(static_cast<qint64>(nDoubleParentId));
 }
+
+
+
+void BaseModel::reload()
+{
+    clear();
+
+    setLoaded(false);
+
+    load();
+}
