@@ -99,6 +99,8 @@ class FUOTENSHARED_EXPORT GetItems : public Component
     /*!
      * \brief ID of the folder or feed, 0 for starred and all.
      *
+     * Defaults to \c 0
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>parentId() const</TD></TR><TR><TD>void</TD><TD>setParentId(qint64 nParentId)</TD></TR></TABLE>
      * \par Notifier signal:
