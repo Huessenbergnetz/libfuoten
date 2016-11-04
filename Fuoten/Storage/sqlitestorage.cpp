@@ -1614,7 +1614,7 @@ QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole,
 
 void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 {
-
+    Q_EMIT requestedItems(QList<qint64>(), QList<qint64>(), QList<qint64>());
 }
 
 
