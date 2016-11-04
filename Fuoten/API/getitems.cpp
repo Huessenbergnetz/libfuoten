@@ -142,7 +142,7 @@ bool GetItems::checkInput()
 
         if (parentId() < 0) {
             //% "Invalid ID"
-            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-erro-invalid-id"), QString::number(parentId()), this));
+            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-error-invalid-id"), QString::number(parentId()), this));
             setInOperation(false);
             Q_EMIT failed(error());
             return false;
