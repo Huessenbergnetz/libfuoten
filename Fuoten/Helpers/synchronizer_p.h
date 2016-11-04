@@ -27,6 +27,7 @@
 #include "../API/getfolders.h"
 #include "../API/getfeeds.h"
 #include "../API/getitems.h"
+#include "../API/getupdateditems.h"
 #include "../error.h"
 
 namespace Fuoten {
@@ -44,7 +45,8 @@ public:
         getFolders(nullptr),
         getFeeds(nullptr),
         getUnread(nullptr),
-        getStarred(nullptr)
+        getStarred(nullptr),
+        getUpdated(nullptr)
     {}
 
     ~SynchronizerPrivate() {}
@@ -54,6 +56,7 @@ public:
     void requestFeeds();
     void requestUnread();
     void requestStarred();
+    void requestUpdated();
     void finished();
 
 
@@ -67,6 +70,7 @@ public:
     GetFeeds *getFeeds;
     GetItems *getUnread;
     GetItems *getStarred;
+    GetUpdatedItems *getUpdated;
 };
 
 }

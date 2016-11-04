@@ -100,6 +100,11 @@ void SynchronizerPrivate::requestFeeds()
     if (!getFeeds) {
 #ifdef QT_DEBUG
         qDebug() << "Getting feeds";
+        if (configuration->getLastSync().isValid()) {
+            qDebug() << "We have a valid last sync time. Calling GetUpdatedItems after receiving feeds.";
+        } else {
+            qDebug() << "We have no valid last sync time. Calling GetItems after receiving feeds.";
+        }
 #endif
         getFeeds = new GetFeeds(q_ptr);
         getFeeds->setConfiguration(configuration);
@@ -107,10 +112,18 @@ void SynchronizerPrivate::requestFeeds()
         QObject::connect(getFeeds, &Component::failed, [=] (Error *e) {setError(e);});
         QObject::connect(getFeeds, &Component::failed, getFeeds, &QObject::deleteLater);
         if (storage) {
-            QObject::connect(storage, &AbstractStorage::requestedFeeds, [=] () {requestUnread();});
+            if (configuration->getLastSync().isValid()) {
+                QObject::connect(storage, &AbstractStorage::requestedFeeds, [=] () {requestUpdated();});
+            } else {
+                QObject::connect(storage, &AbstractStorage::requestedFeeds, [=] () {requestUnread();});
+            }
             QObject::connect(storage, &AbstractStorage::requestedFeeds, getFeeds, &QObject::deleteLater);
         } else {
-            QObject::connect(getFeeds, &Component::succeeded, [=] () {requestUnread();});
+            if (configuration->getLastSync().isValid()) {
+                QObject::connect(getFeeds, &Component::succeeded, [=] () {requestUpdated();});
+            } else {
+                QObject::connect(getFeeds, &Component::succeeded, [=] () {requestUnread();});
+            }
             QObject::connect(getFeeds, &Component::succeeded, getFeeds, &QObject::deleteLater);
         }
         getFeeds->execute();
@@ -167,6 +180,33 @@ void SynchronizerPrivate::requestStarred()
             QObject::connect(getStarred, &Component::succeeded, getStarred, &QObject::deleteLater);
         }
         getStarred->execute();
+    }
+}
+
+
+
+void SynchronizerPrivate::requestUpdated()
+{
+    if (!getUpdated) {
+#ifdef QT_DEBUG
+        qDebug() << "Getting updated items";
+#endif
+        getUpdated = new GetUpdatedItems(q_ptr);
+        getUpdated->setConfiguration(configuration);
+        getUpdated->setStorage(storage);
+        getUpdated->setLastModified(configuration->getLastSync());
+        getUpdated->setType(FuotenEnums::All);
+        getUpdated->setParentId(0);
+        QObject::connect(getUpdated, &Component::failed, [=] (Error *e) {setError(e);});
+        QObject::connect(getUpdated, &Component::failed, getUpdated, &QObject::deleteLater);
+        if (storage) {
+            QObject::connect(storage, &AbstractStorage::requestedItems, [=] () {finished();});
+            QObject::connect(storage, &AbstractStorage::requestedItems, getUpdated, &QObject::deleteLater);
+        } else {
+            QObject::connect(getUpdated, &Component::succeeded, [=] () {finished();});
+            QObject::connect(getUpdated, &Component::succeeded, getUpdated, &QObject::deleteLater);
+        }
+        getUpdated->execute();
     }
 }
 
