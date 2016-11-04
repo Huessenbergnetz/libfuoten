@@ -1534,7 +1534,7 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
 
 
 
-QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, bool unreadOnly, int limit, int bodyLimit)
+QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, bool unreadOnly, bool starredOnly, int limit, int bodyLimit)
 {
     QList<Article*> articles;
 
@@ -1549,19 +1549,32 @@ QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole,
 
     QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
+    if (!ids.isEmpty() || unreadOnly || starredOnly) {
+        qs.append(QLatin1String(" WHERE"));
+    }
 
     if (!ids.isEmpty()) {
         if (idType == FuotenEnums::Folder) {
-            qs.append(QStringLiteral(" WHERE it.feedId IN (SELECT id FROM feeds WHERE folderId IN (%1))").arg(d->intListToString(ids)));
+            qs.append(QStringLiteral(" it.feedId IN (SELECT id FROM feeds WHERE folderId IN (%1))").arg(d->intListToString(ids)));
         } else if (idType == FuotenEnums::Item) {
-            qs.append(QStringLiteral(" WHERE it.id IN (%1)").arg(d->intListToString(ids)));
+            qs.append(QStringLiteral(" it.id IN (%1)").arg(d->intListToString(ids)));
         } else {
-            qs.append(QStringLiteral(" WHERE it.feedId IN (%1)").arg(d->intListToString(ids)));
+            qs.append(QStringLiteral(" it.feedId IN (%1)").arg(d->intListToString(ids)));
         }
     }
 
     if (unreadOnly) {
-        qs.append(QStringLiteral(" AND it.unread = 1"));
+        if (!ids.isEmpty()) {
+            qs.append(QLatin1String(" AND"));
+        }
+        qs.append(QLatin1String(" it.unread = 1"));
+    }
+
+    if (starredOnly) {
+        if (!ids.isEmpty() || unreadOnly) {
+            qs.append(QLatin1String(" AND"));
+        }
+        qs.append(QLatin1String(" it.starred = 1"));
     }
 
     switch(sortingRole) {

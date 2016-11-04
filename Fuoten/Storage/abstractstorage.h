@@ -213,7 +213,7 @@ public:
      * </TABLE>
      *
      * If \a unreadOnly is set to \c true, only unread articles will be returned. Setting a \a limit > \c 0 returns only the amount of
-     * articles up to that limit.
+     * articles up to that limit. If \a starredOnly is set to \c true, only starred articles will be returned.
      *
      * \a bodyLimit limits the size of the body text in number of characters. Values lower than \c 0 will return no body text,
      * \c 0 will return the full body text, any other positive value will return a body stripped from HTML tags and limited to the amount of
@@ -227,7 +227,7 @@ public:
      *
      * \endcode
      */
-    virtual QList<Article*> getArticles(FuotenEnums::SortingRole sortingRole = FuotenEnums::Time, Qt::SortOrder sortOrder = Qt::DescendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, bool unreadOnly = false, int limit = 0, int bodyLimit = -1) = 0;
+    virtual QList<Article*> getArticles(FuotenEnums::SortingRole sortingRole = FuotenEnums::Time, Qt::SortOrder sortOrder = Qt::DescendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, bool unreadOnly = false, bool starredOnly = false, int limit = 0, int bodyLimit = -1) = 0;
 
 
 
