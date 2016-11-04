@@ -59,10 +59,14 @@ void AbstractArticleModel::load()
 
     QList<Article*> as;
     if (parentId() < 0) {
-        as = storage()->getArticles();
+        if (parentIdType() != FuotenEnums::Starred) {
+            as = storage()->getArticles();
+        } else {
+            as = storage()->getArticles(FuotenEnums::Time, Qt::DescendingOrder, QList<qint64>(), FuotenEnums::Feed, false, true);
+        }
     } else {
         QList<qint64> ids({parentId()});
-        as = storage()->getArticles(FuotenEnums::Time, Qt::DescendingOrder, ids);
+        as = storage()->getArticles(FuotenEnums::Time, Qt::DescendingOrder, ids, parentIdType());
     }
 
     if (!as.isEmpty()) {
