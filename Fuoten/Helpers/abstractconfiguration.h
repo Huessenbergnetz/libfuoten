@@ -160,7 +160,7 @@ public:
     virtual void setAvatar(const QString &data, const QString &mime);
 
     /*!
-     * \brief Returns the last date and time a successful snychronization has been performed.
+     * \brief Returns the last date and time in UTC a successful snychronization has been performed.
      *
      * Reimplement this in a subclass if you want let the Synchronizer save the last sync time.
      * The default implementation returns a invalid QDateTime;
@@ -170,7 +170,7 @@ public:
     virtual QDateTime getLastSync() const;
 
     /*!
-     * \brief Sets the data and time the last successfule synchronization has been performed.
+     * \brief Sets the data and time in UTC the last successfule synchronization has been performed.
      *
      * Reimplement this in a subclass if you want let the Synchronizer save the last sync time.
      * The default implementation does nothing.
