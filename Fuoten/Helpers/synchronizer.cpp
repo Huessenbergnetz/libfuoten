@@ -60,6 +60,7 @@ void SynchronizerPrivate::setError(Error *nError)
             getFeeds = nullptr;
             getStarred = nullptr;
             getUnread = nullptr;
+            getUpdated = nullptr;
             inOperation = false;
             Q_EMIT q->inOperationChanged(false);
             Q_EMIT q->failed(error);
@@ -223,6 +224,7 @@ void SynchronizerPrivate::finished()
     getFeeds = nullptr;
     getStarred = nullptr;
     getUnread = nullptr;
+    getUpdated = nullptr;
 
 #ifdef QT_DEBUG
         qDebug() << "Finished synchronizing";
