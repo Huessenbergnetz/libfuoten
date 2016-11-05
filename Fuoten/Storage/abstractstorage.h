@@ -510,6 +510,12 @@ protected:
      */
     void setError(Error *nError);
 
+    virtual QString limitBody(const QString &body, int limit) const;
+
+    const QScopedPointer<AbstractStoragePrivate> d_ptr;
+    AbstractStorage(AbstractStoragePrivate &dd, QObject *parent = nullptr);
+
+protected Q_SLOTS:
     /*!
      * \brief Sets the total number of unread articles.
      * \sa totalUnread
@@ -521,11 +527,6 @@ protected:
      * \sa starred
      */
     virtual void setStarred(quint16 nStarred);
-
-    virtual QString limitBody(const QString &body, int limit) const;
-
-    const QScopedPointer<AbstractStoragePrivate> d_ptr;
-    AbstractStorage(AbstractStoragePrivate &dd, QObject *parent = nullptr);
 
 Q_SIGNALS:
     /*!
