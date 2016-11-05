@@ -28,5 +28,8 @@
 #else
 #  define FUOTENSHARED_EXPORT Q_DECL_IMPORT
 #endif
+namespace Fuoten {
+typedef QList<qint64> IdList;
+}
 
 #endif // FUOTEN_GLOBAL_H
