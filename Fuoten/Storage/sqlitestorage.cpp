@@ -26,6 +26,7 @@
 #include <QHash>
 #include <QSqlQuery>
 #include <QDateTime>
+#include <QVariant>
 #include "../folder.h"
 #include "../feed.h"
 #include "../article.h"

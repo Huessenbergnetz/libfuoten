@@ -21,6 +21,7 @@
 #include "articlelistfiltermodel_p.h"
 #include "../Storage/abstractstorage.h"
 #include "../article.h"
+#include <QLocale>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
