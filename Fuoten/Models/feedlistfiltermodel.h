@@ -29,6 +29,13 @@ namespace Fuoten {
 
 class FeedListFilterModelPrivate;
 
+/*!
+ * \brief Proxy filter model for FeedListModel.
+ *
+ * This proxy model filters and sorts the data of a FeedListModel that is internally created.
+ *
+ * \headerfile "" <Fuoten/Models/FeedListFilterModel>
+ */
 class FUOTENSHARED_EXPORT FeedListFilterModel : public BaseFilterModel
 {
     Q_OBJECT
