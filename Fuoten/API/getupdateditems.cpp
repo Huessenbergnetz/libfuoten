@@ -22,6 +22,7 @@
 #include "../error.h"
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QUrlQuery>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -63,14 +64,12 @@ void GetUpdatedItems::execute()
 
     setInOperation(true);
 
+    QUrlQuery uq;
+    uq.addQueryItem(QStringLiteral("lastModified"), QString::number(lastModified().toTime_t()));
+    uq.addQueryItem(QStringLiteral("type"), QString::number((int)type()));
+    uq.addQueryItem(QStringLiteral("id"), QString::number(parentId()));
 
-    QJsonObject plo; // payload object
-    plo.insert(QStringLiteral("lastModified"), QJsonValue((qint64)lastModified().toTime_t()));
-    plo.insert(QStringLiteral("type"), (int)type());
-    plo.insert(QStringLiteral("id"), parentId());
-
-    setPayload(plo);
-
+    setUrlQuery(uq);
 
     sendRequest();
 }

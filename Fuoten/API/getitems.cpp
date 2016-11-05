@@ -22,6 +22,7 @@
 #include "../error.h"
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QUrlQuery>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -62,25 +63,24 @@ void GetItems::execute()
 
     setInOperation(true);
 
+    QUrlQuery uq;
 
-    QJsonObject plo; // payload object
-    if (batchSize() < 0) {
-        plo.insert(QStringLiteral("batchSize"), QJsonValue(-1));
-    } else {
-        plo.insert(QStringLiteral("batchSize"), QJsonValue(batchSize()));
-    }
+    QString bs = (batchSize() < 0) ? QStringLiteral("-1") : QString::number(batchSize());
+    uq.addQueryItem(QStringLiteral("batchSize"), bs);
 
     if (offset() > 0) {
-        plo.insert(QStringLiteral("offset"), QJsonValue(offset()));
+        uq.addQueryItem(QStringLiteral("offset"), QString::number(offset()));
     }
 
-    plo.insert(QStringLiteral("type"), QJsonValue((int)type()));
-    plo.insert(QStringLiteral("id"), QJsonValue(parentId()));
-    plo.insert(QStringLiteral("getRead"), QJsonValue(getRead()));
-    plo.insert(QStringLiteral("oldestFirst"), QJsonValue(oldestFirst()));
+    uq.addQueryItem(QStringLiteral("type"), QString::number((int)type()));
 
-    setPayload(plo);
+    QString gr = getRead() ? QStringLiteral("true") : QStringLiteral("false");
+    uq.addQueryItem(QStringLiteral("getRead"), gr);
 
+    QString of = oldestFirst() ? QStringLiteral("true") : QStringLiteral("false");
+    uq.addQueryItem(QStringLiteral("oldestFirst"), of);
+
+    setUrlQuery(uq);
 
     sendRequest();
 }
