@@ -283,7 +283,7 @@ void SQLiteStorageManager::run()
 SQLiteStorage::SQLiteStorage(const QString &dbpath, QObject *parent) :
     AbstractStorage(* new SQLiteStoragePrivate(dbpath), parent)
 {
-
+qRegisterMetaType<Fuoten::IdList>("IdList");
 }
 
 
@@ -1645,25 +1645,31 @@ QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole,
 
 
 
-
-void SQLiteStorage::itemsRequested(const QJsonDocument &json)
+ItemsRequestedWorker::ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, QObject *parent) :
+    QThread(parent), m_json(json)
 {
-    Q_D(SQLiteStorage);
+    if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
+        m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
+        m_db.setDatabaseName(dbpath);
+    } else {
+        m_db = QSqlDatabase::database(QStringLiteral("fuotendb"));
+    }
+}
 
-    if (!ready()) {
-        //% "SQLite database not ready. Can not process requested data."
-        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+
+
+void ItemsRequestedWorker::run()
+{
+    QSqlQuery q(m_db);
+
+    if (!q.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
+        //% "Failed to execute database query."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
         return;
     }
 
-    if (json.isEmpty() || json.isNull()) {
-        Q_EMIT requestedItems(QList<qint64>(), QList<qint64>(), QList<qint64>());
-        return;
-    }
 
-    QSqlQuery q(d->db);
-
-    const QJsonArray items = json.object().value(QStringLiteral("items")).toArray();
+    const QJsonArray items = m_json.object().value(QStringLiteral("items")).toArray();
 
     QList<qint64> updatedItemIds;
     QList<qint64> newItemIds;
@@ -1681,7 +1687,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 
     if (!q.exec(QStringLiteral("SELECT id, lastModified FROM items"))) {
         //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
         return;
     }
 
@@ -1691,9 +1697,9 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 
 
 
-    if (!d->db.transaction()) {
+    if (!m_db.transaction()) {
         //% "Failed to begin a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin")));
         return;
     }
 
@@ -1730,7 +1736,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
                                                   "WHERE id = ?"
                                                   ))) {
                         //% "Failed to prepare database query."
-                        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+                        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
                         return;
                     }
 
@@ -1748,7 +1754,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 
                     if (!q.exec()) {
                         //% "Failed to execute database query."
-                        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+                        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
                         return;
                     }
                 }
@@ -1765,7 +1771,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
                                               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                                               ))) {
                     //% "Failed to prepare database query."
-                    setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+                    Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
                     return;
                 }
 
@@ -1787,40 +1793,67 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 
                 if (!q.exec()) {
                     //% "Failed to execute database query."
-                    setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+                    Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
                     return;
                 }
             }
         }
     }
 
-    if (!d->db.commit()) {
+    if (!m_db.commit()) {
         //% "Failed to commit a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit")));
         return;
     }
 
     if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
         //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
         return;
     }
 
     if (q.next()) {
-        setTotalUnread(q.value(0).toInt());
+        Q_EMIT gotTotalUnread(q.value(0).toUInt());
     }
 
     if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE starred = 1"))) {
         //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
         return;
     }
 
     if (q.next()) {
-        setStarred(q.value(0).toInt());
+        Q_EMIT gotStarred(q.value(0).toUInt());
     }
 
     Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
+}
+
+
+
+
+void SQLiteStorage::itemsRequested(const QJsonDocument &json)
+{
+    Q_D(SQLiteStorage);
+
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
+
+    if (json.isEmpty() || json.isNull()) {
+        Q_EMIT requestedItems(QList<qint64>(), QList<qint64>(), QList<qint64>());
+        return;
+    }
+
+    ItemsRequestedWorker *worker = new ItemsRequestedWorker(d->db.databaseName(), json, this);
+    connect(worker, &ItemsRequestedWorker::requestedItems, this, &SQLiteStorage::requestedItems);
+    connect(worker, &ItemsRequestedWorker::gotStarred, this, &SQLiteStorage::setStarred);
+    connect(worker, &ItemsRequestedWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
+    connect(worker, &ItemsRequestedWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, worker, &QObject::deleteLater);
+    worker->start();
 }
 
 

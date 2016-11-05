@@ -75,9 +75,8 @@ void AbstractStorage::setError(Error *nError)
                 nError->setParent(this);
                 d->error = nError;
             } else {
-                d->error = nullptr;
-                delete nError;
-                qWarning("Failed to move Error object to this thread.");
+                d->error = new Error(nError->type(), nError->severity(), nError->text(), nError->data(), this);
+                qWarning("Failed to move Error object to this thread. Creating deep copy.");
             }
         } else {
             d->error = new Error(nError->type(), nError->severity(), nError->text(), nError->data(), this);

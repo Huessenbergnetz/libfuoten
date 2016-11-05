@@ -27,8 +27,9 @@
 #include <QSqlError>
 #include <QStringList>
 #include <QThread>
+#include <QJsonDocument>
 
-#include <QtDebug>
+//#include <QtDebug>
 
 namespace Fuoten {
 
@@ -95,6 +96,31 @@ public:
     }
 
     QSqlDatabase db;
+    QThread worker;
+};
+
+
+
+
+
+class ItemsRequestedWorker : public QThread
+{
+    Q_OBJECT
+public:
+    ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, QObject *parent = nullptr);
+
+Q_SIGNALS:
+    void requestedItems( IdList updatedItems, IdList newItems, IdList deletedItems);
+    void gotTotalUnread(quint16 tu);
+    void gotStarred(quint16 st);
+    void failed(Error *e);
+
+protected:
+    void run() override;
+
+private:
+    QSqlDatabase m_db;
+    QJsonDocument m_json;
 };
 
 }
