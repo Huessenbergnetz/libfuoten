@@ -45,6 +45,9 @@ public:
     QString name;
     uint feedCount;
     uint unreadCount;
+
+private:
+    Q_DISABLE_COPY(FolderPrivate)
 };
 
 }

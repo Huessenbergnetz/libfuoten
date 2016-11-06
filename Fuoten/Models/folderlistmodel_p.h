@@ -30,6 +30,9 @@ class FolderListModelPrivate : public AbstractFolderModelPrivate
 {
 public:
     FolderListModelPrivate() : AbstractFolderModelPrivate() {}
+
+private:
+    Q_DISABLE_COPY(FolderListModelPrivate)
 };
 
 }

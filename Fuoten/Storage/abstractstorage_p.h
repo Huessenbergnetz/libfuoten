@@ -43,6 +43,9 @@ public:
     Error *error;
     quint16 totalUnread;
     quint16 starred;
+
+private:
+    Q_DISABLE_COPY(AbstractStoragePrivate)
 };
 
 }

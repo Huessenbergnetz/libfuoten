@@ -41,6 +41,9 @@ public:
     AbstractStorage *storage;
     bool loaded;
     qint64 parentId;
+
+private:
+    Q_DISABLE_COPY(BaseModelPrivate)
 };
 
 }

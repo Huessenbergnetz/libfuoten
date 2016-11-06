@@ -46,6 +46,9 @@ public:
     QString lastUpdateError;
     QUrl faviconLink;
     QString folderName;
+
+private:
+    Q_DISABLE_COPY(FeedPrivate)
 };
 
 }

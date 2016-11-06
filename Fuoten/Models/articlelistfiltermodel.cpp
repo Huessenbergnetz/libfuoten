@@ -156,7 +156,7 @@ FuotenEnums::Type ArticleListFilterModel::parentIdType() const
     }
 }
 
-void ArticleListFilterModel::setParentIdType(const FuotenEnums::Type &nParentIdType)
+void ArticleListFilterModel::setParentIdType(FuotenEnums::Type nParentIdType)
 {
     Q_D(ArticleListFilterModel);
     if (d->alm) {

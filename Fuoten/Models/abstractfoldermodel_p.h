@@ -62,6 +62,9 @@ public:
     }
 
     QList<Folder*> folders;
+
+private:
+    Q_DISABLE_COPY(AbstractFolderModelPrivate)
 };
 }
 

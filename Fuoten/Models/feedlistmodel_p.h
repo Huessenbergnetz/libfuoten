@@ -31,6 +31,8 @@ class FeedListModelPrivate : public AbstractFeedModelPrivate
 public:
     FeedListModelPrivate() : AbstractFeedModelPrivate() {}
 
+private:
+    Q_DISABLE_COPY(FeedListModelPrivate)
 };
 
 }

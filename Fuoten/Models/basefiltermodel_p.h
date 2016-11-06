@@ -40,6 +40,9 @@ public:
     Qt::SortOrder sortOrder;
     QString search;
     bool hideRead;
+
+private:
+    Q_DISABLE_COPY(BaseFilterModelPrivate)
 };
 
 }

@@ -46,9 +46,9 @@ class FUOTENSHARED_EXPORT ArticleListFilterModel : public BaseFilterModel
      * Defaults to FuotenEnums::All
      *
      * \par Access functions:
-     * <TABLE><TR><TD>FuotenEnums::Type</TD><TD>parentIdType() const</TD></TR><TR><TD>void</TD><TD>setParentIdType(const FuotenEnums::Type &nParentIdType)</TD></TR></TABLE>
+     * <TABLE><TR><TD>FuotenEnums::Type</TD><TD>parentIdType() const</TD></TR><TR><TD>void</TD><TD>setParentIdType(FuotenEnums::Type nParentIdType)</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>parentIdTypeChanged(const FuotenEnums::Type &parentIdType)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>parentIdTypeChanged(FuotenEnums::Type parentIdType)</TD></TR></TABLE>
      */
     Q_PROPERTY(Fuoten::FuotenEnums::Type parentIdType READ parentIdType WRITE setParentIdType NOTIFY parentIdTypeChanged)
 public:
@@ -101,7 +101,7 @@ public:
      * Emits the parentIdTypeChanged() signal if \a nParentIdType is not equal to the stored value.
      * \sa ArticleListFilterModel::parentIdType(), ArticleListFilterModel::parentIdTypeChanged()
      */
-    void setParentIdType(const FuotenEnums::Type &nParentIdType);
+    void setParentIdType(FuotenEnums::Type nParentIdType);
 
 
 Q_SIGNALS:
@@ -109,7 +109,7 @@ Q_SIGNALS:
      * \brief This is emitted if the value of the \link ArticleListFilterModel::parentIdType parentIdType \endlink property changes.
      * \sa ArticleListFilterModel::parentIdType(), ArticleListFilterModel::setParentIdType()
      */
-    void parentIdTypeChanged(const FuotenEnums::Type &parentIdType);
+    void parentIdTypeChanged(FuotenEnums::Type parentIdType);
 
 protected:
     ArticleListFilterModel(ArticleListFilterModelPrivate &&dd, QObject *parent = nullptr);

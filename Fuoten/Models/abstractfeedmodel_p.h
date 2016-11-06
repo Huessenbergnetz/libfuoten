@@ -59,6 +59,9 @@ public:
     }
 
     QList<Feed*> feeds;
+
+private:
+    Q_DISABLE_COPY(AbstractFeedModelPrivate)
 };
 
 }

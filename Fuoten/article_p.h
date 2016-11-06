@@ -122,6 +122,9 @@ public:
     qint64 folderId;
     QString folderName;
     QString humanPubDate;
+
+private:
+    Q_DISABLE_COPY(ArticlePrivate)
 };
 
 }

@@ -49,6 +49,9 @@ public:
     Error *error;
 
     Component *comp;
+
+private:
+    Q_DISABLE_COPY(BaseItemPrivate)
 };
 
 }

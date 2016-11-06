@@ -44,6 +44,9 @@ public:
 
     FuotenEnums::Type parentIdType;
     QList<Article*> articles;
+
+private:
+    Q_DISABLE_COPY(AbstractArticleModelPrivate)
 };
 
 }

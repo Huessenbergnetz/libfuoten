@@ -89,6 +89,9 @@ public:
     QJsonDocument jsonResult;
     QByteArray result;
     bool requiresAuth;
+
+private:
+    Q_DISABLE_COPY(ComponentPrivate)
 };
 
 }
