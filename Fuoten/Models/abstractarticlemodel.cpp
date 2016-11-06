@@ -120,7 +120,7 @@ QModelIndex AbstractArticleModel::findByID(qint64 id) const
 
 
 
-QHash<qint64, QModelIndex> AbstractArticleModel::findByIDs(const QList<qint64> &ids) const
+QHash<qint64, QModelIndex> AbstractArticleModel::findByIDs(const IdList &ids) const
 {
     Q_D(const AbstractArticleModel);
 

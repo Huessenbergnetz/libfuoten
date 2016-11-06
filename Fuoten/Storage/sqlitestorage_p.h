@@ -69,7 +69,7 @@ public:
         }
     }
 
-    QStringList intListToStringList(const QList<qint64> &ints) const
+    QStringList intListToStringList(const IdList &ints) const
     {
         QStringList sl;
 
@@ -84,7 +84,7 @@ public:
         return sl;
     }
 
-    QString intListToString(const QList<qint64> &ints) const
+    QString intListToString(const IdList &ints) const
     {
         if (ints.isEmpty()) {
             return QString();

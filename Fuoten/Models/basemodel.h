@@ -109,7 +109,7 @@ public:
      * The default implementation return an empty QHash<qint64, QModelIndex>. Reimplement this
      * function in a subclass.
      */
-    virtual QHash<qint64, QModelIndex> findByIDs(const QList<qint64> &ids) const;
+    virtual QHash<qint64, QModelIndex> findByIDs(const IdList &ids) const;
 
 
     /*!

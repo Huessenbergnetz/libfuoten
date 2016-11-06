@@ -186,7 +186,7 @@ public:
      *
      * \endcode
      */
-    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) = 0;
+    virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) = 0;
     
     /*!
      * \brief Returns a list of Feed objects from the local storage.
@@ -214,7 +214,7 @@ public:
      *
      * \endcode
      */
-    virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) = 0;
+    virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) = 0;
 
 
     /*!
@@ -460,7 +460,7 @@ public Q_SLOTS:
      * \param idsMarkedRead     IDs of items that have been marked as read
      * \param idsMarkedUnread   IDs of items that have been marked as unread
      */
-    virtual void itemsMarked(const QList<qint64> &idsMarkedRead, const QList<qint64> &idsMarkedUnread) = 0;
+    virtual void itemsMarked(const IdList &idsMarkedRead, const IdList &idsMarkedUnread) = 0;
 
     /*!
      * \brief Receives the reply data for the StarItems request.
@@ -535,7 +535,7 @@ Q_SIGNALS:
      * contain a list of databaes IDs and names of new folders, and \c deletedFolders should contain a list of database IDs
      * of deleted folders.
      */
-    void requestedFolders(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const QList<qint64> &deletedFolders);
+    void requestedFolders(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const IdList &deletedFolders);
 
     /*!
      * \brief Emit this after a new folder has been created.
@@ -599,7 +599,7 @@ Q_SIGNALS:
      *
      * Every argument of the signal should contain a list of feed IDs that are either updated, new or deleted.
      */
-    void requestedFeeds(const QList<qint64> &updatedFeeds, const QList<qint64> &newFeeds, const QList<qint64> &deletedFeeds);
+    void requestedFeeds(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds);
 
     /*!
      * \brief Emit this after a new feed has been created.
@@ -653,7 +653,7 @@ Q_SIGNALS:
      * \param newItems      list of IDs from items that are new in the local storage
      * \param deletedItems  list of IDs from items that have been remove from the local storage
      */
-    void requestedItems(const QList<qint64> &updatedItems, const QList<qint64> &newItems, const QList<qint64> &deletedItems);
+    void requestedItems(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
 
     /*!
      * \brief Emit this after items/articles have been marked as read or unread.
@@ -665,7 +665,7 @@ Q_SIGNALS:
      * \param idsMarkedRead     IDs of items that have been marked as read
      * \param idsMarkedUnread   IDs of items that have been marked as unread
      */
-    void markedItems(const QList<qint64> &idsMarkedRead, const QList<qint64> &idsMarkedUnread);
+    void markedItems(const IdList &idsMarkedRead, const IdList &idsMarkedUnread);
 
     /*!
      * \brief Emit this after items/articles have been starred or unstarred.

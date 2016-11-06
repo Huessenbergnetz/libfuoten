@@ -166,7 +166,7 @@ void AbstractFolderModel::folderCreated(qint64 id, const QString &name)
 
 
 
-void AbstractFolderModel::foldersRequested(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const QList<qint64> &deletedFolders)
+void AbstractFolderModel::foldersRequested(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const IdList &deletedFolders)
 {
     if (!storage()) {
         return;
@@ -187,7 +187,7 @@ void AbstractFolderModel::foldersRequested(const QList<QPair<qint64, QString> > 
     }
 
     if (!newFolders.isEmpty()) {
-        QList<qint64> nf;
+        IdList nf;
         nf.reserve(newFolders.size());
         for (const QPair<qint64, QString> &p : newFolders) {
             nf.append(p.first);
@@ -275,7 +275,7 @@ void AbstractFolderModel::folderMarkedRead(qint64 id, qint64 newestItem)
 
 
 
-void AbstractFolderModel::feedsRequested(const QList<qint64> &updatedFeeds, const QList<qint64> &newFeeds, const QList<qint64> &deletedFeeds)
+void AbstractFolderModel::feedsRequested(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds)
 {
     if (!storage()) {
         qWarning("Can not update folders, no storage available.");
@@ -316,7 +316,7 @@ void AbstractFolderModel::feedMarkedRead(qint64 id)
         return;
     }
 
-    QList<qint64> l;
+    IdList l;
     l.append(id);
 
     const QList<Folder*> fs = storage()->getFolders(FuotenEnums::ID, Qt::AscendingOrder, l, FuotenEnums::Feed);
@@ -346,7 +346,7 @@ void AbstractFolderModel::feedCreated(qint64 feedId, qint64 folderId)
 
     Q_UNUSED(feedId);
 
-    QList<qint64> l;
+    IdList l;
     l.append(folderId);
 
     const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder, l);

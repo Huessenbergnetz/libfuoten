@@ -78,7 +78,7 @@ void AbstractFeedModel::load()
     if (parentId() < 0) {
         fs = storage()->getFeeds();
     } else {
-        fs = storage()->getFeeds(FuotenEnums::Name, Qt::AscendingOrder, QList<qint64>(), FuotenEnums::Folder, parentId());
+        fs = storage()->getFeeds(FuotenEnums::Name, Qt::AscendingOrder, IdList(), FuotenEnums::Folder, parentId());
     }
 
     if (!fs.isEmpty()) {
@@ -118,7 +118,7 @@ QModelIndex AbstractFeedModel::findByID(qint64 id) const
 
 
 
-QHash<qint64, QModelIndex> AbstractFeedModel::findByIDs(const QList<qint64> &ids) const
+QHash<qint64, QModelIndex> AbstractFeedModel::findByIDs(const IdList &ids) const
 {
     Q_D(const AbstractFeedModel);
 
@@ -147,7 +147,7 @@ QList<Feed*> AbstractFeedModel::feeds() const
 
 
 
-void AbstractFeedModel::feedsRequested(const QList<qint64> &updatedFeeds, const QList<qint64> &newFeeds, const QList<qint64> &deletedFeeds)
+void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds)
 {
     if (!storage()) {
         qWarning("Can not load feeds, no storage available.");
@@ -170,7 +170,7 @@ void AbstractFeedModel::feedsRequested(const QList<qint64> &updatedFeeds, const 
 
         if (!ufs.isEmpty()) {
 
-            QList<qint64> movedIds;
+            IdList movedIds;
 
             for (Feed *f : ufs) {
                 QModelIndex idx = updIxs.value(f->id());
@@ -441,7 +441,7 @@ void AbstractFeedModel::folderDeleted(qint64 folderId)
     } else if (parentId() < 0) {
 
 
-        QList<qint64> rmFeedIds;
+        IdList rmFeedIds;
 
         const QList<Feed*> fs = feeds();
         for (Feed *f : fs) {

@@ -455,7 +455,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         return;
     }
 
-    QList<qint64> deletedIds;
+    IdList deletedIds;
     QList<QPair<qint64, QString>> newFolders;
     QList<QPair<qint64, QString>> updatedFolders;
 
@@ -699,7 +699,7 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
 
 
 
-QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, Fuoten::FuotenEnums::Type idType, int limit)
+QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const IdList &ids, Fuoten::FuotenEnums::Type idType, int limit)
 {
     QList<Fuoten::Folder*> folders;
 
@@ -834,7 +834,7 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
 
 
 
-QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, qint64 folderId, int limit)
+QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const IdList &ids, FuotenEnums::Type idType, qint64 folderId, int limit)
 {
     QList<Fuoten::Feed*> feeds;
 
@@ -1000,9 +1000,9 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
     const QList<Feed*> currentFeeds = getFeeds(FuotenEnums::ID);
 
-    QList<qint64> updatedFeedIds;
-    QList<qint64> newFeedIds;
-    QList<qint64> deletedFeedIds;
+    IdList updatedFeedIds;
+    IdList newFeedIds;
+    IdList deletedFeedIds;
 
     if (feeds.isEmpty() && currentFeeds.isEmpty()) {
 
@@ -1092,7 +1092,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 #endif
 
         QHash<qint64, Feed*> cfh; // current feeds hash
-        QList<qint64> requestedFeedIds;
+        IdList requestedFeedIds;
 
         for (Feed *f : currentFeeds) {
             cfh.insert(f->id(), f);
@@ -1879,9 +1879,9 @@ void ItemsRequestedWorker::run()
 
     const QJsonArray items = m_json.object().value(QStringLiteral("items")).toArray();
 
-    QList<qint64> updatedItemIds;
-    QList<qint64> newItemIds;
-    QList<qint64> removedItemIds;
+    IdList updatedItemIds;
+    IdList newItemIds;
+    IdList removedItemIds;
 
     if (items.isEmpty()) {
         Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
@@ -2051,7 +2051,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
     }
 
     if (json.isEmpty() || json.isNull()) {
-        Q_EMIT requestedItems(QList<qint64>(), QList<qint64>(), QList<qint64>());
+        Q_EMIT requestedItems(IdList(), IdList(), IdList());
         return;
     }
 
@@ -2071,7 +2071,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 //}
 
 
-void SQLiteStorage::itemsMarked(const QList<qint64> &idsMarkedRead, const QList<qint64> &idsMarkedUnread)
+void SQLiteStorage::itemsMarked(const IdList &idsMarkedRead, const IdList &idsMarkedUnread)
 {
 
 }

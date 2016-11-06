@@ -58,7 +58,7 @@ public:
      *
      * \param ids list of feed IDs to find in the model
      */
-    QHash<qint64, QModelIndex> findByIDs(const QList<qint64> &ids) const override;
+    QHash<qint64, QModelIndex> findByIDs(const IdList &ids) const override;
 
 public Q_SLOTS:
     /*!
@@ -80,7 +80,7 @@ protected Q_SLOTS:
      * \param newFeeds      list of IDs of feeds that are new to the local storage
      * \param deletedFeeds  list of IDs of feeds that have been deleted in the local storage (and remotely before)
      */
-    void feedsRequested(const QList<qint64> &updatedFeeds, const QList<qint64> &newFeeds, const QList<qint64> &deletedFeeds);
+    void feedsRequested(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds);
 
     /*!
      * \brief Takes and processes data after a feed has been created.

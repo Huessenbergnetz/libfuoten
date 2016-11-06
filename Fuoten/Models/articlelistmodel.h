@@ -54,6 +54,7 @@ public:
     bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QHash<int, QByteArray> roleNames() const override;
 
 protected:
     ArticleListModel(ArticleListModelPrivate &dd, QObject *parent = nullptr);

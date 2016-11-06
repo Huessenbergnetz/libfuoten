@@ -62,12 +62,12 @@ public:
     /*!
      * \brief Returns a list of Folder objects from the \a folders table.
      */
-    QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) override;
+    QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) override;
 
     /*!
      * \brief Returns a list of Feed objects from the \a feed table.
      */
-    QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) override;
+    QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) override;
 
     /*!
      * \brief Returns a list of Article objects from the \a items table.
@@ -124,7 +124,7 @@ public Q_SLOTS:
     void feedMarkedRead(qint64 id, qint64 newestItem) override;
 
     void itemsRequested(const QJsonDocument &json) override;
-    void itemsMarked(const QList<qint64> &idsMarkedRead, const QList<qint64> &idsMarkedUnread) override;
+    void itemsMarked(const IdList &idsMarkedRead, const IdList &idsMarkedUnread) override;
     void itemsStarred(const QList<QPair<qint64, QString>> &articlesStarred, const QList<QPair<qint64, QString>> &articlesUnstarred) override;
     void itemMarked(qint64 itemId, bool unread) override;
     void itemStarred(qint64 itemId, const QString &guidHash, bool starred) override;

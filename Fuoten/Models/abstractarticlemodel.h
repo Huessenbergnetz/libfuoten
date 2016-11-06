@@ -31,9 +31,7 @@ class FUOTENSHARED_EXPORT AbstractArticleModel : public BaseModel
      * <TABLE><TR><TD>void</TD><TD>parentIdTypeChanged(FuotenEnums::Type parentIdType)</TD></TR></TABLE>
      */
     Q_PROPERTY(Fuoten::FuotenEnums::Type parentIdType READ parentIdType WRITE setParentIdType NOTIFY parentIdTypeChanged)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    Q_ENUM(Fuoten::FuotenEnums::Type)
-#else
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
     Q_ENUMS(Fuoten::FuotenEnums::Type)
 #endif
 public:
@@ -72,7 +70,7 @@ public:
      *
      * \param ids list of article IDs to find in the model
      */
-    QHash<qint64, QModelIndex> findByIDs(const QList<qint64> &ids) const override;
+    QHash<qint64, QModelIndex> findByIDs(const IdList &ids) const override;
 
 public Q_SLOTS:
     /*!
