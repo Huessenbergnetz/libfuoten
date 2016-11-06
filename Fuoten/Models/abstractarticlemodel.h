@@ -91,6 +91,18 @@ Q_SIGNALS:
      */
     void parentIdTypeChanged(FuotenEnums::Type parentIdType);
 
+protected Q_SLOTS:
+    /*!
+     * \brief Takes and processes data after items/articles have been requested.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::requestedItems() signal to this slot.
+     *
+     * \param updatedItems  list of IDs of items that have been updated
+     * \param newItems      list of IDs of items that are new to the local storage
+     * \param deletedItems  list of IDs of items that have benn updated in the local storage
+     */
+    void itemsRequested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
+
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);
 

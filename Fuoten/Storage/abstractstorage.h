@@ -27,6 +27,25 @@
 
 namespace Fuoten {
 
+/*!
+ * \brief Helper struct containing query arguments.
+ *
+ * Used by AbstractStrorage::getFolders(), AbstractStroage::getFeeds() and AbstractStorage::getArticles() to set the arguments used to query a list
+ * of objects. Not all members of this struct are used by every query.
+ */
+struct FUOTENSHARED_EXPORT QueryArgs {
+    FuotenEnums::SortingRole sortingRole = FuotenEnums::ID; /**< The role/value used to sort the result by. */
+    Qt::SortOrder sortOrder = Qt::AscendingOrder;           /**< The sorting order. */
+    qint64 parentId = -1;                                   /**< ID of a parent object (Feed or Folder). Used by feed and article queries, defaults to -1. */
+    FuotenEnums::Type parentIdType = FuotenEnums::All;      /**< Type of the parent ID. On feeds can only be FuotenEnums::Folder, on articles can be FuotenEnums::Folder and FuotenEnums::Feed. Defaults to FuotenEnums::All */
+    IdList inIds;                                           /**< A list of IDs the records are compared with. Defaults to an empty list. */
+    FuotenEnums::Type inIdsType = FuotenEnums::All;         /**< Type of of the inIds list to compare. Related to the object to query, it can be FuotenEnums::Folder, FuotenEnums::Feed or FuotenEnums::Item. Defaults to FuotenEnums::All. */
+    bool unreadOnly = false;                                /**< Only valid for article queries. If true, only unread articles are returned. */
+    bool starredOnly = false;                               /**< Only valid for article queries. If true, only starrred articles are returned. */
+    int limit = 0;                                          /**< Limits the result to the specified number of objects. Defaults to \c 0 to return all objects. */
+    int bodyLimit = -1;                                     /**< Only valid for article queries. Limits the size of the body text in number of characters. Values lower than \c 0 will return no body text, \c 0 will return the full body text, any other positive value will return a body stripped from HTML tags and limited to the amount of characters. */
+};
+
 class Folder;
 class Feed;
 class Error;
@@ -201,33 +220,9 @@ public:
     /*!
      * \brief Returns a list of Article objects from the local storage.
      *
-     * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
-     * only articles with IDs of \a idType from the list will be returned. The \a idType specifies the
-     * ID the article is compared with. If the \a idType is not one of out of the table below, it will
-     * be treated as FuotenEnums::Feed.
-     *
-     * <TABLE>
-     * <TR><TD>FuotenEnums::Folder</TD><TD>Only feeds will be returned that are part of a folder with an ID in \a ids</TD></TR>
-     * <TR><TD>FuotenEnums::Feed</TD><TD>Only feeds with an ID in \a ids will be returned</TD></TR>
-     * <TR><TD>FuotenEnums::Item</TD><TD>Only feeds will be returned that contain items with an ID in \a ids</TD></TR>
-     * </TABLE>
-     *
-     * If \a unreadOnly is set to \c true, only unread articles will be returned. Setting a \a limit > \c 0 returns only the amount of
-     * articles up to that limit. If \a starredOnly is set to \c true, only starred articles will be returned.
-     *
-     * \a bodyLimit limits the size of the body text in number of characters. Values lower than \c 0 will return no body text,
-     * \c 0 will return the full body text, any other positive value will return a body stripped from HTML tags and limited to the amount of
-     * characters.
-     *
-     * The Article objects in the returned list will have their parent set to \c nullptr.
-     *
-     * \par Examples
-     *
-     * \code{.cpp}
-     *
-     * \endcode
+     * See QueryArgs for a list of possible query arguments.
      */
-    virtual QList<Article*> getArticles(FuotenEnums::SortingRole sortingRole = FuotenEnums::Time, Qt::SortOrder sortOrder = Qt::DescendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, bool unreadOnly = false, bool starredOnly = false, int limit = 0, int bodyLimit = -1) = 0;
+    virtual QList<Article*> getArticles(const QueryArgs &args) = 0;
 
 
 

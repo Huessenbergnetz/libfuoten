@@ -1535,7 +1535,7 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
 
 
 
-QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const QList<qint64> &ids, FuotenEnums::Type idType, bool unreadOnly, bool starredOnly, int limit, int bodyLimit)
+QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
 {
     QList<Article*> articles;
 
@@ -1550,35 +1550,50 @@ QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole,
 
     QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
-    if (!ids.isEmpty() || unreadOnly || starredOnly) {
+    if (!args.inIds.isEmpty() || args.unreadOnly || args.starredOnly || (args.parentId > -1)) {
         qs.append(QLatin1String(" WHERE"));
     }
 
-    if (!ids.isEmpty()) {
-        if (idType == FuotenEnums::Folder) {
-            qs.append(QStringLiteral(" it.feedId IN (SELECT id FROM feeds WHERE folderId IN (%1))").arg(d->intListToString(ids)));
-        } else if (idType == FuotenEnums::Item) {
-            qs.append(QStringLiteral(" it.id IN (%1)").arg(d->intListToString(ids)));
+    if (args.parentId > -1) {
+        if (args.parentIdType == FuotenEnums::Feed) {
+            qs.append(QStringLiteral(" it.feedId = %1").arg(QString::number(args.parentId)));
         } else {
-            qs.append(QStringLiteral(" it.feedId IN (%1)").arg(d->intListToString(ids)));
+            qs.append(QStringLiteral(" it.feedId IN (SELECT id FROM feeds WHERE folderId = %1)").arg(args.parentId));
         }
     }
 
-    if (unreadOnly) {
-        if (!ids.isEmpty()) {
+    if (!args.inIds.isEmpty()) {
+        if (args.parentId > -1) {
+            qs.append(QLatin1String(" AND"));
+        }
+        switch(args.inIdsType) {
+        case FuotenEnums::Folder:
+            qs.append(QStringLiteral(" it.feedId IN (SELECT id FROM feeds WHERE folderId IN (%1))").arg(d->intListToString(args.inIds)));
+            break;
+        case FuotenEnums::Feed:
+            qs.append(QStringLiteral(" it.feedId IN (%1)").arg(d->intListToString(args.inIds)));
+            break;
+        default:
+            qs.append(QStringLiteral(" it.id IN (%1)").arg(d->intListToString(args.inIds)));
+            break;
+        }
+    }
+
+    if (args.unreadOnly) {
+        if ((args.parentId > -1) || !args.inIds.isEmpty()) {
             qs.append(QLatin1String(" AND"));
         }
         qs.append(QLatin1String(" it.unread = 1"));
     }
 
-    if (starredOnly) {
-        if (!ids.isEmpty() || unreadOnly) {
+    if (args.starredOnly) {
+        if ((args.parentId > -1) || !args.inIds.isEmpty() || args.unreadOnly) {
             qs.append(QLatin1String(" AND"));
         }
         qs.append(QLatin1String(" it.starred = 1"));
     }
 
-    switch(sortingRole) {
+    switch(args.sortingRole) {
     case FuotenEnums::Time:
         qs.append(QLatin1String(" ORDER BY it.pubDate"));
         break;
@@ -1596,30 +1611,35 @@ QList<Article*> SQLiteStorage::getArticles(FuotenEnums::SortingRole sortingRole,
         break;
     }
 
-    if (sortOrder == Qt::AscendingOrder) {
+    if (args.sortOrder== Qt::AscendingOrder) {
         qs.append(QLatin1String(" ASC"));
     } else {
         qs.append(QLatin1String(" DESC"));
     }
 
-    if (limit > 0) {
-        qs.append(QLatin1String(" LIMIT ")).append(QString::number(limit));
+    if (args.limit > 0) {
+        qs.append(QLatin1String(" LIMIT ")).append(QString::number(args.limit));
     }
+
+#ifdef QT_DEBUG
+    qDebug() << "Start to query articles from the local SQLite database using the following query:";
+    qDebug() << qs;
+#endif
 
     if (!q.exec(qs)) {
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
         return articles;
     }
 
-    QString body;
-
-    if (bodyLimit == 0) {
-        body = q.value(9).toString();
-    } else if (bodyLimit > 0) {
-        body = limitBody(q.value(9).toString(), bodyLimit);
-    }
-
     while (q.next()) {
+        QString body;
+
+        if (args.bodyLimit == 0) {
+            body = q.value(9).toString();
+        } else if (args.bodyLimit > 0) {
+            body = limitBody(q.value(9).toString(), args.bodyLimit);
+        }
+
         articles.append(new Article(q.value(0).toLongLong(),
                                  q.value(1).toLongLong(),
                                  q.value(2).toString(),

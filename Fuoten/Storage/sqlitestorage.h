@@ -72,7 +72,7 @@ public:
     /*!
      * \brief Returns a list of Article objects from the \a items table.
      */
-    virtual QList<Article*> getArticles(FuotenEnums::SortingRole sortingRole = FuotenEnums::Time, Qt::SortOrder sortOrder = Qt::DescendingOrder, const QList<qint64> &ids = QList<qint64>(), FuotenEnums::Type idType = FuotenEnums::Feed, bool unreadOnly = false, bool starredOnly = false, int limit = 0, int bodyLimit = -1) override;
+    QList<Article*> getArticles(const QueryArgs &args) override;
 
     /*!
      * \brief Returns the Feed identified by \a id.

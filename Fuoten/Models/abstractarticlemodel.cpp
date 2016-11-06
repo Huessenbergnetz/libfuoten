@@ -45,7 +45,7 @@ void AbstractArticleModel::handleStorageChanged()
 void AbstractArticleModel::load()
 {
     if (!storage()) {
-        qWarning("Can not laod articles, no storage available.");
+        qWarning("Can not load articles, no storage available.");
         return;
     }
 
@@ -57,17 +57,17 @@ void AbstractArticleModel::load()
 
     Q_D(AbstractArticleModel);
 
-    QList<Article*> as;
-    if (parentId() < 0) {
-        if (parentIdType() != FuotenEnums::Starred) {
-            as = storage()->getArticles();
-        } else {
-            as = storage()->getArticles(FuotenEnums::Time, Qt::DescendingOrder, QList<qint64>(), FuotenEnums::Feed, false, true);
-        }
-    } else {
-        QList<qint64> ids({parentId()});
-        as = storage()->getArticles(FuotenEnums::Time, Qt::DescendingOrder, ids, parentIdType());
+    QueryArgs qa;
+    qa.sortingRole = FuotenEnums::Time;
+    qa.sortOrder = Qt::DescendingOrder;
+    qa.parentId = parentId();
+    qa.parentIdType = parentIdType();
+
+    if ((parentId() < 0) && (parentIdType() == FuotenEnums::Starred)) {
+        qa.starredOnly = true;
     }
+
+    const QList<Article*> as = storage()->getArticles(qa);
 
     if (!as.isEmpty()) {
 
@@ -150,5 +150,62 @@ void AbstractArticleModel::clear()
         d->articles.clear();
 
         endRemoveRows();
+    }
+}
+
+
+
+void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems)
+{
+    if (!storage()) {
+        qWarning("Can not load articles, no storage available.");
+        return;
+    }
+
+    if (rowCount() == 0) {
+        reload();
+        return;
+    }
+
+    if (!updatedItems.isEmpty()) {
+
+        QHash<qint64, QModelIndex> idxs = findByIDs(updatedItems);
+
+        if (!idxs.isEmpty()) {
+
+            QueryArgs qa;
+            qa.parentId = parentId();
+            qa.parentIdType = parentIdType();
+            qa.inIds = idxs.keys();
+            qa.inIdsType = FuotenEnums::Item;
+            const QList<Article*> upits = storage()->getArticles(qa);
+//            const QList<Article*> upits = storage()->getArticles(FuotenEnums::ID, Qt::DescendingOrder, idxs.keys(), FuotenEnums::Item);
+
+            if (!upits.isEmpty()) {
+
+            }
+        }
+
+    }
+
+    if (!newItems.isEmpty()) {
+
+//        const QList<Article*> upits = storage()->getArticles(FuotenEnums::Time, Qt::AscendingOrder, newItems, FuotenEnums::Item);
+        QueryArgs qa;
+        qa.parentId = parentId();
+        qa.parentIdType = parentIdType();
+        qa.inIds = newItems;
+        qa.inIdsType = FuotenEnums::Item;
+        const QList<Article*> newits = storage()->getArticles(qa);
+
+        if (!newits.isEmpty()) {
+
+            for (Article *a : newits) {
+
+                if (a->feedId()) {
+
+                }
+            }
+        }
     }
 }
