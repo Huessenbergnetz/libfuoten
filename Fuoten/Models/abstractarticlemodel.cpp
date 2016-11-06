@@ -56,8 +56,6 @@ void AbstractArticleModel::load()
 
     setInOperation(true);
 
-//    Q_D(AbstractArticleModel);
-
     QueryArgs qa;
     qa.sortingRole = FuotenEnums::Time;
     qa.sortOrder = Qt::DescendingOrder;

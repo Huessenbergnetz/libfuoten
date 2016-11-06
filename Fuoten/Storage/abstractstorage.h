@@ -655,19 +655,6 @@ Q_SIGNALS:
      */
     void requestedItems(const QList<qint64> &updatedItems, const QList<qint64> &newItems, const QList<qint64> &deletedItems);
 
-//    /*!
-//     * \brief Emit this after items/articles have been received and processed.
-//     *
-//     * Best location to emit this signal is your implementation of itemsUpdated().
-//     *
-//     * Every argument of the signal should contain a list of item IDs that are either updated, new or deleted.
-//     *
-//     * \param updatedItems  list of IDs from items that have been updated
-//     * \param newItems      list of IDs from items that are new in the local storage
-//     * \param deletedItems  list of IDs from items that have been remove from the local storage
-//     */
-//    void updatedItems(QList<qint64> &updatedItems, QList<qint64> &newItems, QList<qint64> &deletedItems);
-
     /*!
      * \brief Emit this after items/articles have been marked as read or unread.
      *
