@@ -192,7 +192,17 @@ class FUOTENSHARED_EXPORT Article : public BaseItem
      * <TABLE><TR><TD>void</TD><TD>folderNameChanged(const QString &folderName)</TD></TR></TABLE>
      */
     Q_PROPERTY(QString folderName READ folderName WRITE setFolderName NOTIFY folderNameChanged)
-
+    /*!
+     * \brief Returns a human readable string of the publication date.
+     *
+     * Will automatically created from pubDate.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>QString</TD><TD>getHumanPubDate() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>humanPubDateChanged(const QString &humanPubDate)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(QString humanPubDate READ humanPubDate NOTIFY humanPubDateChanged)
 
 public:
     /*!
@@ -296,6 +306,11 @@ public:
      * \sa Article::setFolderName(), Article::folderNameChanged()
      */
     QString folderName() const;
+    /*!
+     * \brief Getter function for the \link Article::humanPubDate humanPubDate \endlink property.
+     * \sa Article::humanPubDateChanged()
+     */
+    QString humanPubDate() const;
 
 
 
@@ -491,6 +506,11 @@ Q_SIGNALS:
      * \sa Article::folderName(), Article::setFolderName()
      */
     void folderNameChanged(const QString &folderName);
+    /*!
+     * \brief This is emitted if the value of the \link Article::humanPubDate humanPubDate \endlink property changes.
+     * \sa Article::getHumanPubDate()
+     */
+    void humanPubDateChanged(const QString &humanPubDate);
 
 protected:
     Article(ArticlePrivate &dd, QObject *parent = nullptr);

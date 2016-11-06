@@ -73,7 +73,36 @@ public:
         fingerprint(nFingerprint),
         folderId(nFolderId),
         folderName(nFolderName)
-    {}
+    {
+        createHumanPubDate();
+    }
+
+    void createHumanPubDate() {
+        QDateTime lt = pubDate.toLocalTime();
+        QDate cd = QDate::currentDate();
+        if (lt.date() == cd) {
+            //% "Today, %1"
+            humanPubDate = qtTrId("libfuoten-today-datetime").arg(
+                                                            //% "hh:mm"
+                                                            lt.toString(qtTrId("libfuoten-time-format")
+                                                           ));
+        } else if (lt.daysTo(QDateTime::currentDateTime()) == 1 ) {
+            //% "Yesterday, %1"
+            humanPubDate = qtTrId("libfuoten-yesterday-datetime").arg(
+                        //% "hh:mm"
+                        lt.toString(qtTrId("libfuoten-time-format")
+                       ));
+        } else if (lt.daysTo(QDateTime::currentDateTime()) < 7) {
+            //% "dddd, hh:mm"
+            humanPubDate = lt.toString(qtTrId("libfuoten-day-time-format"));
+        } else if (lt.daysTo(QDateTime::currentDateTime()) < 365) {
+            //% "d. MMMM, hh:mm"
+            humanPubDate = lt.toString(qtTrId("libfuoten-short-datetime"));
+        } else {
+            //% "d. MMM yyyy, hh:mm"
+            humanPubDate = lt.toString(qtTrId("libfuoten-date-time-format"));
+        }
+    }
 
     qint64 feedId;
     QString feedTitle;
@@ -92,6 +121,7 @@ public:
     QString fingerprint;
     qint64 folderId;
     QString folderName;
+    QString humanPubDate;
 };
 
 }

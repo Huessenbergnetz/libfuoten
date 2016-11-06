@@ -180,6 +180,8 @@ void Article::setPubDate(const QDateTime &nPubDate)
         qDebug() << "Changed pubDate to" << d->pubDate;
 #endif
         Q_EMIT pubDateChanged(pubDate());
+        d->createHumanPubDate();
+        Q_EMIT humanPubDateChanged(humanPubDate());
     }
 }
 
@@ -336,3 +338,5 @@ void Article::setFolderName(const QString &nFolderName)
     }
 }
 
+
+QString Article::humanPubDate() const { Q_D(const Article); return d->humanPubDate; }
