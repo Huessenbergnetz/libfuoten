@@ -340,3 +340,27 @@ void Article::setFolderName(const QString &nFolderName)
 
 
 QString Article::humanPubDate() const { Q_D(const Article); return d->humanPubDate; }
+
+
+
+void Article::clone(Article *other)
+{
+    setId(other->id());
+    setFeedId(other->feedId());
+    setFeedTitle(other->feedTitle());
+    setGuid(other->guid());
+    setGuidHash(other->guidHash());
+    setUrl(other->url());
+    setTitle(other->title());
+    setAuthor(other->author());
+    setPubDate(other->pubDate());
+    setBody(other->body());
+    setEnclosureLink(other->enclosureLink());
+    setEnclosureMime(other->enclosureMime());
+    setUnread(other->unread());
+    setStarred(other->starred());
+    setLastModified(other->lastModified());
+    setFingerprint(other->fingerprint());
+    setFolderId(other->folderId());
+    setFolderName(other->folderName());
+}

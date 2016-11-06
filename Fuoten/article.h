@@ -419,6 +419,11 @@ public:
      */
     void setFolderName(const QString &nFolderName);
 
+    /*!
+     * \brief Copies the property values of \a other into this object.
+     */
+    void clone(Article *other);
+
 
 Q_SIGNALS:
     /*!
