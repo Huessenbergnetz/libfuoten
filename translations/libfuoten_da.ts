@@ -245,13 +245,13 @@
         <translation type="unfinished"/>
     </message>
     <message id="libfuoten-err-failed-open-db">
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+66"/>
-        <location line="+234"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+69"/>
+        <location line="+254"/>
         <source>Failed to open the SQLite database.</source>
         <translation type="unfinished"/>
     </message>
     <message id="fuoten-error-failed-execute-query">
-        <location line="-222"/>
+        <location line="-242"/>
         <location line="+16"/>
         <location line="+11"/>
         <location line="+6"/>
@@ -269,7 +269,9 @@
         <location line="+12"/>
         <location line="+16"/>
         <location line="+7"/>
-        <location line="+86"/>
+        <location line="+31"/>
+        <location line="+10"/>
+        <location line="+65"/>
         <location line="+16"/>
         <location line="+136"/>
         <location line="+24"/>
@@ -281,68 +283,91 @@
         <location line="+25"/>
         <location line="+69"/>
         <location line="+49"/>
-        <location line="+82"/>
+        <location line="+83"/>
         <location line="+44"/>
         <location line="+70"/>
         <location line="+44"/>
         <location line="+25"/>
         <location line="+80"/>
         <location line="+37"/>
-        <location line="+51"/>
+        <location line="+44"/>
+        <location line="+44"/>
+        <location line="+44"/>
+        <location line="+32"/>
+        <location line="+137"/>
+        <location line="+60"/>
+        <location line="+97"/>
+        <location line="+88"/>
+        <location line="+23"/>
+        <location line="+67"/>
+        <location line="+39"/>
+        <location line="+15"/>
+        <location line="+10"/>
         <source>Failed to execute database query.</source>
         <translation type="unfinished"/>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-1272"/>
-        <location line="+410"/>
-        <location line="+523"/>
+        <location line="-1942"/>
+        <location line="+430"/>
+        <location line="+524"/>
         <location line="+62"/>
+        <location line="+807"/>
         <source>Failed to begin a database transaction.</source>
         <translation type="unfinished"/>
     </message>
     <message id="fuoten-error-transaction-commit">
-        <location line="-828"/>
-        <location line="+315"/>
-        <location line="+492"/>
+        <location line="-1656"/>
+        <location line="+335"/>
+        <location line="+493"/>
         <location line="+139"/>
+        <location line="+792"/>
         <source>Failed to commit a database transaction.</source>
         <translation type="unfinished"/>
     </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
-        <location line="-882"/>
+        <location line="-1675"/>
         <location line="+75"/>
         <location line="+249"/>
         <location line="+117"/>
         <location line="+206"/>
-        <location line="+252"/>
+        <location line="+253"/>
         <location line="+67"/>
+        <location line="+37"/>
         <location line="+43"/>
+        <location line="+45"/>
+        <location line="+619"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation type="unfinished"/>
     </message>
     <message id="libfuoten-err-invalid-feed-id">
         <location filename="../Fuoten/API/deletefeed.cpp" line="+91"/>
+        <location filename="../Fuoten/API/markfeedread.cpp" line="+79"/>
+        <location filename="../Fuoten/API/movefeed.cpp" line="+80"/>
         <location filename="../Fuoten/API/renamefeed.cpp" line="+114"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-997"/>
-        <location line="+960"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1699"/>
+        <location line="+961"/>
+        <location line="+37"/>
         <location line="+49"/>
+        <location line="+39"/>
         <source>The feed ID is not valid.</source>
         <translation type="unfinished"/>
     </message>
     <message id="libfuoten-err-empty-feed-name">
         <location filename="../Fuoten/API/renamefeed.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-6"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-45"/>
         <source>The feed name can not be empty.</source>
         <translation type="unfinished"/>
     </message>
     <message id="libfuoten-err-feed-not-exists">
         <location filename="../Fuoten/API/deletefeed.cpp" line="+38"/>
+        <location filename="../Fuoten/API/markfeedread.cpp" line="+44"/>
+        <location filename="../Fuoten/API/movefeed.cpp" line="+30"/>
         <location filename="../Fuoten/API/renamefeed.cpp" line="+42"/>
         <source>The feed was not found on the server.</source>
         <translation type="unfinished"/>
     </message>
     <message id="fuoten-failed-query-folders">
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-910"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-948"/>
         <source>Failed to query the folders from the local database.</source>
         <translation type="unfinished"/>
     </message>
@@ -355,12 +380,17 @@
         <location line="+111"/>
         <location line="+25"/>
         <location line="+118"/>
-        <location line="+115"/>
+        <location line="+116"/>
         <location line="+70"/>
         <location line="+47"/>
         <location line="+99"/>
         <location line="+51"/>
-        <location line="+50"/>
+        <location line="+43"/>
+        <location line="+44"/>
+        <location line="+44"/>
+        <location line="+33"/>
+        <location line="+462"/>
+        <location line="+35"/>
         <source>Failed to prepare database query.</source>
         <translation type="unfinished"/>
     </message>
@@ -373,10 +403,12 @@
         <location line="+8"/>
         <location filename="../Fuoten/API/deletefolder.cpp" line="+75"/>
         <location filename="../Fuoten/API/markfolderread.cpp" line="+81"/>
+        <location filename="../Fuoten/API/movefeed.cpp" line="-22"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+81"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1026"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1638"/>
         <location line="+330"/>
         <location line="+111"/>
+        <location line="+569"/>
         <source>The folder ID is not valid.</source>
         <oldsource>Failed to rename the folder. The folder ID is not valid.</oldsource>
         <translation type="unfinished"/>
@@ -394,7 +426,7 @@
     <message id="libfuoten-err-empty-folder-name">
         <location filename="../Fuoten/API/createfolder.cpp" line="+79"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-117"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-686"/>
         <source>The folder name can not be empty.</source>
         <oldsource>Failed to rename the folder. The new folder name is empty.</oldsource>
         <translation type="unfinished"/>
@@ -428,7 +460,9 @@
         <translation type="unfinished"/>
     </message>
     <message id="libfuoten-err-invalid-item-id">
+        <location filename="../Fuoten/API/markfeedread.cpp" line="-36"/>
         <location filename="../Fuoten/API/markfolderread.cpp" line="-36"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+774"/>
         <source>The item ID is not valid.</source>
         <translation type="unfinished"/>
     </message>
@@ -436,6 +470,62 @@
         <location filename="../Fuoten/API/createfeed.cpp" line="-27"/>
         <location filename="../Fuoten/API/getfeeds.cpp" line="+95"/>
         <source>The data the server replied does not contain a &quot;feeds&quot; array.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-no-items-array-in-reply">
+        <location filename="../Fuoten/API/getitems.cpp" line="+121"/>
+        <location filename="../Fuoten/API/getupdateditems.cpp" line="+110"/>
+        <source>The data the server replied does not contain an &quot;items&quot; array.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-error-invalid-id">
+        <location line="+24"/>
+        <location filename="../Fuoten/API/getupdateditems.cpp" line="+32"/>
+        <source>Invalid ID</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-error-invalid-time">
+        <location filename="../Fuoten/API/getupdateditems.cpp" line="-8"/>
+        <source>Invalid last modified time.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-today-dateteime">
+        <location filename="../Fuoten/Models/articlelistmodel_p.h" line="+39"/>
+        <source>Today, %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-today-datetime">
+        <location filename="../Fuoten/article_p.h" line="+85"/>
+        <source>Today, %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-time-format">
+        <location line="+2"/>
+        <location line="+6"/>
+        <location filename="../Fuoten/Models/articlelistmodel_p.h" line="+2"/>
+        <source>hh:mm</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-yesterday-datetime">
+        <location line="-2"/>
+        <source>Yesterday, %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-day-time-format">
+        <location line="+6"/>
+        <source>dddd, hh:mm</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-short-datetime">
+        <location line="+3"/>
+        <source>d. MMMM, hh:mm</source>
+        <oldsource>d.MMMM, hh:mm</oldsource>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-date-time-format">
+        <location line="+3"/>
+        <source>d. MMM yyyy, hh:mm</source>
+        <oldsource>d.MMM yyyy, hh:mm</oldsource>
         <translation type="unfinished"/>
     </message>
 </context>
