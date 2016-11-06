@@ -75,6 +75,17 @@ public:
     QList<Article*> getArticles(const QueryArgs &args) override;
 
     /*!
+     * \brief Invokes an asynchronous query for articles in a different thread.
+     *
+     * Will emit the AbstractStorage::gotArticlesAsync() signal after the query finished. The signal
+     * will contain a list of Article objects. When connecting to this signal, be aware that the objects
+     * in the list have been created in a different thread.
+     *
+     * \param args query arguments
+     */
+    void getArticlesAsync(const QueryArgs &args) override;
+
+    /*!
      * \brief Returns the Feed identified by \a id.
      *
      * Returns a \c nullptr if the Feed can not be found.
@@ -113,7 +124,6 @@ public Q_SLOTS:
     void feedMarkedRead(qint64 id, qint64 newestItem) override;
 
     void itemsRequested(const QJsonDocument &json) override;
-//    void itemsUpdated(const QJsonDocument &json) override;
     void itemsMarked(const QList<qint64> &idsMarkedRead, const QList<qint64> &idsMarkedUnread) override;
     void itemsStarred(const QList<QPair<qint64, QString>> &articlesStarred, const QList<QPair<qint64, QString>> &articlesUnstarred) override;
     void itemMarked(qint64 itemId, bool unread) override;

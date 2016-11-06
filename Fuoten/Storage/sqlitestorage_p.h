@@ -123,6 +123,28 @@ private:
     QJsonDocument m_json;
 };
 
+
+
+
+class GetArticlesAsyncWorker : public QThread
+{
+    Q_OBJECT
+public:
+    GetArticlesAsyncWorker(const QString &dbpath, const QueryArgs &args, QObject *parent = nullptr);
+
+Q_SIGNALS:
+    void gotArticles(ArticleList articles);
+    void failed(Error *e);
+
+protected:
+    void run() override;
+
+private:
+    QSqlDatabase m_db;
+    QueryArgs m_args;
+};
+
+
 }
 
 #endif // SQLITESTORAGE_P

@@ -38,6 +38,7 @@ void AbstractArticleModel::setParentIdType(FuotenEnums::Type nParentIdType)
 void AbstractArticleModel::handleStorageChanged()
 {
     AbstractStorage *s = storage();
+    connect(s, &AbstractStorage::gotArticlesAsync, this, &AbstractArticleModel::gotArticlesAsync);
 }
 
 
@@ -55,7 +56,7 @@ void AbstractArticleModel::load()
 
     setInOperation(true);
 
-    Q_D(AbstractArticleModel);
+//    Q_D(AbstractArticleModel);
 
     QueryArgs qa;
     qa.sortingRole = FuotenEnums::Time;
@@ -67,13 +68,27 @@ void AbstractArticleModel::load()
         qa.starredOnly = true;
     }
 
-    const QList<Article*> as = storage()->getArticles(qa);
+    storage()->getArticlesAsync(qa);
+}
 
-    if (!as.isEmpty()) {
 
-        beginInsertRows(QModelIndex(), 0, as.count() - 1);
 
-        d->articles = as;
+void AbstractArticleModel::gotArticlesAsync(const ArticleList &articles)
+{
+    if (!articles.isEmpty()) {
+
+        Q_D(AbstractArticleModel);
+
+        beginInsertRows(QModelIndex(), rowCount(), rowCount() + articles.count() -1);
+
+        for (Article *a : articles) {
+            if (a->thread() != this->thread()) {
+                d->articles.append(new Article(a));
+                delete a;
+            } else {
+                d->articles.append(a);
+            }
+        }
 
         endInsertRows();
     }

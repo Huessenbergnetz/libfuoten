@@ -19,6 +19,7 @@
  */
 
 #include "abstractstorage_p.h"
+#include "../article.h"
 #include <QRegularExpression>
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -29,11 +30,15 @@ using namespace Fuoten;
 AbstractStorage::AbstractStorage(QObject *parent) :
     QObject(parent), d_ptr(new AbstractStoragePrivate)
 {
+    qRegisterMetaType<Fuoten::IdList>("IdList");
+    qRegisterMetaType<Fuoten::ArticleList>("ArticleList");
 }
 
 AbstractStorage::AbstractStorage(AbstractStoragePrivate &dd, QObject *parent) :
     QObject(parent), d_ptr(&dd)
 {
+    qRegisterMetaType<Fuoten::IdList>("IdList");
+    qRegisterMetaType<Fuoten::ArticleList>("ArticleList");
 }
 
 AbstractStorage::~AbstractStorage()
@@ -139,4 +144,13 @@ QString AbstractStorage::limitBody(const QString &body, int limit) const
     s.remove(QRegularExpression(QStringLiteral("<[^>]*>")));
     s = s.simplified();
     return s.left(limit);
+}
+
+
+
+void AbstractStorage::getArticlesAsync(const QueryArgs &args)
+{
+    const ArticleList articles = getArticles(args);
+
+    Q_EMIT gotArticlesAsync(articles);
 }

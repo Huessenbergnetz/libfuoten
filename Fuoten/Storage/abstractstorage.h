@@ -224,6 +224,18 @@ public:
      */
     virtual QList<Article*> getArticles(const QueryArgs &args) = 0;
 
+    /*!
+     * \brief Invokes a query for Article objects from the local storage, limited by \a args.
+     *
+     * This should emit the gotArticlesAsync() signal containing a list of Article objects. The
+     * default implementation is not really asynchronous, it simply calls getArticles() and emits
+     * gotArticlesSync() with the return value of that function.
+     *
+     * When reimplementing this and connecting to the gotArticlesSync() signal, be aware that the Article
+     * objects in the list might have been created in a different thread.
+     */
+    virtual void getArticlesAsync(const QueryArgs &args);
+
 
 
     /*!
@@ -438,16 +450,6 @@ public Q_SLOTS:
      * \endcode
      */
     virtual void itemsRequested(const QJsonDocument &json) = 0;
-
-//    /*!
-//     * \brief Receives the reply data fo the UpdateItems request.
-//     *
-//     * Implement this in a derived class to store item data, for example in a local SQL databs.
-//     * You should emit updatedItems() in your implementation after you processed the data to update connected models.
-//     *
-//     * For an example of the JSON response see itemsRequested().
-//     */
-//    virtual void itemsUpdated(const QJsonDocument &json) = 0;
 
     /*!
      * \brief Receives the reply data for the MarkItems request.
@@ -708,6 +710,16 @@ Q_SIGNALS:
      * \param starred   \c true if the item has been starred, \c false if it has been unstarred
      */
     void starredItem(qint64 itemId, const QString &guidHash, bool starred);
+
+    /*!
+     * \brief Emit this after getArticlesAsync() has been called and articles have been queried.
+     *
+     * Be aware that the objects in the list might have been created in a different thread when you
+     * connect to this signal.
+     *
+     * \param articles list of Article objects
+     */
+    void gotArticlesAsync(const ArticleList &articles);
 
 
 private:

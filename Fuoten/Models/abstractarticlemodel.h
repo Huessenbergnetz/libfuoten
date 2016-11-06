@@ -92,6 +92,9 @@ Q_SIGNALS:
     void parentIdTypeChanged(FuotenEnums::Type parentIdType);
 
 protected Q_SLOTS:
+    void gotArticlesAsync(const ArticleList &articles);
+
+
     /*!
      * \brief Takes and processes data after items/articles have been requested.
      *
