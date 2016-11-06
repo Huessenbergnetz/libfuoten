@@ -205,7 +205,10 @@ public:
      */
     Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, QObject *parent = nullptr);
 
-
+    /*!
+     * \brief Constructs a new Article object with the given \a parent by copying the properties of \a other to the new object.
+     */
+    explicit Article(Article *other, QObject *parent = nullptr);
 
 
     /*!
