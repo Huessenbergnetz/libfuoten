@@ -29,7 +29,9 @@
 #  define FUOTENSHARED_EXPORT Q_DECL_IMPORT
 #endif
 namespace Fuoten {
+class Article;
 typedef QList<qint64> IdList;
+typedef QList<Article*> ArticleList;
 }
 
 #endif // FUOTEN_GLOBAL_H
