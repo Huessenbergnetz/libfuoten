@@ -258,7 +258,7 @@ void Feed::copy(Fuoten::BaseItem *other)
 {
     Feed *o = qobject_cast<Feed*>(other);
 
-    if (o) {
+    if (o && (o->id() == id())) {
         setAdded(o->added());
         setFaviconLink(o->faviconLink());
         setFolderId(o->folderId());
