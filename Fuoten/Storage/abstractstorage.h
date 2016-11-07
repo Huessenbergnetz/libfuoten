@@ -40,7 +40,7 @@ struct FUOTENSHARED_EXPORT QueryArgs {
     FuotenEnums::Type parentIdType = FuotenEnums::All;      /**< Type of the parent ID. On feeds can only be FuotenEnums::Folder, on articles can be FuotenEnums::Folder and FuotenEnums::Feed. Defaults to FuotenEnums::All */
     IdList inIds;                                           /**< A list of IDs the records are compared with. Defaults to an empty list. */
     FuotenEnums::Type inIdsType = FuotenEnums::All;         /**< Type of of the inIds list to compare. Related to the object to query, it can be FuotenEnums::Folder, FuotenEnums::Feed or FuotenEnums::Item. Defaults to FuotenEnums::All. */
-    bool unreadOnly = false;                                /**< Only valid for article queries. If true, only unread articles are returned. */
+    bool unreadOnly = false;                                /**< If true, only unread articles or folders and feeds without unread content are returned. */
     bool starredOnly = false;                               /**< Only valid for article queries. If true, only starrred articles are returned. */
     int limit = 0;                                          /**< Limits the result to the specified number of objects. Defaults to \c 0 to return all objects. */
     int bodyLimit = -1;                                     /**< Only valid for article queries. Limits the size of the body text in number of characters. Values lower than \c 0 will return no body text, \c 0 will return the full body text, any other positive value will return a body stripped from HTML tags and limited to the amount of characters. */
@@ -188,33 +188,13 @@ public:
      */
     virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) = 0;
     
+
     /*!
      * \brief Returns a list of Feed objects from the local storage.
      *
-     * The returned list will be sorted by \a sortingRole and \a sortOrder. If \a ids is not empty,
-     * only folders with IDs of \a idType from the list will be returned. The \a idType specifies the
-     * id the feed is compared with. If the \a idType is not one of out of the table below, it will
-     * be treated as FuotenEnums::Folder.
-     *
-     * <TABLE>
-     * <TR><TD>FuotenEnums::Folder</TD><TD>Only feeds will be returned that are part of a folder with an ID in \a ids</TD></TR>
-     * <TR><TD>FuotenEnums::Feed</TD><TD>Only feeds with an ID in \a ids will be returned</TD></TR>
-     * <TR><TD>FuotenEnums::Item</TD><TD>Only feeds will be returned that contain items with an ID in \a ids</TD></TR>
-     * </TABLE>
-     *
-     * If you specify a \a folderId > \c -1, only feeds will be returned that are part of that Folder. Setting this greater than \c -1
-     * makes only sense if you do not specify a list of \a ids or if you set \a idType to a different value than FuotenEnums::Folder.
-     * Setting \a limit > \c 0 returns only the amount of items up to that limit.
-     *
-     * The Feed objects in the returned list will have their parent set to \c nullptr.
-     *
-     * \par Examples
-     *
-     * \code{.cpp}
-     *
-     * \endcode
+     * See QueryArgs for a list of possible query arguments.
      */
-    virtual QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) = 0;
+    virtual QList<Feed*> getFeeds(const QueryArgs &args) = 0;
 
 
     /*!

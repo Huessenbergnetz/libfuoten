@@ -65,9 +65,9 @@ public:
     QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) override;
 
     /*!
-     * \brief Returns a list of Feed objects from the \a feed table.
+     * \brief Returns a list of Feed objects from the \a feeds table.
      */
-    QList<Feed*> getFeeds(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Feed, qint64 folderId = -1, int limit = 0) override;
+    QList<Feed*> getFeeds(const QueryArgs &args) override;
 
     /*!
      * \brief Returns a list of Article objects from the \a items table.

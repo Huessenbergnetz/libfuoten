@@ -834,7 +834,9 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
 
 
 
-QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::SortOrder sortOrder, const IdList &ids, FuotenEnums::Type idType, qint64 folderId, int limit)
+
+
+QList<Feed*> SQLiteStorage::getFeeds(const QueryArgs &args)
 {
     QList<Fuoten::Feed*> feeds;
 
@@ -849,23 +851,33 @@ QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::S
 
     QString qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId");
 
-    if ((folderId > -1) && ids.isEmpty()) {
-        qs.append(QLatin1String(" WHERE fe.folderId = ")).append(QString::number(folderId));
+    if (args.parentId > -1 || !args.inIds.isEmpty() || args.unreadOnly) {
+        qs.append(QLatin1String(" WHERE"));
     }
 
-    if (!ids.isEmpty()) {
-        if (idType == FuotenEnums::Folder) {
-            qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.folderId IN (%1)").arg(d->intListToString(ids));
+    if (args.parentId > -1) {
+        qs.append(QStringLiteral(" fe.folderId = %1").arg(QString::number(args.parentId)));
+    }
+
+    if (!args.inIds.isEmpty() && ((args.inIdsType == FuotenEnums::Feed) || (args.inIdsType == FuotenEnums::Folder))) {
+        if (args.parentId > -1) {
+            qs.append(QLatin1String(" AND"));
+        }
+        if (args.inIdsType == FuotenEnums::Folder) {
+            qs.append(QStringLiteral(" fe.folderId IN (%1)").arg(d->intListToString(args.inIds)));
         } else {
-            qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.id IN (%1)").arg(d->intListToString(ids));
-        }
-
-        if ((folderId > -1) && (idType != FuotenEnums::Folder)) {
-            qs.append(QLatin1String(" AND fe.folderId = ")).append(QString::number(folderId));
+            qs.append(QStringLiteral(" fe.id IN (%1)").arg(d->intListToString(args.inIds)));
         }
     }
 
-    switch(sortingRole) {
+    if (args.unreadOnly) {
+        if ((args.parentId > -1) || (!args.inIds.isEmpty() && ((args.inIdsType == FuotenEnums::Feed) || (args.inIdsType == FuotenEnums::Folder)))) {
+            qs.append(QLatin1String(" AND"));
+        }
+        qs.append(QLatin1String(" fe.unreadCount > 0"));
+    }
+
+    switch(args.sortingRole) {
     case FuotenEnums::Name:
         qs.append(QLatin1String(" ORDER BY fe.title"));
         break;
@@ -883,14 +895,14 @@ QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::S
         break;
     }
 
-    if (sortOrder == Qt::AscendingOrder) {
+    if (args.sortOrder == Qt::AscendingOrder) {
         qs.append(QLatin1String(" ASC"));
     } else {
         qs.append(QLatin1String(" DESC"));
     }
 
-    if (limit > 0) {
-        qs.append(QLatin1String(" LIMIT ")).append(QString::number(limit));
+    if (args.limit > 0) {
+        qs.append(QLatin1String(" LIMIT ")).append(QString::number(args.limit));
     }
 
     if (!q.exec(qs)) {
@@ -918,7 +930,6 @@ QList<Feed*> SQLiteStorage::getFeeds(FuotenEnums::SortingRole sortingRole, Qt::S
 
     return feeds;
 }
-
 
 
 
@@ -998,7 +1009,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
     qDebug() << "Processing" << feeds.size() << "feeds requested from the remote server.";
 #endif
 
-    const QList<Feed*> currentFeeds = getFeeds(FuotenEnums::ID);
+    QueryArgs qa;
+    const QList<Feed*> currentFeeds = getFeeds(qa);
 
     IdList updatedFeedIds;
     IdList newFeedIds;
