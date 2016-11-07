@@ -2141,9 +2141,62 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
 }
 
 
-void SQLiteStorage::itemsStarred(const QList<QPair<qint64, QString> > &articlesStarred, const QList<QPair<qint64, QString> > &articlesUnstarred)
+void SQLiteStorage::itemsStarred(const QList<QPair<qint64, QString> > &articles, bool star)
 {
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
 
+    if (articles.isEmpty()) {
+        qWarning("No articles in the list. Can not update local storage.");
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!d->db.transaction()) {
+        //% "Failed to begin a database transaction."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
+        return;
+    }
+
+    for (const QPair<qint64,QString> &p : articles) {
+
+        if (!q.prepare(QStringLiteral("UPDATE items SET starred = ?, lastModified = ? WHERE feedId = ? and guidHash = ?"))) {
+            //% "Failed to prepare database query."
+            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+            return;
+        }
+
+        q.addBindValue(star);
+        q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+        q.addBindValue(p.first);
+        q.addBindValue(p.second);
+
+        if (!q.exec()) {
+            //% "Failed to execute database query."
+            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+            return;
+        }
+
+    }
+
+    if (!d->db.commit()) {
+        //% "Failed to commit a database transaction."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
+        return;
+    }
+
+    if (star) {
+        setStarred(starred() + articles.count());
+    } else {
+        setStarred(starred() - articles.count());
+    }
+
+    Q_EMIT starredItems(articles, star);
 }
 
 

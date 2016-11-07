@@ -449,10 +449,10 @@ public Q_SLOTS:
      * The lists contains the item/article IDs and the guid hash of the items/articles that have been either starred or unstarred.
      * You should emit starredItems() in your implementation after you processed the data to update connected models.
      *
-     * \param articlesStarred   list of pairs of article ID and guid hash of starred articles
-     * \param articlesUnstarred list of pairs of article ID and guid hash of unstarred articles
+     * \param articles  list of pairs of feed ID and guid hash of starred/unstarred articles
+     * \param star      \c true if the articles have been starred, \c false if they have been unstarred
      */
-    virtual void itemsStarred(const QList<QPair<qint64, QString>> &articlesStarred, const QList<QPair<qint64, QString>> &articlesUnstarred) = 0;
+    virtual void itemsStarred(const QList<QPair<qint64, QString>> &articles, bool star) = 0;
 
     /*!
      * \brief Receives the reply data for the MarkItem request.
@@ -653,10 +653,10 @@ Q_SIGNALS:
      *
      * Best location to emit this signal is your implementation of itemsStarred().
      *
-     * \param articlesStarred   list of pairs of article ID and guid hash of starred articles
-     * \param articlesUnstarred list of pairs of article ID and guid hash of unstarred articles
+     * \param articles  list of pairs of feed ID and guid hash of starred/unstarred articles
+     * \param star      \c true if the articles have been starred, \c false if they have been unstarred
      */
-    void starredItems(const QList<QPair<qint64, QString>> &articlesStarred, const QList<QPair<qint64, QString>> &articlesUnstarred);
+    void starredItems(const QList<QPair<qint64, QString>> &articles, bool star);
 
     /*!
      * \brief Emit this after an item/article has been marked read or unread.
@@ -675,7 +675,7 @@ Q_SIGNALS:
      *
      * \param feedId    the ID of the feed the item/article that has been starred or unstarred belongs to
      * \param guidHash  the global unique ID hash of the article that has been starred or unstarred
-     * \param starred   \c true if the item has been starred, \c false if it has been unstarred
+     * \param starred   \c true if the article has been starred, \c false if it has been unstarred
      */
     void starredItem(qint64 feedId, const QString &guidHash, bool starred);
 

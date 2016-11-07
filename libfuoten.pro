@@ -112,7 +112,9 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/API/MarkMultipleItems \
         Fuoten/API/markmultipleitems.h \
         Fuoten/API/StarItem \
-        Fuoten/API/staritem.h
+        Fuoten/API/staritem.h \
+        Fuoten/API/StarMultipleItems \
+        Fuoten/API/starmultipleitems.h
 
     basePath = $${dirname(PWD)}
     for(header, INSTALL_HEADERS) {
@@ -226,7 +228,9 @@ HEADERS += \
     Fuoten/API/markmultipleitems.h \
     Fuoten/API/markmultipleitems_p.h \
     Fuoten/API/staritem.h \
-    Fuoten/API/staritem_p.h
+    Fuoten/API/staritem_p.h \
+    Fuoten/API/starmultipleitems_p.h \
+    Fuoten/API/starmultipleitems.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -270,7 +274,8 @@ SOURCES += \
     Fuoten/Models/articlelistfiltermodel.cpp \
     Fuoten/API/markitem.cpp \
     Fuoten/API/markmultipleitems.cpp \
-    Fuoten/API/staritem.cpp
+    Fuoten/API/staritem.cpp \
+    Fuoten/API/starmultipleitems.cpp
 
 DISTFILES += \
     fuoten.pc.in

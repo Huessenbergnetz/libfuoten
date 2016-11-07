@@ -1,3 +1,23 @@
+/* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
+ * Copyright (C) 2016 Buschtrommel / Matthias Fehring
+ * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
+ * https://github.com/Buschtrommel/libfuoten
+ *
+ * This library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+
 #include "abstractarticlemodel_p.h"
 #include "../Storage/abstractstorage.h"
 #ifdef QT_DEBUG
@@ -46,6 +66,7 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::deletedFeed, this, &AbstractArticleModel::feedDeleted);
     connect(s, &AbstractStorage::markedItem, this, &AbstractArticleModel::itemMarked);
     connect(s, &AbstractStorage::starredItem, this, &AbstractArticleModel::itemStarred);
+    connect(s, &AbstractStorage::starredItems, this, &AbstractArticleModel::itemsStarred);
 }
 
 
@@ -428,5 +449,22 @@ void AbstractArticleModel::itemStarred(qint64 feedId, const QString &guidHash, b
             a->setStarred(starred);
             Q_EMIT dataChanged(index(row, 0), index(row, 0), QVector<int>(1, Qt::DisplayRole));
         }
+    }
+}
+
+
+
+void AbstractArticleModel::itemsStarred(const QList<QPair<qint64, QString> > &articles, bool starred)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    if (articles.isEmpty()) {
+        qWarning("Articles list is empty. Will not update anything.");
+    }
+
+    for (const QPair<qint64, QString> p : articles) {
+        itemStarred(p.first, p.second, starred);
     }
 }

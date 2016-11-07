@@ -1,3 +1,23 @@
+/* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
+ * Copyright (C) 2016 Buschtrommel / Matthias Fehring
+ * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
+ * https://github.com/Buschtrommel/libfuoten
+ *
+ * This library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef FUOTENABSTRACTARTICLEMODEL_H
 #define FUOTENABSTRACTARTICLEMODEL_H
 
@@ -161,6 +181,16 @@ protected Q_SLOTS:
      * \param starred   \c true if the article/item has been starred, \c false if it has been unstarred
      */
     void itemStarred(qint64 feedId, const QString &guidHash, bool starred);
+
+    /*!
+     * \brief Takes and processes data after a list of items/articles has been starred/unstarred.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::starredItems() signal to this slot.
+     *
+     * \param articles  list of pairs of feed ID and article/item guid hash of articles that have been starred/unstarred
+     * \param starred   \c true if the articles in the list have been starred, \c false if the have been unstarred
+     */
+    void itemsStarred(const QList<QPair<qint64,QString>> &articles, bool starred);
 
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);
