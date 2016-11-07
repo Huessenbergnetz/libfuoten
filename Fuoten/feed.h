@@ -330,7 +330,7 @@ public:
     /*!
      * \brief Moves this feed to a different folder on the remote server.
      *
-     * Will also move the feed in the local, \a storage if a valid AbstractStorage object has been set.
+     * Will also move the feed in the local \a storage if a valid AbstractStorage object has been set.
      *
      * \param targetFolderId    ID of the folder the feed should be moved to
      * \param config            pointer to an AbstractConfiguration subclass to get the account configuration
