@@ -43,7 +43,7 @@ class MarkFeedReadPrivate;
  * MarkFeedRead::feedId, MarkFeedRead::newestItemId, Component::configuration
  *
  * \par API route
- * /folders/{feedId}/read
+ * /feeds/{feedId}/read
  *
  * \par Method
  * PUT
