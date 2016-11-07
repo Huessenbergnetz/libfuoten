@@ -113,11 +113,7 @@ bool FolderListFilterModel::lessThan(const QModelIndex &left, const QModelIndex 
 
     switch(sortingRole()) {
     case FuotenEnums::Name:
-        if (isSortLocaleAware()) {
-            return sortOrder() == Qt::AscendingOrder ? QString::localeAwareCompare(l->name(), r->name()) < 0 : QString::localeAwareCompare(l->name(), r->name()) > 0;
-        } else {
-            return sortOrder() == Qt::AscendingOrder ? QString::compare(l->name(), r->name()) < 0 : QString::compare(l->name(), r->name()) > 0;
-        }
+        return sortOrder() == Qt::AscendingOrder ? QString::localeAwareCompare(l->name(), r->name()) < 0 : QString::localeAwareCompare(l->name(), r->name()) > 0;
     case FuotenEnums::UnreadCount:
         return sortOrder() == Qt::AscendingOrder ? l->unreadCount()< r->unreadCount() : l->unreadCount() > r->unreadCount();
     case FuotenEnums::FeedCount:
