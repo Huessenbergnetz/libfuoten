@@ -73,7 +73,8 @@ void MarkMultipleItems::execute()
 
     QJsonArray ia;
     if (!itemIds().isEmpty()) {
-        for (qint64 id : itemIds()) {
+        const IdList iids = itemIds();
+        for (qint64 id : iids) {
             ia.append(QJsonValue(id));
         }
     }

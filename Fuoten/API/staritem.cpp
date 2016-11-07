@@ -66,9 +66,9 @@ void StarItem::execute()
     rl.append(QString::number(feedId()));
     rl.append(guidHash());
     if (starred()) {
-        rl.append(QLatin1String("star"));
+        rl.append(QStringLiteral("star"));
     } else {
-        rl.append(QLatin1String("unstar"));
+        rl.append(QStringLiteral("unstar"));
     }
     setApiRoute(rl);
 

@@ -347,7 +347,8 @@ void AbstractArticleModel::folderDeleted(qint64 folderId)
     }
 
     IdList idsToDelete;
-    for (Article *a : articles()) {
+    const ArticleList as = articles();
+    for (Article *a : as) {
         if (a->folderId() == folderId) {
             idsToDelete.append(a->id());
         }
@@ -385,7 +386,8 @@ void AbstractArticleModel::feedDeleted(qint64 feedId)
     }
 
     IdList idsToDelete;
-    for (Article *a : articles()) {
+    const ArticleList as = articles();
+    for (Article *a : as) {
         if (a->feedId() == feedId) {
             idsToDelete.append(a->id());
         }
@@ -493,7 +495,7 @@ void AbstractArticleModel::itemsStarred(const QList<QPair<qint64, QString> > &ar
         qWarning("Articles list is empty. Will not update anything.");
     }
 
-    for (const QPair<qint64, QString> p : articles) {
+    for (const QPair<qint64, QString> &p : articles) {
         itemStarred(p.first, p.second, starred);
     }
 }
@@ -506,7 +508,8 @@ void AbstractArticleModel::allItemsMarkedRead(qint64 newestItemId)
         return;
     }
 
-    for (Article *a : articles()) {
+    const ArticleList as = articles();
+    for (Article *a : as) {
         if (a->id() <= newestItemId) {
             a->setUnread(false);
         }

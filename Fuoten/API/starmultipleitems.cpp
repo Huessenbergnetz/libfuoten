@@ -74,7 +74,8 @@ void StarMultipleItems::execute()
 
     QJsonArray arr;
     if (!itemsToStar().isEmpty()) {
-        for (const QPair<qint64,QString> &p : itemsToStar()) {
+        const QList<QPair<qint64,QString>> its = itemsToStar();
+        for (const QPair<qint64,QString> &p : its) {
             QJsonObject o;
             o.insert(QStringLiteral("feedId"), QJsonValue(p.first));
             o.insert(QStringLiteral("guidHash"), QJsonValue(p.second));

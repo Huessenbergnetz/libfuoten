@@ -1749,7 +1749,8 @@ void GetArticlesAsyncWorker::run()
             idListString = QString::number(m_args.inIds.first());
         } else {
             QStringList sl;
-            for (qint64 id : m_args.inIds) {
+            const IdList ids = m_args.inIds;
+            for (qint64 id : ids) {
                 sl.append(QString::number(id));
             }
             idListString = sl.join(QChar(','));
