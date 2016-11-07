@@ -77,6 +77,32 @@ public:
         createHumanPubDate();
     }
 
+    ArticlePrivate(Article *other) :
+        BaseItemPrivate()
+    {
+        if (other) {
+            id = other->id();
+            feedId = other->feedId();
+            feedTitle = other->feedTitle();
+            guid = other->guid();
+            guidHash = other->guidHash();
+            url = other->url();
+            title = other->title();
+            author = other->author();
+            pubDate = other->pubDate();
+            body = other->body();
+            enclosureLink = other->enclosureLink();
+            enclosureMime = other->enclosureMime();
+            unread = other->unread();
+            starred = other->starred();
+            lastModified = other->lastModified();
+            fingerprint = other->fingerprint();
+            folderId = other->folderId();
+            folderName = other->folderName();
+            createHumanPubDate();
+        }
+    }
+
     void createHumanPubDate() {
         QDateTime lt = pubDate.toLocalTime();
         QDate cd = QDate::currentDate();

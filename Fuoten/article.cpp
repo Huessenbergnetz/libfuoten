@@ -39,7 +39,7 @@ Article::Article(qint64 id, qint64 feedId, const QString &feedTitle, const QStri
 
 
 Article::Article(Article *other, QObject *parent) :
-    BaseItem(* new ArticlePrivate(other->id(), other->feedId(), other->feedTitle(), other->guid(), other->guidHash(), other->url(), other->title(), other->author(), other->pubDate(), other->body(), other->enclosureMime(), other->enclosureLink(), other->unread(), other->starred(), other->lastModified(), other->fingerprint(), other->folderId(), other->folderName()), parent)
+    BaseItem(* new ArticlePrivate(other), parent)
 {
 }
 
