@@ -55,6 +55,8 @@ void AbstractFeedModel::handleStorageChanged()
     connect(s, &AbstractStorage::movedFeed, this, &AbstractFeedModel::feedMoved);
     connect(s, &AbstractStorage::renamedFeed, this, &AbstractFeedModel::feedRenamed);
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFeedModel::feedMarkedRead);
+
+    connect(s, &AbstractStorage::requestedItems, this, &AbstractFeedModel::itemsRquested);
 }
 
 
@@ -72,16 +74,14 @@ void AbstractFeedModel::load()
 
     setInOperation(true);
 
-    Q_D(AbstractFeedModel);
+    QueryArgs qa;
+    qa.parentId = parentId();
 
-    QList<Feed*> fs;
-    if (parentId() < 0) {
-        fs = storage()->getFeeds();
-    } else {
-        fs = storage()->getFeeds(FuotenEnums::Name, Qt::AscendingOrder, IdList(), FuotenEnums::Folder, parentId());
-    }
+    const QList<Feed*> fs = storage()->getFeeds(qa);
 
     if (!fs.isEmpty()) {
+
+        Q_D(AbstractFeedModel);
 
         beginInsertRows(QModelIndex(), 0, fs.count() - 1);
 
@@ -166,41 +166,47 @@ void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList 
         QHash<qint64, QModelIndex> updIxs = findByIDs(updatedFeeds);
 
         // request the updated feed data from the local storage
-        const QList<Feed*> ufs = storage()->getFeeds(FuotenEnums::ID, Qt::AscendingOrder, updIxs.keys());
+        if (!updIxs.isEmpty()) {
 
-        if (!ufs.isEmpty()) {
+            QueryArgs qa;
+            qa.inIds = updIxs.keys();
+            qa.inIdsType = FuotenEnums::Feed;
+            const QList<Feed*> ufs = storage()->getFeeds(qa);
 
-            IdList movedIds;
+            if (!ufs.isEmpty()) {
 
-            for (Feed *f : ufs) {
-                QModelIndex idx = updIxs.value(f->id());
+                IdList movedIds;
 
-                if (idx.isValid()) {
-                    Feed *mf = d->feeds.at(idx.row());
+                for (Feed *f : ufs) {
+                    QModelIndex idx = updIxs.value(f->id());
 
-                    if ((parentId() < 0) || (f->folderId() == parentId())) {
-                        // the feed has not moved, let's copy the new data
-                        mf->copy(f);
-                    } else {
-                        // the feed is not longer part of this folder
-                        movedIds.append(f->id());
+                    if (idx.isValid()) {
+                        Feed *mf = d->feeds.at(idx.row());
+
+                        if ((parentId() < 0) || (f->folderId() == parentId())) {
+                            // the feed has not moved, let's copy the new data
+                            mf->copy(f);
+                        } else {
+                            // the feed is not longer part of this folder
+                            movedIds.append(f->id());
+                        }
+                        Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
                     }
-                    Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
                 }
-            }
-            qDeleteAll(ufs);
+                qDeleteAll(ufs);
 
-            // remove moved feeds from the model
-            if (!movedIds.isEmpty()) {
-                for (qint64 mid : movedIds) {
-                    int row = d->rowByID(mid);
-                    if (row > -1) {
+                // remove moved feeds from the model
+                if (!movedIds.isEmpty()) {
+                    for (qint64 mid : movedIds) {
+                        int row = d->rowByID(mid);
+                        if (row > -1) {
 
-                        beginRemoveRows(QModelIndex(), row, row);
+                            beginRemoveRows(QModelIndex(), row, row);
 
-                        delete d->feeds.takeAt(row);
+                            delete d->feeds.takeAt(row);
 
-                        endRemoveRows();
+                            endRemoveRows();
+                        }
                     }
                 }
             }
@@ -213,7 +219,11 @@ void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList 
 
     if (!newFeeds.isEmpty()) {
 
-        const QList<Feed*> nfs = storage()->getFeeds(FuotenEnums::ID, Qt::AscendingOrder, newFeeds, FuotenEnums::Feed, parentId());
+        QueryArgs qa;
+        qa.parentId = parentId();
+        qa.inIds = newFeeds;
+        qa.inIdsType = FuotenEnums::Feed;
+        const QList<Feed*> nfs = storage()->getFeeds(qa);
 
         if (!nfs.isEmpty()) {
 
@@ -487,5 +497,41 @@ void AbstractFeedModel::clear()
         d->feeds.clear();
 
         endRemoveRows();
+    }
+}
+
+
+
+void AbstractFeedModel::itemsRquested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems)
+{
+    Q_UNUSED(updatedItems)
+    Q_UNUSED(newItems)
+    Q_UNUSED(deletedItems)
+
+    if (!storage()) {
+        qWarning("Can not update feeds, no storage available.");
+        return;
+    }
+
+    QueryArgs qa;
+    qa.parentId = parentId();
+
+    const QList<Feed*> fs = storage()->getFeeds(qa);
+
+    if (!fs.isEmpty()) {
+
+        Q_D(AbstractFeedModel);
+
+        for (Feed *f : fs) {
+
+            QModelIndex idx = findByID(f->id());
+
+            if (idx.isValid()) {
+                d->feeds.at(idx.row())->copy(f);
+                Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+            }
+        }
+
+        qDeleteAll(fs);
     }
 }

@@ -149,6 +149,15 @@ protected Q_SLOTS:
      */
     void folderDeleted(qint64 folderId);
 
+    /*!
+     * \brief Takes and processes data after items/articles have been requested/updated.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::requestedItems() signal to this slot.
+     * The model will reload all feeds in it and will update the unreadCount properties, it will not
+     * use the arguments of the slot
+     */
+    void itemsRquested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
+
 protected:
     AbstractFeedModel(AbstractFeedModelPrivate &dd, QObject *parent = nullptr);
 
