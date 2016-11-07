@@ -297,7 +297,7 @@ public:
     void setFaviconLink(const QUrl &nFaviconLink);
 
     /*!
-     * \brief Maked a deep copy of \a other.
+     * \brief Makes a deep copy of \a other.
      *
      * \a other has to be a Feed object.
      */
