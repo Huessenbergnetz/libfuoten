@@ -39,6 +39,9 @@ void AbstractArticleModel::handleStorageChanged()
 {
     AbstractStorage *s = storage();
     connect(s, &AbstractStorage::gotArticlesAsync, this, &AbstractArticleModel::gotArticlesAsync);
+    connect(s, &AbstractStorage::requestedItems, this, &AbstractArticleModel::itemsRequested);
+    connect(s, &AbstractStorage::markedReadFolder, this, &AbstractArticleModel::folderMarkedRead);
+    connect(s, &AbstractStorage::markedReadFeed, this, &AbstractArticleModel::feedMarkedRead);
 }
 
 
@@ -171,7 +174,7 @@ void AbstractArticleModel::clear()
 void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems)
 {
     if (!storage()) {
-        qWarning("Can not load articles, no storage available.");
+        qWarning("Can not update articles, no storage available.");
         return;
     }
 
@@ -179,6 +182,8 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
         reload();
         return;
     }
+
+    Q_D(AbstractArticleModel);
 
     if (!updatedItems.isEmpty()) {
 
@@ -192,18 +197,21 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
             qa.inIds = idxs.keys();
             qa.inIdsType = FuotenEnums::Item;
             const QList<Article*> upits = storage()->getArticles(qa);
-//            const QList<Article*> upits = storage()->getArticles(FuotenEnums::ID, Qt::DescendingOrder, idxs.keys(), FuotenEnums::Item);
 
             if (!upits.isEmpty()) {
+                for (Article *a : upits) {
 
+                    QModelIndex idx = idxs.value(a->id());
+                    d->articles.at(idx.row())->clone(a);
+                    Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+                }
+                qDeleteAll(upits);
             }
         }
-
     }
 
     if (!newItems.isEmpty()) {
 
-//        const QList<Article*> upits = storage()->getArticles(FuotenEnums::Time, Qt::AscendingOrder, newItems, FuotenEnums::Item);
         QueryArgs qa;
         qa.parentId = parentId();
         qa.parentIdType = parentIdType();
@@ -213,12 +221,87 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
 
         if (!newits.isEmpty()) {
 
-            for (Article *a : newits) {
+            beginInsertRows(QModelIndex(), rowCount(), rowCount() + newits.count() -1);
 
-                if (a->feedId()) {
+            d->articles.append(newits);
 
-                }
+            endInsertRows();
+        }
+    }
+
+    if (!deletedItems.isEmpty()) {
+
+        for (qint64 id : deletedItems) {
+
+            int row = d->rowByID(id);
+
+            if (row > -1) {
+
+                beginRemoveRows(QModelIndex(), row, row);
+
+                delete d->articles.takeAt(row);
+
+                endRemoveRows();
             }
         }
+    }
+}
+
+
+
+void AbstractArticleModel::folderMarkedRead(qint64 folderId, qint64 newestItemId)
+{
+    if (!storage()) {
+        qWarning("Can not update articles, no storage available.");
+        return;
+    }
+
+    Q_D(AbstractArticleModel);
+
+    const ArticleList as = d->articles;
+
+    if (as.isEmpty()) {
+        return;
+    }
+
+    for (Article *a : as) {
+
+        if ((a->folderId() == folderId) && (a->id() <= newestItemId)) {
+            QModelIndex idx = findByID(a->id());
+            if (idx.isValid()) {
+                a->setUnread(false);
+                Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+            }
+        }
+    }
+}
+
+
+
+void AbstractArticleModel::feedMarkedRead(qint64 feedId, qint64 newestItemId)
+{
+    if (!storage()) {
+        qWarning("Can not update articles, no storage available.");
+        return;
+    }
+
+    Q_D(AbstractArticleModel);
+
+    const ArticleList as = d->articles;
+
+    if (as.isEmpty()) {
+        return;
+    }
+
+    for (Article *a : as) {
+
+        if ((a->feedId() == feedId) && (a->id() <= newestItemId)) {
+            QModelIndex idx = findByID(a->id());
+            if (idx.isValid()) {
+                a->setUnread(false);
+                Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+            }
+        }
+
     }
 }

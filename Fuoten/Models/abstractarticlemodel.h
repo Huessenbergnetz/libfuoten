@@ -92,7 +92,6 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void gotArticlesAsync(const ArticleList &articles);
 
-
     /*!
      * \brief Takes and processes data after items/articles have been requested.
      *
@@ -103,6 +102,26 @@ protected Q_SLOTS:
      * \param deletedItems  list of IDs of items that have benn updated in the local storage
      */
     void itemsRequested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
+
+    /*!
+     * \brief Takes and processses data after a folder has been marked as read.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedFolderRead() signal to this slot.
+     *
+     * \param folderId      ID of the folder that has been marked as read
+     * \param newestItemId  ID of the newest item that has been marked as read
+     */
+    void folderMarkedRead(qint64 folderId, qint64 newestItemId);
+
+    /*!
+     * \brief Takes and processes data after a feed has been marked as read.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedReadFeed() signal to this slot.
+     *
+     * \param feedId        ID of the feed that has been marked as read
+     * \param newestItemId  ID of the newest item that has been marked as read
+     */
+    void feedMarkedRead(qint64 feedId, qint64 newestItemId);
 
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);
