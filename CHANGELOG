@@ -1,3 +1,13 @@
+libfuoten 0.3.0 - 2016-11-07
+* new: Article object (#25)
+* new: abstract article model (#21)
+* new: article storage in AbstractStorage and SQLiteStorage (#30)
+* new: request/update articles (#26, #27)
+* new: article marking (read/unread) (#28)
+* new: article starring (star/unstar) (#29)
+* new: article list model (#22)
+* new: article list filter model (#23)
+
 libfuoten 0.2.0 - 2016-11-02
 * new: Feed object (#24)
 * new: abstract feed model (#12)
