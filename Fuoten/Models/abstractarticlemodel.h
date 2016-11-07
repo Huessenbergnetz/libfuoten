@@ -123,6 +123,24 @@ protected Q_SLOTS:
      */
     void feedMarkedRead(qint64 feedId, qint64 newestItemId);
 
+    /*!
+     * \brief Takes and processes data after a folder has been deleted.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::deletedFolder() signal to this slots.
+     *
+     * \param folderId ID of the folder that has been deleted.
+     */
+    void folderDeleted(qint64 folderId);
+
+    /*!
+     * \brief Takes and processes data after a feed has been deleted.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::deletedFeed() signal to this slot.
+     *
+     * \param feedId ID of the feed that has been deleted.
+     */
+    void feedDeleted(qint64 feedId);
+
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);
 

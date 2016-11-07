@@ -42,6 +42,8 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::requestedItems, this, &AbstractArticleModel::itemsRequested);
     connect(s, &AbstractStorage::markedReadFolder, this, &AbstractArticleModel::folderMarkedRead);
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractArticleModel::feedMarkedRead);
+    connect(s, &AbstractStorage::deletedFolder, this, &AbstractArticleModel::folderDeleted);
+    connect(s, &AbstractStorage::deletedFeed, this, &AbstractArticleModel::feedDeleted);
 }
 
 
@@ -303,5 +305,82 @@ void AbstractArticleModel::feedMarkedRead(qint64 feedId, qint64 newestItemId)
             }
         }
 
+    }
+}
+
+
+
+void AbstractArticleModel::folderDeleted(qint64 folderId)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    if (!storage()) {
+        qWarning("Can not remove articles from model. No storage available.");
+        return;
+    }
+
+    IdList idsToDelete;
+    for (Article *a : articles()) {
+        if (a->folderId() == folderId) {
+            idsToDelete.append(a->id());
+        }
+    }
+
+    if (!idsToDelete.isEmpty()) {
+
+        Q_D(AbstractArticleModel);
+
+        for (int i = 0; i < idsToDelete.count(); ++i) {
+            int row = d->rowByID(idsToDelete.at(i));
+            if (row > -1) {
+                beginRemoveRows(QModelIndex(), row, row);
+
+                Article *a = d->articles.takeAt(row);
+
+                endRemoveRows();
+
+                a->deleteLater();
+            }
+        }
+    }
+}
+
+
+void AbstractArticleModel::feedDeleted(qint64 feedId)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    if (!storage()) {
+        qWarning("Can not remove articles from model. No storage available.");
+        return;
+    }
+
+    IdList idsToDelete;
+    for (Article *a : articles()) {
+        if (a->feedId() == feedId) {
+            idsToDelete.append(a->id());
+        }
+    }
+
+    if (!idsToDelete.isEmpty()) {
+
+        Q_D(AbstractArticleModel);
+
+        for (int i = 0; i < idsToDelete.count(); ++i) {
+            int row = d->rowByID(idsToDelete.at(i));
+            if (row > -1) {
+                beginRemoveRows(QModelIndex(), row, row);
+
+                Article *a = d->articles.takeAt(row);
+
+                endRemoveRows();
+
+                a->deleteLater();
+            }
+        }
     }
 }
