@@ -426,6 +426,17 @@ public:
      */
     void copy(BaseItem *other) override;
 
+    /*!
+     * \brief Marks this article as \c read or \c unread on the server.
+     *
+     * Will also mark the article as read\unread in the local \a storage, if a valid AbstractStorage object is available.
+     *
+     * \param unread    set to \c true to mark the item as unread, set to \c false to mark it as read
+     * \param config    pointer to an AbstractConfiguration object that containts the authentication credentials
+     * \param storage   pointer to an AbstractStorage object to update the local storage after successful request
+     */
+    Q_INVOKABLE void mark(bool unread, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
+
 
 Q_SIGNALS:
     /*!

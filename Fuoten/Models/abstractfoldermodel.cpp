@@ -21,6 +21,7 @@
 #include "abstractfoldermodel_p.h"
 #include "../Storage/abstractstorage.h"
 #include "../fuoten.h"
+#include "../article.h"
 
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -62,7 +63,7 @@ void AbstractFolderModel::handleStorageChanged()
 
     connect(s, &AbstractStorage::requestedItems, this, &AbstractFolderModel::updateCountValues);
     connect(s, &AbstractStorage::markedItems, this, &AbstractFolderModel::updateCountValues);
-    connect(s, &AbstractStorage::starredItems, this, &AbstractFolderModel::updateCountValues);
+    connect(s, &AbstractStorage::markedItem, this, &AbstractFolderModel::itemMarked);
 }
 
 
@@ -403,5 +404,39 @@ void AbstractFolderModel::clear()
         d->folders.clear();
 
         endRemoveRows();
+    }
+}
+
+
+
+void AbstractFolderModel::itemMarked(qint64 itemId, bool unread)
+{
+    if (!storage()) {
+        qWarning("Can not update feeds, no storage available.");
+        return;
+    }
+
+    Article *a = storage()->getArticle(itemId, -1);
+
+    if (a) {
+
+        QModelIndex idx = findByID(a->folderId());
+
+        if (idx.isValid()) {
+
+            Q_D(AbstractFolderModel);
+
+            Folder *f = d->folders.at(idx.row());
+
+            if (unread) {
+                f->setUnreadCount(f->unreadCount()+1);
+            } else {
+                f->setUnreadCount(f->unreadCount()-1);
+            }
+
+            Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+        }
+
+        delete a;
     }
 }

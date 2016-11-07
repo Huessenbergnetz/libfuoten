@@ -44,6 +44,7 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractArticleModel::feedMarkedRead);
     connect(s, &AbstractStorage::deletedFolder, this, &AbstractArticleModel::folderDeleted);
     connect(s, &AbstractStorage::deletedFeed, this, &AbstractArticleModel::feedDeleted);
+    connect(s, &AbstractStorage::markedItem, this, &AbstractArticleModel::itemMarked);
 }
 
 
@@ -382,5 +383,24 @@ void AbstractArticleModel::feedDeleted(qint64 feedId)
                 a->deleteLater();
             }
         }
+    }
+}
+
+
+
+void AbstractArticleModel::itemMarked(qint64 itemId, bool unread)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    QModelIndex idx = findByID(itemId);
+
+    if (idx.isValid()) {
+        Q_D(AbstractArticleModel);
+
+        d->articles.at(idx.row())->setUnread(unread);
+
+        Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
     }
 }

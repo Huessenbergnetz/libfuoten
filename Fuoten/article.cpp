@@ -19,6 +19,7 @@
  */
 
 #include "article_p.h"
+#include "API/markitem.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -368,4 +369,31 @@ void Article::copy(BaseItem *other)
     } else {
         qCritical("Failed to cast BaseItem to Article when trying to create a deep copy!");
     }
+}
+
+
+
+void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *storage)
+{
+    if (inOperation()) {
+        qWarning("Item is still in operation.");
+        return;
+    }
+
+    if (!config) {
+        qWarning("Can not mark item. No configuration available.");
+        return;
+    }
+
+    MarkItem *mi = new MarkItem(id(), unread, this);
+    mi->setConfiguration(config);
+    mi->setStorage(storage);
+    connect(mi, &MarkItem::succeeded, [=] () {
+        setUnread(unread);
+        setComponent(nullptr);
+    });
+    connect(mi, &MarkItem::succeeded, mi, &QObject::deleteLater);
+    setComponent(mi);
+    component()->execute();
+    Q_EMIT inOperationChanged(inOperation());
 }

@@ -2077,11 +2077,6 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 }
 
 
-//void SQLiteStorage::itemsUpdated(const QJsonDocument &json)
-//{
-
-//}
-
 
 void SQLiteStorage::itemsMarked(const IdList &idsMarkedRead, const IdList &idsMarkedUnread)
 {
@@ -2097,7 +2092,32 @@ void SQLiteStorage::itemsStarred(const QList<QPair<qint64, QString> > &articlesS
 
 void SQLiteStorage::itemMarked(qint64 itemId, bool unread)
 {
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
 
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("UPDATE items SET unread = ? WHERE id = ?"))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    q.addBindValue(unread);
+    q.addBindValue(itemId);
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    Q_EMIT markedItem(itemId, unread);
 }
 
 

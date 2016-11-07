@@ -141,9 +141,18 @@ protected Q_SLOTS:
      * \li AbstractStorage::requestedItems()
      * \li AbstractStorage::updatedItems()
      * \li AbstractStorage::markedItems()
-     * \li AbstractStorage::starredItems()
      */
     void updateCountValues();
+
+    /*!
+     * \brief Takes and processes data after an item/article has been marked as read.
+     *
+     * handleStorageChanged() will connnect the AbstractStorage::markedItem() signal to this slot.
+     *
+     * \param itemId    ID of the item/article that has been marked as read or unread
+     * \param unread    \c true if the article has been marked as unread, \c false if it has been marked as read
+     */
+    void itemMarked(qint64 itemId, bool unread);
 
 private:
     Q_DISABLE_COPY(AbstractFolderModel)

@@ -141,6 +141,16 @@ protected Q_SLOTS:
      */
     void feedDeleted(qint64 feedId);
 
+    /*!
+     * \brief Takes and processes data after an item/article has been marked as read/unread.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedItem() signal to this slot.
+     *
+     * \param itemId    ID of the article that has been marked as read or unread
+     * \param unread    \c true if the article has been marked as unread, \c false if it has been marked as read
+     */
+    void itemMarked(qint64 itemId, bool unread);
+
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);
 

@@ -20,6 +20,7 @@
 
 #include "abstractfeedmodel_p.h"
 #include "../Storage/abstractstorage.h"
+#include "../article.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -57,6 +58,7 @@ void AbstractFeedModel::handleStorageChanged()
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFeedModel::feedMarkedRead);
 
     connect(s, &AbstractStorage::requestedItems, this, &AbstractFeedModel::itemsRquested);
+    connect(s, &AbstractStorage::markedItem, this, &AbstractFeedModel::itemMarked);
 }
 
 
@@ -533,5 +535,38 @@ void AbstractFeedModel::itemsRquested(const IdList &updatedItems, const IdList &
         }
 
         qDeleteAll(fs);
+    }
+}
+
+
+void AbstractFeedModel::itemMarked(qint64 itemId, bool unread)
+{
+    if (!storage()) {
+        qWarning("Can not update feeds, no storage available.");
+        return;
+    }
+
+    Article *a = storage()->getArticle(itemId, -1);
+
+    if (a) {
+
+        QModelIndex idx = findByID(a->feedId());
+
+        if (idx.isValid()) {
+
+            Q_D(AbstractFeedModel);
+
+            Feed *f = d->feeds.at(idx.row());
+
+            if (unread) {
+                f->setUnreadCount(f->unreadCount()+1);
+            } else {
+                f->setUnreadCount(f->unreadCount()-1);
+            }
+
+            Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+        }
+
+        delete a;
     }
 }
