@@ -2276,3 +2276,35 @@ void SQLiteStorage::itemStarred(qint64 feedId, const QString &guidHash, bool sta
 
     Q_EMIT starredItem(feedId, guidHash, star);
 }
+
+
+void SQLiteStorage::allItemsMarkedRead(qint64 newestItemId)
+{
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE id <= ?"))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    q.addBindValue(newestItemId);
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    setTotalUnread(0);
+
+    Q_EMIT markedAllItemsRead(newestItemId);
+}

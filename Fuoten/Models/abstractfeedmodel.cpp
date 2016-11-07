@@ -60,6 +60,7 @@ void AbstractFeedModel::handleStorageChanged()
     connect(s, &AbstractStorage::requestedItems, this, &AbstractFeedModel::itemsRquested);
     connect(s, &AbstractStorage::markedItem, this, &AbstractFeedModel::itemMarked);
     connect(s, &AbstractStorage::markedItems, this, &AbstractFeedModel::itemsMarked);
+    connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractFeedModel::itemsMarked);
 }
 
 

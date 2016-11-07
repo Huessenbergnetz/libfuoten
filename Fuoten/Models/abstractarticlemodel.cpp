@@ -65,8 +65,10 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::deletedFolder, this, &AbstractArticleModel::folderDeleted);
     connect(s, &AbstractStorage::deletedFeed, this, &AbstractArticleModel::feedDeleted);
     connect(s, &AbstractStorage::markedItem, this, &AbstractArticleModel::itemMarked);
+    connect(s, &AbstractStorage::markedItems, this, &AbstractArticleModel::itemsMarked);
     connect(s, &AbstractStorage::starredItem, this, &AbstractArticleModel::itemStarred);
     connect(s, &AbstractStorage::starredItems, this, &AbstractArticleModel::itemsStarred);
+    connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractArticleModel::allItemsMarkedRead);
 }
 
 
@@ -429,6 +431,33 @@ void AbstractArticleModel::itemMarked(qint64 itemId, bool unread)
 
 
 
+void AbstractArticleModel::itemsMarked(const IdList &itemIds, bool unread)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    if (itemIds.isEmpty()) {
+        qWarning("The list of item ids to be marked as read is empty.");
+        return;
+    }
+
+    QHash<qint64, QModelIndex> idxs = findByIDs(itemIds);
+
+    if (!idxs.isEmpty()) {
+
+        Q_D(AbstractArticleModel);
+
+        QHash<qint64, QModelIndex>::const_iterator i = idxs.constBegin();
+        while (i != idxs.constEnd()) {
+            d->articles.at(i.value().row())->setUnread(unread);
+            Q_EMIT dataChanged(i.value(), i.value(), QVector<int>(Qt::DisplayRole));
+        }
+    }
+}
+
+
+
 void AbstractArticleModel::itemStarred(qint64 feedId, const QString &guidHash, bool starred)
 {
     if ((parentId() > 0) && (parentIdType() == FuotenEnums::Feed) && (parentId() != feedId)) {
@@ -467,4 +496,21 @@ void AbstractArticleModel::itemsStarred(const QList<QPair<qint64, QString> > &ar
     for (const QPair<qint64, QString> p : articles) {
         itemStarred(p.first, p.second, starred);
     }
+}
+
+
+
+void AbstractArticleModel::allItemsMarkedRead(qint64 newestItemId)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    for (Article *a : articles()) {
+        if (a->id() <= newestItemId) {
+            a->setUnread(false);
+        }
+    }
+
+    Q_EMIT dataChanged(index(0, 0), index(rowCount()-1, 0), QVector<int>(1, Qt::DisplayRole));
 }

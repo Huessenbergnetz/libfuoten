@@ -173,7 +173,9 @@ protected Q_SLOTS:
      *
      * Will update the unreadCount property of all Feed objects in the model.
      *
-     * handleStorageChanged() will connect the AbstractStorage::markedItems() signal to this slot.
+     * handleStorageChanged() will connect the following signals to this slot:
+     * \li AbstractStorage::markedItems()
+     * \li AbstractStorage::markedAllItemsRead()
      */
     void itemsMarked();
 

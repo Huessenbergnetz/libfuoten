@@ -156,7 +156,7 @@ public:
      * \brief Returns the newest item/article ID for the given type.
      *
      * Supported Types: FuotenEnums::Feed, FuotenEnums::Folder, FuotenEnums::All. For folder and feed type
-     * a valid \a id has be provided that identifieds the folder or feed.
+     * a valid \a id has to be provided that identifieds the folder or feed.
      *
      * If the type does not match one of the supported or if there are not items, \c -1 is returned.
      */
@@ -465,7 +465,7 @@ public Q_SLOTS:
     virtual void itemMarked(qint64 itemId, bool unread) = 0;
 
     /*!
-     * \brief Receives the reply data fro the StarItem request.
+     * \brief Receives the reply data from the StarItem request.
      *
      * Will star or unstar the item/article identified by \a itemId and \a guidHash in the local storage.
      *
@@ -474,6 +474,13 @@ public Q_SLOTS:
      * \param star      \c true if the article has been starred, \c false if it has been unstarred
      */
     virtual void itemStarred(qint64 feedId, const QString &guidHash, bool star) = 0;
+
+    /*!
+     * \brief Receives the reply data from the MarkAllItemsRead request.
+     *
+     * Will mark all items in the local database as read which have an ID lower or equal to \a newestItemId.
+     */
+    virtual void allItemsMarkedRead(qint64 newestItemId) = 0;
 
 protected:
     /*!
@@ -678,6 +685,15 @@ Q_SIGNALS:
      * \param starred   \c true if the article has been starred, \c false if it has been unstarred
      */
     void starredItem(qint64 feedId, const QString &guidHash, bool starred);
+
+    /*!
+     * \brief Emit this signal after all items/articles have been marked as read.
+     *
+     * Best location to emit this signal is your implementation of allItemsMarkedRead().
+     *
+     * \param newestItemId  highest/newest ID of the local available items/articles
+     */
+    void markedAllItemsRead(qint64 newestItemId);
 
     /*!
      * \brief Emit this after getArticlesAsync() has been called and articles have been queried.

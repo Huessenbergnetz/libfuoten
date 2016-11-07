@@ -172,6 +172,16 @@ protected Q_SLOTS:
     void itemMarked(qint64 itemId, bool unread);
 
     /*!
+     * \brief Takes and processes data after a list of items/articles has been marked as read/unread.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedItems() signal to this slot.
+     *
+     * \param itemIds   list of IDs of items/articles that have been marked as read/unread
+     * \param unread    \c true if the items/articles in the list have been marked as unread, \c false if they have been marked as read
+     */
+    void itemsMarked(const IdList &itemIds, bool unread);
+
+    /*!
      * \brief Takes and processes data after an item/article has been starred/unstarred.
      *
      * handleStorageChanged() will connect the AbstractStorage::starredItem() signal to this slot.
@@ -191,6 +201,12 @@ protected Q_SLOTS:
      * \param starred   \c true if the articles in the list have been starred, \c false if the have been unstarred
      */
     void itemsStarred(const QList<QPair<qint64,QString>> &articles, bool starred);
+
+    /*!
+     * \brief Takes and processes data after all items/articles have been marked as read.
+     * \param newestItemId  highest/newest ID of local available items/articles
+     */
+    void allItemsMarkedRead(qint64 newestItemId);
 
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);

@@ -141,6 +141,7 @@ protected Q_SLOTS:
      * \li AbstractStorage::requestedItems()
      * \li AbstractStorage::updatedItems()
      * \li AbstractStorage::markedItems()
+     * \li AbstractStorage::markedAllItemsRead()
      */
     void updateCountValues();
 
