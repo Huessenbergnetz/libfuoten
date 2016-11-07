@@ -109,7 +109,7 @@ void MarkItem::successCallback()
     setInOperation(false);
 
 #ifdef QT_DEBUG
-    qDebug() << "Successfully marked the item on the server as" << (unread() ? "unread" : "read");;
+    qDebug() << "Successfully marked the item on the server as" << (unread() ? "unread" : "read");
 #endif
 
     Q_EMIT succeeded(itemId(), unread());

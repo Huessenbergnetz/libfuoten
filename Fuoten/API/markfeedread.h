@@ -136,7 +136,7 @@ protected:
     MarkFeedRead(MarkFeedReadPrivate &dd, QObject *parent = nullptr);
 
     /*!
-     * \brief Finished the feed marking if the request was successful.
+     * \brief Finishes the feed marking if the request was successful.
      *
      * If Component::storage contains a valid pointer, the AbstractStorage::feedMarkedRead() function will be called to
      * update the local storage. After that the Component::inOperation property will be set to false and the succeeded() signal
