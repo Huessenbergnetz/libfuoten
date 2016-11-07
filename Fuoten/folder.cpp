@@ -195,3 +195,18 @@ void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage)
     component()->execute();
     Q_EMIT inOperationChanged(true);
 }
+
+
+void Folder::copy(BaseItem *other)
+{
+    Folder *o = qobject_cast<Folder*>(other);
+
+    if (o && (o->id() == id())) {
+        setName(o->name());
+        setFeedCount(o->feedCount());
+        setUnreadCount(o->unreadCount());
+    } else {
+        qCritical("Failed to cast BaseItem to Folder when trying to create a deep copy!");
+    }
+
+}

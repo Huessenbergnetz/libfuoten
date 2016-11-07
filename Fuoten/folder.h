@@ -150,6 +150,13 @@ public:
      */
     Q_INVOKABLE void markAsRead(Fuoten::AbstractConfiguration * config, Fuoten::AbstractStorage *storage);
 
+    /*!
+     * \brief Makes a deep copy of \a other.
+     *
+     * \a other has to be a Folder object.
+     */
+    void copy(BaseItem *other) override;
+
 Q_SIGNALS:
     /*!
      * \brief This signal will be emitted if the folder name changes.
