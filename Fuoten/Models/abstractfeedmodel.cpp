@@ -59,6 +59,7 @@ void AbstractFeedModel::handleStorageChanged()
 
     connect(s, &AbstractStorage::requestedItems, this, &AbstractFeedModel::itemsRquested);
     connect(s, &AbstractStorage::markedItem, this, &AbstractFeedModel::itemMarked);
+    connect(s, &AbstractStorage::markedItems, this, &AbstractFeedModel::itemsMarked);
 }
 
 
@@ -541,6 +542,10 @@ void AbstractFeedModel::itemsRquested(const IdList &updatedItems, const IdList &
 
 void AbstractFeedModel::itemMarked(qint64 itemId, bool unread)
 {
+    if (rowCount() <= 0) {
+        return;
+    }
+
     if (!storage()) {
         qWarning("Can not update feeds, no storage available.");
         return;
@@ -568,5 +573,39 @@ void AbstractFeedModel::itemMarked(qint64 itemId, bool unread)
         }
 
         delete a;
+    }
+}
+
+
+
+void AbstractFeedModel::itemsMarked()
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    if (!storage()) {
+        qWarning("Can not update feeds, no storage available.");
+        return;
+    }
+
+    QueryArgs qa;
+    qa.parentId = parentId();
+
+    const QList<Feed*> fs = storage()->getFeeds(qa);
+
+    if (!fs.isEmpty()) {
+        Q_D(AbstractFeedModel);
+
+        for (Feed *f : fs) {
+            int row = d->rowByID(f->id());
+            if (row > -1) {
+                d->feeds.at(row)->setUnreadCount(f->unreadCount());
+            }
+        }
+
+        Q_EMIT dataChanged(index(0, 0), index(rowCount()-1, 0), QVector<int>(1, Qt::DisplayRole));
+
+        qDeleteAll(fs);
     }
 }

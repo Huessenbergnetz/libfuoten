@@ -829,6 +829,16 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
         return;
     }
 
+    if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    if (q.next()) {
+        setTotalUnread(q.value(0).toInt());
+    }
+
     Q_EMIT markedReadFolder(id, newestItem);
 }
 
@@ -1459,12 +1469,13 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0 WHERE feedId = ? AND id <= ?"))) {
+    if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId = ? AND id <= ?"))) {
         //% "Failed to prepare database query."
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
         return;
     }
 
+    q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
     q.addBindValue(id);
     q.addBindValue(newestItem);
 
@@ -1472,6 +1483,16 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
         //% "Failed to execute database query."
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
         return;
+    }
+
+    if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    if (q.next()) {
+        setTotalUnread(q.value(0).toInt());
     }
 
     Q_EMIT markedReadFeed(id, newestItem);
@@ -2078,9 +2099,45 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 
 
 
-void SQLiteStorage::itemsMarked(const IdList &idsMarkedRead, const IdList &idsMarkedUnread)
+void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
 {
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
 
+    if (itemIds.isEmpty()) {
+        qWarning("List of marked articles is empty.");
+        return;
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id IN (%1)").arg(d->intListToString(itemIds)))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    q.addBindValue(unread);
+    q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    if (unread) {
+        setTotalUnread(totalUnread() + itemIds.count());
+    } else {
+        setTotalUnread(totalUnread() - itemIds.count());
+    }
+
+    Q_EMIT markedItems(itemIds, unread);
 }
 
 
@@ -2102,19 +2159,26 @@ void SQLiteStorage::itemMarked(qint64 itemId, bool unread)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE items SET unread = ? WHERE id = ?"))) {
+    if (!q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id = ?"))) {
         //% "Failed to prepare database query."
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
         return;
     }
 
     q.addBindValue(unread);
+    q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
     q.addBindValue(itemId);
 
     if (!q.exec()) {
         //% "Failed to execute database query."
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
         return;
+    }
+
+    if (unread) {
+        setTotalUnread(totalUnread()+1);
+    } else {
+        setTotalUnread(totalUnread()-1);
     }
 
     Q_EMIT markedItem(itemId, unread);

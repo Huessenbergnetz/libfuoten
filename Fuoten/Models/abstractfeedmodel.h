@@ -168,6 +168,15 @@ protected Q_SLOTS:
      */
     void itemMarked(qint64 itemId, bool unread);
 
+    /*!
+     * \brief Should be called after a set of items has been marked as read or unread.
+     *
+     * Will update the unreadCount property of all Feed objects in the model.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedItems() signal to this slot.
+     */
+    void itemsMarked();
+
 protected:
     AbstractFeedModel(AbstractFeedModelPrivate &dd, QObject *parent = nullptr);
 

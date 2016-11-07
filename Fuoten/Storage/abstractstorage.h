@@ -434,13 +434,14 @@ public Q_SLOTS:
     /*!
      * \brief Receives the reply data for the MarkItems request.
      *
-     * Will mark the items identified by their \a id in the lists either as read or as unread.
+     * Will mark the items identified by their ID in the \a itemIds as read if \a unread is set to \c false,
+     * otherwise it will mark them as unread.
      * You should emit markedItems() in your implementation after you processed the data to update connected models.
      *
-     * \param idsMarkedRead     IDs of items that have been marked as read
-     * \param idsMarkedUnread   IDs of items that have been marked as unread
+     * \param itemIds   IDs of articles that have been marked as read or unread
+     * \param unread    \c true if the articles have been marked as unread, \c false if marked as read
      */
-    virtual void itemsMarked(const IdList &idsMarkedRead, const IdList &idsMarkedUnread) = 0;
+    virtual void itemsMarked(const IdList &itemIds, bool unread) = 0;
 
     /*!
      * \brief Receives the reply data for the StarItems request.
@@ -642,10 +643,10 @@ Q_SIGNALS:
      *
      * The lists have to conatin the item/article IDs that haven been marked as read or unread.
      *
-     * \param idsMarkedRead     IDs of items that have been marked as read
-     * \param idsMarkedUnread   IDs of items that have been marked as unread
+     * \param itemIds   IDs of articles that have been marked as read or unread
+     * \param unread    \c true if the articles have been marked as unread, \c false if marked as read
      */
-    void markedItems(const IdList &idsMarkedRead, const IdList &idsMarkedUnread);
+    void markedItems(const IdList &itemIds, bool unread);
 
     /*!
      * \brief Emit this after items/articles have been starred or unstarred.
