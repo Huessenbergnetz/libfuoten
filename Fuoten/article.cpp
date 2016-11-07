@@ -343,24 +343,29 @@ QString Article::humanPubDate() const { Q_D(const Article); return d->humanPubDa
 
 
 
-void Article::clone(Article *other)
+void Article::copy(BaseItem *other)
 {
-    setId(other->id());
-    setFeedId(other->feedId());
-    setFeedTitle(other->feedTitle());
-    setGuid(other->guid());
-    setGuidHash(other->guidHash());
-    setUrl(other->url());
-    setTitle(other->title());
-    setAuthor(other->author());
-    setPubDate(other->pubDate());
-    setBody(other->body());
-    setEnclosureLink(other->enclosureLink());
-    setEnclosureMime(other->enclosureMime());
-    setUnread(other->unread());
-    setStarred(other->starred());
-    setLastModified(other->lastModified());
-    setFingerprint(other->fingerprint());
-    setFolderId(other->folderId());
-    setFolderName(other->folderName());
+    Article *o = qobject_cast<Article*>(other);
+
+    if (o && (o->id() == id())) {
+        setFeedId(o->feedId());
+        setFeedTitle(o->feedTitle());
+        setGuid(o->guid());
+        setGuidHash(o->guidHash());
+        setUrl(o->url());
+        setTitle(o->title());
+        setAuthor(o->author());
+        setPubDate(o->pubDate());
+        setBody(o->body());
+        setEnclosureLink(o->enclosureLink());
+        setEnclosureMime(o->enclosureMime());
+        setUnread(o->unread());
+        setStarred(o->starred());
+        setLastModified(o->lastModified());
+        setFingerprint(o->fingerprint());
+        setFolderId(o->folderId());
+        setFolderName(o->folderName());
+    } else {
+        qCritical("Failed to cast BaseItem to Article when trying to create a deep copy!");
+    }
 }

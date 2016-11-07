@@ -202,7 +202,7 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
                 for (Article *a : upits) {
 
                     QModelIndex idx = idxs.value(a->id());
-                    d->articles.at(idx.row())->clone(a);
+                    d->articles.at(idx.row())->copy(a);
                     Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
                 }
                 qDeleteAll(upits);

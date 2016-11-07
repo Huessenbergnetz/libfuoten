@@ -420,9 +420,11 @@ public:
     void setFolderName(const QString &nFolderName);
 
     /*!
-     * \brief Copies the property values of \a other into this object.
+     * \brief Makes a deep copy of \a other.
+     *
+     * \a other has to be an Article object.
      */
-    void clone(Article *other);
+    void copy(BaseItem *other) override;
 
 
 Q_SIGNALS:
