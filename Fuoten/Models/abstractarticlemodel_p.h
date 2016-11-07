@@ -42,6 +42,23 @@ public:
         return idx;
     }
 
+    int rowByGuidHash(const QString &guidHash) {
+        if (articles.isEmpty()) {
+            return -1;
+        }
+
+        int idx = -1;
+
+        for (int i = 0; i < articles.count(); ++i) {
+            if (articles.at(i)->guidHash() == guidHash) {
+                idx = i;
+                break;
+            }
+        }
+
+        return idx;
+    }
+
     FuotenEnums::Type parentIdType;
     QList<Article*> articles;
 

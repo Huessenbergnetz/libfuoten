@@ -127,7 +127,7 @@ public Q_SLOTS:
     void itemsMarked(const IdList &itemIds, bool unread) override;
     void itemsStarred(const QList<QPair<qint64, QString>> &articlesStarred, const QList<QPair<qint64, QString>> &articlesUnstarred) override;
     void itemMarked(qint64 itemId, bool unread) override;
-    void itemStarred(qint64 itemId, const QString &guidHash, bool starred) override;
+    void itemStarred(qint64 feedId, const QString &guidHash, bool star) override;
 
 private:
     Q_DECLARE_PRIVATE(SQLiteStorage)

@@ -20,6 +20,7 @@
 
 #include "article_p.h"
 #include "API/markitem.h"
+#include "API/staritem.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -394,6 +395,33 @@ void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *
     });
     connect(mi, &MarkItem::succeeded, mi, &QObject::deleteLater);
     setComponent(mi);
+    component()->execute();
+    Q_EMIT inOperationChanged(inOperation());
+}
+
+
+
+void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage *storage)
+{
+    if (inOperation()) {
+        qWarning("Item is still in operation.");
+        return;
+    }
+
+    if (!config) {
+        qWarning("Can not mark item. No configuration available.");
+        return;
+    }
+
+    StarItem *si = new StarItem(feedId(), guidHash(), starred, this);
+    si->setConfiguration(config);
+    si->setStorage(storage);
+    connect(si, &StarItem::succeeded, [=] () {
+        setStarred(starred);
+        setComponent(nullptr);
+    });
+    connect(si, &StarItem::succeeded, si, &QObject::deleteLater);
+    setComponent(si);
     component()->execute();
     Q_EMIT inOperationChanged(inOperation());
 }

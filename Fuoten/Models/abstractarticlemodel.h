@@ -151,6 +151,17 @@ protected Q_SLOTS:
      */
     void itemMarked(qint64 itemId, bool unread);
 
+    /*!
+     * \brief Takes and processes data after an item/article has been starred/unstarred.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::starredItem() signal to this slot.
+     *
+     * \param feedId    ID of the feed the article/item that has been starred/unstarred belongs to
+     * \param guidHash  GUID hash of the article/item that has been starred/unstarred
+     * \param starred   \c true if the article/item has been starred, \c false if it has been unstarred
+     */
+    void itemStarred(qint64 feedId, const QString &guidHash, bool starred);
+
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);
 

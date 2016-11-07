@@ -2186,7 +2186,40 @@ void SQLiteStorage::itemMarked(qint64 itemId, bool unread)
 
 
 
-void SQLiteStorage::itemStarred(qint64 itemId, const QString &guidHash, bool starred)
+void SQLiteStorage::itemStarred(qint64 feedId, const QString &guidHash, bool star)
 {
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
 
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(QStringLiteral("UPDATE items SET starred = ?, lastModified = ? WHERE feedId = ? and guidHash = ?"))) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    q.addBindValue(star);
+    q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+    q.addBindValue(feedId);
+    q.addBindValue(guidHash);
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    if (star) {
+        setStarred(starred() + 1);
+    } else {
+        setStarred(starred() - 1);
+    }
+
+    Q_EMIT starredItem(feedId, guidHash, star);
 }

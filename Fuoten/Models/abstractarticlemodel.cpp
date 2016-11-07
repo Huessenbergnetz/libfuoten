@@ -45,6 +45,7 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::deletedFolder, this, &AbstractArticleModel::folderDeleted);
     connect(s, &AbstractStorage::deletedFeed, this, &AbstractArticleModel::feedDeleted);
     connect(s, &AbstractStorage::markedItem, this, &AbstractArticleModel::itemMarked);
+    connect(s, &AbstractStorage::starredItem, this, &AbstractArticleModel::itemStarred);
 }
 
 
@@ -402,5 +403,30 @@ void AbstractArticleModel::itemMarked(qint64 itemId, bool unread)
         d->articles.at(idx.row())->setUnread(unread);
 
         Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+    }
+}
+
+
+
+void AbstractArticleModel::itemStarred(qint64 feedId, const QString &guidHash, bool starred)
+{
+    if ((parentId() > 0) && (parentIdType() == FuotenEnums::Feed) && (parentId() != feedId)) {
+        return;
+    }
+
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    Q_D(AbstractArticleModel);
+
+    int row = d->rowByGuidHash(guidHash);
+
+    if (row > -1) {
+        Article *a = d->articles.at(row);
+        if (a->feedId() == feedId) {
+            a->setStarred(starred);
+            Q_EMIT dataChanged(index(row, 0), index(row, 0), QVector<int>(1, Qt::DisplayRole));
+        }
     }
 }

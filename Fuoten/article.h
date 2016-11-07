@@ -427,7 +427,7 @@ public:
     void copy(BaseItem *other) override;
 
     /*!
-     * \brief Marks this article as \c read or \c unread on the server.
+     * \brief Marks this article as \a read or \a unread on the server.
      *
      * Will also mark the article as read\unread in the local \a storage, if a valid AbstractStorage object is available.
      *
@@ -436,6 +436,18 @@ public:
      * \param storage   pointer to an AbstractStorage object to update the local storage after successful request
      */
     Q_INVOKABLE void mark(bool unread, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
+
+
+    /*!
+     * \brief Marks this article as \a starred or \a unstarred on the remote server.
+     *
+     * Will also mark the article as starred/unstarred in the local \a storage if a valid AbstractStorage object is available.
+     *
+     * \param starred   ste to \c true to mark the item as starred, set to \c false to mark it as unstarred
+     * \param config    pointer to an AbstractConfiguration object that containts the authentication credentials
+     * \param storage   pointer to an AbstractStorage object to update the local storage after successful request
+     */
+    Q_INVOKABLE void star(bool starred, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
 
 
 Q_SIGNALS:

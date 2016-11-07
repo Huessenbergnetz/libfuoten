@@ -469,11 +469,11 @@ public Q_SLOTS:
      *
      * Will star or unstar the item/article identified by \a itemId and \a guidHash in the local storage.
      *
-     * \param itemId    ID of the item/article that has been starred or unstarred
+     * \param feedId    ID of the feed the item/article that has been starred or unstarred belongs to
      * \param guidHash  global unique ID hash of the item/article that has been starred or unstarred
-     * \param starred   \c true if the article has been starred, \c false if it has been unstarred
+     * \param star      \c true if the article has been starred, \c false if it has been unstarred
      */
-    virtual void itemStarred(qint64 itemId, const QString &guidHash, bool starred) = 0;
+    virtual void itemStarred(qint64 feedId, const QString &guidHash, bool star) = 0;
 
 protected:
     /*!
@@ -673,11 +673,11 @@ Q_SIGNALS:
      *
      * Best location to emit this signal is your implementation of itemStarred().
      *
-     * \param itemId    the ID of the item/article that has been starred or unstarred
+     * \param feedId    the ID of the feed the item/article that has been starred or unstarred belongs to
      * \param guidHash  the global unique ID hash of the article that has been starred or unstarred
      * \param starred   \c true if the item has been starred, \c false if it has been unstarred
      */
-    void starredItem(qint64 itemId, const QString &guidHash, bool starred);
+    void starredItem(qint64 feedId, const QString &guidHash, bool starred);
 
     /*!
      * \brief Emit this after getArticlesAsync() has been called and articles have been queried.
