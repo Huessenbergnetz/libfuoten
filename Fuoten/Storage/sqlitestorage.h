@@ -109,6 +109,11 @@ public:
      */
     qint64 getNewestItemId(FuotenEnums::Type type = FuotenEnums::All, qint64 id = -1) override;
 
+    /*!
+     * \brief Returns the full body of an Article identified by \a id.
+     */
+    Q_INVOKABLE QString getArticleBody(qint64 id) override;
+
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;

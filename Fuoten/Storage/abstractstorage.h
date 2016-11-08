@@ -236,6 +236,11 @@ public:
      */
     virtual Article *getArticle(qint64 id, int bodyLimit = 0) = 0;
 
+    /*!
+     * \brief Returns the full body of an Article identified by \a id.
+     */
+    Q_INVOKABLE virtual QString getArticleBody(qint64 id) = 0;
+
 public Q_SLOTS:
     /*!
      * \brief Receives the reply data of the GetFolders request.
