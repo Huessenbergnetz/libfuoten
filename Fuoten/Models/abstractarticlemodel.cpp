@@ -260,6 +260,9 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
             qa.inIds = idxs.keys();
             qa.inIdsType = FuotenEnums::Item;
             qa.bodyLimit = bodyLimit();
+            if ((parentId() < 0) && (parentIdType() == FuotenEnums::Starred)) {
+                qa.starredOnly = true;
+            }
             const QList<Article*> upits = storage()->getArticles(qa);
 
             if (!upits.isEmpty()) {
@@ -282,6 +285,9 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
         qa.inIds = newItems;
         qa.inIdsType = FuotenEnums::Item;
         qa.bodyLimit = bodyLimit();
+        if ((parentId() < 0) && (parentIdType() == FuotenEnums::Starred)) {
+            qa.starredOnly = true;
+        }
         const QList<Article*> newits = storage()->getArticles(qa);
 
         if (!newits.isEmpty()) {
