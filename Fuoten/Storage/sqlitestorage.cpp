@@ -1667,10 +1667,19 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
     while (q.next()) {
         QString body;
 
-        if (args.bodyLimit == 0) {
+        if (args.bodyLimit > -1) {
+
             body = q.value(9).toString();
-        } else if (args.bodyLimit > 0) {
-            body = limitBody(q.value(9).toString(), args.bodyLimit);
+
+            if (args.bodyLimit > 0) {
+
+//                body = body.left(5*args.bodyLimit);
+//                body.remove(QRegularExpression(QStringLiteral("<[^>]*>")));
+                body.replace(QRegularExpression(QStringLiteral("<[^>]*>")), QStringLiteral(" "));
+                body = body.simplified();
+                body = body.left(args.bodyLimit);
+            }
+
         }
 
         articles.append(new Article(q.value(0).toLongLong(),
@@ -1830,13 +1839,13 @@ void GetArticlesAsyncWorker::run()
 
             body = q.value(9).toString();
 
-            if (body.length() > m_args.bodyLimit) {
+            if (m_args.bodyLimit > 0) {
 
-                body = body.left(2*m_args.bodyLimit);
-                body.remove(QRegularExpression(QStringLiteral("<[^>]*>")));
+//                body = body.left(5*m_args.bodyLimit);
+                body.replace(QRegularExpression(QStringLiteral("<[^>]*>")), QStringLiteral(" "));
+//                body.remove(QRegularExpression(QStringLiteral("<[^>]*>")));
                 body = body.simplified();
                 body = body.left(m_args.bodyLimit);
-
             }
 
         }
