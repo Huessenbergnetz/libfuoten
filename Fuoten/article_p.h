@@ -74,7 +74,7 @@ public:
         folderId(nFolderId),
         folderName(nFolderName)
     {
-        createHumanPubDate();
+        createHumanPubDateTime();
     }
 
     ArticlePrivate(Article *other) :
@@ -99,35 +99,60 @@ public:
             fingerprint = other->fingerprint();
             folderId = other->folderId();
             folderName = other->folderName();
-            createHumanPubDate();
+            createHumanPubDateTime();
         }
     }
 
-    void createHumanPubDate() {
-        QDateTime lt = pubDate.toLocalTime();
-        QDate cd = QDate::currentDate();
-        if (lt.date() == cd) {
-            //% "Today, %1"
-            humanPubDate = qtTrId("libfuoten-today-datetime").arg(
-                                                            //% "hh:mm"
-                                                            lt.toString(qtTrId("libfuoten-time-format")
-                                                           ));
-        } else if (lt.daysTo(QDateTime::currentDateTime()) == 1 ) {
-            //% "Yesterday, %1"
-            humanPubDate = qtTrId("libfuoten-yesterday-datetime").arg(
-                        //% "hh:mm"
-                        lt.toString(qtTrId("libfuoten-time-format")
-                       ));
-        } else if (lt.daysTo(QDateTime::currentDateTime()) < 7) {
-            //% "dddd, hh:mm"
-            humanPubDate = lt.toString(qtTrId("libfuoten-day-time-format"));
-        } else if (lt.daysTo(QDateTime::currentDateTime()) < 365) {
-            //% "d. MMMM, hh:mm"
-            humanPubDate = lt.toString(qtTrId("libfuoten-short-datetime"));
+    void createHumanPubDateTime() {
+//        QDateTime lt = pubDate.toLocalTime();
+//        QDate cd = QDate::currentDate();
+//        if (lt.date() == cd) {
+//            //% "Today, %1"
+//            humanPubDate = qtTrId("libfuoten-today-datetime").arg(
+//                                                            //% "hh:mm"
+//                                                            lt.toString(qtTrId("libfuoten-time-format")
+//                                                           ));
+//        } else if (lt.daysTo(QDateTime::currentDateTime()) == 1 ) {
+//            //% "Yesterday, %1"
+//            humanPubDate = qtTrId("libfuoten-yesterday-datetime").arg(
+//                        //% "hh:mm"
+//                        lt.toString(qtTrId("libfuoten-time-format")
+//                       ));
+//        } else if (lt.daysTo(QDateTime::currentDateTime()) < 7) {
+//            //% "dddd, hh:mm"
+//            humanPubDate = lt.toString(qtTrId("libfuoten-day-time-format"));
+//        } else if (lt.daysTo(QDateTime::currentDateTime()) < 365) {
+//            //% "d. MMMM, hh:mm"
+//            humanPubDate = lt.toString(qtTrId("libfuoten-short-datetime"));
+//        } else {
+//            //% "d. MMM yyyy, hh:mm"
+//            humanPubDate = lt.toString(qtTrId("libfuoten-date-time-format"));
+//        }
+
+
+        QTime lt = pubDate.toLocalTime().time();    // the local publication time
+        QDate ld = pubDate.toLocalTime().date();    // the local publication date
+        QDate cd = QDate::currentDate();            // the current date
+
+        qint64 dayDiff = ld.daysTo(cd);
+        if (dayDiff == 0) {
+            //% "Today"
+            humanPubDate = qtTrId("libfuoten-tody");
+        } else if (dayDiff == 1) {
+            //% "Yesterday"
+            humanPubDate = qtTrId("libfuoten-yesterday");
+        } else if (dayDiff < 7) {
+            humanPubDate = ld.toString(QStringLiteral("dddd"));
+        } else if ((dayDiff < 365) && (dayDiff > -365)) {
+            //% "d. MMMM"
+            humanPubDate = ld.toString(qtTrId("libfuoten-short-date-format"));
         } else {
-            //% "d. MMM yyyy, hh:mm"
-            humanPubDate = lt.toString(qtTrId("libfuoten-date-time-format"));
+            //% "d. MMM yyyy"
+            humanPubDate = ld.toString(qtTrId("libfuoten-long-date-format"));
         }
+
+        //% "hh:mm"
+        humanPubTime = lt.toString(qtTrId("libfuoten-time-format"));
     }
 
     qint64 feedId;
@@ -148,6 +173,7 @@ public:
     qint64 folderId;
     QString folderName;
     QString humanPubDate;
+    QString humanPubTime;
 
 private:
     Q_DISABLE_COPY(ArticlePrivate)

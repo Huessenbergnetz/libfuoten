@@ -195,7 +195,7 @@ class FUOTENSHARED_EXPORT Article : public BaseItem
     /*!
      * \brief Returns a human readable string of the publication date.
      *
-     * Will automatically created from pubDate.
+     * Will be automatically created from pubDate.
      *
      * \par Access functions:
      * <TABLE><TR><TD>QString</TD><TD>getHumanPubDate() const</TD></TR></TABLE>
@@ -203,6 +203,15 @@ class FUOTENSHARED_EXPORT Article : public BaseItem
      * <TABLE><TR><TD>void</TD><TD>humanPubDateChanged(const QString &humanPubDate)</TD></TR></TABLE>
      */
     Q_PROPERTY(QString humanPubDate READ humanPubDate NOTIFY humanPubDateChanged)
+    /*!
+     * \brief Return a human readable string of the publication time.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>QString</TD><TD>humanPubTime() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>humanPubTimeChanged(const QString &humanPubTime)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(QString humanPubTime READ humanPubTime NOTIFY humanPubTimeChanged)
 
 public:
     /*!
@@ -311,7 +320,11 @@ public:
      * \sa Article::humanPubDateChanged()
      */
     QString humanPubDate() const;
-
+    /*!
+     * \brief Getter function for the \link Article::humanPubTime humanPubTime \endlink property.
+     * \sa Article::humanPubTimeChanged()
+     */
+    QString humanPubTime() const;
 
 
 
@@ -541,6 +554,11 @@ Q_SIGNALS:
      * \sa Article::getHumanPubDate()
      */
     void humanPubDateChanged(const QString &humanPubDate);
+    /*!
+     * \brief This is emitted if the value of the \link Article::humanPubTime humanPubTime \endlink property changes.
+     * \sa Article::humanPubTime()
+     */
+    void humanPubTimeChanged(const QString &humanPubTime);
 
 protected:
     Article(ArticlePrivate &dd, QObject *parent = nullptr);
