@@ -86,7 +86,13 @@ bool ArticleListFilterModel::lessThan(const QModelIndex &left, const QModelIndex
         l = sourceModel()->data(right).value<Article*>();
     }
 
-    return l->pubDate() < r->pubDate();
+    if (l->pubDate() < r->pubDate()) {
+        return true;
+    } else if (l->pubDate() > r->pubDate()) {
+        return false;
+    }
+
+    return l->id() < r->id();
 }
 
 
