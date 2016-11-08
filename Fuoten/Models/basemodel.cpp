@@ -139,6 +139,73 @@ void BaseModel::setDoubleParentId(double nDoubleParentId)
 }
 
 
+FuotenEnums::SortingRole BaseModel::sortingRole() const { Q_D(const BaseModel); return d->sortingRole; }
+
+void BaseModel::setSortingRole(FuotenEnums::SortingRole nSortingRole)
+{
+    Q_D(BaseModel);
+    if (nSortingRole != d->sortingRole) {
+        d->sortingRole = nSortingRole;
+#ifdef QT_DEBUG
+        qDebug() << "Changed sortingRole to" << d->sortingRole;
+#endif
+        Q_EMIT sortingRoleChanged(sortingRole());
+    }
+}
+
+
+
+
+Qt::SortOrder BaseModel::sortOrder() const { Q_D(const BaseModel); return d->sortOrder; }
+
+void BaseModel::setSortOrder(Qt::SortOrder nSortOrder)
+{
+    Q_D(BaseModel);
+    if (nSortOrder != d->sortOrder) {
+        d->sortOrder = nSortOrder;
+#ifdef QT_DEBUG
+        qDebug() << "Changed sortOrder to" << d->sortOrder;
+#endif
+        Q_EMIT sortOrderChanged(sortOrder());
+    }
+}
+
+
+
+
+bool BaseModel::unreadOnly() const { Q_D(const BaseModel); return d->unreadOnly; }
+
+void BaseModel::setUnreadOnly(bool nUnreadOnly)
+{
+    Q_D(BaseModel);
+    if (nUnreadOnly != d->unreadOnly) {
+        d->unreadOnly = nUnreadOnly;
+#ifdef QT_DEBUG
+        qDebug() << "Changed unreadOnly to" << d->unreadOnly;
+#endif
+        Q_EMIT unreadOnlyChanged(unreadOnly());
+    }
+}
+
+
+
+
+int BaseModel::limit() const { Q_D(const BaseModel); return d->limit; }
+
+void BaseModel::setLimit(int nLimit)
+{
+    Q_D(BaseModel);
+    if (nLimit != d->limit) {
+        d->limit = nLimit;
+#ifdef QT_DEBUG
+        qDebug() << "Changed limit to" << d->limit;
+#endif
+        Q_EMIT limitChanged(limit());
+    }
+}
+
+
+
 
 void BaseModel::reload()
 {

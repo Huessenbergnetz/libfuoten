@@ -96,6 +96,11 @@ public:
     Q_INVOKABLE void load(const QString &locale = QString()) override;
 
     /*!
+     * \brief Reloads the complete underlying FeedListModel.
+     */
+    Q_INVOKABLE void reload(const QString &locale = QString()) override;
+
+    /*!
      * \brief Returns true if the pinned status should be respected on sorting.
      * \sa respectPinned
      */

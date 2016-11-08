@@ -37,7 +37,7 @@ struct FUOTENSHARED_EXPORT QueryArgs {
     FuotenEnums::SortingRole sortingRole = FuotenEnums::ID; /**< The role/value used to sort the result by. */
     Qt::SortOrder sortOrder = Qt::AscendingOrder;           /**< The sorting order. */
     qint64 parentId = -1;                                   /**< ID of a parent object (Feed or Folder). Used by feed and article queries, defaults to -1. */
-    FuotenEnums::Type parentIdType = FuotenEnums::All;      /**< Type of the parent ID. On feeds can only be FuotenEnums::Folder, on articles can be FuotenEnums::Folder and FuotenEnums::Feed. Defaults to FuotenEnums::All */
+    FuotenEnums::Type parentIdType = FuotenEnums::All;      /**< Only usable on articles where it can can be FuotenEnums::Folder or FuotenEnums::Feed. Defaults to FuotenEnums::All */
     IdList inIds;                                           /**< A list of IDs the records are compared with. Defaults to an empty list. */
     FuotenEnums::Type inIdsType = FuotenEnums::All;         /**< Type of of the inIds list to compare. Related to the object to query, it can be FuotenEnums::Folder, FuotenEnums::Feed or FuotenEnums::Item. Defaults to FuotenEnums::All. */
     bool unreadOnly = false;                                /**< If true, only unread articles or folders and feeds without unread content are returned. */

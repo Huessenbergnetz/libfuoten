@@ -80,6 +80,8 @@ void AbstractFeedModel::load()
 
     QueryArgs qa;
     qa.parentId = parentId();
+    qa.sortingRole = sortingRole();
+    qa.sortOrder = sortOrder();
 
     const QList<Feed*> fs = storage()->getFeeds(qa);
 

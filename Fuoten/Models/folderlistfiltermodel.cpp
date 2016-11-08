@@ -63,6 +63,20 @@ void FolderListFilterModel::load(const QString &locale)
 }
 
 
+void FolderListFilterModel::reload(const QString &locale)
+{
+    if (!locale.isEmpty()) {
+        QLocale::setDefault(QLocale(locale));
+    }
+
+    Q_D(FolderListFilterModel);
+    if (d->flm) {
+        d->flm->reload();
+        sort(0);
+    }
+}
+
+
 bool FolderListFilterModel::inOperation() const
 {
     Q_D(const FolderListFilterModel);

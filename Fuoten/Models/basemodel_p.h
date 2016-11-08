@@ -32,7 +32,11 @@ public:
         inOperation(false),
         storage(nullptr),
         loaded(false),
-        parentId(-1)
+        parentId(-1),
+        sortingRole(FuotenEnums::ID),
+        sortOrder(Qt::AscendingOrder),
+        unreadOnly(false),
+        limit(0)
     {}
 
     virtual ~BaseModelPrivate() {}
@@ -41,6 +45,10 @@ public:
     AbstractStorage *storage;
     bool loaded;
     qint64 parentId;
+    FuotenEnums::SortingRole sortingRole;
+    Qt::SortOrder sortOrder;
+    bool unreadOnly;
+    int limit;
 
 private:
     Q_DISABLE_COPY(BaseModelPrivate)

@@ -154,13 +154,13 @@ public:
      * \brief Returns the currently set sorting role.
      * \sa sortingRole
      */
-    FuotenEnums::SortingRole sortingRole() const;
+    virtual FuotenEnums::SortingRole sortingRole() const;
 
     /*!
      * \brief Returns the currently set sort order.
      * \sa sortOrder
      */
-    Qt::SortOrder sortOrder() const;
+    virtual Qt::SortOrder sortOrder() const;
 
     /*!
      * \brief Returns the currently set serach string.
@@ -190,13 +190,13 @@ public:
      * \brief Sets the sorting role.
      * \sa sortingRole
      */
-    void setSortingRole(FuotenEnums::SortingRole nSortingRole);
+    virtual void setSortingRole(FuotenEnums::SortingRole nSortingRole);
 
     /*!
      * \brief Sets the sort order.
      * \sa sortOrder
      */
-    void setSortOrder(Qt::SortOrder nSortOrder);
+    virtual void setSortOrder(Qt::SortOrder nSortOrder);
 
     /*!
      * \brief Sets the search string.
@@ -218,6 +218,15 @@ public:
      * \sa QLocale::setDefault()
      */
     Q_INVOKABLE virtual void load(const QString &locale = QString()) = 0;
+
+    /*!
+     * \brief Reloads the complete underlying model.
+     *
+     * Reimplement this in a subclass and call the underlying model's BaseModel::reload() function.
+     * If \a localse is not an empty string, the default local will be set to the defined locale.
+     * \sa QLocale::setDefault()
+     */
+    Q_INVOKABLE virtual void reload(const QString &locale = QString()) = 0;
 
 
     double doubleParentId() const;

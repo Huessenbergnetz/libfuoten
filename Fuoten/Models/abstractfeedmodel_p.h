@@ -30,7 +30,12 @@ namespace Fuoten {
 class AbstractFeedModelPrivate : public BaseModelPrivate
 {
 public:
-    AbstractFeedModelPrivate() : BaseModelPrivate() {}
+    AbstractFeedModelPrivate() :
+        BaseModelPrivate()
+    {
+        sortingRole = FuotenEnums::Name;
+        sortOrder = Qt::AscendingOrder;
+    }
 
     ~AbstractFeedModelPrivate() {
         while (!feeds.isEmpty()) {

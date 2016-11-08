@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QAbstractItemModel>
 #include "../fuoten_global.h"
+#include "../fuoten.h"
 
 namespace Fuoten {
 
@@ -84,6 +85,45 @@ class FUOTENSHARED_EXPORT BaseModel : public QAbstractItemModel
      * <TABLE><TR><TD>void</TD><TD>doubleParentIdChanged(double doubleParentId)</TD></TR></TABLE>
      */
     Q_PROPERTY(double doubleParentId READ doubleParentId WRITE setDoubleParentId NOTIFY doubleParentIdChanged)
+    /*!
+     * \brief The role/value used to sort the result.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>FuotenEnums::SortingRole</TD><TD>sortingRole() const</TD></TR><TR><TD>void</TD><TD>setSortingRole(FuotenEnums::SortingRole nSortingRole)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>sortingRoleChanged(FuotenEnums::SortingRole sortingRole)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(Fuoten::FuotenEnums::SortingRole sortingRole READ sortingRole WRITE setSortingRole NOTIFY sortingRoleChanged)
+    /*!
+     * \brief The sorting order.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>Qt::SortOrder</TD><TD>sortOrder() const</TD></TR><TR><TD>void</TD><TD>setSortOrder(Qt::SortOrder nSortOrder)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>sortOrderChanged(Qt::SortOrder sortOrder)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(Qt::SortOrder sortOrder READ sortOrder WRITE setSortOrder NOTIFY sortOrderChanged)
+    /*!
+     * \brief If true, only unread articles, feeds or folders are returned.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>bool</TD><TD>unreadOnly() const</TD></TR><TR><TD>void</TD><TD>setUnreadOnly(bool nUnreadOnly)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>unreadOnlyChanged(bool unreadOnly)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(bool unreadOnly READ unreadOnly WRITE setUnreadOnly NOTIFY unreadOnlyChanged)
+    /*!
+     * \brief Limits the result to the specified number of objects.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>int</TD><TD>limit() const</TD></TR><TR><TD>void</TD><TD>setLimit(int nLimit)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>limitChanged(int limit)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(int limit READ limit WRITE setLimit NOTIFY limitChanged)
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+    Q_ENUMS(Fuoten::FuotenEnums::SortingRole)
+#endif
 public:
     /*!
      * \brief Constructs a new BaseModel object.
@@ -117,39 +157,56 @@ public:
      * \sa inOperation
      */
     bool inOperation() const;
-
     /*!
      * \brief Returns the pointer to the currently set local storage.
      * \sa storage
      */
     AbstractStorage *storage() const;
-
     /*!
      * \brief Returns the currently set parent ID.
      * \sa parentId
      */
     qint64 parentId() const;
-
     /*!
      * \brief Returns the currently set parent ID as double.
      * This function is for use in QML, that does not support 64bit integers. It performs a static cast from
      * the saved qint64 parent ID to double.
      * \sa doubleParentId
      */
-    double doubleParentId() const;
+    double doubleParentId() const;    
+    /*!
+     * \brief Getter function for the \link BaseModel::sortingRole sortingRole \endlink property.
+     * \sa BaseModel::setSortingRole(), BaseModel::sortingRoleChanged()
+     */
+    FuotenEnums::SortingRole sortingRole() const;
+    /*!
+     * \brief Getter function for the \link BaseModel::sortOrder sortOrder \endlink property.
+     * \sa BaseModel::setSortOrder(), BaseModel::sortOrderChanged()
+     */
+    Qt::SortOrder sortOrder() const;
+    /*!
+     * \brief Getter function for the \link BaseModel::unreadOnly unreadOnly \endlink property.
+     * \sa BaseModel::setUnreadOnly(), BaseModel::unreadOnlyChanged()
+     */
+    bool unreadOnly() const;
+    /*!
+     * \brief Getter function for the \link BaseModel::limit limit \endlink property.
+     * \sa BaseModel::setLimit(), BaseModel::limitChanged()
+     */
+    int limit() const;
+
+
 
     /*!
      * \brief Sets the pointer to the local storage handler.
      * \sa storage
      */
     void setStorage(AbstractStorage *nStorage);
-
     /*!
      * \brief Set the parent ID.
      * \sa parentId
      */
     void setParentId(qint64 nParentId);
-
     /*!
      * \brief Sets the parent ID via a double.
      * This function is for use in QML, that does not support 64bit integers. It performs a static cast from
@@ -157,6 +214,30 @@ public:
      * \sa doubleParentId
      */
     void setDoubleParentId(double nDoubleParentId);
+    /*!
+     * \brief Setter function for the \link BaseModel::sortingRole sortingRole \endlink property.
+     * Emits the sortingRoleChanged() signal if \a nSortingRole is not equal to the stored value.
+     * \sa BaseModel::sortingRole(), BaseModel::sortingRoleChanged()
+     */
+    void setSortingRole(FuotenEnums::SortingRole nSortingRole);
+    /*!
+     * \brief Setter function for the \link BaseModel::sortOrder sortOrder \endlink property.
+     * Emits the sortOrderChanged() signal if \a nSortOrder is not equal to the stored value.
+     * \sa BaseModel::sortOrder(), BaseModel::sortOrderChanged()
+     */
+    void setSortOrder(Qt::SortOrder nSortOrder);
+    /*!
+     * \brief Setter function for the \link BaseModel::unreadOnly unreadOnly \endlink property.
+     * Emits the unreadOnlyChanged() signal if \a nUnreadOnly is not equal to the stored value.
+     * \sa BaseModel::unreadOnly(), BaseModel::unreadOnlyChanged()
+     */
+    void setUnreadOnly(bool nUnreadOnly);
+    /*!
+     * \brief Setter function for the \link BaseModel::limit limit \endlink property.
+     * Emits the limitChanged() signal if \a nLimit is not equal to the stored value.
+     * \sa BaseModel::limit(), BaseModel::limitChanged()
+     */
+    void setLimit(int nLimit);
 
 public Q_SLOTS:
     /*!
@@ -215,24 +296,41 @@ Q_SIGNALS:
      * \sa inOperatoin
      */
     void inOperationChanged(bool inOperation);
-
     /*!
      * \brief This signal is emitted if the poiner to the local storage changes.
      * \sa storage
      */
     void storageChanged(AbstractStorage *storage);
-
     /*!
      * \brief This signal is emitted if the parent ID changes.
      * \sa parentId
      */
     void parentIdChanged(qint64 parentId);
-
     /*!
      * \brief This signal is emitted if the parent ID changes.
      * \sa doubleParentId
      */
     void doubleParentIdChanged(double doubleParentId);
+    /*!
+     * \brief This is emitted if the value of the \link BaseModel::sortingRole sortingRole \endlink property changes.
+     * \sa BaseModel::sortingRole(), BaseModel::setSortingRole()
+     */
+    void sortingRoleChanged(FuotenEnums::SortingRole sortingRole);
+    /*!
+     * \brief This is emitted if the value of the \link BaseModel::sortOrder sortOrder \endlink property changes.
+     * \sa BaseModel::sortOrder(), BaseModel::setSortOrder()
+     */
+    void sortOrderChanged(Qt::SortOrder sortOrder);
+    /*!
+     * \brief This is emitted if the value of the \link BaseModel::unreadOnly unreadOnly \endlink property changes.
+     * \sa BaseModel::unreadOnly(), BaseModel::setUnreadOnly()
+     */
+    void unreadOnlyChanged(bool unreadOnly);
+    /*!
+     * \brief This is emitted if the value of the \link BaseModel::limit limit \endlink property changes.
+     * \sa BaseModel::limit(), BaseModel::setLimit()
+     */
+    void limitChanged(int limit);
 
 
 protected:

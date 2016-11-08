@@ -54,6 +54,41 @@ void AbstractArticleModel::setParentIdType(FuotenEnums::Type nParentIdType)
 
 
 
+bool AbstractArticleModel::starredOnly() const { Q_D(const AbstractArticleModel); return d->starredOnly; }
+
+void AbstractArticleModel::setStarredOnly(bool nStarredOnly)
+{
+    Q_D(AbstractArticleModel);
+    if (nStarredOnly != d->starredOnly) {
+        d->starredOnly = nStarredOnly;
+#ifdef QT_DEBUG
+        qDebug() << "Changed starredOnly to" << d->starredOnly;
+#endif
+        Q_EMIT starredOnlyChanged(starredOnly());
+    }
+}
+
+
+
+
+int AbstractArticleModel::bodyLimit() const { Q_D(const AbstractArticleModel); return d->bodyLimit; }
+
+void AbstractArticleModel::setBodyLimit(int nBodyLimit)
+{
+    Q_D(AbstractArticleModel);
+    if (nBodyLimit != d->bodyLimit) {
+        d->bodyLimit = nBodyLimit;
+#ifdef QT_DEBUG
+        qDebug() << "Changed bodyLimit to" << d->bodyLimit;
+#endif
+        Q_EMIT bodyLimitChanged(bodyLimit());
+    }
+}
+
+
+
+
+
 
 void AbstractArticleModel::handleStorageChanged()
 {
@@ -87,10 +122,11 @@ void AbstractArticleModel::load()
     setInOperation(true);
 
     QueryArgs qa;
-    qa.sortingRole = FuotenEnums::Time;
-    qa.sortOrder = Qt::DescendingOrder;
+    qa.sortingRole = sortingRole();
+    qa.sortOrder = sortOrder();
     qa.parentId = parentId();
     qa.parentIdType = parentIdType();
+    qa.bodyLimit = bodyLimit();
 
     if ((parentId() < 0) && (parentIdType() == FuotenEnums::Starred)) {
         qa.starredOnly = true;
@@ -223,6 +259,7 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
             qa.parentIdType = parentIdType();
             qa.inIds = idxs.keys();
             qa.inIdsType = FuotenEnums::Item;
+            qa.bodyLimit = bodyLimit();
             const QList<Article*> upits = storage()->getArticles(qa);
 
             if (!upits.isEmpty()) {
@@ -244,6 +281,7 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
         qa.parentIdType = parentIdType();
         qa.inIds = newItems;
         qa.inIdsType = FuotenEnums::Item;
+        qa.bodyLimit = bodyLimit();
         const QList<Article*> newits = storage()->getArticles(qa);
 
         if (!newits.isEmpty()) {

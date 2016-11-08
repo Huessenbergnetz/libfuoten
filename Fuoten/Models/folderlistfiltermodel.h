@@ -72,9 +72,14 @@ public:
     void setParentId(qint64 nParentId) override;
 
     /*!
-     * \brief Loads the data in the underlyinf FolderListModel.
+     * \brief Loads the data in the underlying FolderListModel.
      */
     Q_INVOKABLE void load(const QString &locale = QString()) override;
+
+    /*!
+     * \brief Reloads the complete underlying FolderListModel.
+     */
+    Q_INVOKABLE void reload(const QString &locale = QString()) override;
 
 protected:
     FolderListFilterModel(FolderListFilterModelPrivate &dd, QObject *parent = nullptr);

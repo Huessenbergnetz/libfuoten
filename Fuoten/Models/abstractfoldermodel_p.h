@@ -31,7 +31,10 @@ class AbstractFolderModelPrivate : public BaseModelPrivate
 public:
     AbstractFolderModelPrivate() :
         BaseModelPrivate()
-    {}
+    {
+        sortingRole = FuotenEnums::Name;
+        sortOrder = Qt::AscendingOrder;
+    }
 
     ~AbstractFolderModelPrivate() {
         while (!folders.isEmpty()) {

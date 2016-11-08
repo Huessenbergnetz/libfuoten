@@ -51,6 +51,27 @@ class FUOTENSHARED_EXPORT AbstractArticleModel : public BaseModel
      * <TABLE><TR><TD>void</TD><TD>parentIdTypeChanged(FuotenEnums::Type parentIdType)</TD></TR></TABLE>
      */
     Q_PROPERTY(Fuoten::FuotenEnums::Type parentIdType READ parentIdType WRITE setParentIdType NOTIFY parentIdTypeChanged)
+    /*!
+     * \brief If true, only starred articles will be returned.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>bool</TD><TD>starredOnly() const</TD></TR><TR><TD>void</TD><TD>setStarredOnly(bool nStarredOnly)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>starredOnlyChanged(bool starredOnly)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(bool starredOnly READ starredOnly WRITE setStarredOnly NOTIFY starredOnlyChanged)
+    /*!
+     * \brief Limits the size of the body text in number of characters.
+     *
+     * Values lower than \c 0 will return no body text, \c 0 will return the full body text, any other positive
+     * value will return a body stripped from HTML tags and limited to the amount of characters. Defaults to \c -1.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>int</TD><TD>bodyLimit() const</TD></TR><TR><TD>void</TD><TD>setBodyLimit(int nBodyLimit)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>bodyLimitChanged(int bodyLimit)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(int bodyLimit READ bodyLimit WRITE setBodyLimit NOTIFY bodyLimitChanged)
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
     Q_ENUMS(Fuoten::FuotenEnums::Type)
 #endif
@@ -66,6 +87,19 @@ public:
      * \sa AbstractArticleModel::setParentIdType(), AbstractArticleModel::parentIdTypeChanged()
      */
     FuotenEnums::Type parentIdType() const;
+    /*!
+     * \brief Getter function for the \link AbstractArticleModel::starredOnly starredOnly \endlink property.
+     * \sa AbstractArticleModel::setStarredOnly(), AbstractArticleModel::starredOnlyChanged()
+     */
+    bool starredOnly() const;
+    /*!
+     * \brief Getter function for the \link AbstractArticleModel::bodyLimit bodyLimit \endlink property.
+     * \sa AbstractArticleModel::setBodyLimit(), AbstractArticleModel::bodyLimitChanged()
+     */
+    int bodyLimit() const;
+
+
+
 
     /*!
      * \brief Setter function for the \link AbstractArticleModel::parentIdType parentIdType \endlink property.
@@ -73,6 +107,19 @@ public:
      * \sa AbstractArticleModel::parentIdType(), AbstractArticleModel::parentIdTypeChanged()
      */
     void setParentIdType(FuotenEnums::Type nParentIdType);
+    /*!
+     * \brief Setter function for the \link AbstractArticleModel::starredOnly starredOnly \endlink property.
+     * Emits the starredOnlyChanged() signal if \a nStarredOnly is not equal to the stored value.
+     * \sa AbstractArticleModel::starredOnly(), AbstractArticleModel::starredOnlyChanged()
+     */
+    void setStarredOnly(bool nStarredOnly);
+    /*!
+     * \brief Setter function for the \link AbstractArticleModel::bodyLimit bodyLimit \endlink property.
+     * Emits the bodyLimitChanged() signal if \a nBodyLimit is not equal to the stored value.
+     * \sa AbstractArticleModel::bodyLimit(), AbstractArticleModel::bodyLimitChanged()
+     */
+    void setBodyLimit(int nBodyLimit);
+
 
 
     /*!
@@ -108,6 +155,16 @@ Q_SIGNALS:
      * \sa AbstractArticleModel::parentIdType(), AbstractArticleModel::setParentIdType()
      */
     void parentIdTypeChanged(FuotenEnums::Type parentIdType);
+    /*!
+     * \brief This is emitted if the value of the \link AbstractArticleModel::starredOnly starredOnly \endlink property changes.
+     * \sa AbstractArticleModel::starredOnly(), AbstractArticleModel::setStarredOnly()
+     */
+    void starredOnlyChanged(bool starredOnly);
+    /*!
+     * \brief This is emitted if the value of the \link AbstractArticleModel::bodyLimit bodyLimit \endlink property changes.
+     * \sa AbstractArticleModel::bodyLimit(), AbstractArticleModel::setBodyLimit()
+     */
+    void bodyLimitChanged(int bodyLimit);
 
 protected Q_SLOTS:
     void gotArticlesAsync(const ArticleList &articles);

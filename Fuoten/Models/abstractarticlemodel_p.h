@@ -32,8 +32,13 @@ class AbstractArticleModelPrivate : public BaseModelPrivate
 public:
     AbstractArticleModelPrivate() :
         BaseModelPrivate(),
-        parentIdType(FuotenEnums::All)
-    {}
+        parentIdType(FuotenEnums::All),
+        starredOnly(false),
+        bodyLimit(-1)
+    {
+        sortingRole = FuotenEnums::Time;
+        sortOrder = Qt::DescendingOrder;
+    }
 
     ~AbstractArticleModelPrivate() {
         while (!articles.isEmpty()) {
@@ -80,6 +85,8 @@ public:
     }
 
     FuotenEnums::Type parentIdType;
+    bool starredOnly;
+    int bodyLimit;
     QList<Article*> articles;
 
 private:

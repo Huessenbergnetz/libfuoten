@@ -37,6 +37,7 @@ ArticleListFilterModel::ArticleListFilterModel(QObject *parent) :
     connect(d->alm.data(), &ArticleListModel::parentIdChanged, this, &BaseFilterModel::parentIdChanged);
     connect(d->alm.data(), &ArticleListModel::doubleParentIdChanged, this, &BaseFilterModel::doubleParentIdChanged);
     connect(d->alm.data(), &ArticleListModel::parentIdTypeChanged, this, &ArticleListFilterModel::parentIdChanged);
+    connect(d->alm.data(), &ArticleListModel::bodyLimitChanged, this, &ArticleListFilterModel::bodyLimitChanged);
     setSourceModel(d->alm.data());
 }
 
@@ -50,6 +51,7 @@ ArticleListFilterModel::ArticleListFilterModel(ArticleListFilterModelPrivate &&d
     connect(d->alm.data(), &ArticleListModel::parentIdChanged, this, &BaseFilterModel::parentIdChanged);
     connect(d->alm.data(), &ArticleListModel::doubleParentIdChanged, this, &BaseFilterModel::doubleParentIdChanged);
     connect(d->alm.data(), &ArticleListModel::parentIdTypeChanged, this, &ArticleListFilterModel::parentIdChanged);
+    connect(d->alm.data(), &ArticleListModel::bodyLimitChanged, this, &ArticleListFilterModel::bodyLimitChanged);
     setSourceModel(d->alm.data());
 }
 
@@ -145,6 +147,19 @@ void ArticleListFilterModel::load(const QString &locale)
 }
 
 
+void ArticleListFilterModel::reload(const QString &locale)
+{
+    if (!locale.isEmpty()) {
+        QLocale::setDefault(QLocale(locale));
+    }
+
+    Q_D(ArticleListFilterModel);
+    if (d->alm) {
+        d->alm->reload();
+        sort(0);
+    }
+}
+
 
 FuotenEnums::Type ArticleListFilterModel::parentIdType() const
 {
@@ -165,3 +180,20 @@ void ArticleListFilterModel::setParentIdType(FuotenEnums::Type nParentIdType)
 }
 
 
+int ArticleListFilterModel::bodyLimit() const
+{
+    Q_D(const ArticleListFilterModel);
+    if (d->alm) {
+        return d->alm->bodyLimit();
+    } else {
+        return -1;
+    }
+}
+
+void ArticleListFilterModel::setBodyLimit(int nBodyLimit)
+{
+    Q_D(ArticleListFilterModel);
+    if (d->alm) {
+        d->alm->setBodyLimit(nBodyLimit);
+    }
+}

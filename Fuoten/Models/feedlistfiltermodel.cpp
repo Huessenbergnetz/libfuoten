@@ -66,6 +66,20 @@ void FeedListFilterModel::load(const QString &locale)
 }
 
 
+void FeedListFilterModel::reload(const QString &locale)
+{
+    if (!locale.isEmpty()) {
+        QLocale::setDefault(QLocale(locale));
+    }
+
+    Q_D(FeedListFilterModel);
+    if (d->flm) {
+        d->flm->reload();
+        sort(0);
+    }
+}
+
+
 
 bool FeedListFilterModel::inOperation() const
 {
