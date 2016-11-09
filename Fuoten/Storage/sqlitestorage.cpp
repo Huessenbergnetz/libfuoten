@@ -158,23 +158,6 @@ void SQLiteStorageManager::run()
         return;
     }
 
-    if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS queue "
-                               "(id INTEGER PRIMARY KEY NOT NULL, "
-                               "itemId INTEGER NOT NULL, "
-                               "action INTEGER NOT NULL, "
-                               "FOREIGN KEY (itemId) REFERENCES items(id) ON DELETE CASCADE)"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
-
-    if (!q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS queue_item_id_index ON queue (itemId)"))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
-
     if (!q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS feeds_folder_id_index ON feeds (folderId)"))) {
         //% "Failed to execute database query."
         setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
