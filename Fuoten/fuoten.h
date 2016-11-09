@@ -72,16 +72,21 @@ public:
      * \brief Actions for the local queue.
      */
     enum QueueAction {
-        MarkAsRead      = 0,    /**< The item has been marked as read. */
-        MarkAsUnread    = 1,    /**< The item has been marked as unread. */
-        Star            = 2,    /**< The item has been starred. */
-        Unstar          = 3     /**< The item has been unstarred. */
+        NoQueueAction   = 0x0,    /**< No action set. */
+        MarkAsRead      = 0x1,    /**< The item has been marked as read. */
+        MarkAsUnread    = 0x2,    /**< The item has been marked as unread. */
+        Star            = 0x4,    /**< The item has been starred. */
+        Unstar          = 0x8     /**< The item has been unstarred. */
     };
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(QueueAction)
+    Q_FLAG(QueueActions)
 #else
     Q_ENUMS(QueueAction)
+    Q_FLAGS(QueueActions)
 #endif
+    Q_DECLARE_FLAGS(QueueActions, QueueAction)
+
 
 private:
     FuotenEnums();
@@ -94,6 +99,7 @@ Q_DECLARE_METATYPE(Fuoten::FuotenEnums::Type)
 Q_DECLARE_METATYPE(Fuoten::FuotenEnums::SortingRole)
 Q_DECLARE_METATYPE(Fuoten::FuotenEnums::QueueAction)
 #endif
+Q_DECLARE_OPERATORS_FOR_FLAGS(Fuoten::FuotenEnums::QueueActions)
 
 #endif // FUOTEN
 

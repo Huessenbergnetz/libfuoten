@@ -19,6 +19,8 @@
  */
 
 #include "synchronizer_p.h"
+#include "../article.h"
+#include <QPair>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -56,11 +58,46 @@ void SynchronizerPrivate::setError(Error *nError)
         }
 
         if (error && (error->type() != Error::NoError) && (error->severity() == Error::Critical || error->severity() == Error::Fatal)) {
-            getFolders = nullptr;
-            getFeeds = nullptr;
-            getStarred = nullptr;
-            getUnread = nullptr;
-            getUpdated = nullptr;
+            if (getFolders) {
+                delete getFolders;
+                getFolders = nullptr;
+            }
+            if (getFeeds) {
+                delete getFeeds;
+                getFeeds = nullptr;
+            }
+            if (getStarred) {
+                delete getStarred;
+                getStarred = nullptr;
+            }
+            if (getUnread) {
+                delete getUnread;
+                getUnread = nullptr;
+            }
+            if (getUpdated) {
+                delete getUpdated;
+                getUpdated = nullptr;
+            }
+            if (starMultipleItems) {
+                delete starMultipleItems;
+                starMultipleItems = nullptr;
+            }
+            if (unstarMultipleItems) {
+                delete unstarMultipleItems;
+                unstarMultipleItems = nullptr;
+            }
+            if (readMultipleItems) {
+                delete readMultipleItems;
+                readMultipleItems = nullptr;
+            }
+            if (unreadMultipleItems) {
+                delete unreadMultipleItems;
+                unreadMultipleItems = nullptr;
+            }
+            queuedUnreadArticles.clear();
+            queuedReadArticles.clear();
+            queuedStarredArticles.clear();
+            queuedUnstarredArticles.clear();
             inOperation = false;
             Q_EMIT q->inOperationChanged(false);
             Q_EMIT q->failed(error);
@@ -75,6 +112,150 @@ void SynchronizerPrivate::start()
     Q_Q(Synchronizer);
     inOperation = true;
     Q_EMIT q->inOperationChanged(true);
+
+    QueryArgs qa;
+    qa.queuedOnly = true;
+
+    const ArticleList qas = storage->getArticles(qa);
+    if (!qas.isEmpty()) {
+        for (Article *a : qas) {
+            if (a->queue().testFlag(FuotenEnums::MarkAsUnread)) {
+                queuedUnreadArticles.append(a->id());
+            }
+            if (a->queue().testFlag(FuotenEnums::MarkAsRead)) {
+                queuedReadArticles.append(a->id());
+            }
+            if (a->queue().testFlag(FuotenEnums::Star)) {
+                queuedStarredArticles.append(qMakePair(a->feedId(), a->guidHash()));
+            }
+            if (a->queue().testFlag(FuotenEnums::Unstar)) {
+                queuedUnstarredArticles.append(qMakePair(a->feedId(), a->guidHash()));
+            }
+        }
+
+        if (!queuedUnreadArticles.isEmpty()) {
+            notifyAboutUnread();
+        } else if (!queuedReadArticles.isEmpty()) {
+            notifyAboutRead();
+        } else if (!queuedStarredArticles.isEmpty()) {
+            notifyAboutStarred();
+        } else if (!queuedUnstarredArticles.isEmpty()) {
+            notifyAboutUnstarred();
+        } else {
+            requestFolders();
+        }
+
+    } else {
+        requestFolders();
+    }
+}
+
+
+
+void SynchronizerPrivate::notifyAboutUnread()
+{
+    if (!unreadMultipleItems) {
+#ifdef QT_DEBUG
+        qDebug() << "Notify the News App about unread items.";
+#endif
+        unreadMultipleItems = new MarkMultipleItems(q_ptr);
+        unreadMultipleItems->setConfiguration(configuration);
+        unreadMultipleItems->setItemIds(queuedUnreadArticles);
+        unreadMultipleItems->setUnread(true);
+        QObject::connect(unreadMultipleItems, &Component::failed, [=] (Error *e) {setError(e);});
+//        QObject::connect(unreadMultipleItems, &Component::failed, unreadMultipleItems, &QObject::deleteLater);
+        QObject::connect(unreadMultipleItems, &MarkMultipleItems::succeeded, [=] () {
+            if (!queuedReadArticles.isEmpty()) {
+                notifyAboutRead();
+            } else if (!queuedStarredArticles.isEmpty()) {
+                notifyAboutStarred();
+            } else if (!queuedUnstarredArticles.isEmpty()) {
+                notifyAboutUnstarred();
+            } else {
+                requestFolders();
+            }
+        });
+//        QObject::connect(unreadMultipleItems, &MarkMultipleItems::succeeded, unreadMultipleItems, &QObject::deleteLater);
+        unreadMultipleItems->execute();
+    }
+}
+
+
+void SynchronizerPrivate::notifyAboutRead()
+{
+    if (!readMultipleItems) {
+#ifdef QT_DEBUG
+        qDebug() << "Notify the News App about read items.";
+#endif
+        readMultipleItems = new MarkMultipleItems(q_ptr);
+        readMultipleItems->setConfiguration(configuration);
+        readMultipleItems->setItemIds(queuedReadArticles);
+        readMultipleItems->setUnread(false);
+        QObject::connect(readMultipleItems, &Component::failed, [=] (Error *e) {setError(e);});
+//        QObject::connect(readMultipleItems, &Component::failed, readMultipleItems, &QObject::deleteLater);
+        QObject::connect(readMultipleItems, &MarkMultipleItems::succeeded, [=] () {
+            if (!queuedStarredArticles.isEmpty()) {
+                notifyAboutStarred();
+            } else if (!queuedUnstarredArticles.isEmpty()) {
+                notifyAboutUnstarred();
+            } else {
+                requestFolders();
+            }
+        });
+//        QObject::connect(readMultipleItems, &MarkMultipleItems::succeeded, readMultipleItems, &QObject::deleteLater);
+        readMultipleItems->execute();
+    }
+}
+
+
+void SynchronizerPrivate::notifyAboutStarred()
+{
+    if (!starMultipleItems) {
+#ifdef QT_DEBUG
+        qDebug() << "Notify the News App about starred items.";
+#endif
+        starMultipleItems = new StarMultipleItems(q_ptr);
+        starMultipleItems->setConfiguration(configuration);
+        starMultipleItems->setItemsToStar(queuedStarredArticles);
+        starMultipleItems->setStarred(true);
+        QObject::connect(starMultipleItems, &Component::failed, [=] (Error *e) {setError(e);});
+//        QObject::connect(starMultipleItems, &Component::failed, starMultipleItems, &QObject::deleteLater);
+        QObject::connect(starMultipleItems, &StarMultipleItems::succeeded, [=] () {
+            if (!queuedUnstarredArticles.isEmpty()) {
+                notifyAboutUnstarred();
+            } else {
+                requestFolders();
+            }
+        });
+//        QObject::connect(starMultipleItems, &StarMultipleItems::succeeded, starMultipleItems, &QObject::deleteLater);
+        starMultipleItems->execute();
+    }
+}
+
+
+void SynchronizerPrivate::notifyAboutUnstarred()
+{
+    if (!unstarMultipleItems) {
+#ifdef QT_DEBUG
+        qDebug() << "Notify the News App about unstarred items.";
+#endif
+        unstarMultipleItems = new StarMultipleItems(q_ptr);
+        unstarMultipleItems->setConfiguration(configuration);
+        unstarMultipleItems->setItemsToStar(queuedUnstarredArticles);
+        unstarMultipleItems->setStarred(false);
+        QObject::connect(unstarMultipleItems, &Component::failed, [=] (Error *e) {setError(e);});
+//        QObject::connect(unstarMultipleItems, &Component::failed, unstarMultipleItems, &QObject::deleteLater);
+        QObject::connect(unstarMultipleItems, &StarMultipleItems::succeeded, [=] () {
+            requestFolders();
+        });
+//        QObject::connect(unstarMultipleItems, &StarMultipleItems::succeeded, unstarMultipleItems, &QObject::deleteLater);
+        unstarMultipleItems->execute();
+    }
+}
+
+
+void SynchronizerPrivate::requestFolders()
+{
     if (!getFolders) {
 #ifdef QT_DEBUG
         qDebug() << "Getting folders";
@@ -83,17 +264,18 @@ void SynchronizerPrivate::start()
         getFolders->setConfiguration(configuration);
         getFolders->setStorage(storage);
         QObject::connect(getFolders, &Component::failed, [=] (Error *e) {setError(e);});
-        QObject::connect(getFolders, &Component::failed, getFolders, &QObject::deleteLater);
+//        QObject::connect(getFolders, &Component::failed, getFolders, &QObject::deleteLater);
         if (storage) {
             QObject::connect(storage, &AbstractStorage::requestedFolders, [=] () {requestFeeds();});
-            QObject::connect(storage, &AbstractStorage::requestedFolders, getFolders, &QObject::deleteLater);
+//            QObject::connect(storage, &AbstractStorage::requestedFolders, getFolders, &QObject::deleteLater);
         } else {
             QObject::connect(getFolders, &Component::succeeded, [=] () {requestFeeds();});
-            QObject::connect(getFolders, &Component::succeeded, getFolders, &QObject::deleteLater);
+//            QObject::connect(getFolders, &Component::succeeded, getFolders, &QObject::deleteLater);
         }
         getFolders->execute();
     }
 }
+
 
 
 void SynchronizerPrivate::requestFeeds()
@@ -111,21 +293,21 @@ void SynchronizerPrivate::requestFeeds()
         getFeeds->setConfiguration(configuration);
         getFeeds->setStorage(storage);
         QObject::connect(getFeeds, &Component::failed, [=] (Error *e) {setError(e);});
-        QObject::connect(getFeeds, &Component::failed, getFeeds, &QObject::deleteLater);
+//        QObject::connect(getFeeds, &Component::failed, getFeeds, &QObject::deleteLater);
         if (storage) {
             if (configuration->getLastSync().isValid()) {
                 QObject::connect(storage, &AbstractStorage::requestedFeeds, [=] () {requestUpdated();});
             } else {
                 QObject::connect(storage, &AbstractStorage::requestedFeeds, [=] () {requestUnread();});
             }
-            QObject::connect(storage, &AbstractStorage::requestedFeeds, getFeeds, &QObject::deleteLater);
+//            QObject::connect(storage, &AbstractStorage::requestedFeeds, getFeeds, &QObject::deleteLater);
         } else {
             if (configuration->getLastSync().isValid()) {
                 QObject::connect(getFeeds, &Component::succeeded, [=] () {requestUpdated();});
             } else {
                 QObject::connect(getFeeds, &Component::succeeded, [=] () {requestUnread();});
             }
-            QObject::connect(getFeeds, &Component::succeeded, getFeeds, &QObject::deleteLater);
+//            QObject::connect(getFeeds, &Component::succeeded, getFeeds, &QObject::deleteLater);
         }
         getFeeds->execute();
     }
@@ -146,13 +328,13 @@ void SynchronizerPrivate::requestUnread()
         getUnread->setGetRead(false);
         getUnread->setBatchSize(-1);
         QObject::connect(getUnread, &Component::failed, [=] (Error *e) {setError(e);});
-        QObject::connect(getUnread, &Component::failed, getUnread, &QObject::deleteLater);
+//        QObject::connect(getUnread, &Component::failed, getUnread, &QObject::deleteLater);
         if (storage) {
             QObject::connect(storage, &AbstractStorage::requestedItems, [=] () {requestStarred();});
-            QObject::connect(storage, &AbstractStorage::requestedItems, getUnread, &QObject::deleteLater);
+//            QObject::connect(storage, &AbstractStorage::requestedItems, getUnread, &QObject::deleteLater);
         } else {
             QObject::connect(getUnread, &Component::succeeded, [=] () {requestStarred();});
-            QObject::connect(getUnread, &Component::succeeded, getUnread, &QObject::deleteLater);
+//            QObject::connect(getUnread, &Component::succeeded, getUnread, &QObject::deleteLater);
         }
         getUnread->execute();
     }
@@ -172,13 +354,13 @@ void SynchronizerPrivate::requestStarred()
         getStarred->setGetRead(true);
         getStarred->setBatchSize(-1);
         QObject::connect(getStarred, &Component::failed, [=] (Error *e) {setError(e);});
-        QObject::connect(getStarred, &Component::failed, getStarred, &QObject::deleteLater);
+//        QObject::connect(getStarred, &Component::failed, getStarred, &QObject::deleteLater);
         if (storage) {
             QObject::connect(storage, &AbstractStorage::requestedItems, [=] () {finished();});
-            QObject::connect(storage, &AbstractStorage::requestedItems, getStarred, &QObject::deleteLater);
+//            QObject::connect(storage, &AbstractStorage::requestedItems, getStarred, &QObject::deleteLater);
         } else {
             QObject::connect(getStarred, &Component::succeeded, [=] () {finished();});
-            QObject::connect(getStarred, &Component::succeeded, getStarred, &QObject::deleteLater);
+//            QObject::connect(getStarred, &Component::succeeded, getStarred, &QObject::deleteLater);
         }
         getStarred->execute();
     }
@@ -199,13 +381,13 @@ void SynchronizerPrivate::requestUpdated()
         getUpdated->setType(FuotenEnums::All);
         getUpdated->setParentId(0);
         QObject::connect(getUpdated, &Component::failed, [=] (Error *e) {setError(e);});
-        QObject::connect(getUpdated, &Component::failed, getUpdated, &QObject::deleteLater);
+//        QObject::connect(getUpdated, &Component::failed, getUpdated, &QObject::deleteLater);
         if (storage) {
             QObject::connect(storage, &AbstractStorage::requestedItems, [=] () {finished();});
-            QObject::connect(storage, &AbstractStorage::requestedItems, getUpdated, &QObject::deleteLater);
+//            QObject::connect(storage, &AbstractStorage::requestedItems, getUpdated, &QObject::deleteLater);
         } else {
             QObject::connect(getUpdated, &Component::succeeded, [=] () {finished();});
-            QObject::connect(getUpdated, &Component::succeeded, getUpdated, &QObject::deleteLater);
+//            QObject::connect(getUpdated, &Component::succeeded, getUpdated, &QObject::deleteLater);
         }
         getUpdated->execute();
     }
@@ -220,11 +402,46 @@ void SynchronizerPrivate::finished()
     configuration->setLastSync(QDateTime::currentDateTimeUtc());
     Q_EMIT q->inOperationChanged(false);
     Q_EMIT q->succeeded();
-    getFolders = nullptr;
-    getFeeds = nullptr;
-    getStarred = nullptr;
-    getUnread = nullptr;
-    getUpdated = nullptr;
+    if (getFolders) {
+        delete getFolders;
+        getFolders = nullptr;
+    }
+    if (getFeeds) {
+        delete getFeeds;
+        getFeeds = nullptr;
+    }
+    if (getStarred) {
+        delete getStarred;
+        getStarred = nullptr;
+    }
+    if (getUnread) {
+        delete getUnread;
+        getUnread = nullptr;
+    }
+    if (getUpdated) {
+        delete getUpdated;
+        getUpdated = nullptr;
+    }
+    if (starMultipleItems) {
+        delete starMultipleItems;
+        starMultipleItems = nullptr;
+    }
+    if (unstarMultipleItems) {
+        delete unstarMultipleItems;
+        unstarMultipleItems = nullptr;
+    }
+    if (readMultipleItems) {
+        delete readMultipleItems;
+        readMultipleItems = nullptr;
+    }
+    if (unreadMultipleItems) {
+        delete unreadMultipleItems;
+        unreadMultipleItems = nullptr;
+    }
+    queuedUnreadArticles.clear();
+    queuedReadArticles.clear();
+    queuedStarredArticles.clear();
+    queuedUnstarredArticles.clear();
 
 #ifdef QT_DEBUG
         qDebug() << "Finished synchronizing";

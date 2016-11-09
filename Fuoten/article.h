@@ -26,6 +26,7 @@
 #include <QDateTime>
 #include "baseitem.h"
 #include "fuoten_global.h"
+#include "fuoten.h"
 
 namespace Fuoten {
 
@@ -222,7 +223,7 @@ public:
     /*!
      * \brief Constructs a new Article object with the given arguments and \a parent.
      */
-    Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, QObject *parent = nullptr);
+    Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, FuotenEnums::QueueActions queue, QObject *parent = nullptr);
 
     /*!
      * \brief Constructs a new Article object with the given \a parent by copying the properties of \a other to the new object.
@@ -326,7 +327,7 @@ public:
      */
     QString humanPubTime() const;
 
-
+    FuotenEnums::QueueActions queue() const;
 
 
     /*!
@@ -432,6 +433,8 @@ public:
      */
     void setFolderName(const QString &nFolderName);
 
+    void setQueue(FuotenEnums::QueueActions queue);
+
     /*!
      * \brief Makes a deep copy of \a other.
      *
@@ -447,8 +450,9 @@ public:
      * \param unread    set to \c true to mark the item as unread, set to \c false to mark it as read
      * \param config    pointer to an AbstractConfiguration object that containts the authentication credentials
      * \param storage   pointer to an AbstractStorage object to update the local storage after successful request
+     * \param enqueue   \c true to enqueue the marking local up to the next sync, valid \c storage has to be available
      */
-    Q_INVOKABLE void mark(bool unread, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
+    Q_INVOKABLE void mark(bool unread, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr, bool enqueue = false);
 
 
     /*!
@@ -459,8 +463,9 @@ public:
      * \param starred   ste to \c true to mark the item as starred, set to \c false to mark it as unstarred
      * \param config    pointer to an AbstractConfiguration object that containts the authentication credentials
      * \param storage   pointer to an AbstractStorage object to update the local storage after successful request
+     * \param enqueue   \c true to enqueue the un/starring local up to the next sync, valid \c storage has to be available
      */
-    Q_INVOKABLE void star(bool starred, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
+    Q_INVOKABLE void star(bool starred, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr, bool enqueue = false);
 
 
 Q_SIGNALS:

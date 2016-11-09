@@ -154,3 +154,12 @@ void AbstractStorage::getArticlesAsync(const QueryArgs &args)
 
     Q_EMIT gotArticlesAsync(articles);
 }
+
+
+
+bool AbstractStorage::enqueueItem(FuotenEnums::QueueAction action, Article *article)
+{
+    Q_UNUSED(action)
+    Q_UNUSED(article)
+    return false;
+}

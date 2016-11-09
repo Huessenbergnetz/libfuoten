@@ -114,6 +114,8 @@ public:
      */
     Q_INVOKABLE QString getArticleBody(qint64 id) override;
 
+    bool enqueueItem(FuotenEnums::QueueAction action, Article *article) override;
+
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;

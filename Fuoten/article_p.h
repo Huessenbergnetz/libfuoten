@@ -34,7 +34,8 @@ public:
         feedId(0),
         unread(false),
         starred(false),
-        folderId(0)
+        folderId(0),
+        queue(0)
     {}
 
     ArticlePrivate(qint64 nId,
@@ -54,7 +55,8 @@ public:
                    const QDateTime &nLastModified,
                    const QString &nFingerprint,
                    qint64 nFolderId,
-                   const QString &nFolderName) :
+                   const QString &nFolderName,
+                   FuotenEnums::QueueActions nQueue) :
         BaseItemPrivate(nId),
         feedId(nFeedId),
         feedTitle(nFeedTitle),
@@ -72,7 +74,8 @@ public:
         lastModified(nLastModified),
         fingerprint(nFingerprint),
         folderId(nFolderId),
-        folderName(nFolderName)
+        folderName(nFolderName),
+        queue(nQueue)
     {
         createHumanPubDateTime();
     }
@@ -99,36 +102,12 @@ public:
             fingerprint = other->fingerprint();
             folderId = other->folderId();
             folderName = other->folderName();
+            queue = other->queue();
             createHumanPubDateTime();
         }
     }
 
     void createHumanPubDateTime() {
-//        QDateTime lt = pubDate.toLocalTime();
-//        QDate cd = QDate::currentDate();
-//        if (lt.date() == cd) {
-//            //% "Today, %1"
-//            humanPubDate = qtTrId("libfuoten-today-datetime").arg(
-//                                                            //% "hh:mm"
-//                                                            lt.toString(qtTrId("libfuoten-time-format")
-//                                                           ));
-//        } else if (lt.daysTo(QDateTime::currentDateTime()) == 1 ) {
-//            //% "Yesterday, %1"
-//            humanPubDate = qtTrId("libfuoten-yesterday-datetime").arg(
-//                        //% "hh:mm"
-//                        lt.toString(qtTrId("libfuoten-time-format")
-//                       ));
-//        } else if (lt.daysTo(QDateTime::currentDateTime()) < 7) {
-//            //% "dddd, hh:mm"
-//            humanPubDate = lt.toString(qtTrId("libfuoten-day-time-format"));
-//        } else if (lt.daysTo(QDateTime::currentDateTime()) < 365) {
-//            //% "d. MMMM, hh:mm"
-//            humanPubDate = lt.toString(qtTrId("libfuoten-short-datetime"));
-//        } else {
-//            //% "d. MMM yyyy, hh:mm"
-//            humanPubDate = lt.toString(qtTrId("libfuoten-date-time-format"));
-//        }
-
 
         QTime lt = pubDate.toLocalTime().time();    // the local publication time
         QDate ld = pubDate.toLocalTime().date();    // the local publication date
@@ -174,6 +153,7 @@ public:
     QString folderName;
     QString humanPubDate;
     QString humanPubTime;
+    FuotenEnums::QueueActions queue;
 
 private:
     Q_DISABLE_COPY(ArticlePrivate)

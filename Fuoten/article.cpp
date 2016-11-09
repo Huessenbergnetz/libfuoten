@@ -21,6 +21,7 @@
 #include "article_p.h"
 #include "API/markitem.h"
 #include "API/staritem.h"
+#include "fuoten.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -33,8 +34,8 @@ Article::Article(QObject *parent) :
 }
 
 
-Article::Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, QObject *parent) :
-    BaseItem(* new ArticlePrivate(id, feedId, feedTitle, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint, folderId, folderName), parent)
+Article::Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, Fuoten::FuotenEnums::QueueActions queue, QObject *parent) :
+    BaseItem(* new ArticlePrivate(id, feedId, feedTitle, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint, folderId, folderName, queue), parent)
 {
 }
 
@@ -348,6 +349,15 @@ QString Article::humanPubDate() const { Q_D(const Article); return d->humanPubDa
 QString Article::humanPubTime() const { Q_D(const Article); return d->humanPubTime; }
 
 
+FuotenEnums::QueueActions Article::queue() const { Q_D(const Article); return d->queue; }
+
+void Article::setQueue(FuotenEnums::QueueActions queue)
+{
+    Q_D(Article);
+    d->queue = queue;
+}
+
+
 void Article::copy(BaseItem *other)
 {
     Article *o = qobject_cast<Article*>(other);
@@ -370,6 +380,7 @@ void Article::copy(BaseItem *other)
         setFingerprint(o->fingerprint());
         setFolderId(o->folderId());
         setFolderName(o->folderName());
+        setQueue(o->queue());
     } else {
         qCritical("Failed to cast BaseItem to Article when trying to create a deep copy!");
     }
@@ -377,7 +388,7 @@ void Article::copy(BaseItem *other)
 
 
 
-void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *storage)
+void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
 {
     if (inOperation()) {
         qWarning("Item is still in operation.");
@@ -389,22 +400,34 @@ void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *
         return;
     }
 
-    MarkItem *mi = new MarkItem(id(), unread, this);
-    mi->setConfiguration(config);
-    mi->setStorage(storage);
-    connect(mi, &MarkItem::succeeded, [=] () {
+    FuotenEnums::QueueAction action = FuotenEnums::MarkAsRead;
+    if (unread) {
+        action = FuotenEnums::MarkAsUnread;
+    }
+
+    if (enqueue && storage && storage->enqueueItem(action, this)) {
+
         setUnread(unread);
-        setComponent(nullptr);
-    });
-    connect(mi, &MarkItem::succeeded, mi, &QObject::deleteLater);
-    setComponent(mi);
-    component()->execute();
-    Q_EMIT inOperationChanged(inOperation());
+
+    } else {
+
+        MarkItem *mi = new MarkItem(id(), unread, this);
+        mi->setConfiguration(config);
+        mi->setStorage(storage);
+        connect(mi, &MarkItem::succeeded, [=] () {
+            setUnread(unread);
+            setComponent(nullptr);
+        });
+        connect(mi, &MarkItem::succeeded, mi, &QObject::deleteLater);
+        setComponent(mi);
+        component()->execute();
+        Q_EMIT inOperationChanged(inOperation());
+    }
 }
 
 
 
-void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage *storage)
+void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
 {
     if (inOperation()) {
         qWarning("Item is still in operation.");
@@ -416,15 +439,27 @@ void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage 
         return;
     }
 
-    StarItem *si = new StarItem(feedId(), guidHash(), starred, this);
-    si->setConfiguration(config);
-    si->setStorage(storage);
-    connect(si, &StarItem::succeeded, [=] () {
+    FuotenEnums::QueueAction action = FuotenEnums::Unstar;
+    if (starred) {
+        action = FuotenEnums::Star;
+    }
+
+    if (enqueue && storage && storage->enqueueItem(action, this)) {
+
         setStarred(starred);
-        setComponent(nullptr);
-    });
-    connect(si, &StarItem::succeeded, si, &QObject::deleteLater);
-    setComponent(si);
-    component()->execute();
-    Q_EMIT inOperationChanged(inOperation());
+
+    } else {
+
+        StarItem *si = new StarItem(feedId(), guidHash(), starred, this);
+        si->setConfiguration(config);
+        si->setStorage(storage);
+        connect(si, &StarItem::succeeded, [=] () {
+            setStarred(starred);
+            setComponent(nullptr);
+        });
+        connect(si, &StarItem::succeeded, si, &QObject::deleteLater);
+        setComponent(si);
+        component()->execute();
+        Q_EMIT inOperationChanged(inOperation());
+    }
 }

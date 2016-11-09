@@ -151,6 +151,7 @@ void SQLiteStorageManager::run()
                                "starred INTEGER NOT NULL, "
                                "lastModified INTEGER NOT NULL, "
                                "fingerprint TEXT NOT NULL, "
+                               "queue INTEGER DEFAULT 0, "
                                "FOREIGN KEY(feedId) REFERENCES feeds(id) ON DELETE CASCADE)"
                                ))) {
         //% "Failed to execute database query."
@@ -1513,7 +1514,7 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId WHERE it.id = ?"))) {
+    if (!q.prepare(QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId WHERE it.id = ?"))) {
         //% "Failed to prepare database query."
         setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
         return nullptr;
@@ -1554,7 +1555,8 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
                                  QDateTime::fromTime_t(q.value(14).toUInt()),
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
-                                 q.value(17).toString()
+                                 q.value(17).toString(),
+                                 FuotenEnums::QueueActions(q.value(18).toInt())
                                  );
         return a;
 
@@ -1581,9 +1583,9 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
 
     QSqlQuery q(d->db);
 
-    QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
+    QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
-    if (!args.inIds.isEmpty() || args.unreadOnly || args.starredOnly || (args.parentId > -1)) {
+    if (!args.inIds.isEmpty() || args.unreadOnly || args.starredOnly || (args.parentId > -1) || args.queuedOnly) {
         qs.append(QLatin1String(" WHERE"));
     }
 
@@ -1624,6 +1626,13 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
             qs.append(QLatin1String(" AND"));
         }
         qs.append(QLatin1String(" it.starred = 1"));
+    }
+
+    if (args.queuedOnly) {
+        if ((args.parentId > -1) || !args.inIds.isEmpty() || args.unreadOnly || args.starredOnly) {
+            qs.append(QLatin1String(" AND"));
+        }
+        qs.append(QLatin1String(" it.queue > 0"));
     }
 
     switch(args.sortingRole) {
@@ -1673,8 +1682,6 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
 
             if (args.bodyLimit > 0) {
 
-//                body = body.left(5*args.bodyLimit);
-//                body.remove(QRegularExpression(QStringLiteral("<[^>]*>")));
                 body.replace(QRegularExpression(QStringLiteral("<[^>]*>")), QStringLiteral(" "));
                 body = body.simplified();
                 body = body.left(args.bodyLimit);
@@ -1699,7 +1706,8 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
                                  QDateTime::fromTime_t(q.value(14).toUInt()),
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
-                                 q.value(17).toString()
+                                 q.value(17).toString(),
+                                 FuotenEnums::QueueActions(q.value(18).toInt())
                                  ));
     }
 
@@ -1734,9 +1742,9 @@ void GetArticlesAsyncWorker::run()
         return;
     }
 
-    QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
+    QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
-    if (!m_args.inIds.isEmpty() || m_args.unreadOnly || m_args.starredOnly || (m_args.parentId > -1)) {
+    if (!m_args.inIds.isEmpty() || m_args.unreadOnly || m_args.starredOnly || (m_args.parentId > -1) || m_args.queuedOnly) {
         qs.append(QLatin1String(" WHERE"));
     }
 
@@ -1793,6 +1801,13 @@ void GetArticlesAsyncWorker::run()
         qs.append(QLatin1String(" it.starred = 1"));
     }
 
+    if (m_args.queuedOnly) {
+        if ((m_args.parentId > -1) || !m_args.inIds.isEmpty() || m_args.unreadOnly || m_args.starredOnly) {
+            qs.append(QLatin1String(" AND"));
+        }
+        qs.append(QStringLiteral(" it.queue > 0"));
+    }
+
     switch(m_args.sortingRole) {
     case FuotenEnums::Time:
         qs.append(QLatin1String(" ORDER BY it.pubDate"));
@@ -1841,9 +1856,7 @@ void GetArticlesAsyncWorker::run()
 
             if (m_args.bodyLimit > 0) {
 
-//                body = body.left(5*m_args.bodyLimit);
                 body.replace(QRegularExpression(QStringLiteral("<[^>]*>")), QStringLiteral(" "));
-//                body.remove(QRegularExpression(QStringLiteral("<[^>]*>")));
                 body = body.simplified();
                 body = body.left(m_args.bodyLimit);
             }
@@ -1867,7 +1880,8 @@ void GetArticlesAsyncWorker::run()
                                  QDateTime::fromTime_t(q.value(14).toUInt()),
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
-                                 q.value(17).toString()
+                                 q.value(17).toString(),
+                                 FuotenEnums::QueueActions(q.value(18).toInt())
                                  ));
     }
 
@@ -1983,7 +1997,8 @@ void ItemsRequestedWorker::run()
                                                   "unread = ?, "
                                                   "starred = ?, "
                                                   "lastModified = ?,"
-                                                  "fingerprint = ? "
+                                                  "fingerprint = ?, "
+                                                  "queue = 0 "
                                                   "WHERE id = ?"
                                                   ))) {
                         //% "Failed to prepare database query."
@@ -2352,4 +2367,100 @@ QString SQLiteStorage::getArticleBody(qint64 id)
     } else {
         return QString();
     }
+}
+
+
+
+bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *article)
+{
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return false;
+    }
+
+    if (!article) {
+        qWarning("Invalid article object.");
+        return false;
+    }
+
+    FuotenEnums::QueueActions aq = article->queue();
+
+    QString qs(QStringLiteral("UPDATE items SET lastModified = ?, "));
+
+    switch (action) {
+    case FuotenEnums::MarkAsRead:
+        if (aq.testFlag(FuotenEnums::MarkAsUnread)) {
+            aq ^= FuotenEnums::MarkAsUnread;
+        } else {
+            aq |= FuotenEnums::MarkAsRead;
+        }
+        qs.append(QLatin1String("unread = 0, "));
+        break;
+    case FuotenEnums::MarkAsUnread:
+        if (aq.testFlag(FuotenEnums::MarkAsRead)) {
+            aq ^= FuotenEnums::MarkAsRead;
+        } else {
+            aq |= FuotenEnums::MarkAsUnread;
+        }
+        qs.append(QLatin1String("unread = 1, "));
+        break;
+    case FuotenEnums::Star:
+        if (aq.testFlag(FuotenEnums::Unstar)) {
+            aq ^= FuotenEnums::Unstar;
+        } else {
+            aq |= FuotenEnums::Star;
+        }
+        qs.append(QLatin1String("starred = 1, "));
+        break;
+    case FuotenEnums::Unstar:
+        if (aq.testFlag(FuotenEnums::Star)) {
+            aq ^= FuotenEnums::Star;
+        } else {
+            aq |= FuotenEnums::Unstar;
+        }
+        qs.append(QLatin1String("starred = 0, "));
+        break;
+    default:
+        qWarning("Invalid queue action.");
+        return false;
+    }
+
+    qs.append(QLatin1String("queue = ? "));
+
+    if ((action == FuotenEnums::MarkAsUnread) || (action == FuotenEnums::MarkAsRead)) {
+        qs.append(QLatin1String("WHERE id = ?"));
+    } else {
+        qs.append(QLatin1String("WHERE feedId = ? AND guidHash = ?"));
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.prepare(qs)) {
+        //% "Failed to prepare database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return false;
+    }
+
+    q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t()-10);
+    q.addBindValue((int)aq);
+
+    if ((action == FuotenEnums::MarkAsUnread) || (action == FuotenEnums::MarkAsRead)) {
+        q.addBindValue(article->id());
+    } else {
+        q.addBindValue(article->feedId());
+        q.addBindValue(article->guidHash());
+    }
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return false;
+    }
+
+    article->setQueue(aq);
+
+    return true;
 }

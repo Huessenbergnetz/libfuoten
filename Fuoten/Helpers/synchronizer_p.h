@@ -28,6 +28,8 @@
 #include "../API/getfeeds.h"
 #include "../API/getitems.h"
 #include "../API/getupdateditems.h"
+#include "../API/markmultipleitems.h"
+#include "../API/starmultipleitems.h"
 #include "../error.h"
 
 namespace Fuoten {
@@ -53,6 +55,11 @@ public:
 
     void setError(Error *nError);
     void start();
+    void notifyAboutUnread();
+    void notifyAboutRead();
+    void notifyAboutStarred();
+    void notifyAboutUnstarred();
+    void requestFolders();
     void requestFeeds();
     void requestUnread();
     void requestStarred();
@@ -71,6 +78,14 @@ public:
     GetItems *getUnread;
     GetItems *getStarred;
     GetUpdatedItems *getUpdated;
+    StarMultipleItems *starMultipleItems;
+    StarMultipleItems *unstarMultipleItems;
+    MarkMultipleItems *readMultipleItems;
+    MarkMultipleItems *unreadMultipleItems;
+    IdList queuedUnreadArticles;
+    IdList queuedReadArticles;
+    QList<QPair<qint64, QString> > queuedStarredArticles;
+    QList<QPair<qint64, QString> > queuedUnstarredArticles;
 };
 
 }

@@ -44,6 +44,7 @@ struct FUOTENSHARED_EXPORT QueryArgs {
     bool starredOnly = false;                               /**< Only valid for article queries. If true, only starrred articles are returned. */
     int limit = 0;                                          /**< Limits the result to the specified number of objects. Defaults to \c 0 to return all objects. */
     int bodyLimit = -1;                                     /**< Only valid for article queries. Limits the size of the body text in number of characters. Values lower than \c 0 will return no body text, \c 0 will return the full body text, any other positive value will return a body stripped from HTML tags and limited to the amount of characters. */
+    bool queuedOnly = false;                                /**< Only valid for article queries. Will only return items/articles that are queued. */
 };
 
 class Folder;
@@ -240,6 +241,8 @@ public:
      * \brief Returns the full body of an Article identified by \a id.
      */
     Q_INVOKABLE virtual QString getArticleBody(qint64 id) = 0;
+
+    virtual bool enqueueItem(FuotenEnums::QueueAction action, Article *article);
 
 public Q_SLOTS:
     /*!
