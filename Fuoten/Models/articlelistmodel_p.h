@@ -32,20 +32,6 @@ class ArticleListModelPrivate : public AbstractArticleModelPrivate
 public:
     ArticleListModelPrivate() : AbstractArticleModelPrivate() {}
 
-    QString humanDate(const QDateTime &pubDate) {
-        QDateTime lt = pubDate.toLocalTime();
-        if (lt.date() == QDate::currentDate()) {
-            //% "Today, %1"
-            return qtTrId("libfuoten-today-dateteime").arg(
-                                                            //% "hh:mm"
-                                                            pubDate.toString(qtTrId("libfuoten-time-format")
-                                                           ));
-        } else {
-            //% "d.MMMM, hh:mm"
-            return lt.toString(qtTrId("libfuoten-short-datetime"));
-        }
-    }
-
 private:
     Q_DISABLE_COPY(ArticleListModelPrivate)
 };

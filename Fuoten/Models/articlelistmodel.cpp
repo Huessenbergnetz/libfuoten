@@ -109,12 +109,3 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 }
-
-
-
-QHash<int, QByteArray> ArticleListModel::roleNames() const
-{
-    QHash<int, QByteArray> roles = QAbstractItemModel::roleNames();
-    roles.insert(Qt::UserRole+1, QByteArrayLiteral("humanDate"));
-    return roles;
-}
