@@ -1,3 +1,7 @@
+libfuoten 0.4.0 - 2016-11-10
+* new: local queue for article/item actions (#31)
+* new: process local queue on sync (#32)
+
 libfuoten 0.3.0 - 2016-11-07
 * new: Article object (#25)
 * new: abstract article model (#21)
