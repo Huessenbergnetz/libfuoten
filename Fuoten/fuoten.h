@@ -78,14 +78,13 @@ public:
         Star            = 0x4,    /**< The item has been starred. */
         Unstar          = 0x8     /**< The item has been unstarred. */
     };
+    Q_DECLARE_FLAGS(QueueActions, QueueAction)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    Q_ENUM(QueueAction)
     Q_FLAG(QueueActions)
 #else
     Q_ENUMS(QueueAction)
     Q_FLAGS(QueueActions)
 #endif
-    Q_DECLARE_FLAGS(QueueActions, QueueAction)
 
 
 private:
