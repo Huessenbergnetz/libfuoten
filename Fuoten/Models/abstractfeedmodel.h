@@ -177,6 +177,7 @@ protected Q_SLOTS:
      * handleStorageChanged() will connect the following signals to this slot:
      * \li AbstractStorage::markedItems()
      * \li AbstractStorage::markedAllItemsRead()
+     * \li AbstractStorage::markedAllItemsReadInQueue()
      */
     void itemsMarked();
 

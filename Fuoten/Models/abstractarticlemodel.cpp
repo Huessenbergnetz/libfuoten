@@ -106,6 +106,7 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::starredItem, this, &AbstractArticleModel::itemStarred);
     connect(s, &AbstractStorage::starredItems, this, &AbstractArticleModel::itemsStarred);
     connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractArticleModel::allItemsMarkedRead);
+    connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractArticleModel::allItemsMarkedReadInQueue);
 }
 
 
@@ -634,7 +635,32 @@ void AbstractArticleModel::allItemsMarkedRead(qint64 newestItemId)
 
     const ArticleList as = articles();
     for (Article *a : as) {
-        if (a->id() <= newestItemId) {
+        if (a->unread() && (a->id() <= newestItemId)) {
+            a->setUnread(false);
+        }
+    }
+
+    Q_EMIT dataChanged(index(0, 0), index(rowCount()-1, 0), QVector<int>(1, Qt::DisplayRole));
+}
+
+
+void AbstractArticleModel::allItemsMarkedReadInQueue()
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    const ArticleList as = articles();
+
+    for (Article *a : as) {
+        if (a->unread()) {
+            FuotenEnums::QueueActions qa = a->queue();
+            if (qa.testFlag(FuotenEnums::MarkAsUnread)) {
+                qa ^= FuotenEnums::MarkAsUnread;
+            } else {
+                qa |= FuotenEnums::MarkAsRead;
+            }
+            a->setQueue(qa);
             a->setUnread(false);
         }
     }

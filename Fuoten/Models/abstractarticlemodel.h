@@ -283,9 +283,19 @@ protected Q_SLOTS:
 
     /*!
      * \brief Takes and processes data after all items/articles have been marked as read.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedAllItemsRead() signal to this slot.
+     *
      * \param newestItemId  highest/newest ID of local available items/articles
      */
     void allItemsMarkedRead(qint64 newestItemId);
+
+    /*!
+     * \brief Takes and processes data after all items/articles have been marked as read in local queue.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedAllItemsReadInQueue() signal to this slot.
+     */
+    void allItemsMarkedReadInQueue();
 
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);
