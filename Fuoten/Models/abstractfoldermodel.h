@@ -107,7 +107,8 @@ protected Q_SLOTS:
     /*!
      * \brief Takes and processes data after a folder has been marked as read.
      *
-     * Will set the \link Folder::unreadCount unreadCount \endlink of the folder identified by \a id to \c 0. handleStorageChanged() will connect AbstractStorage::markedReadFolder() to this slot.
+     * Will set the \link Folder::unreadCount unreadCount \endlink of the folder identified by \a id to \c 0.
+     * handleStorageChanged() will connect the AbstractStorage::markedReadFolder() and AbstractStorage::markedReadFolderInQueue() signals to this slot.
      */
     void folderMarkedRead(qint64 id, qint64 newestItem);
 

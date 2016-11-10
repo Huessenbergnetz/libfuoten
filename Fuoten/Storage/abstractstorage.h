@@ -269,6 +269,18 @@ public:
      */
     virtual bool enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId);
 
+    /*!
+     * \brief Adds all articles older than \a newestItemId in the folder identified \a folderId as read to the local queue.
+     *
+     * After successfully adding the items/articles to the local queue, emit the markedReadFolderInQueue() signal.
+     * The default implementation does nothing and returns \c false.
+     *
+     * \param folderId      ID of the folder to be marked as read
+     * \param newestItemId  ID of the newest item in the folder
+     * \return \c true on success, otherwise \c false
+     */
+    virtual bool enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId);
+
 public Q_SLOTS:
     /*!
      * \brief Receives the reply data of the GetFolders request.
@@ -590,6 +602,16 @@ Q_SIGNALS:
      * the \a newestItem that has been marked as read.
      */
     void markedReadFolder(qint64 id, qint64 newestItem);
+
+    /*!
+     * \brief Emit this after a folder has been marked as read in the local queue.
+     *
+     * Best location to emit this signal is your implementation of enqueueMarkFolderRead().
+     *
+     * \param folderId      ID of the folder that has been marked as read in the local queue
+     * \param newestItemId  ID of the newest item in folder that has been marked as read in the local queue
+     */
+    void markedReadFolderInQueue(qint64 folderId, qint64 newestItemId);
 
     /*!
      * \brief Emitted whenever the ready property changes.

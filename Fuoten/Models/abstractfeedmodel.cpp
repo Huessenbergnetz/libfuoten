@@ -48,6 +48,7 @@ void AbstractFeedModel::handleStorageChanged()
     connect(s, &AbstractStorage::readyChanged, this, &AbstractFeedModel::load);
 
     connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFeedModel::folderMarkedRead);
+    connect(s, &AbstractStorage::markedReadFolderInQueue, this, &AbstractFeedModel::folderMarkedRead);
     connect(s, &AbstractStorage::deletedFolder, this, &AbstractFeedModel::folderDeleted);
 
     connect(s, &AbstractStorage::requestedFeeds, this, &AbstractFeedModel::feedsRequested);

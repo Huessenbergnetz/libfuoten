@@ -191,6 +191,16 @@ protected Q_SLOTS:
     void folderMarkedRead(qint64 folderId, qint64 newestItemId);
 
     /*!
+     * \brief Takes and processses data after a folder has been marked as read in the queue.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedReadFolderInQueue() signal to this slots.
+     *
+     * \param folderId      ID of the folder that has been marked as read
+     * \param newestItemId  ID of the newest item that has been marked as read
+     */
+    void folderMarkedReadInQueue(qint64 folderId, qint64 newestItemId);
+
+    /*!
      * \brief Takes and processes data after a feed has been marked as read.
      *
      * handleStorageChanged() will connect the AbstractStorage::markedReadFeed() signal to this slot.

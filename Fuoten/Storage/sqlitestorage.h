@@ -137,6 +137,18 @@ public:
      */
     bool enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId) override;
 
+    /*!
+     * \brief Adds all articles older than \a newestItemId in the folder identified by \a folderId as read to the local queue.
+     *
+     * Will update the queue column for every item in the folder and will also perform the action locally. Will
+     * emit the AbstractStorage::markedReadFolderInQueue() signal on success.
+     *
+     * \param folderId      ID of the folder to be marked as read
+     * \param newestItemId  ID of the newest item in the folder
+     * \return \c true on success, otherwise \c false
+     */
+    bool enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId) override;
+
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;

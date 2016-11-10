@@ -96,6 +96,7 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::gotArticlesAsync, this, &AbstractArticleModel::gotArticlesAsync);
     connect(s, &AbstractStorage::requestedItems, this, &AbstractArticleModel::itemsRequested);
     connect(s, &AbstractStorage::markedReadFolder, this, &AbstractArticleModel::folderMarkedRead);
+    connect(s, &AbstractStorage::markedReadFolderInQueue, this, &AbstractArticleModel::folderMarkedReadInQueue);
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractArticleModel::feedMarkedRead);
     connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractArticleModel::feedMarkedReadInQueue);
     connect(s, &AbstractStorage::deletedFolder, this, &AbstractArticleModel::folderDeleted);
@@ -337,9 +338,44 @@ void AbstractArticleModel::folderMarkedRead(qint64 folderId, qint64 newestItemId
 
     for (Article *a : as) {
 
-        if ((a->folderId() == folderId) && (a->id() <= newestItemId)) {
+        if (a->unread() && (a->folderId() == folderId) && (a->id() <= newestItemId)) {
             QModelIndex idx = findByID(a->id());
             if (idx.isValid()) {
+                a->setUnread(false);
+                Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+            }
+        }
+    }
+}
+
+
+
+void AbstractArticleModel::folderMarkedReadInQueue(qint64 folderId, qint64 newestItemId)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    Q_D(AbstractArticleModel);
+
+    const ArticleList as = d->articles;
+
+    if (as.isEmpty()) {
+        return;
+    }
+
+    for (Article *a : as) {
+
+        if (a->unread() && (a->folderId() == folderId) && (a->id() <= newestItemId)) {
+            QModelIndex idx = findByID(a->id());
+            if (idx.isValid()) {
+                FuotenEnums::QueueActions qa = a->queue();
+                if (qa.testFlag(FuotenEnums::MarkAsUnread)) {
+                    qa ^= FuotenEnums::MarkAsUnread;
+                } else {
+                    qa |= FuotenEnums::MarkAsRead;
+                }
+                a->setQueue(qa);
                 a->setUnread(false);
                 Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
             }
@@ -369,7 +405,7 @@ void AbstractArticleModel::feedMarkedRead(qint64 feedId, qint64 newestItemId)
 
     for (Article *a : as) {
 
-        if ((a->feedId() == feedId) && (a->id() <= newestItemId)) {
+        if (a->unread() && (a->feedId() == feedId) && (a->id() <= newestItemId)) {
             QModelIndex idx = findByID(a->id());
             if (idx.isValid()) {
                 a->setUnread(false);
@@ -402,7 +438,7 @@ void AbstractArticleModel::feedMarkedReadInQueue(qint64 feedId, qint64 newestIte
 
     for (Article *a : as) {
 
-        if ((a->unread() == true) && (a->feedId() == feedId) && (a->id() <= newestItemId)) {
+        if (a->unread() && (a->feedId() == feedId) && (a->id() <= newestItemId)) {
 
             QModelIndex idx = findByID(a->id());
             if (idx.isValid()) {

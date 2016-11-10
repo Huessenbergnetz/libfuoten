@@ -134,7 +134,7 @@ protected Q_SLOTS:
     /*!
      * \brief Takes and processes data after a complete folder has been marked as read.
      *
-     * handleStorageChanged() will connect the AbstractStorage::markedReadFolder() signal to this slot.
+     * handleStorageChanged() will connect the AbstractStorage::markedReadFolder() and AbstractStorage::markedReadFolderInQueue() signals to this slot.
      *
      * \param folderId      ID of the folder that has been marked as read
      * \param newestItemId  unused

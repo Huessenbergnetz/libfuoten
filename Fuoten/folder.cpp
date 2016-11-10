@@ -167,7 +167,7 @@ void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
 
 
 
-void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage)
+void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
 {
     if (inOperation()) {
         qWarning("Folder is still in operation.");
@@ -181,19 +181,26 @@ void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage)
 
     const qint64 newestItemId = storage->getNewestItemId(FuotenEnums::Folder, id());
 
-    MarkFolderRead *mfr = new MarkFolderRead(this);
-    mfr->setConfiguration(config);
-    mfr->setStorage(storage);
-    mfr->setFolderId(id());
-    mfr->setNewestItemId(newestItemId);
-    connect(mfr, &MarkFolderRead::succeeded, [=] () {
+    if (enqueue && storage->enqueueMarkFolderRead(id(), newestItemId)) {
+
         setUnreadCount(0);
-        setComponent(nullptr);
-    });
-    connect(mfr, &MarkFolderRead::succeeded, mfr, &QObject::deleteLater);
-    setComponent(mfr);
-    component()->execute();
-    Q_EMIT inOperationChanged(true);
+
+    } else {
+
+        MarkFolderRead *mfr = new MarkFolderRead(this);
+        mfr->setConfiguration(config);
+        mfr->setStorage(storage);
+        mfr->setFolderId(id());
+        mfr->setNewestItemId(newestItemId);
+        connect(mfr, &MarkFolderRead::succeeded, [=] () {
+            setUnreadCount(0);
+            setComponent(nullptr);
+        });
+        connect(mfr, &MarkFolderRead::succeeded, mfr, &QObject::deleteLater);
+        setComponent(mfr);
+        component()->execute();
+        Q_EMIT inOperationChanged(true);
+    }
 }
 
 
