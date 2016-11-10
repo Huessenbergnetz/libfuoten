@@ -48,23 +48,63 @@ public:
         getFeeds(nullptr),
         getUnread(nullptr),
         getStarred(nullptr),
-        getUpdated(nullptr)
+        getUpdated(nullptr),
+        starMultipleItems(nullptr),
+        unstarMultipleItems(nullptr),
+        readMultipleItems(nullptr),
+        unreadMultipleItems(nullptr)
     {}
 
     ~SynchronizerPrivate() {}
 
-    void setError(Error *nError);
-    void start();
-    void notifyAboutUnread();
-    void notifyAboutRead();
-    void notifyAboutStarred();
-    void notifyAboutUnstarred();
-    void requestFolders();
-    void requestFeeds();
-    void requestUnread();
-    void requestStarred();
-    void requestUpdated();
-    void finished();
+
+    void cleanup()
+    {
+        if (getFolders) {
+            delete getFolders;
+            getFolders = nullptr;
+        }
+        if (getFeeds) {
+            delete getFeeds;
+            getFeeds = nullptr;
+        }
+        if (getStarred) {
+            delete getStarred;
+            getStarred = nullptr;
+        }
+        if (getUnread) {
+            delete getUnread;
+            getUnread = nullptr;
+        }
+        if (getUpdated) {
+            delete getUpdated;
+            getUpdated = nullptr;
+        }
+        if (starMultipleItems) {
+            delete starMultipleItems;
+            starMultipleItems = nullptr;
+        }
+        if (unstarMultipleItems) {
+            delete unstarMultipleItems;
+            unstarMultipleItems = nullptr;
+        }
+        if (readMultipleItems) {
+            delete readMultipleItems;
+            readMultipleItems = nullptr;
+        }
+        if (unreadMultipleItems) {
+            delete unreadMultipleItems;
+            unreadMultipleItems = nullptr;
+        }
+        if (storage) {
+            QObject::disconnect(storage, 0, q_ptr, 0);
+        }
+        queuedUnreadArticles.clear();
+        queuedReadArticles.clear();
+        queuedStarredArticles.clear();
+        queuedUnstarredArticles.clear();
+        inOperation = false;
+    }
 
 
     Synchronizer * const q_ptr;

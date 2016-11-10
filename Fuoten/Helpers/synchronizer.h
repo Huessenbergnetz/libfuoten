@@ -187,6 +187,63 @@ protected:
      */
     void start();
 
+protected Q_SLOTS:
+    /*!
+     * \brief Sets a new Error object to the error property.
+     * \sa error
+     */
+    void setError(Error *nError);
+
+    /*!
+     * \brief Notifies the News App about unread articles from the local queue.
+     */
+    void notifyAboutUnread();
+
+    /*!
+     * \brief Notifies the News App about read articles from the local queue.
+     */
+    void notifyAboutRead();
+
+    /*!
+     * \brief Notifies the News App about starred articles from the local queue.
+     */
+    void notifyAboutStarred();
+
+    /*!
+     * \brief Notifies the News app about unstarred articles from the local queue.
+     */
+    void notifyAboutUnstarred();
+
+    /*!
+     * \brief Requests folder information from the News App.
+     */
+    void requestFolders();
+
+    /*!
+     * \brief Requests feed information from the News App.
+     */
+    void requestFeeds();
+
+    /*!
+     * \brief Requests all unread articles from the News App.
+     */
+    void requestUnread();
+
+    /*!
+     * \brief Requests all starred articles from the News App.
+     */
+    void requestStarred();
+
+    /*!
+     * \brief Requests articles from the News App that are new or have benn updated since last sync.
+     */
+    void requestUpdated();
+
+    /*!
+     * \brief Finishes the synchrinization and cleans up.
+     */
+    void finished();
+
 private:
     Q_DISABLE_COPY(Synchronizer)
     Q_DECLARE_PRIVATE(Synchronizer)
