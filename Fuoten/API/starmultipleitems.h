@@ -97,7 +97,7 @@ public:
 
     /*!
      * \brief Sets the list of feed IDs and article GUID hashes that shoul be starred/unstarred.
-     * \param articles  list containing a set of feed ID as \a first and article guid hash as \a second
+     * \param items  list containing a set of feed ID as \a first and article guid hash as \a second
      */
     void setItemsToStar(const QList<QPair<qint64,QString>> &items);
 
