@@ -201,6 +201,18 @@ protected Q_SLOTS:
     void feedMarkedRead(qint64 feedId, qint64 newestItemId);
 
     /*!
+     * \brief Takes and processes data after a feeds has been marked as read in local queue.
+     *
+     * Will do the same as feedMarkedRead() but will also update the queue property of the article objects.
+     *
+     * handleStorageChanged() will connect the AbstractStorage::markedReadFeedInQueue() signal to this slot.
+     *
+     * \param feedId        ID of the feed that has been marked as read
+     * \param newestItemId  ID of the newest item that has been marked as read
+     */
+    void feedMarkedReadInQueue(qint64 feedId, qint64 newestItemId);
+
+    /*!
      * \brief Takes and processes data after a folder has been deleted.
      *
      * handleStorageChanged() will connect the AbstractStorage::deletedFolder() signal to this slots.

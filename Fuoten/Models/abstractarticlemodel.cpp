@@ -97,6 +97,7 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::requestedItems, this, &AbstractArticleModel::itemsRequested);
     connect(s, &AbstractStorage::markedReadFolder, this, &AbstractArticleModel::folderMarkedRead);
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractArticleModel::feedMarkedRead);
+    connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractArticleModel::feedMarkedReadInQueue);
     connect(s, &AbstractStorage::deletedFolder, this, &AbstractArticleModel::folderDeleted);
     connect(s, &AbstractStorage::deletedFeed, this, &AbstractArticleModel::feedDeleted);
     connect(s, &AbstractStorage::markedItem, this, &AbstractArticleModel::itemMarked);
@@ -322,8 +323,7 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
 
 void AbstractArticleModel::folderMarkedRead(qint64 folderId, qint64 newestItemId)
 {
-    if (!storage()) {
-        qWarning("Can not update articles, no storage available.");
+    if (rowCount() <= 0) {
         return;
     }
 
@@ -351,8 +351,11 @@ void AbstractArticleModel::folderMarkedRead(qint64 folderId, qint64 newestItemId
 
 void AbstractArticleModel::feedMarkedRead(qint64 feedId, qint64 newestItemId)
 {
-    if (!storage()) {
-        qWarning("Can not update articles, no storage available.");
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    if ((parentIdType() == FuotenEnums::Feed) && (parentId() != feedId)) {
         return;
     }
 
@@ -374,6 +377,47 @@ void AbstractArticleModel::feedMarkedRead(qint64 feedId, qint64 newestItemId)
             }
         }
 
+    }
+}
+
+
+
+void AbstractArticleModel::feedMarkedReadInQueue(qint64 feedId, qint64 newestItemId)
+{
+    if (rowCount() <= 0) {
+        return;
+    }
+
+    if ((parentIdType() == FuotenEnums::Feed) && (parentId() != feedId)) {
+        return;
+    }
+
+    Q_D(AbstractArticleModel);
+
+    const ArticleList as = d->articles;
+
+    if (as.isEmpty()) {
+        return;
+    }
+
+    for (Article *a : as) {
+
+        if ((a->unread() == true) && (a->feedId() == feedId) && (a->id() <= newestItemId)) {
+
+            QModelIndex idx = findByID(a->id());
+            if (idx.isValid()) {
+
+                FuotenEnums::QueueActions qa = a->queue();
+                if (qa.testFlag(FuotenEnums::MarkAsUnread)) {
+                    qa ^= FuotenEnums::MarkAsUnread;
+                } else {
+                    qa |= FuotenEnums::MarkAsRead;
+                }
+                a->setQueue(qa);
+                a->setUnread(false);
+                Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
+            }
+        }
     }
 }
 

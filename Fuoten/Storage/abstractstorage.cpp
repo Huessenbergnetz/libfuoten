@@ -163,3 +163,11 @@ bool AbstractStorage::enqueueItem(FuotenEnums::QueueAction action, Article *arti
     Q_UNUSED(article)
     return false;
 }
+
+
+bool AbstractStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
+{
+    Q_UNUSED(feedId)
+    Q_UNUSED(newestItemId)
+    return false;
+}

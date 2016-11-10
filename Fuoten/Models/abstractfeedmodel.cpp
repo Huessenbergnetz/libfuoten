@@ -56,6 +56,7 @@ void AbstractFeedModel::handleStorageChanged()
     connect(s, &AbstractStorage::movedFeed, this, &AbstractFeedModel::feedMoved);
     connect(s, &AbstractStorage::renamedFeed, this, &AbstractFeedModel::feedRenamed);
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFeedModel::feedMarkedRead);
+    connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractFeedModel::feedMarkedRead);
 
     connect(s, &AbstractStorage::requestedItems, this, &AbstractFeedModel::itemsRquested);
     connect(s, &AbstractStorage::markedItem, this, &AbstractFeedModel::itemMarked);

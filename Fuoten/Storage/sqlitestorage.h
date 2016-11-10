@@ -114,7 +114,28 @@ public:
      */
     Q_INVOKABLE QString getArticleBody(qint64 id) override;
 
+    /*!
+     * \brief Enqueues the \a action for the given \a article in the local SQLite database.
+     *
+     * Will update the queue column in the items table and also will perform the action locally.
+     *
+     * \param action    the action to be performed on the Article object
+     * \param article   the Article object the action should be performed on
+     * \return          \c true if the enqueue was successful, otherwise \c false
+     */
     bool enqueueItem(FuotenEnums::QueueAction action, Article *article) override;
+
+    /*!
+     * \brief Adds all articles older than \a newestItemId in the feed identified by \a feedId as read to the local queue.
+     *
+     * Will update the queue column for every item in the feed and will also perform the action locally. Will
+     * emit the AbstractStorage::markedReadFeedInQueue() signal on success.
+     *
+     * \param feedId        ID of the feed to be marked as read
+     * \param newestItemId  ID of the newest item in the feed
+     * \return \c true on success, otherwise \c false
+     */
+    bool enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId) override;
 
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;

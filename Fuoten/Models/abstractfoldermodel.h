@@ -128,7 +128,7 @@ protected Q_SLOTS:
     /*!
      * \brief Takes and processes data after a feed has been created.
      *
-     * handleStorageChanged() will connect the AbstractStorage::markedReadFeed() signal to this slot.
+     * handleStorageChanged() will connect the AbstractStorage::markedReadFeed() and AbstractStorage::markedReadFeedInQueue() signals to this slot.
      */
     void feedMarkedRead(qint64 id);
 

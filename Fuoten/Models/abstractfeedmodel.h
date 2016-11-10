@@ -124,7 +124,8 @@ protected Q_SLOTS:
     /*!
      * \brief Takes and processes data after a complete feed has been marked as read.
      *
-     * handleStorageChanged() will connect the AbstractStorage::markedReadFeed() signal to this slot.
+     * handleStorageChanged() will connect the AbstractStorage::markedReadFeed() and AbstractStorage::markedReadFeedInQueue() signals to this slot.
+     *
      * \param id            ID of the feed that has been marked as read
      * \param newestItemId  unused
      */

@@ -242,7 +242,32 @@ public:
      */
     Q_INVOKABLE virtual QString getArticleBody(qint64 id) = 0;
 
+    /*!
+     * \brief Enqueues an \a action for the given \a article.
+     *
+     * When enqueueing an article, the performed action should already be saved in the local storage
+     * together with the queue action. If the article is marked as read for example, add the action to
+     * your local queue and also mark the article as read in your local storage.
+     *
+     * The default implementation does nothing and returns \c false.
+     *
+     * \param action    the action that should be enqueued
+     * \param article   pointer to the Article object that should be enqueued
+     * \return \c true if the enqueue was successful, otherwise \c false
+     */
     virtual bool enqueueItem(FuotenEnums::QueueAction action, Article *article);
+
+    /*!
+     * \brief Adds all articles older than \a newestItemId in the feed identified by \a feedId as read to the local queue.
+     *
+     * After successfully adding the items/articles to the local queue, emit the markedReadFeedInQueue() signal.
+     * The default implementation does nothing and returns \c false.
+     *
+     * \param feedId        ID of the feed to be marked as read
+     * \param newestItemId  ID of the newest item in the feed
+     * \return  \c true on success, otherwise \c false
+     */
+    virtual bool enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId);
 
 public Q_SLOTS:
     /*!
@@ -637,6 +662,13 @@ Q_SIGNALS:
      * the \a newestItem that has been marked as read.
      */
     void markedReadFeed(qint64 id, qint64 newestItem);
+
+    /*!
+     * \brief Emit this after a feed has been marked as read in the local queue.
+     * \param feedId        ID of the feed that has been marked as read
+     * \param newestItemId  ID of the newest item in the feed
+     */
+    void markedReadFeedInQueue(qint64 feedId, qint64 newestItemId);
 
     /*!
      * \brief Emit this after items/articles have been received and processed.

@@ -28,8 +28,7 @@
 #include <QStringList>
 #include <QThread>
 #include <QJsonDocument>
-
-//#include <QtDebug>
+#include <QSqlQuery>
 
 namespace Fuoten {
 
@@ -93,6 +92,11 @@ public:
         } else {
             return intListToStringList(ints).join(QChar(','));
         }
+    }
+
+    QSqlQuery getQuery() const
+    {
+        return QSqlQuery(db);
     }
 
     QSqlDatabase db;

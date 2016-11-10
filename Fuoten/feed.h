@@ -344,8 +344,9 @@ public:
      *
      * \param config    pointer to an AbstractConfiguration subclass to get the account configuration
      * \param storage   pointer to an AbstractStorage subclass to query the newest item ID in the feed and update the local storage
+     * \param enqueue   \c true to enqueue the marking local up to the next sync, valid \c storage has to be available
      */
-    Q_INVOKABLE void markAsRead(Fuoten::AbstractConfiguration * config, Fuoten::AbstractStorage *storage);
+    Q_INVOKABLE void markAsRead(Fuoten::AbstractConfiguration * config, Fuoten::AbstractStorage *storage, bool enqueue = false);
 
 Q_SIGNALS:
     /*!

@@ -60,6 +60,7 @@ void AbstractFolderModel::handleStorageChanged()
     connect(s, &AbstractStorage::deletedFeed, this, &AbstractFolderModel::updateCountValues);
     connect(s, &AbstractStorage::movedFeed, this, &AbstractFolderModel::updateCountValues);
     connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFolderModel::feedMarkedRead);
+    connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractFolderModel::feedMarkedRead);
 
     connect(s, &AbstractStorage::requestedItems, this, &AbstractFolderModel::updateCountValues);
     connect(s, &AbstractStorage::markedItems, this, &AbstractFolderModel::updateCountValues);
