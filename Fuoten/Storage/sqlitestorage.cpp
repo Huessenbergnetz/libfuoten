@@ -2462,5 +2462,27 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
 
     article->setQueue(aq);
 
+    switch (action) {
+    case FuotenEnums::MarkAsRead:
+        Q_EMIT markedItem(article->id(), false);
+        setTotalUnread(totalUnread()-1);
+        break;
+    case FuotenEnums::MarkAsUnread:
+        Q_EMIT markedItem(article->id(), true);
+        setTotalUnread(totalUnread()+1);
+        break;
+    case FuotenEnums::Star:
+        Q_EMIT starredItem(article->feedId(), article->guidHash(), true);
+        setStarred(starred()+1);
+        break;
+    case FuotenEnums::Unstar:
+        Q_EMIT starredItem(article->feedId(), article->guidHash(), false);
+        setStarred(starred()-1);
+        break;
+    default:
+        qWarning("Invalid queue action.");
+        return false;
+    }
+
     return true;
 }
