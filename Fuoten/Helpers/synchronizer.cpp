@@ -331,6 +331,7 @@ void Synchronizer::requestUnread()
         d->getUnread->setType(FuotenEnums::All);
         d->getUnread->setGetRead(false);
         d->getUnread->setBatchSize(-1);
+        d->getUnread->setRequestTimeout(150);
         QObject::connect(d->getUnread, &Component::failed, this, &Synchronizer::setError);
 //        QObject::connect(getUnread, &Component::failed, getUnread, &QObject::deleteLater);
         if (d->storage) {
