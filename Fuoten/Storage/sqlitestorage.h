@@ -149,6 +149,15 @@ public:
      */
     bool enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId) override;
 
+    /*!
+     * \brief Adds all local articles that are unread to the queue and marks them as read.
+     *
+     * The default implementation does nothing and returns \c false.
+     *
+     * \return \c true on success, otherwise \c false
+     */
+    bool enqueueMarkAllItemsRead() override;
+
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;

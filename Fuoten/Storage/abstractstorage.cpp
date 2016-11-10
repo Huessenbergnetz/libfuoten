@@ -179,3 +179,9 @@ bool AbstractStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId
     Q_UNUSED(newestItemId)
     return false;
 }
+
+
+bool AbstractStorage::enqueueMarkAllItemsRead()
+{
+    return false;
+}

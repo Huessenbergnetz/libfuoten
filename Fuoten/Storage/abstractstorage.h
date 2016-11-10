@@ -281,6 +281,16 @@ public:
      */
     virtual bool enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId);
 
+    /*!
+     * \brief Adds all local articles that are unread to the queue and marks them as read.
+     *
+     * After successfully addint the items/articles to the local queue, emit the markedAllItemsReadInQueue() signal.
+     * The default implementation does nothing and returns \c false.
+     *
+     * \return \c true on success, otherwise \c false
+     */
+    virtual bool enqueueMarkAllItemsRead();
+
 public Q_SLOTS:
     /*!
      * \brief Receives the reply data of the GetFolders request.
@@ -756,6 +766,13 @@ Q_SIGNALS:
      * \param newestItemId  highest/newest ID of the local available items/articles
      */
     void markedAllItemsRead(qint64 newestItemId);
+
+    /*!
+     * \brief Emit this signal after all items/articles have been marked as read in the local queue.
+     *
+     * Best location to emit this signal is your implemetation of enqueueMarkAllItemsRead().
+     */
+    void markedAllItemsReadInQueue();
 
     /*!
      * \brief Emit this after getArticlesAsync() has been called and articles have been queried.

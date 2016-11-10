@@ -2698,3 +2698,88 @@ bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
 
     return true;
 }
+
+
+
+bool SQLiteStorage::enqueueMarkAllItemsRead()
+{
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return false;
+    }
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q = d->getQuery();
+
+    if (!q.exec(QStringLiteral("SELECT id, queue FROM items WHERE unread = 1"))) {
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return false;
+    }
+
+    QHash<qint64,FuotenEnums::QueueActions> idsAndQueue;
+
+    while (q.next()) {
+        idsAndQueue.insert(q.value(0).toLongLong(), FuotenEnums::QueueActions(q.value(1).toInt()));
+    }
+
+    if (idsAndQueue.isEmpty()) {
+        qWarning("No items found.");
+        return true;
+    }
+
+    QHash<qint64,FuotenEnums::QueueActions> idsAndQueueUpdated;
+    QHash<qint64,FuotenEnums::QueueActions>::const_iterator i = idsAndQueue.constBegin();
+    while (i != idsAndQueue.constEnd()) {
+        FuotenEnums::QueueActions qa = i.value();
+        if (qa.testFlag(FuotenEnums::MarkAsUnread)) {
+            qa ^= FuotenEnums::MarkAsUnread;
+        } else {
+            qa |= FuotenEnums::MarkAsRead;
+        }
+        idsAndQueueUpdated.insert(i.key(), qa);
+        ++i;
+    }
+
+    if (!d->db.transaction()) {
+        //% "Failed to begin a database transaction."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
+        return false;
+    }
+
+    QHash<qint64,FuotenEnums::QueueActions>::const_iterator ii = idsAndQueueUpdated.constBegin();
+    while (ii != idsAndQueueUpdated.constEnd()) {
+
+        if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, queue = ? WHERE id = ?"))) {
+            //% "Failed to prepare database query."
+            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+            return false;
+        }
+
+        q.addBindValue((int)ii.value());
+        q.addBindValue(ii.key());
+
+        if (!q.exec()) {
+            //% "Failed to execute database query."
+            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+            return false;
+        }
+
+        ++ii;
+    }
+
+
+    if (!d->db.commit()) {
+        //% "Failed to commit a database transaction."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
+        return false;
+    }
+
+    setTotalUnread(totalUnread() - idsAndQueueUpdated.size());
+
+    Q_EMIT markedAllItemsReadInQueue();
+
+    return true;
+}
