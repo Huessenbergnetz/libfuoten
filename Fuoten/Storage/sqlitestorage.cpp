@@ -2489,6 +2489,147 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
 
 
 
+EnqueueMarkReadWorker::EnqueueMarkReadWorker(const QString &dbpath, qint64 id, FuotenEnums::Type idType, qint64 newestItemId, QObject *parent) :
+    QThread(parent), m_id(id), m_idType(idType), m_newestItemId(newestItemId)
+{
+    if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
+        m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
+        m_db.setDatabaseName(dbpath);
+    } else {
+        m_db = QSqlDatabase::database(QStringLiteral("fuotendb"));
+    }
+}
+
+
+void EnqueueMarkReadWorker::run()
+{
+    QSqlQuery q(m_db);
+
+    if (!q.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
+        //% "Failed to execute database query."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    QString qs; // query string
+
+    switch(m_idType) {
+    case FuotenEnums::Feed:
+        qs = QStringLiteral("SELECT id, queue FROM items WHERE unread = 1 AND id <= ? AND feedId = ?");
+        break;
+    case FuotenEnums::Folder:
+        qs = QStringLiteral("SELECT id, queue FROM items WHERE unread = 1 AND id <= ? AND feedId IN (SELECT id FROM feeds WHERE folderId = ?)");
+        break;
+    case FuotenEnums::All:
+        qs = QStringLiteral("SELECT id, queue FROM items WHERE unread = 1");
+        break;
+    default:
+        //% "Invalid ID type."
+        Q_EMIT failed(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-id-type"), QString(), this));
+        return;
+    }
+
+    if (!q.prepare(qs)) {
+        //% "Failed to prepare database query."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+        return;
+    }
+
+    if (m_idType != FuotenEnums::All) {
+        q.addBindValue(m_newestItemId);
+        q.addBindValue(m_id);
+    }
+
+    if (!q.exec()) {
+        //% "Failed to execute database query."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    QHash<qint64,FuotenEnums::QueueActions> idsAndQueue;
+
+    while (q.next()) {
+        idsAndQueue.insert(q.value(0).toLongLong(), FuotenEnums::QueueActions(q.value(1).toInt()));
+    }
+
+    if (idsAndQueue.isEmpty()) {
+        qWarning("No items found.");
+        return;
+    }
+
+    QHash<qint64,FuotenEnums::QueueActions> idsAndQueueUpdated;
+    QHash<qint64,FuotenEnums::QueueActions>::const_iterator i = idsAndQueue.constBegin();
+    while (i != idsAndQueue.constEnd()) {
+        FuotenEnums::QueueActions qa = i.value();
+        if (qa.testFlag(FuotenEnums::MarkAsUnread)) {
+            qa ^= FuotenEnums::MarkAsUnread;
+        } else {
+            qa |= FuotenEnums::MarkAsRead;
+        }
+        idsAndQueueUpdated.insert(i.key(), qa);
+        ++i;
+    }
+
+    if (!m_db.transaction()) {
+        //% "Failed to begin a database transaction."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
+        return;
+    }
+
+    QHash<qint64,FuotenEnums::QueueActions>::const_iterator ii = idsAndQueueUpdated.constBegin();
+    while (ii != idsAndQueueUpdated.constEnd()) {
+
+        if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, queue = ? WHERE id = ?"))) {
+            //% "Failed to prepare database query."
+            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
+            return;
+        }
+
+        q.addBindValue((int)ii.value());
+        q.addBindValue(ii.key());
+
+        if (!q.exec()) {
+            //% "Failed to execute database query."
+            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+            return;
+        }
+
+        ++ii;
+    }
+
+
+    if (!m_db.commit()) {
+        //% "Failed to commit a database transaction."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
+        return;
+    }
+
+
+    if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
+        //% "Failed to execute database query."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    if (q.next()) {
+        Q_EMIT gotTotalUnread(q.value(0).toUInt());
+    }
+
+    switch (m_idType) {
+    case FuotenEnums::Feed:
+        Q_EMIT markedReadFeedInQueue(m_id, m_newestItemId);
+        break;
+    case FuotenEnums::Folder:
+        Q_EMIT markedReadFolderInQueue(m_id, m_newestItemId);
+        break;
+    default:
+        Q_EMIT markedAllItemsReadInQueue();
+        break;
+    }
+}
+
+
+
 bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
 {
     if (!ready()) {
@@ -2511,84 +2652,12 @@ bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
 
     Q_D(SQLiteStorage);
 
-    QSqlQuery q = d->getQuery();
-
-    if (!q.prepare(QStringLiteral("SELECT id, queue FROM items WHERE unread = 1 AND feedId = ? AND id <= ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return false;
-    }
-
-    q.addBindValue(feedId);
-    q.addBindValue(newestItemId);
-
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return false;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions> idsAndQueue;
-
-    while (q.next()) {
-        idsAndQueue.insert(q.value(0).toLongLong(), FuotenEnums::QueueActions(q.value(1).toInt()));
-    }
-
-    if (idsAndQueue.isEmpty()) {
-        qWarning("No items found.");
-        return true;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions> idsAndQueueUpdated;
-    QHash<qint64,FuotenEnums::QueueActions>::const_iterator i = idsAndQueue.constBegin();
-    while (i != idsAndQueue.constEnd()) {
-        FuotenEnums::QueueActions qa = i.value();
-        if (qa.testFlag(FuotenEnums::MarkAsUnread)) {
-            qa ^= FuotenEnums::MarkAsUnread;
-        } else {
-            qa |= FuotenEnums::MarkAsRead;
-        }
-        idsAndQueueUpdated.insert(i.key(), qa);
-        ++i;
-    }
-
-    if (!d->db.transaction()) {
-        //% "Failed to begin a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
-        return false;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions>::const_iterator ii = idsAndQueueUpdated.constBegin();
-    while (ii != idsAndQueueUpdated.constEnd()) {
-
-        if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, queue = ? WHERE id = ?"))) {
-            //% "Failed to prepare database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-            return false;
-        }
-
-        q.addBindValue((int)ii.value());
-        q.addBindValue(ii.key());
-
-        if (!q.exec()) {
-            //% "Failed to execute database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return false;
-        }
-
-        ++ii;
-    }
-
-
-    if (!d->db.commit()) {
-        //% "Failed to commit a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
-        return false;
-    }
-
-    setTotalUnread(totalUnread() - idsAndQueueUpdated.size());
-
-    Q_EMIT markedReadFeedInQueue(feedId, newestItemId);
+    EnqueueMarkReadWorker *worker = new EnqueueMarkReadWorker(d->db.databaseName(), feedId, FuotenEnums::Feed, newestItemId, this);
+    connect(worker, &EnqueueMarkReadWorker::markedReadFeedInQueue, this, &SQLiteStorage::markedReadFeedInQueue);
+    connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
+    connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, worker, &QObject::deleteLater);
+    worker->start();
 
     return true;
 }
@@ -2617,84 +2686,12 @@ bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
 
     Q_D(SQLiteStorage);
 
-    QSqlQuery q = d->getQuery();
-
-    if (!q.prepare(QStringLiteral("SELECT id, queue FROM items WHERE unread = 1 AND id <= ? AND feedId IN (SELECT id FROM feeds WHERE folderId = ?)"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return false;
-    }
-
-    q.addBindValue(newestItemId);
-    q.addBindValue(folderId);
-
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return false;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions> idsAndQueue;
-
-    while (q.next()) {
-        idsAndQueue.insert(q.value(0).toLongLong(), FuotenEnums::QueueActions(q.value(1).toInt()));
-    }
-
-    if (idsAndQueue.isEmpty()) {
-        qWarning("No items found.");
-        return true;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions> idsAndQueueUpdated;
-    QHash<qint64,FuotenEnums::QueueActions>::const_iterator i = idsAndQueue.constBegin();
-    while (i != idsAndQueue.constEnd()) {
-        FuotenEnums::QueueActions qa = i.value();
-        if (qa.testFlag(FuotenEnums::MarkAsUnread)) {
-            qa ^= FuotenEnums::MarkAsUnread;
-        } else {
-            qa |= FuotenEnums::MarkAsRead;
-        }
-        idsAndQueueUpdated.insert(i.key(), qa);
-        ++i;
-    }
-
-    if (!d->db.transaction()) {
-        //% "Failed to begin a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
-        return false;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions>::const_iterator ii = idsAndQueueUpdated.constBegin();
-    while (ii != idsAndQueueUpdated.constEnd()) {
-
-        if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, queue = ? WHERE id = ?"))) {
-            //% "Failed to prepare database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-            return false;
-        }
-
-        q.addBindValue((int)ii.value());
-        q.addBindValue(ii.key());
-
-        if (!q.exec()) {
-            //% "Failed to execute database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return false;
-        }
-
-        ++ii;
-    }
-
-
-    if (!d->db.commit()) {
-        //% "Failed to commit a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
-        return false;
-    }
-
-    setTotalUnread(totalUnread() - idsAndQueueUpdated.size());
-
-    Q_EMIT markedReadFolderInQueue(folderId, newestItemId);
+    EnqueueMarkReadWorker *worker = new EnqueueMarkReadWorker(d->db.databaseName(), folderId, FuotenEnums::Folder, newestItemId, this);
+    connect(worker, &EnqueueMarkReadWorker::markedReadFolderInQueue, this, &SQLiteStorage::markedReadFolderInQueue);
+    connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
+    connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, worker, &QObject::deleteLater);
+    worker->start();
 
     return true;
 }
@@ -2711,75 +2708,12 @@ bool SQLiteStorage::enqueueMarkAllItemsRead()
 
     Q_D(SQLiteStorage);
 
-    QSqlQuery q = d->getQuery();
-
-    if (!q.exec(QStringLiteral("SELECT id, queue FROM items WHERE unread = 1"))) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return false;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions> idsAndQueue;
-
-    while (q.next()) {
-        idsAndQueue.insert(q.value(0).toLongLong(), FuotenEnums::QueueActions(q.value(1).toInt()));
-    }
-
-    if (idsAndQueue.isEmpty()) {
-        qWarning("No items found.");
-        return true;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions> idsAndQueueUpdated;
-    QHash<qint64,FuotenEnums::QueueActions>::const_iterator i = idsAndQueue.constBegin();
-    while (i != idsAndQueue.constEnd()) {
-        FuotenEnums::QueueActions qa = i.value();
-        if (qa.testFlag(FuotenEnums::MarkAsUnread)) {
-            qa ^= FuotenEnums::MarkAsUnread;
-        } else {
-            qa |= FuotenEnums::MarkAsRead;
-        }
-        idsAndQueueUpdated.insert(i.key(), qa);
-        ++i;
-    }
-
-    if (!d->db.transaction()) {
-        //% "Failed to begin a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
-        return false;
-    }
-
-    QHash<qint64,FuotenEnums::QueueActions>::const_iterator ii = idsAndQueueUpdated.constBegin();
-    while (ii != idsAndQueueUpdated.constEnd()) {
-
-        if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, queue = ? WHERE id = ?"))) {
-            //% "Failed to prepare database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-            return false;
-        }
-
-        q.addBindValue((int)ii.value());
-        q.addBindValue(ii.key());
-
-        if (!q.exec()) {
-            //% "Failed to execute database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return false;
-        }
-
-        ++ii;
-    }
-
-
-    if (!d->db.commit()) {
-        //% "Failed to commit a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
-        return false;
-    }
-
-    setTotalUnread(totalUnread() - idsAndQueueUpdated.size());
-
-    Q_EMIT markedAllItemsReadInQueue();
+    EnqueueMarkReadWorker *worker = new EnqueueMarkReadWorker(d->db.databaseName(), 0, FuotenEnums::All, -1, this);
+    connect(worker, &EnqueueMarkReadWorker::markedAllItemsReadInQueue, this, &SQLiteStorage::markedAllItemsReadInQueue);
+    connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
+    connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, worker, &QObject::deleteLater);
+    worker->start();
 
     return true;
 }
