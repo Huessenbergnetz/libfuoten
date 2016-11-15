@@ -64,6 +64,8 @@ void Synchronizer::start()
         qDebug() << "Start synchronizing";
 #endif
 
+    setError(nullptr);
+
     d->inOperation = true;
     Q_EMIT inOperationChanged(true);
 

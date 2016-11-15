@@ -61,39 +61,39 @@ public:
     void cleanup()
     {
         if (getFolders) {
-            delete getFolders;
+            getFolders->deleteLater();
             getFolders = nullptr;
         }
         if (getFeeds) {
-            delete getFeeds;
+            getFeeds->deleteLater();
             getFeeds = nullptr;
         }
         if (getStarred) {
-            delete getStarred;
+            getStarred->deleteLater();
             getStarred = nullptr;
         }
         if (getUnread) {
-            delete getUnread;
+            getUnread->deleteLater();
             getUnread = nullptr;
         }
         if (getUpdated) {
-            delete getUpdated;
+            getUpdated->deleteLater();
             getUpdated = nullptr;
         }
         if (starMultipleItems) {
-            delete starMultipleItems;
+            starMultipleItems->deleteLater();
             starMultipleItems = nullptr;
         }
         if (unstarMultipleItems) {
-            delete unstarMultipleItems;
+            unstarMultipleItems->deleteLater();
             unstarMultipleItems = nullptr;
         }
         if (readMultipleItems) {
-            delete readMultipleItems;
+            readMultipleItems->deleteLater();
             readMultipleItems = nullptr;
         }
         if (unreadMultipleItems) {
-            delete unreadMultipleItems;
+            unreadMultipleItems->deleteLater();
             unreadMultipleItems = nullptr;
         }
         if (storage) {
