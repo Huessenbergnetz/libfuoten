@@ -66,8 +66,7 @@ void Synchronizer::start()
 
     setError(nullptr);
 
-    d->inOperation = true;
-    Q_EMIT inOperationChanged(true);
+    d->setInOperation(true);
 
     if (d->storage) {
         QueryArgs qa;
@@ -148,7 +147,7 @@ void Synchronizer::setError(Error *nError)
         }
 
         if (d->error && (d->error->type() != Error::NoError) && (d->error->severity() == Error::Critical || d->error->severity() == Error::Fatal)) {
-            Q_EMIT inOperationChanged(false);
+            d->setInOperation(false);
             Q_EMIT failed(d->error);
             d->cleanup();
         }
@@ -407,9 +406,8 @@ void Synchronizer::requestUpdated()
 void Synchronizer::finished()
 {
     Q_D(Synchronizer);
-    d->inOperation = false;
     d->configuration->setLastSync(QDateTime::currentDateTimeUtc());
-    Q_EMIT inOperationChanged(false);
+    d->setInOperation(false);
     Q_EMIT succeeded();
     d->cleanup();
 

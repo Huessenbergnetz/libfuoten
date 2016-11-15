@@ -106,6 +106,15 @@ public:
         inOperation = false;
     }
 
+    void setInOperation(bool nInOperation)
+    {
+        if (inOperation != nInOperation) {
+            Q_Q(Synchronizer);
+            inOperation = nInOperation;
+            Q_EMIT q->inOperationChanged(inOperation);
+        }
+    }
+
 
     Synchronizer * const q_ptr;
     Error *error;
