@@ -2632,6 +2632,11 @@ void EnqueueMarkReadWorker::run()
 
 bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
 {
+    if (inOperation()) {
+        qWarning("Still in operation. Returning.");
+        return false;
+    }
+
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
@@ -2650,12 +2655,15 @@ bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
         return false;
     }
 
+    setInOperation(true);
+
     Q_D(SQLiteStorage);
 
     EnqueueMarkReadWorker *worker = new EnqueueMarkReadWorker(d->db.databaseName(), feedId, FuotenEnums::Feed, newestItemId, this);
     connect(worker, &EnqueueMarkReadWorker::markedReadFeedInQueue, this, &SQLiteStorage::markedReadFeedInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
     connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &EnqueueMarkReadWorker::finished, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
@@ -2666,6 +2674,11 @@ bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
 
 bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
 {
+    if (inOperation()) {
+        qWarning("Still in operation. Returning.");
+        return false;
+    }
+
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
@@ -2684,12 +2697,15 @@ bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
         return false;
     }
 
+    setInOperation(true);
+
     Q_D(SQLiteStorage);
 
     EnqueueMarkReadWorker *worker = new EnqueueMarkReadWorker(d->db.databaseName(), folderId, FuotenEnums::Folder, newestItemId, this);
     connect(worker, &EnqueueMarkReadWorker::markedReadFolderInQueue, this, &SQLiteStorage::markedReadFolderInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
     connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &EnqueueMarkReadWorker::finished, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
@@ -2700,11 +2716,18 @@ bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
 
 bool SQLiteStorage::enqueueMarkAllItemsRead()
 {
+    if (inOperation()) {
+        qWarning("Still in operation. Returning.");
+        return false;
+    }
+
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
         return false;
     }
+
+    setInOperation(true);
 
     Q_D(SQLiteStorage);
 
@@ -2712,6 +2735,7 @@ bool SQLiteStorage::enqueueMarkAllItemsRead()
     connect(worker, &EnqueueMarkReadWorker::markedAllItemsReadInQueue, this, &SQLiteStorage::markedAllItemsReadInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
     connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &EnqueueMarkReadWorker::finished, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 

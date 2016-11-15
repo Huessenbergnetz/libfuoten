@@ -185,3 +185,18 @@ bool AbstractStorage::enqueueMarkAllItemsRead()
 {
     return false;
 }
+
+
+bool AbstractStorage::inOperation() const { Q_D(const AbstractStorage); return d->inOperation; }
+
+void AbstractStorage::setInOperation(bool nInOperation)
+{
+    Q_D(AbstractStorage);
+    if (nInOperation != d->inOperation) {
+        d->inOperation = nInOperation;
+#ifdef QT_DEBUG
+        qDebug() << "Changed inOperation to" << d->inOperation;
+#endif
+        Q_EMIT inOperationChanged(inOperation());
+    }
+}

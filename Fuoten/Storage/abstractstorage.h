@@ -113,6 +113,17 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      * \sa setStarred()
      */
     Q_PROPERTY(quint16 starred READ starred NOTIFY starredChanged)
+    /*!
+     * \brief Returns true while the storage is in operation.
+     *
+     * This will only be set to true by pure storage functions (like queue functions), not when processing requested data.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>bool</TD><TD>inOperation() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>inOperationChanged(bool inOperation)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(bool inOperation READ inOperation NOTIFY inOperationChanged)
 public:
     /*!
      * \brief Constructs a new abstract local storage with the given \a parent.
@@ -290,6 +301,12 @@ public:
      * \return \c true on success, otherwise \c false
      */
     virtual bool enqueueMarkAllItemsRead();
+
+    /*!
+     * \brief Getter function for the \link AbstractStorage::inOperation inOperation \endlink property.
+     * \sa AbstractStorage::setInOperation(), AbstractStorage::inOperationChanged()
+     */
+    bool inOperation() const;
 
 public Q_SLOTS:
     /*!
@@ -550,6 +567,13 @@ protected:
      */
     void setError(Error *nError);
 
+    /*!
+     * \brief Setter function for the \link AbstractStorage::inOperation inOperation \endlink property.
+     * Emits the inOperationChanged() signal if \a nInOperation is not equal to the stored value.
+     * \sa AbstractStorage::inOperation(), AbstractStorage::inOperationChanged()
+     */
+    void setInOperation(bool nInOperation);
+
     virtual QString limitBody(const QString &body, int limit) const;
 
     const QScopedPointer<AbstractStoragePrivate> d_ptr;
@@ -783,6 +807,12 @@ Q_SIGNALS:
      * \param articles list of Article objects
      */
     void gotArticlesAsync(const ArticleList &articles);
+
+    /*!
+     * \brief This is emitted if the value of the \link AbstractStorage::inOperation inOperation \endlink property changes.
+     * \sa AbstractStorage::inOperation(), AbstractStorage::setInOperation()
+     */
+    void inOperationChanged(bool inOperation);
 
 
 private:
