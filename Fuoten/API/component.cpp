@@ -520,7 +520,7 @@ void Component::setPayload(const QByteArray &payload)
 void Component::setPayload(const QJsonObject &payload)
 {
     Q_D(Component);
-    d->payload = QJsonDocument(payload).toJson();
+    d->payload = QJsonDocument(payload).toJson(QJsonDocument::Compact);
 }
 
 
