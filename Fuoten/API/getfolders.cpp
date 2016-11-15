@@ -80,14 +80,6 @@ void GetFolders::successCallback()
 
 
 
-void GetFolders::extractError(QNetworkReply *reply)
-{
-    setError(new Error(reply, this));
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
 
 bool GetFolders::checkOutput()
 {

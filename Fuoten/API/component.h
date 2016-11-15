@@ -577,7 +577,10 @@ protected:
      *
      * Reimplement this in a subclass to extract errors from the request result. The simplest implementation is to create
      * a new Error object from the QNetworkReply and set it to the Component::error property. You should than also
-     * emit the failed() signal.
+     * emit the failed() signal.#
+     *
+     * The basic implementation uses the overloaded Error constructor to extract reply errors, set the new Error to the error
+     * property, sets inOperation to \c false and emits the failed() signal.
      *
      * \par Implementation example
      *
@@ -590,7 +593,7 @@ protected:
      * }
      * \endcode
      */
-    virtual void extractError(QNetworkReply *reply) = 0;
+    virtual void extractError(QNetworkReply *reply);
 
     /*!
      * \brief Set this to true if the request requires authentication.

@@ -77,14 +77,6 @@ void GetVersion::successCallback()
 
 
 
-void GetVersion::extractError(QNetworkReply *reply)
-{
-    setError(new Error(reply, this));
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
 
 bool GetVersion::checkOutput()
 {

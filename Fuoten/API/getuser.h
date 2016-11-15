@@ -81,11 +81,6 @@ protected:
     void successCallback() override;
 
     /*!
-     * \brief Extracts possible errors replied by the News App API.
-     */
-    void extractError(QNetworkReply *reply) override;
-
-    /*!
      * \brief Checks for \a displayName in the replied JSON object.
      *
      * Will at first perform the checks from Component::checkOutput().

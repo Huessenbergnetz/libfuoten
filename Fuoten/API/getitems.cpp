@@ -103,15 +103,6 @@ void GetItems::successCallback()
 
 
 
-void GetItems::extractError(QNetworkReply *reply)
-{
-    setError(new Error(reply, this));
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
-
 bool GetItems::checkOutput()
 {
     if (Component::checkOutput()) {

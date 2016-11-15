@@ -130,19 +130,6 @@ void StarMultipleItems::successCallback()
 }
 
 
-void StarMultipleItems::extractError(QNetworkReply *reply)
-{
-    if (reply) {
-        setError(new Error(reply, this));
-    } else {
-        qFatal("Invalid QNetworkReply!");
-    }
-
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
 
 
 

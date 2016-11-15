@@ -85,11 +85,6 @@ protected:
     void successCallback() override;
 
     /*!
-     * \brief Extracts possible errors replied by the News App API.
-     */
-    void extractError(QNetworkReply *reply) override;
-
-    /*!
      * \brief Checks for a \a folders array in the JSON API reply.
      *
      * Will at first perform the checks from Component::checkOutput() and will than check if the \a folders array is present.

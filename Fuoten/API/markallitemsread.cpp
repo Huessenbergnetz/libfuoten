@@ -107,19 +107,6 @@ void MarkAllItemsRead::successCallback()
 }
 
 
-void MarkAllItemsRead::extractError(QNetworkReply *reply)
-{
-    if (reply) {
-        setError(new Error(reply, this));
-    } else {
-        qFatal("Invalid QNetworkReply!");
-    }
-
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
 qint64 MarkAllItemsRead::newestItemId() const { Q_D(const MarkAllItemsRead); return d->newestItemId; }
 
 void MarkAllItemsRead::setNewestItemId(qint64 nNewestItemId)

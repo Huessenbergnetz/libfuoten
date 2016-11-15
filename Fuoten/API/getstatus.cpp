@@ -80,14 +80,6 @@ void GetStatus::successCallback()
 }
 
 
-void GetStatus::extractError(QNetworkReply *reply)
-{
-    setError(new Error(reply, this));
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
 
 bool GetStatus::checkOutput()
 {

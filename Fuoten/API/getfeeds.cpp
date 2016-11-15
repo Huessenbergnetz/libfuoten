@@ -77,14 +77,6 @@ void GetFeeds::successCallback()
 
 
 
-void GetFeeds::extractError(QNetworkReply *reply)
-{
-    setError(new Error(reply, this));
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
 
 bool GetFeeds::checkOutput()
 {

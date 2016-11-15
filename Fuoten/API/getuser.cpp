@@ -86,14 +86,6 @@ void GetUser::successCallback()
 
 
 
-void GetUser::extractError(QNetworkReply *reply)
-{
-    setError(new Error(reply, this));
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
 bool GetUser::checkOutput()
 {
     if (Component::checkOutput()) {

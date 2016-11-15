@@ -130,11 +130,6 @@ protected:
      */
     bool checkInput() override;
 
-    /*!
-     * \brief Extracts possible errors replied by the News App API.
-     */
-    void extractError(QNetworkReply *reply) override;
-
 private:
     Q_DISABLE_COPY(MarkAllItemsRead)
     Q_DECLARE_PRIVATE(MarkAllItemsRead)

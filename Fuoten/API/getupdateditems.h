@@ -176,11 +176,6 @@ protected:
     void successCallback() override;
 
     /*!
-     * \brief Extracts possible errors replied by the News App API.
-     */
-    void extractError(QNetworkReply *reply) override;
-
-    /*!
      * \brief Checks for an \a items array in the JSON API reply.
      *
      * Will at first perform the checks from Component::checkOutput() and will than check if the \a items array is present.

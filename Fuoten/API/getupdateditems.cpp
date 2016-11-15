@@ -92,15 +92,6 @@ void GetUpdatedItems::successCallback()
 
 
 
-void GetUpdatedItems::extractError(QNetworkReply *reply)
-{
-    setError(new Error(reply, this));
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
-
 bool GetUpdatedItems::checkOutput()
 {
     if (Component::checkOutput()) {

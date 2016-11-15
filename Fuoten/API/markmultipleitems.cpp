@@ -49,7 +49,6 @@ MarkMultipleItems::MarkMultipleItems(MarkMultipleItemsPrivate &dd, QObject *pare
 
 
 
-
 void MarkMultipleItems::execute()
 {
     if (inOperation()) {
@@ -124,21 +123,6 @@ void MarkMultipleItems::successCallback()
 
     Q_EMIT succeeded(itemIds(), unread());
 }
-
-
-void MarkMultipleItems::extractError(QNetworkReply *reply)
-{
-    if (reply) {
-        setError(new Error(reply, this));
-    } else {
-        qFatal("Invalid QNetworkReply!");
-    }
-
-    setInOperation(false);
-    Q_EMIT failed(error());
-}
-
-
 
 
 

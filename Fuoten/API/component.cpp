@@ -193,13 +193,24 @@ void Component::_requestFinished()
 
     } else {
         extractError(d->reply);
-        setInOperation(false);
     }
 
     d->reply->deleteLater();
     d->reply = nullptr;
 }
 
+
+void Component::extractError(QNetworkReply *reply)
+{
+    if (reply) {
+        setError(new Error(reply, this));
+    } else {
+        qFatal("Invalid QNetworkReply!");
+    }
+
+    setInOperation(false);
+    Q_EMIT failed(error());
+}
 
 
 void Component::_requestTimedOut()

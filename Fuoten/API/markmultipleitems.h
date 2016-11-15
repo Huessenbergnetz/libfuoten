@@ -83,7 +83,6 @@ public:
     MarkMultipleItems(const IdList &itemIds, bool unread, QObject *parent = nullptr);
 
 
-
     /*!
      * \brief Getter function for the \link MarkMultipleItems::itemIds itemIds \endlink property.
      * \sa MarkMultipleItems::setItemIds(), MarkMultipleItems::itemIdsChanged()
@@ -157,11 +156,6 @@ protected:
      * Will at first perform the checks of Component::checkInput(). Will than simply check for the existence of the itemIds list.
      */
     bool checkInput() override;
-
-    /*!
-     * \brief Extracts possible errors replied by the News App API.
-     */
-    void extractError(QNetworkReply *reply) override;
 
 private:
     Q_DISABLE_COPY(MarkMultipleItems)
