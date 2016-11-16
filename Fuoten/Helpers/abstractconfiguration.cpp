@@ -94,3 +94,15 @@ QDateTime AbstractConfiguration::getLastSync() const
 {
     return QDateTime();
 }
+
+
+FuotenEnums::ItemDeletionStrategy AbstractConfiguration::getPerFeedDeletionStrategy(qint64 feedId) const
+{
+    return FuotenEnums::NoItemDeletion;
+}
+
+
+quint16 AbstractConfiguration::getPerFeedDeletionValue(qint64 feedId) const
+{
+    return 0;
+}

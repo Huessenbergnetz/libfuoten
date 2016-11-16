@@ -86,6 +86,19 @@ public:
     Q_FLAGS(QueueActions)
 #endif
 
+    /*!
+     * \brief Item per feed deletion strategy.
+     */
+    enum ItemDeletionStrategy {
+        NoItemDeletion      = 0,    /**< Items will never be deleted. */
+        DeleteItemsByTime   = 1,    /**< Items will be deleted if they are older than a specific time. */
+        DeleteItemsByCount  = 2     /**< Items will deleted if the feed contains more than a specific count. */
+    };
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    Q_ENUM(ItemDeletionStrategy)
+#else
+    Q_ENUMS(ItemDeletionStrategy)
+#endif
 
 private:
     FuotenEnums();
@@ -97,6 +110,7 @@ private:
 Q_DECLARE_METATYPE(Fuoten::FuotenEnums::Type)
 Q_DECLARE_METATYPE(Fuoten::FuotenEnums::SortingRole)
 Q_DECLARE_METATYPE(Fuoten::FuotenEnums::QueueAction)
+Q_DECLARE_METATYPE(Fuoten::FuotenEnums::ItemDeletionStrategy)
 #endif
 Q_DECLARE_OPERATORS_FOR_FLAGS(Fuoten::FuotenEnums::QueueActions)
 
