@@ -398,7 +398,7 @@ void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *
 
     if (!config) {
         //% "No configuration available."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -446,7 +446,7 @@ void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage 
 
     if (!config) {
         //% "No configuration available."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 

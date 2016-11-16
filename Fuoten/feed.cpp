@@ -287,7 +287,8 @@ void Feed::rename(const QString &newName, AbstractConfiguration *config, Abstrac
     }
 
     if (!config) {
-        qWarning("Can not change the folder name. No configuration available.");
+        //% "No configuration available."
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -322,7 +323,8 @@ void Feed::remove(AbstractConfiguration *config, AbstractStorage *storage)
     }
 
     if (!config) {
-        qWarning("Can not delete the folder. No AbstractConfiguration available.");
+        //% "No configuration available."
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -346,7 +348,8 @@ void Feed::move(qint64 targetFolderId, AbstractConfiguration *config, AbstractSt
     }
 
     if (!config) {
-        qWarning("Can not delete the folder. No AbstractConfiguration available.");
+        //% "No configuration available."
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -381,7 +384,7 @@ void Feed::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, b
 
     if (!config) {
         //% "No configuration available."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 

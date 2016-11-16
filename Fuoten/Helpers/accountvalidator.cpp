@@ -65,7 +65,7 @@ void AccountValidator::start()
 
     if (!configuration()) {
         //% "No configuration available."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("id-err-no-config"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("id-err-no-config"), QString(), this));
         Q_EMIT failed(error());
         return;
     }

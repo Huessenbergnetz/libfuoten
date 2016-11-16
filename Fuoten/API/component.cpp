@@ -242,7 +242,7 @@ bool Component::checkInput()
 
     if (!d->configuration) {
         //% "No configuration available."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }

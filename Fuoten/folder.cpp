@@ -117,7 +117,8 @@ void Folder::rename(const QString &newName, AbstractConfiguration *config, Abstr
     }
 
     if (!config) {
-        qWarning("Can not change the folder name. No configuration available.");
+        //% "No configuration available."
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -151,7 +152,8 @@ void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
     }
 
     if (!config) {
-        qWarning("Can not delete the folder. No AbstractConfiguration available.");
+        //% "No configuration available."
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -176,7 +178,7 @@ void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage,
 
     if (!config) {
         //% "No configuration available."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
