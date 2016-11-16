@@ -2380,7 +2380,8 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
     }
 
     if (!article) {
-        qWarning("Invalid article object.");
+        //% "Invalid article object."
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-article-object"), QString(), this));
         return false;
     }
 
