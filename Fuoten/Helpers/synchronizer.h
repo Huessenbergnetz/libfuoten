@@ -83,6 +83,28 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
      * <TABLE><TR><TD>void</TD><TD>inOperationChanged(bool inOperation)</TD></TR></TABLE>
      */
     Q_PROPERTY(bool inOperation READ inOperation NOTIFY inOperationChanged)
+    /*!
+     * \brief Pregress value between 0.0 and 1.0.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>qreal</TD><TD>progress() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>progressChanged(qreal progress)</TD></TR></TABLE>
+     *
+     * \sa setProgress()
+     */
+    Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+    /*!
+     * \brief Returns the current performed action.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>QString</TD><TD>currentAction() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>currentActionChanged(const QString &currentAction)</TD></TR></TABLE>
+     *
+     * \sa setCurrentAction()
+     */
+    Q_PROPERTY(QString currentAction READ currentAction NOTIFY currentActionChanged)
 public:
     /*!
      * \brief Constructs a new Synchronizer object with the given \a parent.
@@ -118,6 +140,20 @@ public:
     bool inOperation() const;
 
     /*!
+     * \brief Getter function for the \link Synchronizer::progress progress \endlink property.
+     * \sa Synchronizer::setProgress(), Synchronizer::progressChanged()
+     */
+    qreal progress() const;
+
+    /*!
+     * \brief Getter function for the \link Synchronizer::currentAction currentAction \endlink property.
+     * \sa Synchronizer::setCurrentAction(), Synchronizer::currentActionChanged()
+     */
+    QString currentAction() const;
+
+
+
+    /*!
      * \brief Sets the pointer to a AbstractConfiguration object.
      * \sa configuration
      */
@@ -135,6 +171,11 @@ public:
      * The base implementation simply calls start().
      */
     Q_INVOKABLE virtual void sync();
+
+    /*!
+     * \brief Clears the current error and sets the error property to a \c nullptr.
+     */
+    Q_INVOKABLE void clearError();
 
 
 Q_SIGNALS:
@@ -177,8 +218,21 @@ Q_SIGNALS:
      */
     void failed(Error *error);
 
+    /*!
+     * \brief This is emitted if the value of the \link Synchronizer::progress progress \endlink property changes.
+     * \sa Synchronizer::progress(), Synchronizer::setProgress()
+     */
+    void progressChanged(qreal progress);
+
+    /*!
+     * \brief This is emitted if the value of the \link Synchronizer::currentAction currentAction \endlink property changes.
+     * \sa Synchronizer::currentAction(), Synchronizer::setCurrentAction()
+     */
+    void currentActionChanged(const QString &currentAction);
+
 protected:
     const QScopedPointer<SynchronizerPrivate> d_ptr;
+
     /*!
      * \brief Starts the synchronizing process.
      *
@@ -189,6 +243,20 @@ protected:
      * When you create a derived class, call start() in your implementation of sync().
      */
     void start();
+
+    /*!
+     * \brief Sets the current progress value.
+     * Emits the progressChanged() signal if \a nProgress is not equal to the stored value.
+     * \sa Synchronizer::progress(), Synchronizer::progressChanged(), Synchronizer::progress
+     */
+    void setProgress(qreal nProgress);
+
+    /*!
+     * \brief Sets the current action string.
+     * Emits the currentActionChanged() signal if \a nCurrentAction is not equal to the stored value.
+     * \sa Synchronizer::currentAction(), Synchronizer::currentActionChanged(), Synchronizer::currentAction
+     */
+    void setCurrentAction(const QString &nCurrentAction);
 
 protected Q_SLOTS:
     /*!
@@ -238,12 +306,12 @@ protected Q_SLOTS:
     void requestStarred();
 
     /*!
-     * \brief Requests articles from the News App that are new or have benn updated since last sync.
+     * \brief Requests articles from the News App that are new or have been updated since last sync.
      */
     void requestUpdated();
 
     /*!
-     * \brief Finishes the synchrinization and cleans up.
+     * \brief Finishes the synchronization and cleans up.
      */
     void finished();
 

@@ -52,7 +52,10 @@ public:
         starMultipleItems(nullptr),
         unstarMultipleItems(nullptr),
         readMultipleItems(nullptr),
-        unreadMultipleItems(nullptr)
+        unreadMultipleItems(nullptr),
+        progress(0.0),
+        totalActions(0.0),
+        performedActions(0.0)
     {}
 
     ~SynchronizerPrivate() {}
@@ -104,6 +107,13 @@ public:
         queuedStarredArticles.clear();
         queuedUnstarredArticles.clear();
         inOperation = false;
+        progress = 0.0;
+        totalActions = 0.0;
+        performedActions = 0.0;
+        currentAction.clear();
+        Q_Q(Synchronizer);
+        Q_EMIT q->progressChanged(0.0);
+        Q_EMIT q->currentActionChanged(QString());
     }
 
     void setInOperation(bool nInOperation)
@@ -135,6 +145,10 @@ public:
     IdList queuedReadArticles;
     QList<QPair<qint64, QString> > queuedStarredArticles;
     QList<QPair<qint64, QString> > queuedUnstarredArticles;
+    qreal progress;
+    QString currentAction;
+    qreal totalActions;
+    qreal performedActions;
 };
 
 }

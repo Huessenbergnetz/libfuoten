@@ -56,7 +56,8 @@ void Synchronizer::start()
     }
 
     if (!d->configuration) {
-        qWarning("No configuration set. Returning.");
+        //% "No configuration available."
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -67,6 +68,12 @@ void Synchronizer::start()
     setError(nullptr);
 
     d->setInOperation(true);
+
+    if (d->configuration->getLastSync().isValid()) {
+        d->totalActions = 3;
+    } else {
+        d->totalActions = 4;
+    }
 
     if (d->storage) {
         QueryArgs qa;
@@ -90,6 +97,22 @@ void Synchronizer::start()
             }
 
             qDeleteAll(qas);
+
+            if (!d->queuedUnreadArticles.isEmpty()) {
+                d->totalActions++;
+            }
+
+            if (!d->queuedReadArticles.isEmpty()) {
+                d->totalActions++;
+            }
+
+            if (!d->queuedStarredArticles.isEmpty()) {
+                d->totalActions++;
+            }
+
+            if (!d->queuedUnstarredArticles.isEmpty()) {
+                d->totalActions++;
+            }
 
             if (!d->queuedUnreadArticles.isEmpty()) {
                 notifyAboutUnread();
@@ -162,15 +185,15 @@ void Synchronizer::notifyAboutUnread()
 {
     Q_D(Synchronizer);
     if (!d->unreadMultipleItems) {
-#ifdef QT_DEBUG
-        qDebug() << "Notify the News App about unread items.";
-#endif
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Synchronizing unread articles"
+        setCurrentAction(qtTrId("libfuoten-sync-unread-articles"));
+
         d->unreadMultipleItems = new MarkMultipleItems(this);
         d->unreadMultipleItems->setConfiguration(d->configuration);
         d->unreadMultipleItems->setItemIds(d->queuedUnreadArticles);
         d->unreadMultipleItems->setUnread(true);
         QObject::connect(d->unreadMultipleItems, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(unreadMultipleItems, &Component::failed, unreadMultipleItems, &QObject::deleteLater);
         if (!d->queuedReadArticles.isEmpty()) {
             QObject::connect(d->unreadMultipleItems, &MarkMultipleItems::succeeded, this, &Synchronizer::notifyAboutRead);
         } else if (!d->queuedStarredArticles.isEmpty()) {
@@ -180,7 +203,6 @@ void Synchronizer::notifyAboutUnread()
         } else {
             QObject::connect(d->unreadMultipleItems, &MarkMultipleItems::succeeded, this, &Synchronizer::requestFolders);
         }
-//        QObject::connect(unreadMultipleItems, &MarkMultipleItems::succeeded, unreadMultipleItems, &QObject::deleteLater);
         d->unreadMultipleItems->execute();
     }
 }
@@ -190,15 +212,15 @@ void Synchronizer::notifyAboutRead()
 {
     Q_D(Synchronizer);
     if (!d->readMultipleItems) {
-#ifdef QT_DEBUG
-        qDebug() << "Notify the News App about read items.";
-#endif
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Synchronizing read articles"
+        setCurrentAction(qtTrId("libfuoten-sync-read-articles"));
+
         d->readMultipleItems = new MarkMultipleItems(this);
         d->readMultipleItems->setConfiguration(d->configuration);
         d->readMultipleItems->setItemIds(d->queuedReadArticles);
         d->readMultipleItems->setUnread(false);
         QObject::connect(d->readMultipleItems, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(readMultipleItems, &Component::failed, readMultipleItems, &QObject::deleteLater);
         if (!d->queuedStarredArticles.isEmpty()) {
             QObject::connect(d->readMultipleItems, &MarkMultipleItems::succeeded, this, &Synchronizer::notifyAboutStarred);
         } else if (!d->queuedUnstarredArticles.isEmpty()) {
@@ -206,7 +228,6 @@ void Synchronizer::notifyAboutRead()
         } else {
             QObject::connect(d->readMultipleItems, &MarkMultipleItems::succeeded, this, &Synchronizer::requestFolders);
         }
-//        QObject::connect(readMultipleItems, &MarkMultipleItems::succeeded, readMultipleItems, &QObject::deleteLater);
         d->readMultipleItems->execute();
     }
 }
@@ -216,21 +237,20 @@ void Synchronizer::notifyAboutStarred()
 {
     Q_D(Synchronizer);
     if (!d->starMultipleItems) {
-#ifdef QT_DEBUG
-        qDebug() << "Notify the News App about starred items.";
-#endif
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Synchronizing starred articles"
+        setCurrentAction(qtTrId("libfuoten-sync-starred-articles"));
+
         d->starMultipleItems = new StarMultipleItems(this);
         d->starMultipleItems->setConfiguration(d->configuration);
         d->starMultipleItems->setItemsToStar(d->queuedStarredArticles);
         d->starMultipleItems->setStarred(true);
         QObject::connect(d->starMultipleItems, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(starMultipleItems, &Component::failed, starMultipleItems, &QObject::deleteLater);
         if (!d->queuedUnstarredArticles.isEmpty()) {
             QObject::connect(d->starMultipleItems, &StarMultipleItems::succeeded, this, &Synchronizer::notifyAboutUnstarred);
         } else {
             QObject::connect(d->starMultipleItems, &StarMultipleItems::succeeded, this, &Synchronizer::requestFolders);
         }
-//        QObject::connect(starMultipleItems, &StarMultipleItems::succeeded, starMultipleItems, &QObject::deleteLater);
         d->starMultipleItems->execute();
     }
 }
@@ -240,17 +260,16 @@ void Synchronizer::notifyAboutUnstarred()
 {
     Q_D(Synchronizer);
     if (!d->unstarMultipleItems) {
-#ifdef QT_DEBUG
-        qDebug() << "Notify the News App about unstarred items.";
-#endif
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Synchronizing unstarred articles"
+        setCurrentAction(qtTrId("libfuoten-sync-unstarred-articles"));
+
         d->unstarMultipleItems = new StarMultipleItems(this);
         d->unstarMultipleItems->setConfiguration(d->configuration);
         d->unstarMultipleItems->setItemsToStar(d->queuedUnstarredArticles);
         d->unstarMultipleItems->setStarred(false);
         QObject::connect(d->unstarMultipleItems, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(unstarMultipleItems, &Component::failed, unstarMultipleItems, &QObject::deleteLater);
         QObject::connect(d->unstarMultipleItems, &StarMultipleItems::succeeded, this, &Synchronizer::requestFolders);
-//        QObject::connect(unstarMultipleItems, &StarMultipleItems::succeeded, unstarMultipleItems, &QObject::deleteLater);
         d->unstarMultipleItems->execute();
     }
 }
@@ -260,20 +279,18 @@ void Synchronizer::requestFolders()
 {
     Q_D(Synchronizer);
     if (!d->getFolders) {
-#ifdef QT_DEBUG
-        qDebug() << "Getting folders";
-#endif
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Requesting folders"
+        setCurrentAction(qtTrId("libfuoten-sync-folders"));
+
         d->getFolders = new GetFolders(this);
         d->getFolders->setConfiguration(d->configuration);
         d->getFolders->setStorage(d->storage);
         QObject::connect(d->getFolders, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(getFolders, &Component::failed, getFolders, &QObject::deleteLater);
         if (d->storage) {
             QObject::connect(d->storage, &AbstractStorage::requestedFolders, this, &Synchronizer::requestFeeds);
-//            QObject::connect(storage, &AbstractStorage::requestedFolders, getFolders, &QObject::deleteLater);
         } else {
             QObject::connect(d->getFolders, &Component::succeeded, this, &Synchronizer::requestFeeds);
-//            QObject::connect(getFolders, &Component::succeeded, getFolders, &QObject::deleteLater);
         }
         d->getFolders->execute();
     }
@@ -285,8 +302,11 @@ void Synchronizer::requestFeeds()
 {
     Q_D(Synchronizer);
     if (!d->getFeeds) {
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Requesting feeds"
+        setCurrentAction(qtTrId("libfuoten-sync-feeds"));
+
 #ifdef QT_DEBUG
-        qDebug() << "Getting feeds";
         if (d->configuration->getLastSync().isValid()) {
             qDebug() << "We have a valid last sync time. Calling GetUpdatedItems after receiving feeds.";
         } else {
@@ -297,21 +317,18 @@ void Synchronizer::requestFeeds()
         d->getFeeds->setConfiguration(d->configuration);
         d->getFeeds->setStorage(d->storage);
         QObject::connect(d->getFeeds, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(getFeeds, &Component::failed, getFeeds, &QObject::deleteLater);
         if (d->storage) {
             if (d->configuration->getLastSync().isValid()) {
                 QObject::connect(d->storage, &AbstractStorage::requestedFeeds, this, &Synchronizer::requestUpdated);
             } else {
                 QObject::connect(d->storage, &AbstractStorage::requestedFeeds, this, &Synchronizer::requestUnread);
             }
-//            QObject::connect(storage, &AbstractStorage::requestedFeeds, getFeeds, &QObject::deleteLater);
         } else {
             if (d->configuration->getLastSync().isValid()) {
                 QObject::connect(d->getFeeds, &Component::succeeded, this, &Synchronizer::requestUpdated);
             } else {
                 QObject::connect(d->getFeeds, &Component::succeeded, this, &Synchronizer::requestUnread);
             }
-//            QObject::connect(getFeeds, &Component::succeeded, getFeeds, &QObject::deleteLater);
         }
         d->getFeeds->execute();
     }
@@ -323,9 +340,10 @@ void Synchronizer::requestUnread()
 {
     Q_D(Synchronizer);
     if (!d->getUnread) {
-#ifdef QT_DEBUG
-        qDebug() << "Getting unread items";
-#endif
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Requesting unread articles"
+        setCurrentAction(qtTrId("libfuoten-sync-req-articles"));
+
         d->getUnread = new GetItems(this);
         d->getUnread->setConfiguration(d->configuration);
         d->getUnread->setStorage(d->storage);
@@ -334,13 +352,10 @@ void Synchronizer::requestUnread()
         d->getUnread->setBatchSize(-1);
         d->getUnread->setRequestTimeout(150);
         QObject::connect(d->getUnread, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(getUnread, &Component::failed, getUnread, &QObject::deleteLater);
         if (d->storage) {
             QObject::connect(d->storage, &AbstractStorage::requestedItems, this, &Synchronizer::requestStarred);
-//            QObject::connect(storage, &AbstractStorage::requestedItems, getUnread, &QObject::deleteLater);
         } else {
             QObject::connect(d->getUnread, &Component::succeeded, this, &Synchronizer::requestStarred);
-//            QObject::connect(getUnread, &Component::succeeded, getUnread, &QObject::deleteLater);
         }
         d->getUnread->execute();
     }
@@ -351,9 +366,10 @@ void Synchronizer::requestStarred()
 {
     Q_D(Synchronizer);
     if (!d->getStarred) {
-#ifdef QT_DEBUG
-        qDebug() << "Getting starred items";
-#endif
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Requesting starred articles"
+        setCurrentAction(qtTrId("libfuoten-sync-req-starred-articles"));
+
         d->getStarred = new GetItems(this);
         d->getStarred->setConfiguration(d->configuration);
         d->getStarred->setStorage(d->storage);
@@ -361,13 +377,10 @@ void Synchronizer::requestStarred()
         d->getStarred->setGetRead(true);
         d->getStarred->setBatchSize(-1);
         QObject::connect(d->getStarred, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(getStarred, &Component::failed, getStarred, &QObject::deleteLater);
         if (d->storage) {
             QObject::connect(d->storage, &AbstractStorage::requestedItems, this, &Synchronizer::finished);
-//            QObject::connect(storage, &AbstractStorage::requestedItems, getStarred, &QObject::deleteLater);
         } else {
             QObject::connect(d->getStarred, &Component::succeeded, this, &Synchronizer::finished);
-//            QObject::connect(getStarred, &Component::succeeded, getStarred, &QObject::deleteLater);
         }
         d->getStarred->execute();
     }
@@ -379,9 +392,10 @@ void Synchronizer::requestUpdated()
 {
     Q_D(Synchronizer);
     if (!d->getUpdated) {
-#ifdef QT_DEBUG
-        qDebug() << "Getting updated items";
-#endif
+        setProgress(++d->performedActions/d->totalActions);
+        //% "Requesting updated and new articles"
+        setCurrentAction(qtTrId("libfuoten-sync-req-updated-articles"));
+
         d->getUpdated = new GetUpdatedItems(this);
         d->getUpdated->setConfiguration(d->configuration);
         d->getUpdated->setStorage(d->storage);
@@ -389,13 +403,10 @@ void Synchronizer::requestUpdated()
         d->getUpdated->setType(FuotenEnums::All);
         d->getUpdated->setParentId(0);
         QObject::connect(d->getUpdated, &Component::failed, this, &Synchronizer::setError);
-//        QObject::connect(getUpdated, &Component::failed, getUpdated, &QObject::deleteLater);
         if (d->storage) {
             QObject::connect(d->storage, &AbstractStorage::requestedItems, this, &Synchronizer::finished);
-//            QObject::connect(storage, &AbstractStorage::requestedItems, getUpdated, &QObject::deleteLater);
         } else {
             QObject::connect(d->getUpdated, &Component::succeeded, this, &Synchronizer::finished);
-//            QObject::connect(getUpdated, &Component::succeeded, getUpdated, &QObject::deleteLater);
         }
         d->getUpdated->execute();
     }
@@ -465,4 +476,43 @@ bool Synchronizer::inOperation() const
 {
     Q_D(const Synchronizer);
     return d->inOperation;
+}
+
+
+qreal Synchronizer::progress() const { Q_D(const Synchronizer); return d->progress; }
+
+void Synchronizer::setProgress(qreal nProgress)
+{
+    Q_D(Synchronizer);
+    if (nProgress != d->progress) {
+        d->progress = nProgress;
+#ifdef QT_DEBUG
+        qDebug() << "Changed progress to" << d->progress;
+#endif
+        Q_EMIT progressChanged(progress());
+    }
+}
+
+
+
+
+QString Synchronizer::currentAction() const { Q_D(const Synchronizer); return d->currentAction; }
+
+void Synchronizer::setCurrentAction(const QString &nCurrentAction)
+{
+    Q_D(Synchronizer);
+    if (nCurrentAction != d->currentAction) {
+        d->currentAction = nCurrentAction;
+#ifdef QT_DEBUG
+        qDebug() << "Changed currentAction to" << d->currentAction;
+#endif
+        Q_EMIT currentActionChanged(currentAction());
+    }
+}
+
+
+
+void Synchronizer::clearError()
+{
+    setError(nullptr);
 }
