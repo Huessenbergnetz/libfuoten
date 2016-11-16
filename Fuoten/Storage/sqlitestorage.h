@@ -129,7 +129,8 @@ public:
      * \brief Adds all articles older than \a newestItemId in the feed identified by \a feedId as read to the local queue.
      *
      * Will update the queue column for every item in the feed and will also perform the action locally. Will
-     * emit the AbstractStorage::markedReadFeedInQueue() signal on success.
+     * emit the AbstractStorage::markedReadFeedInQueue() signal on success. The action will be performed in a separate
+     * thread, so the return value only indicates if the threaded action has been started successfully.
      *
      * \param feedId        ID of the feed to be marked as read
      * \param newestItemId  ID of the newest item in the feed
@@ -141,7 +142,8 @@ public:
      * \brief Adds all articles older than \a newestItemId in the folder identified by \a folderId as read to the local queue.
      *
      * Will update the queue column for every item in the folder and will also perform the action locally. Will
-     * emit the AbstractStorage::markedReadFolderInQueue() signal on success.
+     * emit the AbstractStorage::markedReadFolderInQueue() signal on success. The action will be performed in a separate
+     * thread, so the return value only indicates if the threaded action has been started successfully.
      *
      * \param folderId      ID of the folder to be marked as read
      * \param newestItemId  ID of the newest item in the folder
@@ -152,7 +154,9 @@ public:
     /*!
      * \brief Adds all local articles that are unread to the queue and marks them as read.
      *
-     * The default implementation does nothing and returns \c false.
+     * Will update the queue column for every item in the database and will also perform the cation locally. Will
+     * emit the AbstractStorage::markedAllItemsReadInQueue() signal on success The action will be performed in a separate
+     * thread, so the return value only indicates if the threaded action has been started successfully.
      *
      * \return \c true on success, otherwise \c false
      */
