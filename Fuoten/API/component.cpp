@@ -325,7 +325,13 @@ QNetworkAccessManager *Component::networkAccessManager() const { Q_D(const Compo
 
 void Component::setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessManager)
 {
-    Q_D(Component); 
+    Q_D(Component);
+
+    if (d->networkAccessManager && inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "networkAccessManager");
+        return;
+    }
+
     if (nNetworkAccessManager != d->networkAccessManager) {
         d->networkAccessManager = nNetworkAccessManager;
 #ifdef QT_DEBUG
@@ -397,6 +403,11 @@ AbstractConfiguration *Component::configuration() const { Q_D(const Component); 
 
 void Component::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "configuration");
+        return;
+    }
+
     Q_D(Component);
     if (nAbstractConfiguration != d->configuration) {
         d->configuration = nAbstractConfiguration;
@@ -413,6 +424,11 @@ AbstractStorage *Component::storage() const { Q_D(const Component); return d->st
 
 void Component::setStorage(AbstractStorage *localStorage)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "storage");
+        return;
+    }
+
     Q_D(Component);
     if (localStorage != d->storage) {
         d->storage = localStorage;

@@ -60,6 +60,8 @@ class FUOTENSHARED_EXPORT StarMultipleItems : public Component
     /*!
      * \brief Set to \c true if the items/articles should be marked as starred, set to \c false to mark them as unstarred.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>starred() const</TD></TR><TR><TD>void</TD><TD>setStarred(bool nStarred)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -97,12 +99,18 @@ public:
 
     /*!
      * \brief Sets the list of feed IDs and article GUID hashes that shoul be starred/unstarred.
+     *
+     * This can not be set while Component::inOperation() returns \c true.
+     *
      * \param items  list containing a set of feed ID as \a first and article guid hash as \a second
      */
     void setItemsToStar(const QList<QPair<qint64,QString>> &items);
 
     /*!
      * \brief Adds a new article to the list of articles to star/unstar.
+     *
+     * Items can not be added while Component::inOperation() returns \c true.
+     *
      * \param feedId    ID of the feed the article belongs to
      * \param guidHash  GUID hash of the article
      */

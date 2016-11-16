@@ -57,6 +57,8 @@ class FUOTENSHARED_EXPORT MarkAllItemsRead : public Component
     /*!
      * \brief ID of the newest local available item/article.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>newestItemId() const</TD></TR><TR><TD>void</TD><TD>setNewestItemId(qint64 nNewestItemId)</TD></TR></TABLE>
      * \par Notifier signal:

@@ -140,15 +140,18 @@ qint64 MarkFolderRead::folderId() const { Q_D(const MarkFolderRead); return d->f
 
 void MarkFolderRead::setFolderId(qint64 nFolderId)
 {
-    if (!inOperation()) {
-        Q_D(MarkFolderRead);
-        if (nFolderId != d->folderId) {
-            d->folderId = nFolderId;
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "folderId");
+        return;
+    }
+
+    Q_D(MarkFolderRead);
+    if (nFolderId != d->folderId) {
+        d->folderId = nFolderId;
 #ifdef QT_DEBUG
-            qDebug() << "Changed folderId to" << d->folderId;
+        qDebug() << "Changed folderId to" << d->folderId;
 #endif
-            Q_EMIT folderIdChanged(folderId());
-        }
+        Q_EMIT folderIdChanged(folderId());
     }
 }
 
@@ -159,15 +162,18 @@ qint64 MarkFolderRead::newestItemId() const { Q_D(const MarkFolderRead); return 
 
 void MarkFolderRead::setNewestItemId(qint64 nNewestItemId)
 {
-    if (!inOperation()) {
-        Q_D(MarkFolderRead);
-        if (nNewestItemId != d->newestItemId) {
-            d->newestItemId = nNewestItemId;
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "newestItemId");
+        return;
+    }
+
+    Q_D(MarkFolderRead);
+    if (nNewestItemId != d->newestItemId) {
+        d->newestItemId = nNewestItemId;
 #ifdef QT_DEBUG
-            qDebug() << "Changed newestItemId to" << d->newestItemId;
+        qDebug() << "Changed newestItemId to" << d->newestItemId;
 #endif
-            Q_EMIT newestItemIdChanged(newestItemId());
-        }
+        Q_EMIT newestItemIdChanged(newestItemId());
     }
 }
 

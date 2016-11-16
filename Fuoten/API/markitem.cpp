@@ -141,6 +141,11 @@ qint64 MarkItem::itemId() const { Q_D(const MarkItem); return d->itemId; }
 
 void MarkItem::setItemId(qint64 nItemId)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "itemId");
+        return;
+    }
+
     Q_D(MarkItem); 
     if (nItemId != d->itemId) {
         d->itemId = nItemId;
@@ -158,6 +163,11 @@ bool MarkItem::unread() const { Q_D(const MarkItem); return d->unread; }
 
 void MarkItem::setUnread(bool nUnread)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "unread");
+        return;
+    }
+
     Q_D(MarkItem); 
     if (nUnread != d->unread) {
         d->unread = nUnread;

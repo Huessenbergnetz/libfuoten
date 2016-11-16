@@ -56,7 +56,8 @@ class FUOTENSHARED_EXPORT StarItem : public Component
     Q_OBJECT
     /*!
      * \brief ID of the feed the item/article to star/unstar belongs to.
-     * Can not be changed while Component::inOperation returns true.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>feedId() const</TD></TR><TR><TD>void</TD><TD>setFeedId(qint64 nFeedId)</TD></TR></TABLE>
@@ -66,7 +67,8 @@ class FUOTENSHARED_EXPORT StarItem : public Component
     Q_PROPERTY(qint64 feedId READ feedId WRITE setFeedId NOTIFY feedIdChanged)
     /*!
      * \brief GUID hash of the item/article to star/unstar.
-     * Can not be changed while Component::inOperation returns true.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>QString</TD><TD>guidHash() const</TD></TR><TR><TD>void</TD><TD>setGuidHash(const QString &nGuidHash)</TD></TR></TABLE>
@@ -76,7 +78,8 @@ class FUOTENSHARED_EXPORT StarItem : public Component
     Q_PROPERTY(QString guidHash READ guidHash WRITE setGuidHash NOTIFY guidHashChanged)
     /*!
      * \brief True if the item/article should be starred, otherwise false.
-     * Can not be changed while Component::inOperation returns true.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>starred() const</TD></TR><TR><TD>void</TD><TD>setStarred(bool nStarred)</TD></TR></TABLE>

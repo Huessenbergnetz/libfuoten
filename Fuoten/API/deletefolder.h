@@ -55,7 +55,7 @@ class FUOTENSHARED_EXPORT DeleteFolder : public Component
     /*!
      * \brief ID of the folder to delete.
      *
-     * Has to be set to a valid folder ID. Can not be changed while the request is active and Component::inOperation returns true.
+     * Has to be set to a valid folder ID. This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>

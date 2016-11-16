@@ -422,6 +422,11 @@ AbstractConfiguration *Synchronizer::configuration() const { Q_D(const Synchroni
 
 void Synchronizer::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "configuration");
+        return;
+    }
+
     Q_D(Synchronizer);
     if (nAbstractConfiguration != d->configuration) {
         d->configuration = nAbstractConfiguration;
@@ -439,6 +444,11 @@ AbstractStorage *Synchronizer::storage() const { Q_D(const Synchronizer); return
 
 void Synchronizer::setStorage(AbstractStorage *nStorageHandler)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "storage");
+        return;
+    }
+
     Q_D(Synchronizer);
     if (nStorageHandler != d->storage) {
         d->storage = nStorageHandler;

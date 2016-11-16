@@ -56,6 +56,8 @@ class FUOTENSHARED_EXPORT MarkItem : public Component
     /*!
      * \brief ID of the item that should be marked as read or unread.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>itemId() const</TD></TR><TR><TD>void</TD><TD>setItemId(qint64 nItemId)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -65,7 +67,7 @@ class FUOTENSHARED_EXPORT MarkItem : public Component
     /*!
      * \brief If true, the item will be marked as unread, otherwise as read.
      *
-     * Defaults to \c false.
+     * Defaults to \c false. This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>unread() const</TD></TR><TR><TD>void</TD><TD>setUnread(bool nUnread)</TD></TR></TABLE>

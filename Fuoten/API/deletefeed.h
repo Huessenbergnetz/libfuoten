@@ -56,6 +56,8 @@ class FUOTENSHARED_EXPORT DeleteFeed : public Component
     /*!
      * \brief ID of the feed to delete.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>feedId() const</TD></TR><TR><TD>void</TD><TD>setFeedId(qint64 nFeedId)</TD></TR></TABLE>
      * \par Notifier signal:

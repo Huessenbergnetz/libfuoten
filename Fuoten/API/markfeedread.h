@@ -56,6 +56,8 @@ class FUOTENSHARED_EXPORT MarkFeedRead : public Component
     /*!
      * \brief ID of the feed to mark as read.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>feedId() const</TD></TR><TR><TD>void</TD><TD>setFeedId(qint64 nFeedId)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -64,6 +66,8 @@ class FUOTENSHARED_EXPORT MarkFeedRead : public Component
     Q_PROPERTY(qint64 feedId READ feedId WRITE setFeedId NOTIFY feedIdChanged)
     /*!
      * \brief ID of the newest local available item in the feed.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>newestItemId() const</TD></TR><TR><TD>void</TD><TD>setNewestItemId(qint64 nNewestItemId)</TD></TR></TABLE>

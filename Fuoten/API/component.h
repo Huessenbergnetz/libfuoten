@@ -148,12 +148,14 @@ class FUOTENSHARED_EXPORT Component : public QObject
 {
     Q_OBJECT
     /*!
-     * \brief Define a custom QNetowrkAccessManager to perform network operations.
+     * \brief Pointer to a custom QNetworkAccessManager to perform network operations.
      *
      * When no custom QNetworkAccessManager is set, a new one will be created when sending the API
      * request via sendRequest(). The internal created network manager will be a child object of
      * this class. If you set your own custom QNetworkAccessManager, this will not automatically be
      * a child object of this class.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>QNetworkAccessManager*</TD><TD>networkAccessManager() const</TD></TR><TR><TD>void</TD><TD>setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessManager)</TD></TR></TABLE>
@@ -195,9 +197,11 @@ class FUOTENSHARED_EXPORT Component : public QObject
      */
     Q_PROPERTY(Fuoten::Error *error READ error NOTIFY errorChanged)
     /*!
-     * \brief Pointer to a AbstractConfiguration object.
+     * \brief Pointer to an AbstractConfiguration derived object.
      *
-     * It is mandatory for all calls to set this property to a valid object that contains the authentication information for the server.
+     * It is mandatory for all calls to set this property to a valid object that provides the authentication information for the server.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
@@ -206,10 +210,12 @@ class FUOTENSHARED_EXPORT Component : public QObject
      */
     Q_PROPERTY(Fuoten::AbstractConfiguration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
     /*!
-     * \brief Pointer to an AbstractStorage subclass.
+     * \brief Pointer to an AbstractStorage derived object.
      *
-     * Set a storage handler to store the results of API requests. You have to derive your own AbstractStorage class from
-     * the abstract base class.
+     * Set a storage handler to store the results of API requests. You have to derive your own storage from AbstractStorage.
+     * Have a look at SQLiteStorage for an example implementation.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>AbstractStorage*</TD><TD>storage() const</TD></TR><TR><TD>void</TD><TD>setStorage(AbstractStorage *nStorageHandler)</TD></TR></TABLE>

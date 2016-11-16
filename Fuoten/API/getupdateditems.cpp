@@ -154,6 +154,11 @@ QDateTime GetUpdatedItems::lastModified() const { Q_D(const GetUpdatedItems); re
 
 void GetUpdatedItems::setLastModified(const QDateTime &nLastModified)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "lastModified");
+        return;
+    }
+
     Q_D(GetUpdatedItems); 
     if (nLastModified != d->lastModified) {
         d->lastModified = nLastModified;
@@ -171,6 +176,11 @@ FuotenEnums::Type GetUpdatedItems::type() const { Q_D(const GetUpdatedItems); re
 
 void GetUpdatedItems::setType(FuotenEnums::Type nType)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "type");
+        return;
+    }
+
     Q_D(GetUpdatedItems); 
     if (nType != d->type) {
         d->type = nType;
@@ -188,6 +198,11 @@ qint64 GetUpdatedItems::parentId() const { Q_D(const GetUpdatedItems); return d-
 
 void GetUpdatedItems::setParentId(qint64 nParentId)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "parentId");
+        return;
+    }
+
     Q_D(GetUpdatedItems); 
     if (nParentId != d->parentId) {
         d->parentId = nParentId;

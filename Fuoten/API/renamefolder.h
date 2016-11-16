@@ -57,7 +57,7 @@ class FUOTENSHARED_EXPORT RenameFolder : public Component
     /*!
      * \brief ID of the folder to rename.
      *
-     * Can not be changed while the request is active and Component::inOperation returns true.
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>
@@ -70,7 +70,7 @@ class FUOTENSHARED_EXPORT RenameFolder : public Component
      *
      * When setting this property, the input string will be simplified. See QString::simplified().
      *
-     * Can not be changed while the request is active and Component::inOperation returns true.
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>QString</TD><TD>newName() const</TD></TR><TR><TD>void</TD><TD>setNewName(const QString &nNewName)</TD></TR></TABLE>

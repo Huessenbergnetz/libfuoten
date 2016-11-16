@@ -144,6 +144,11 @@ AbstractConfiguration *AccountValidator::configuration() const { Q_D(const Accou
 
 void AccountValidator::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "configuration");
+        return;
+    }
+
     Q_D(AccountValidator); 
     if (nAbstractConfiguration != d->configuration) {
         d->configuration = nAbstractConfiguration;

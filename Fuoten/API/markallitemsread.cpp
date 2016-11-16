@@ -111,6 +111,11 @@ qint64 MarkAllItemsRead::newestItemId() const { Q_D(const MarkAllItemsRead); ret
 
 void MarkAllItemsRead::setNewestItemId(qint64 nNewestItemId)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "newestItemId");
+        return;
+    }
+
     Q_D(MarkAllItemsRead); 
     if (nNewestItemId != d->newestItemId) {
         d->newestItemId = nNewestItemId;

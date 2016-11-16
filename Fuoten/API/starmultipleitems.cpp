@@ -137,6 +137,11 @@ QList<QPair<qint64,QString>> StarMultipleItems::itemsToStar() const { Q_D(const 
 
 void StarMultipleItems::setItemsToStar(const QList<QPair<qint64, QString> > &items)
 {
+    if (inOperation()) {
+        qWarning("Can not set items, still in operation.");
+        return;
+    }
+
     Q_D(StarMultipleItems);
     d->itemsToStar = items;
 }
@@ -144,6 +149,11 @@ void StarMultipleItems::setItemsToStar(const QList<QPair<qint64, QString> > &ite
 
 void StarMultipleItems::addItem(qint64 feedId, const QString &guidHash)
 {
+    if (inOperation()) {
+        qWarning("Can not add the item, still in operation.");
+        return;
+    }
+
     Q_D(StarMultipleItems);
     d->itemsToStar.append(qMakePair(feedId, guidHash));
 }
@@ -154,6 +164,11 @@ bool StarMultipleItems::starred() const { Q_D(const StarMultipleItems); return d
 
 void StarMultipleItems::setStarred(bool nStarred)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "starred");
+        return;
+    }
+
     Q_D(StarMultipleItems); 
     if (nStarred != d->starred) {
         d->starred = nStarred;

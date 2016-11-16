@@ -59,6 +59,8 @@ class FUOTENSHARED_EXPORT CreateFolder : public Component
      *
      * When setting this property, the input string will be simplified. See QString::simplified().
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>QString</TD><TD>name() const</TD></TR><TR><TD>void</TD><TD>setName(const QString &nName)</TD></TR></TABLE>
      * \par Notifier signal:

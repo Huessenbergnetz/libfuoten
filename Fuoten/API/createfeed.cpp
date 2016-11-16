@@ -168,6 +168,11 @@ QUrl CreateFeed::url() const { Q_D(const CreateFeed); return d->url; }
 
 void CreateFeed::setUrl(const QUrl &nUrl)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "url");
+        return;
+    }
+
     Q_D(CreateFeed); 
     if (nUrl != d->url) {
         d->url = nUrl;
@@ -185,6 +190,11 @@ qint64 CreateFeed::folderId() const { Q_D(const CreateFeed); return d->folderId;
 
 void CreateFeed::setFolderId(qint64 nFolderId)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "folderId");
+        return;
+    }
+
     Q_D(CreateFeed); 
     if (nFolderId != d->folderId) {
         d->folderId = nFolderId;

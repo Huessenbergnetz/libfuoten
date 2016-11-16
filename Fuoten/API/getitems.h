@@ -61,7 +61,7 @@ class FUOTENSHARED_EXPORT GetItems : public Component
     /*!
      * \brief The number of items/articles that should be returned.
      *
-     * Defaults to \c -1, \c -1 returns all items.
+     * Defaults to \c -1, \c -1 returns all items. This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>int</TD><TD>batchSize() const</TD></TR><TR><TD>void</TD><TD>setBatchSize(int nBatchSize)</TD></TR></TABLE>
@@ -72,7 +72,7 @@ class FUOTENSHARED_EXPORT GetItems : public Component
     /*!
      * \brief Only return older (lower than equal that ID) items.
      *
-     * Defaults to \c 0.
+     * Defaults to \c 0. This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>offset() const</TD></TR><TR><TD>void</TD><TD>setOffset(qint64 nOffset)</TD></TR></TABLE>
@@ -90,6 +90,8 @@ class FUOTENSHARED_EXPORT GetItems : public Component
      * \li FuotenEnums::Folder
      * \li FuotenEnums::Starred
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>FuotenEnums::Type</TD><TD>type() const</TD></TR><TR><TD>void</TD><TD>setType(FuotenEnums::Type nType)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -99,7 +101,7 @@ class FUOTENSHARED_EXPORT GetItems : public Component
     /*!
      * \brief ID of the folder or feed, 0 for starred and all.
      *
-     * Defaults to \c 0
+     * Defaults to \c 0. This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>parentId() const</TD></TR><TR><TD>void</TD><TD>setParentId(qint64 nParentId)</TD></TR></TABLE>
@@ -110,6 +112,8 @@ class FUOTENSHARED_EXPORT GetItems : public Component
     /*!
      * \brief If true, it returns all items, false returns only unread items.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>getRead() const</TD></TR><TR><TD>void</TD><TD>setGetRead(bool nGetRead)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -118,6 +122,8 @@ class FUOTENSHARED_EXPORT GetItems : public Component
     Q_PROPERTY(bool getRead READ getRead WRITE setGetRead NOTIFY getReadChanged)
     /*!
      * \brief If true, it reverses the sort order.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>oldestFirst() const</TD></TR><TR><TD>void</TD><TD>setOldestFirst(bool nOldestFirst)</TD></TR></TABLE>

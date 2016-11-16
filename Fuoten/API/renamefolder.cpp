@@ -151,15 +151,18 @@ qint64 RenameFolder::folderId() const { Q_D(const RenameFolder); return d->folde
 
 void RenameFolder::setFolderId(qint64 nFolderId)
 {
-    if (!inOperation()) {
-        Q_D(RenameFolder);
-        if (nFolderId != d->folderId) {
-            d->folderId = nFolderId;
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "folderId");
+        return;
+    }
+
+    Q_D(RenameFolder);
+    if (nFolderId != d->folderId) {
+        d->folderId = nFolderId;
 #ifdef QT_DEBUG
-            qDebug() << "Changed folderId to" << d->folderId;
+        qDebug() << "Changed folderId to" << d->folderId;
 #endif
-            Q_EMIT folderIdChanged(folderId());
-        }
+        Q_EMIT folderIdChanged(folderId());
     }
 }
 
@@ -170,15 +173,18 @@ QString RenameFolder::newName() const { Q_D(const RenameFolder); return d->newNa
 
 void RenameFolder::setNewName(const QString &nNewName)
 {
-    if (!inOperation()) {
-        Q_D(RenameFolder);
-        if (nNewName.simplified() != d->newName) {
-            d->newName = nNewName.simplified();
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "newName");
+        return;
+    }
+
+    Q_D(RenameFolder);
+    if (nNewName.simplified() != d->newName) {
+        d->newName = nNewName.simplified();
 #ifdef QT_DEBUG
-            qDebug() << "Changed newName to" << d->newName;
+        qDebug() << "Changed newName to" << d->newName;
 #endif
-            Q_EMIT newNameChanged(newName());
-        }
+        Q_EMIT newNameChanged(newName());
     }
 }
 

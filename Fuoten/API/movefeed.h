@@ -59,6 +59,8 @@ class FUOTENSHARED_EXPORT MoveFeed : public Component
     /*!
      * \brief ID of the feed that should be moved.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>feedId() const</TD></TR><TR><TD>void</TD><TD>setFeedId(qint64 nFeedId)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -67,6 +69,8 @@ class FUOTENSHARED_EXPORT MoveFeed : public Component
     Q_PROPERTY(qint64 feedId READ feedId WRITE setFeedId NOTIFY feedIdChanged)
     /*!
      * \brief ID of the folder the feed should be moved to.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>
@@ -100,6 +104,7 @@ public:
 
     /*!
      * \brief Sets the ID of the folder the feed should be moved to.
+     * \sa folderId
      */
     void setFolderId(qint64 nFolderId);
 
@@ -119,11 +124,13 @@ public:
 Q_SIGNALS:
     /*!
      * \brief This is emitted if the ID of the feed that should be moved changes.
+     * \sa feedId
      */
     void feedIdChanged(qint64 feedId);
 
     /*!
      * \brief This is emitted if the ID of the folder the feed should be moved to changes.
+     * \sa folderId
      */
     void folderIdChanged(qint64 folderId);
 

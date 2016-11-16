@@ -62,6 +62,7 @@ class FUOTENSHARED_EXPORT GetUpdatedItems : public Component
      * \brief Return only items with a lastModified timestamp >= this one.
      *
      * This may also return already existing items whose read or starred status has been changed.
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>QDateTime</TD><TD>lastModified() const</TD></TR><TR><TD>void</TD><TD>setLastModified(const QDateTime &nLastModified)</TD></TR></TABLE>
@@ -72,6 +73,8 @@ class FUOTENSHARED_EXPORT GetUpdatedItems : public Component
     /*!
      * \brief Type of the query.
      *
+     * Defaults to FuotenEnums::All. This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>FuotenEnums::Type</TD><TD>type() const</TD></TR><TR><TD>void</TD><TD>setType(FuotenEnums::Type nType)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -80,6 +83,8 @@ class FUOTENSHARED_EXPORT GetUpdatedItems : public Component
     Q_PROPERTY(Fuoten::FuotenEnums::Type type READ type WRITE setType NOTIFY typeChanged)
     /*!
      * \brief ID of the folder or feed, use 0 for Starred and All.
+     *
+     * Defaults to \c 0. This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>parentId() const</TD></TR><TR><TD>void</TD><TD>setParentId(qint64 nParentId)</TD></TR></TABLE>

@@ -56,6 +56,8 @@ class FUOTENSHARED_EXPORT MarkMultipleItems : public Component
     /*!
      * \brief List of IDs of items that should be marked as read or unread.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>IdList</TD><TD>itemIds() const</TD></TR><TR><TD>void</TD><TD>setItemIds(const IdList &nItemIds)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -64,6 +66,8 @@ class FUOTENSHARED_EXPORT MarkMultipleItems : public Component
     Q_PROPERTY(IdList itemIds READ itemIds WRITE setItemIds NOTIFY itemIdsChanged)
     /*!
      * \brief True if items should be marked as unread, otherwise false.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>unread() const</TD></TR><TR><TD>void</TD><TD>setUnread(bool nUnread)</TD></TR></TABLE>

@@ -56,6 +56,8 @@ class FUOTENSHARED_EXPORT MarkFolderRead : public Component
     /*!
      * \brief The ID of the folder that should be marked as read.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -65,7 +67,8 @@ class FUOTENSHARED_EXPORT MarkFolderRead : public Component
     /*!
      * \brief The ID of the newest item in the folder.
      *
-     * Will mark all items with IDs lower than equal that ID as read. This is mean to prevent marking items as read which the client does not yet know of.
+     * Will mark all items with IDs lower than equal that ID as read. This is meant to prevent marking items as read which the client does not yet know of.
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>newestItemId() const</TD></TR><TR><TD>void</TD><TD>setNewestItemId(qint64 nNewestItemId)</TD></TR></TABLE>
@@ -81,21 +84,25 @@ public:
 
     /*!
      * \brief Returns the ID of the folder to be marked as read.
+     * \sa folderId
      */
     qint64 folderId() const;
 
     /*!
      * \brief Returns the ID of the item that is set to be the newest in the folder.
+     * \sa newestItemId
      */
     qint64 newestItemId() const;
 
     /*!
      * \brief Sets the ID of the folder to be marked as read.
+     * \sa folderId
      */
     void setFolderId(qint64 nFolderId);
 
     /*!
      * \brief Sets the ID of the newest item in the folder.
+     * \sa newestItemId
      */
     void setNewestItemId(qint64 nNewestItemId);
 

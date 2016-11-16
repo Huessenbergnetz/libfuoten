@@ -150,17 +150,18 @@ qint64 StarItem::feedId() const { Q_D(const StarItem); return d->feedId; }
 
 void StarItem::setFeedId(qint64 nFeedId)
 {
-    if (!inOperation()) {
-        Q_D(StarItem);
-        if (nFeedId != d->feedId) {
-            d->feedId = nFeedId;
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "feedId");
+        return;
+    }
+
+    Q_D(StarItem);
+    if (nFeedId != d->feedId) {
+        d->feedId = nFeedId;
 #ifdef QT_DEBUG
-            qDebug() << "Changed feedId to" << d->feedId;
+        qDebug() << "Changed feedId to" << d->feedId;
 #endif
-            Q_EMIT feedIdChanged(feedId());
-        }
-    } else {
-        qWarning("Can not change %s while the request is in operation.", "feedId");
+        Q_EMIT feedIdChanged(feedId());
     }
 }
 
@@ -171,17 +172,18 @@ QString StarItem::guidHash() const { Q_D(const StarItem); return d->guidHash; }
 
 void StarItem::setGuidHash(const QString &nGuidHash)
 {
-    if (!inOperation()) {
-        Q_D(StarItem);
-        if (nGuidHash != d->guidHash) {
-            d->guidHash = nGuidHash;
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "guidHash");
+        return;
+    }
+
+    Q_D(StarItem);
+    if (nGuidHash != d->guidHash) {
+        d->guidHash = nGuidHash;
 #ifdef QT_DEBUG
-            qDebug() << "Changed guidHash to" << d->guidHash;
+        qDebug() << "Changed guidHash to" << d->guidHash;
 #endif
-            Q_EMIT guidHashChanged(guidHash());
-        }
-    } else {
-        qWarning("Can not change %s while the request is in operation.", "guidHash");
+        Q_EMIT guidHashChanged(guidHash());
     }
 }
 
@@ -192,17 +194,18 @@ bool StarItem::starred() const { Q_D(const StarItem); return d->starred; }
 
 void StarItem::setStarred(bool nStarred)
 {
-    if (!inOperation()) {
-        Q_D(StarItem);
-        if (nStarred != d->starred) {
-            d->starred = nStarred;
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "starred");
+        return;
+    }
+
+    Q_D(StarItem);
+    if (nStarred != d->starred) {
+        d->starred = nStarred;
 #ifdef QT_DEBUG
-            qDebug() << "Changed starred to" << d->starred;
+        qDebug() << "Changed starred to" << d->starred;
 #endif
-            Q_EMIT starredChanged(starred());
-        }
-    } else {
-        qWarning("Can not change %s while the request is in operation.", "starred");
+        Q_EMIT starredChanged(starred());
     }
 }
 

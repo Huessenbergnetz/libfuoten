@@ -158,6 +158,11 @@ QString CreateFolder::name() const { Q_D(const CreateFolder); return d->name; }
 
 void CreateFolder::setName(const QString &nName)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "name");
+        return;
+    }
+
     Q_D(CreateFolder); 
     if (nName.simplified() != d->name) {
         d->name = nName.simplified();

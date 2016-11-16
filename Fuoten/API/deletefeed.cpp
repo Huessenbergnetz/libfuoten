@@ -44,6 +44,11 @@ qint64 DeleteFeed::feedId() const { Q_D(const DeleteFeed); return d->feedId; }
 
 void DeleteFeed::setFeedId(qint64 nFeedId)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "feedId");
+        return;
+    }
+
     Q_D(DeleteFeed); 
     if (nFeedId != d->feedId) {
         d->feedId = nFeedId;

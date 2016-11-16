@@ -143,7 +143,7 @@ qint64 MoveFeed::feedId() const { Q_D(const MoveFeed); return d->feedId; }
 void MoveFeed::setFeedId(qint64 nFeedId)
 {
     if (inOperation()) {
-        qWarning("Can not set feedId, request in opeartion.");
+        qWarning("Can not change property %s, still in operation.", "feedId");
         return;
     }
 
@@ -165,7 +165,7 @@ qint64 MoveFeed::folderId() const { Q_D(const MoveFeed); return d->folderId; }
 void MoveFeed::setFolderId(qint64 nFolderId)
 {
     if (inOperation()) {
-        qWarning("Can not set folderId, request in opeartion.");
+        qWarning("Can not change property %s, still in operation.", "folderId");
         return;
     }
 

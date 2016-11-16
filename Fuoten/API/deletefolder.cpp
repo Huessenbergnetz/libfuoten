@@ -128,15 +128,18 @@ qint64 DeleteFolder::folderId() const { Q_D(const DeleteFolder); return d->folde
 
 void DeleteFolder::setFolderId(qint64 nFolderId)
 {
-    if (!inOperation()) {
-        Q_D(DeleteFolder);
-        if (nFolderId != d->folderId) {
-            d->folderId = nFolderId;
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "folderId");
+        return;
+    }
+
+    Q_D(DeleteFolder);
+    if (nFolderId != d->folderId) {
+        d->folderId = nFolderId;
 #ifdef QT_DEBUG
-            qDebug() << "Changed folderId to" << d->folderId;
+        qDebug() << "Changed folderId to" << d->folderId;
 #endif
-            Q_EMIT folderIdChanged(folderId());
-        }
+        Q_EMIT folderIdChanged(folderId());
     }
 }
 

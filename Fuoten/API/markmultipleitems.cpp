@@ -131,6 +131,11 @@ IdList MarkMultipleItems::itemIds() const { Q_D(const MarkMultipleItems); return
 
 void MarkMultipleItems::setItemIds(const IdList &nItemIds)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "itemIds");
+        return;
+    }
+
     Q_D(MarkMultipleItems); 
     if (nItemIds != d->itemIds) {
         d->itemIds = nItemIds;
@@ -148,6 +153,11 @@ bool MarkMultipleItems::unread() const { Q_D(const MarkMultipleItems); return d-
 
 void MarkMultipleItems::setUnread(bool nUnread)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "unread");
+        return;
+    }
+
     Q_D(MarkMultipleItems); 
     if (nUnread != d->unread) {
         d->unread = nUnread;

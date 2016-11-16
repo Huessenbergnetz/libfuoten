@@ -155,6 +155,11 @@ int GetItems::batchSize() const { Q_D(const GetItems); return d->batchSize; }
 
 void GetItems::setBatchSize(int nBatchSize)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "batchSize");
+        return;
+    }
+
     Q_D(GetItems); 
     if (nBatchSize != d->batchSize) {
         d->batchSize = nBatchSize;
@@ -172,6 +177,11 @@ qint64 GetItems::offset() const { Q_D(const GetItems); return d->offset; }
 
 void GetItems::setOffset(qint64 nOffset)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "offset");
+        return;
+    }
+
     Q_D(GetItems); 
     if (nOffset != d->offset) {
         d->offset = nOffset;
@@ -189,6 +199,11 @@ FuotenEnums::Type GetItems::type() const { Q_D(const GetItems); return d->type; 
 
 void GetItems::setType(FuotenEnums::Type nType)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "type");
+        return;
+    }
+
     Q_D(GetItems); 
     if (nType != d->type) {
         d->type = nType;
@@ -206,6 +221,11 @@ qint64 GetItems::parentId() const { Q_D(const GetItems); return d->parentId; }
 
 void GetItems::setParentId(qint64 nParentId)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "parentId");
+        return;
+    }
+
     Q_D(GetItems); 
     if (nParentId != d->parentId) {
         d->parentId = nParentId;
@@ -223,6 +243,11 @@ bool GetItems::getRead() const { Q_D(const GetItems); return d->getRead; }
 
 void GetItems::setGetRead(bool nGetRead)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "getRead");
+        return;
+    }
+
     Q_D(GetItems); 
     if (nGetRead != d->getRead) {
         d->getRead = nGetRead;
@@ -240,6 +265,11 @@ bool GetItems::oldestFirst() const { Q_D(const GetItems); return d->oldestFirst;
 
 void GetItems::setOldestFirst(bool nOldestFirst)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "oldestFirst");
+        return;
+    }
+
     Q_D(GetItems); 
     if (nOldestFirst != d->oldestFirst) {
         d->oldestFirst = nOldestFirst;

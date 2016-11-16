@@ -138,6 +138,11 @@ qint64 MarkFeedRead::feedId() const { Q_D(const MarkFeedRead); return d->feedId;
 
 void MarkFeedRead::setFeedId(qint64 nFeedId)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "feedId");
+        return;
+    }
+
     Q_D(MarkFeedRead); 
     if (nFeedId != d->feedId) {
         d->feedId = nFeedId;
@@ -155,6 +160,11 @@ qint64 MarkFeedRead::newestItemId() const { Q_D(const MarkFeedRead); return d->n
 
 void MarkFeedRead::setNewestItemId(qint64 nNewestItemId)
 {
+    if (inOperation()) {
+        qWarning("Can not change property %s, still in operation.", "newestItemId");
+        return;
+    }
+
     Q_D(MarkFeedRead); 
     if (nNewestItemId != d->newestItemId) {
         d->newestItemId = nNewestItemId;

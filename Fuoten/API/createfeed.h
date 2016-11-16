@@ -57,6 +57,8 @@ class FUOTENSHARED_EXPORT CreateFeed : public Component
     /*!
      * \brief URL of the feed to add.
      *
+     * This property can not be changed while Component::inOperation() returns \c true.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>QString</TD><TD>url() const</TD></TR><TR><TD>void</TD><TD>setUrl(const QString &nUrl)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -65,6 +67,8 @@ class FUOTENSHARED_EXPORT CreateFeed : public Component
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     /*!
      * \brief ID of the parent folder.
+     *
+     * This property can not be changed while Component::inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>qint64</TD><TD>folderId() const</TD></TR><TR><TD>void</TD><TD>setFolderId(qint64 nFolderId)</TD></TR></TABLE>
@@ -86,16 +90,19 @@ public:
 
     /*!
      * \brief Returns the ID of the parent folder of the new feed.
+     * \sa folderId
      */
     qint64 folderId() const;
 
     /*!
      * \brief Sets the URL for the new feed.
+     * \sa url
      */
     void setUrl(const QUrl &nUrl);
 
     /*!
      * \brief Sets the ID of the parent folder of the new feed.
+     * \sa folderId
      */
     void setFolderId(qint64 nFolderId);
 
@@ -114,11 +121,13 @@ public:
 Q_SIGNALS:
     /*!
      * \brief This is emitted if the URL for the new feed changes.
+     * \sa url
      */
     void urlChanged(const QUrl &url);
 
     /*!
      * \brief This is emitted if the ID of the parent folder for the new feed changes.
+     * \sa folderId
      */
     void folderIdChanged(qint64 folderId);
 

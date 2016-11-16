@@ -48,7 +48,8 @@ class FUOTENSHARED_EXPORT AccountValidator : public QObject
     /*!
      * \brief Pointer to a AbstractConfiguration object.
      *
-     * It is mandatory to set this property to a valid object that contains the authantication data and server configuration.
+     * It is mandatory to set this property to a valid object that contains the authentication data and server configuration.
+     * This property can not be changed while inOperation() returns \c true.
      *
      * \par Access functions:
      * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
