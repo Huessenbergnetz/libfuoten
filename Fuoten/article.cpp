@@ -22,6 +22,7 @@
 #include "API/markitem.h"
 #include "API/staritem.h"
 #include "fuoten.h"
+#include "error.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -396,18 +397,27 @@ void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *
     }
 
     if (!config) {
-        qWarning("Can not mark item. No configuration available.");
+        //% "No configuration available."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
-    FuotenEnums::QueueAction action = FuotenEnums::MarkAsRead;
-    if (unread) {
-        action = FuotenEnums::MarkAsUnread;
-    }
+    if (enqueue) {
 
-    if (enqueue && storage && storage->enqueueItem(action, this)) {
+        if (!storage) {
+            //% "No storage available."
+            setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-storage"), QString(), this));
+            return;
+        }
 
-        setUnread(unread);
+        FuotenEnums::QueueAction action = FuotenEnums::MarkAsRead;
+        if (unread) {
+            action = FuotenEnums::MarkAsUnread;
+        }
+
+        if (!storage->enqueueItem(action, this)) {
+            setError(storage->error());
+        }
 
     } else {
 
@@ -435,18 +445,27 @@ void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage 
     }
 
     if (!config) {
-        qWarning("Can not mark item. No configuration available.");
+        //% "No configuration available."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
-    FuotenEnums::QueueAction action = FuotenEnums::Unstar;
-    if (starred) {
-        action = FuotenEnums::Star;
-    }
+    if (enqueue) {
 
-    if (enqueue && storage && storage->enqueueItem(action, this)) {
+        if (!storage) {
+            //% "No storage available."
+            setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-storage"), QString(), this));
+            return;
+        }
 
-        setStarred(starred);
+        FuotenEnums::QueueAction action = FuotenEnums::Unstar;
+        if (starred) {
+            action = FuotenEnums::Star;
+        }
+
+        if (!storage->enqueueItem(action, this)) {
+            setError(storage->error());
+        }
 
     } else {
 

@@ -174,16 +174,25 @@ void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage,
         return;
     }
 
-    if (!config || !storage) {
-        qWarning("Can not delete the folder. No configuration and no storage available.");
+    if (!config) {
+        //% "No configuration available."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+        return;
+    }
+
+    if (!storage) {
+        //% "No storage available."
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-storage"), QString(), this));
         return;
     }
 
     const qint64 newestItemId = storage->getNewestItemId(FuotenEnums::Folder, id());
 
-    if (enqueue && storage->enqueueMarkFolderRead(id(), newestItemId)) {
+    if (enqueue) {
 
-        setUnreadCount(0);
+        if (!storage->enqueueMarkFolderRead(id(), newestItemId)) {
+            setError(storage->error());
+        }
 
     } else {
 
