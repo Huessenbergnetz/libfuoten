@@ -1910,8 +1910,8 @@ void SQLiteStorage::getArticlesAsync(const QueryArgs &args)
 
 
 
-ItemsRequestedWorker::ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, QObject *parent) :
-    QThread(parent), m_json(json)
+ItemsRequestedWorker::ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, AbstractConfiguration *config, QObject *parent) :
+    QThread(parent), m_json(json), m_config(config)
 {
     if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
         m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
@@ -2072,6 +2072,85 @@ void ItemsRequestedWorker::run()
         return;
     }
 
+
+    // cleaning feeds by deleting items over threshold
+    // but check for valid configuration object first
+
+    if (m_config) {
+
+        IdList fIds;
+        if (!q.exec(QStringLiteral("SELECT id FROM feeds"))) {
+            //% "Failed to execute database query."
+            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
+            return;
+        }
+
+        while(q.next()) {
+            fIds.append(q.value(0).toLongLong());
+        }
+
+        if (!fIds.isEmpty()) {
+
+            const IdList cfIds = fIds;
+            for (qint64 fId : cfIds) {
+
+                const FuotenEnums::ItemDeletionStrategy delStrat = m_config->getPerFeedDeletionStrategy(fId);
+                const quint16 delVal = m_config->getPerFeedDeletionValue(fId);
+
+                if ((delStrat != FuotenEnums::NoItemDeletion) && (delVal > 0)) {
+
+                    if (delStrat == FuotenEnums::DeleteItemsByCount) {
+
+                        if (!q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 ORDER BY id DESC"))) {
+                            //% "Failed to prepare database query."
+                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
+                            return;
+                        }
+
+                        q.addBindValue(fId);
+
+                        if (!q.exec()) {
+                            //% "Failed to execute database query."
+                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
+                            return;
+                        }
+
+                        IdList iIds;
+                        while (q.next()) {
+                            iIds.append(q.value(0).toLongLong());
+                        }
+
+                        if (iIds.count() > delVal) {
+
+                            QStringList iIdsToDelete;
+                            for (int i = 0; i < iIds.count(); ++i) {
+                                if (i >= delVal) {
+                                    iIdsToDelete.append(QString::number(iIds.at(i)));
+                                    removedItemIds.append(iIds.at(i));
+                                }
+                            }
+
+                            if (!iIdsToDelete.isEmpty()) {
+
+                                if (!q.exec(QStringLiteral("DELETE FROM items WHERE id IN (%1)").arg(iIdsToDelete.join(QChar(','))))) {
+                                    //% "Failed to execute database query."
+                                    Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
+                                    return;
+                                }
+
+                            }
+                        }
+
+                    } else {
+
+                    }
+                }
+            }
+        }
+    }
+
+
+
     if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
         //% "Failed to execute database query."
         Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
@@ -2113,7 +2192,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
         return;
     }
 
-    ItemsRequestedWorker *worker = new ItemsRequestedWorker(d->db.databaseName(), json, this);
+    ItemsRequestedWorker *worker = new ItemsRequestedWorker(d->db.databaseName(), json, d->configuration, this);
     connect(worker, &ItemsRequestedWorker::requestedItems, this, &SQLiteStorage::requestedItems);
     connect(worker, &ItemsRequestedWorker::gotStarred, this, &SQLiteStorage::setStarred);
     connect(worker, &ItemsRequestedWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
