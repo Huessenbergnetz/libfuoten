@@ -20,6 +20,7 @@
 
 #include "abstractstorage_p.h"
 #include "../article.h"
+#include "../Helpers/abstractconfiguration.h"
 #include <QRegularExpression>
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -200,3 +201,19 @@ void AbstractStorage::setInOperation(bool nInOperation)
         Q_EMIT inOperationChanged(inOperation());
     }
 }
+
+
+AbstractConfiguration *AbstractStorage::configuration() const { Q_D(const AbstractStorage); return d->configuration; }
+
+void AbstractStorage::setConfiguration(AbstractConfiguration *nConfiguration)
+{
+    Q_D(AbstractStorage);
+    if (nConfiguration != d->configuration) {
+        d->configuration = nConfiguration;
+#ifdef QT_DEBUG
+        qDebug() << "Changed configuration to" << d->configuration;
+#endif
+        Q_EMIT configurationChanged(configuration());
+    }
+}
+

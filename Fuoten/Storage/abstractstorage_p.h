@@ -35,7 +35,8 @@ public:
         error(nullptr),
         totalUnread(0),
         starred(0),
-        inOperation(false)
+        inOperation(false),
+        configuration(nullptr)
     {}
 
     virtual ~AbstractStoragePrivate() {}
@@ -45,6 +46,7 @@ public:
     quint16 totalUnread;
     quint16 starred;
     bool inOperation;
+    AbstractConfiguration *configuration;
 
 private:
     Q_DISABLE_COPY(AbstractStoragePrivate)

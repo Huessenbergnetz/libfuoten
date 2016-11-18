@@ -51,6 +51,7 @@ class Folder;
 class Feed;
 class Error;
 class Article;
+class AbstractConfiguration;
 class AbstractStoragePrivate;
 
 /*!
@@ -124,6 +125,15 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      * <TABLE><TR><TD>void</TD><TD>inOperationChanged(bool inOperation)</TD></TR></TABLE>
      */
     Q_PROPERTY(bool inOperation READ inOperation NOTIFY inOperationChanged)
+    /*!
+     * \brief Pointer to an AbstractConfiguration derived class.
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(AbstractConfiguration *nConfiguration)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>configurationChanged(AbstractConfiguration *configuration)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(AbstractConfiguration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
 public:
     /*!
      * \brief Constructs a new abstract local storage with the given \a parent.
@@ -307,6 +317,19 @@ public:
      * \sa AbstractStorage::setInOperation(), AbstractStorage::inOperationChanged()
      */
     bool inOperation() const;
+
+    /*!
+     * \brief Getter function for the \link AbstractStorage::configuration configuration \endlink property.
+     * \sa AbstractStorage::setConfiguration(), AbstractStorage::configurationChanged()
+     */
+    AbstractConfiguration *configuration() const;
+
+    /*!
+     * \brief Setter function for the \link AbstractStorage::configuration configuration \endlink property.
+     * Emits the configurationChanged() signal if \a nConfiguration is not equal to the stored value.
+     * \sa AbstractStorage::configuration(), AbstractStorage::configurationChanged()
+     */
+    void setConfiguration(AbstractConfiguration *nConfiguration);
 
 public Q_SLOTS:
     /*!
@@ -813,6 +836,12 @@ Q_SIGNALS:
      * \sa AbstractStorage::inOperation(), AbstractStorage::setInOperation()
      */
     void inOperationChanged(bool inOperation);
+
+    /*!
+     * \brief This is emitted if the value of the \link AbstractStorage::configuration configuration \endlink property changes.
+     * \sa AbstractStorage::configuration(), AbstractStorage::setConfiguration()
+     */
+    void configurationChanged(AbstractConfiguration *configuration);
 
 
 private:
