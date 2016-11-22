@@ -1,3 +1,15 @@
+libfuoten 0.5.0 - 2016-11-22
+* new: per feed item deletion (#33)
+* new: queue marking all items read (#34)
+* new: progress data for synchronizer (#36)
+* improved: protect mandatory properties (#40)
+* improved: enqueue marking feeds, folders all as read in separate thread (#38)
+* improved: inOperation property for storage classes (#39)
+* changed: do not fall back to API request on queue error (#41)
+* changed: make Component::extractError() a normal virtual function (43)
+* fixed: synchronizer crashes on error (#42)
+* fixed: synchronizer still reports inOperation true on error (#45)
+
 libfuoten 0.4.1 - 2016-11-10
 * fixed: build on Qt 5.5+
 
