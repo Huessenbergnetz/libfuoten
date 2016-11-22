@@ -74,6 +74,7 @@ public:
         QStringList sl;
 
         if (!ints.isEmpty()) {
+            sl.reserve(ints.size());
 
             for (qint64 i : ints) {
                 sl.append(QString::number(i));

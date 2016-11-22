@@ -1059,6 +1059,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         qDebug() << "No local feeds. Adding all requested feeds as new feeds.";
 #endif
 
+        newFeedIds.reserve(feeds.size());
+
         if (!d->db.transaction()) {
             //% "Failed to begin a database transaction."
             setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
@@ -1765,8 +1767,9 @@ void GetArticlesAsyncWorker::run()
         if (m_args.inIds.count() == 1) {
             idListString = QString::number(m_args.inIds.first());
         } else {
-            QStringList sl;
             const IdList ids = m_args.inIds;
+            QStringList sl;
+            sl.reserve(ids.size());
             for (qint64 id : ids) {
                 sl.append(QString::number(id));
             }
@@ -2091,7 +2094,8 @@ void ItemsRequestedWorker::run()
 
         if (!fIds.isEmpty()) {
 
-            const IdList cfIds = fIds;
+            const IdList cfIds = fIds; // current feed IDs
+            IdList iIds; // item IDs
             for (qint64 fId : cfIds) {
 
                 const FuotenEnums::ItemDeletionStrategy delStrat = m_config->getPerFeedDeletionStrategy(fId);
@@ -2119,7 +2123,7 @@ void ItemsRequestedWorker::run()
                             return;
                         }
 
-                        IdList iIds;
+                        iIds.clear();
                         while (q.next()) {
                             iIds.append(q.value(0).toLongLong());
                         }
