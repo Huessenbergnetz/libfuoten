@@ -7,13 +7,27 @@
         <translation>Ogiltig API-adress</translation>
     </message>
     <message id="err-conn-timeout" numerus="yes">
-        <location line="+116"/>
+        <location line="+127"/>
         <source>The connection to the server timed out after %n second(s).</source>
         <translation><numerusform>Serveranslutningen överskred tidsgränsen efter %n sekund</numerusform><numerusform>Serveranslutningen överskred tidsgränsen efter %n sekunder</numerusform></translation>
     </message>
     <message id="id-err-no-config">
-        <location line="+24"/>
         <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+68"/>
+        <source>No configuration available.</source>
+        <translation>Ingen konfiguration tillgänglig.</translation>
+    </message>
+    <message id="libfuoten-err-no-config">
+        <location filename="../Fuoten/API/component.cpp" line="+24"/>
+        <location filename="../Fuoten/article.cpp" line="+401"/>
+        <location line="+48"/>
+        <location filename="../Fuoten/feed.cpp" line="+291"/>
+        <location line="+36"/>
+        <location line="+25"/>
+        <location line="+35"/>
+        <location filename="../Fuoten/folder.cpp" line="+121"/>
+        <location line="+35"/>
+        <location line="+25"/>
+        <location filename="../Fuoten/Helpers/synchronizer.cpp" line="+60"/>
         <source>No configuration available.</source>
         <translation>Ingen konfiguration tillgänglig.</translation>
     </message>
@@ -229,8 +243,8 @@
         <translation>Versionsnummret för din nyhets-app är lägre än 6.0.5. Användarinformation kan inte hämtas.</translation>
     </message>
     <message id="err-version-not-found">
-        <location filename="../Fuoten/API/getstatus.cpp" line="+102"/>
-        <location filename="../Fuoten/API/getversion.cpp" line="+99"/>
+        <location filename="../Fuoten/API/getstatus.cpp" line="+94"/>
+        <location filename="../Fuoten/API/getversion.cpp" line="+91"/>
         <source>Can not find the version information in the server reply.</source>
         <translation>Kan inte hitta versionsinformation i serversvaret.</translation>
     </message>
@@ -240,7 +254,7 @@
         <translation>Kan inte hitta varningsinformation i serversvaret.</translation>
     </message>
     <message id="err-displayname-not-found">
-        <location filename="../Fuoten/API/getuser.cpp" line="+107"/>
+        <location filename="../Fuoten/API/getuser.cpp" line="+99"/>
         <source>Can not find the user&apos;s display name in the server reply.</source>
         <translation>Kan inte hitta användarens visningsnamn i serversvaret.</translation>
     </message>
@@ -285,7 +299,7 @@
         <location line="+85"/>
         <location line="+48"/>
         <location line="+84"/>
-        <location line="+44"/>
+        <location line="+46"/>
         <location line="+70"/>
         <location line="+44"/>
         <location line="+25"/>
@@ -298,12 +312,17 @@
         <location line="+36"/>
         <location line="+145"/>
         <location line="+68"/>
-        <location line="+105"/>
+        <location line="+106"/>
         <location line="+87"/>
         <location line="+23"/>
         <location line="+68"/>
         <location line="+39"/>
-        <location line="+15"/>
+        <location line="+22"/>
+        <location line="+35"/>
+        <location line="+27"/>
+        <location line="+28"/>
+        <location line="+19"/>
+        <location line="+13"/>
         <location line="+10"/>
         <location line="+68"/>
         <location line="+51"/>
@@ -311,48 +330,49 @@
         <location line="+40"/>
         <location line="+36"/>
         <location line="+33"/>
-        <location line="+98"/>
+        <location line="+99"/>
         <location line="+51"/>
         <location line="+35"/>
         <location line="+48"/>
         <location line="+17"/>
+        <location line="+159"/>
         <source>Failed to execute database query.</source>
         <translation>Kunde inte köra databasförfrågan.</translation>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-2523"/>
+        <location line="-2815"/>
         <location line="+431"/>
-        <location line="+546"/>
+        <location line="+548"/>
         <location line="+62"/>
-        <location line="+841"/>
-        <location line="+220"/>
-        <location line="+388"/>
+        <location line="+842"/>
+        <location line="+349"/>
+        <location line="+389"/>
         <source>Failed to begin a database transaction.</source>
         <translation>Kunde inte starta en databastransaktion.</translation>
     </message>
     <message id="fuoten-error-transaction-commit">
-        <location line="-2320"/>
+        <location line="-2453"/>
         <location line="+335"/>
-        <location line="+515"/>
+        <location line="+517"/>
         <location line="+139"/>
-        <location line="+827"/>
-        <location line="+143"/>
-        <location line="+389"/>
+        <location line="+828"/>
+        <location line="+272"/>
+        <location line="+390"/>
         <source>Failed to commit a database transaction.</source>
         <translation>Kunde inte tillämpa en databastransaktion.</translation>
     </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
-        <location line="-2264"/>
+        <location line="-2397"/>
         <location line="+75"/>
         <location line="+249"/>
         <location line="+117"/>
         <location line="+227"/>
-        <location line="+254"/>
+        <location line="+256"/>
         <location line="+67"/>
         <location line="+37"/>
         <location line="+43"/>
         <location line="+45"/>
-        <location line="+654"/>
+        <location line="+784"/>
         <location line="+24"/>
         <location line="+42"/>
         <location line="+59"/>
@@ -360,35 +380,41 @@
         <location line="+39"/>
         <location line="+33"/>
         <location line="+35"/>
-        <location line="+259"/>
-        <location line="+34"/>
-        <location line="+34"/>
+        <location line="+265"/>
+        <location line="+42"/>
+        <location line="+42"/>
+        <location line="+30"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation>SQLite-databasen är inte klar. Kan inte bearbeta begärd data.</translation>
     </message>
+    <message id="libfuoten-err-invalid-article-object">
+        <location line="-373"/>
+        <source>Invalid article object.</source>
+        <translation>Ogiltigt artikelobjekt.</translation>
+    </message>
     <message id="libfuoten-err-invalid-id-type">
-        <location line="-177"/>
+        <location line="+145"/>
         <source>Invalid ID type.</source>
-        <translation type="unfinished"/>
+        <translation>Ogiltig ID-typ.</translation>
     </message>
     <message id="libfuoten-err-invalid-feed-id">
-        <location filename="../Fuoten/API/deletefeed.cpp" line="+91"/>
+        <location filename="../Fuoten/API/deletefeed.cpp" line="+96"/>
         <location filename="../Fuoten/API/markfeedread.cpp" line="+79"/>
         <location filename="../Fuoten/API/movefeed.cpp" line="+80"/>
         <location filename="../Fuoten/API/renamefeed.cpp" line="+114"/>
         <location filename="../Fuoten/API/staritem.cpp" line="+88"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2177"/>
-        <location line="+983"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2310"/>
+        <location line="+985"/>
         <location line="+37"/>
         <location line="+49"/>
         <location line="+39"/>
-        <location line="+1184"/>
+        <location line="+1320"/>
         <source>The feed ID is not valid.</source>
         <translation>Flödes-ID är inte giltigt.</translation>
     </message>
     <message id="libfuoten-err-empty-feed-name">
         <location filename="../Fuoten/API/renamefeed.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1229"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1365"/>
         <source>The feed name can not be empty.</source>
         <translation>Flödesnamnet kan inte vara tomt.</translation>
     </message>
@@ -401,7 +427,7 @@
         <translation>Flödet kunde inte hittas på servern.</translation>
     </message>
     <message id="fuoten-failed-query-folders">
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-970"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-972"/>
         <source>Failed to query the folders from the local database.</source>
         <translation>Kunde inte hämta mapparna från den lokala databasen.</translation>
     </message>
@@ -414,7 +440,7 @@
         <location line="+111"/>
         <location line="+25"/>
         <location line="+139"/>
-        <location line="+117"/>
+        <location line="+119"/>
         <location line="+70"/>
         <location line="+47"/>
         <location line="+99"/>
@@ -423,15 +449,18 @@
         <location line="+44"/>
         <location line="+44"/>
         <location line="+44"/>
-        <location line="+486"/>
+        <location line="+487"/>
         <location line="+35"/>
-        <location line="+106"/>
+        <location line="+71"/>
+        <location line="+54"/>
+        <location line="+19"/>
+        <location line="+91"/>
         <location line="+49"/>
         <location line="+47"/>
         <location line="+39"/>
         <location line="+39"/>
         <location line="+33"/>
-        <location line="+90"/>
+        <location line="+91"/>
         <location line="+91"/>
         <location line="+50"/>
         <source>Failed to prepare database query.</source>
@@ -448,11 +477,11 @@
         <location filename="../Fuoten/API/markfolderread.cpp" line="+81"/>
         <location filename="../Fuoten/API/movefeed.cpp" line="-22"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+81"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2239"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2372"/>
         <location line="+330"/>
         <location line="+111"/>
-        <location line="+591"/>
-        <location line="+1300"/>
+        <location line="+593"/>
+        <location line="+1444"/>
         <source>The folder ID is not valid.</source>
         <oldsource>Failed to rename the folder. The folder ID is not valid.</oldsource>
         <translation>Mappens ID är inte giltigt.</translation>
@@ -470,14 +499,14 @@
     <message id="libfuoten-err-empty-folder-name">
         <location filename="../Fuoten/API/createfolder.cpp" line="+79"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2008"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2154"/>
         <source>The folder name can not be empty.</source>
         <oldsource>Failed to rename the folder. The new folder name is empty.</oldsource>
         <translation>Mappnamnet kan inte vara tomt.</translation>
     </message>
     <message id="libfuoten-err-no-folders-array-in-reply">
         <location line="+22"/>
-        <location filename="../Fuoten/API/getfolders.cpp" line="+98"/>
+        <location filename="../Fuoten/API/getfolders.cpp" line="+90"/>
         <source>The data the server replied does not contain a &quot;folders&quot; array.</source>
         <translation>Serversvarets data innehåller ingen mappmatris.</translation>
     </message>
@@ -507,21 +536,21 @@
         <location filename="../Fuoten/API/markallitemsread.cpp" line="+79"/>
         <location filename="../Fuoten/API/markfeedread.cpp" line="-36"/>
         <location filename="../Fuoten/API/markfolderread.cpp" line="-36"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+796"/>
-        <location line="+1184"/>
-        <location line="+34"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+798"/>
+        <location line="+1320"/>
+        <location line="+42"/>
         <source>The item ID is not valid.</source>
         <translation>Objekt-ID är inte giltig.</translation>
     </message>
     <message id="libfuoten-err-no-feeds-array-in-reply">
         <location filename="../Fuoten/API/createfeed.cpp" line="-27"/>
-        <location filename="../Fuoten/API/getfeeds.cpp" line="+95"/>
+        <location filename="../Fuoten/API/getfeeds.cpp" line="+87"/>
         <source>The data the server replied does not contain a &quot;feeds&quot; array.</source>
         <translation>Serverns svarsdata innehåller ingen flödesmatris.</translation>
     </message>
     <message id="libfuoten-err-no-items-array-in-reply">
-        <location filename="../Fuoten/API/getitems.cpp" line="+121"/>
-        <location filename="../Fuoten/API/getupdateditems.cpp" line="+110"/>
+        <location filename="../Fuoten/API/getitems.cpp" line="+112"/>
+        <location filename="../Fuoten/API/getupdateditems.cpp" line="+101"/>
         <source>The data the server replied does not contain an &quot;items&quot; array.</source>
         <translation>Serverns svarsdata innehåller ingen objektmatris.</translation>
     </message>
@@ -573,7 +602,7 @@
         <translation>Artikeln kan inte hittas på servern.</translation>
     </message>
     <message id="libfuoten-err-empty-id-list">
-        <location filename="../Fuoten/API/markmultipleitems.cpp" line="+98"/>
+        <location filename="../Fuoten/API/markmultipleitems.cpp" line="+97"/>
         <source>The list of IDs to mark is empty.</source>
         <translation>Listan över ID att märka, är tom.</translation>
     </message>
@@ -586,6 +615,59 @@
         <location filename="../Fuoten/API/starmultipleitems.cpp" line="+102"/>
         <source>The list of articles to star/unstar can not be empty.</source>
         <translation>Listan över artiklar att stärnmärka/avmarkera kan inte vara tom.</translation>
+    </message>
+    <message id="libfuoten-err-no-storage">
+        <location filename="../Fuoten/article.cpp" line="-40"/>
+        <location line="+48"/>
+        <location filename="../Fuoten/feed.cpp" line="+6"/>
+        <location filename="../Fuoten/folder.cpp" line="+6"/>
+        <source>No storage available.</source>
+        <translation>Ingen lagring tillgänglig.</translation>
+    </message>
+    <message id="libfuoten-sync-unread-articles">
+        <location filename="../Fuoten/Helpers/synchronizer.cpp" line="+130"/>
+        <source>Synchronizing unread articles</source>
+        <translation>Synkroniserar olästa artiklar</translation>
+    </message>
+    <message id="libfuoten-sync-read-articles">
+        <location line="+27"/>
+        <source>Synchronizing read articles</source>
+        <translation>Synkroniserar lästa artiklar</translation>
+    </message>
+    <message id="libfuoten-sync-starred-articles">
+        <location line="+25"/>
+        <source>Synchronizing starred articles</source>
+        <translation>Synkroniserar stjärnmärkta artiklar</translation>
+    </message>
+    <message id="libfuoten-sync-unstarred-articles">
+        <location line="+23"/>
+        <source>Synchronizing unstarred articles</source>
+        <translation>Synkroniserar ej stjärnmärkta artiklar</translation>
+    </message>
+    <message id="libfuoten-sync-folders">
+        <location line="+19"/>
+        <source>Requesting folders</source>
+        <translation>Frågar efter mappar</translation>
+    </message>
+    <message id="libfuoten-sync-feeds">
+        <location line="+23"/>
+        <source>Requesting feeds</source>
+        <translation>Frågar efter flöden</translation>
+    </message>
+    <message id="libfuoten-sync-req-articles">
+        <location line="+38"/>
+        <source>Requesting unread articles</source>
+        <translation>Frågar efter olästa artiklar</translation>
+    </message>
+    <message id="libfuoten-sync-req-starred-articles">
+        <location line="+26"/>
+        <source>Requesting starred articles</source>
+        <translation>Frågar efter stjärnmärkta artiklar</translation>
+    </message>
+    <message id="libfuoten-sync-req-updated-articles">
+        <location line="+26"/>
+        <source>Requesting updated and new articles</source>
+        <translation>Frågar efter uppdaterade och nya artiklar</translation>
     </message>
 </context>
 </TS>

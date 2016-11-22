@@ -7,13 +7,27 @@
         <translation>Ungültige API-URL</translation>
     </message>
     <message id="err-conn-timeout" numerus="yes">
-        <location line="+116"/>
+        <location line="+127"/>
         <source>The connection to the server timed out after %n second(s).</source>
         <translation><numerusform>Die Verbindung zum Server hat die Zeitbegrenzung von %n Sekunde überschritten.</numerusform><numerusform>Die Verbindung zum Server hat die Zeitbegrenzung von %n Sekunden überschritten.</numerusform></translation>
     </message>
     <message id="id-err-no-config">
-        <location line="+24"/>
         <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+68"/>
+        <source>No configuration available.</source>
+        <translation>Keine Konfiguration verfügbar.</translation>
+    </message>
+    <message id="libfuoten-err-no-config">
+        <location filename="../Fuoten/API/component.cpp" line="+24"/>
+        <location filename="../Fuoten/article.cpp" line="+401"/>
+        <location line="+48"/>
+        <location filename="../Fuoten/feed.cpp" line="+291"/>
+        <location line="+36"/>
+        <location line="+25"/>
+        <location line="+35"/>
+        <location filename="../Fuoten/folder.cpp" line="+121"/>
+        <location line="+35"/>
+        <location line="+25"/>
+        <location filename="../Fuoten/Helpers/synchronizer.cpp" line="+60"/>
         <source>No configuration available.</source>
         <translation>Keine Konfiguration verfügbar.</translation>
     </message>
@@ -229,8 +243,8 @@
         <translation>Die Version Ihrer News App ist kleiner als 6.0.5. Benutzerinformationen können nicht abgefragt werden.</translation>
     </message>
     <message id="err-version-not-found">
-        <location filename="../Fuoten/API/getstatus.cpp" line="+102"/>
-        <location filename="../Fuoten/API/getversion.cpp" line="+99"/>
+        <location filename="../Fuoten/API/getstatus.cpp" line="+94"/>
+        <location filename="../Fuoten/API/getversion.cpp" line="+91"/>
         <source>Can not find the version information in the server reply.</source>
         <translation>Die Server-Antwort enthält keine Versionsinformation.</translation>
     </message>
@@ -240,7 +254,7 @@
         <translation>Die Server-Antwort enthält keine Warnhinweise.</translation>
     </message>
     <message id="err-displayname-not-found">
-        <location filename="../Fuoten/API/getuser.cpp" line="+107"/>
+        <location filename="../Fuoten/API/getuser.cpp" line="+99"/>
         <source>Can not find the user&apos;s display name in the server reply.</source>
         <translation>Die Server-Antwort enthält keinen Anzeigenamen des Benutzers.</translation>
     </message>
@@ -311,7 +325,7 @@
         <location line="+40"/>
         <location line="+36"/>
         <location line="+33"/>
-        <location line="+98"/>
+        <location line="+99"/>
         <location line="+51"/>
         <location line="+35"/>
         <location line="+48"/>
@@ -320,29 +334,29 @@
         <translation>Datenbankabfrage konnte nicht durchgeführt werden.</translation>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-2523"/>
+        <location line="-2524"/>
         <location line="+431"/>
         <location line="+546"/>
         <location line="+62"/>
         <location line="+841"/>
         <location line="+220"/>
-        <location line="+388"/>
+        <location line="+389"/>
         <source>Failed to begin a database transaction.</source>
         <translation>Datenbanktransaktion konnte nicht begonnen werden.</translation>
     </message>
     <message id="fuoten-error-transaction-commit">
-        <location line="-2320"/>
+        <location line="-2321"/>
         <location line="+335"/>
         <location line="+515"/>
         <location line="+139"/>
         <location line="+827"/>
         <location line="+143"/>
-        <location line="+389"/>
+        <location line="+390"/>
         <source>Failed to commit a database transaction.</source>
         <translation>Datenbanktransaktion konnte nicht abgeschlossen werden.</translation>
     </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
-        <location line="-2264"/>
+        <location line="-2265"/>
         <location line="+75"/>
         <location line="+249"/>
         <location line="+117"/>
@@ -360,35 +374,40 @@
         <location line="+39"/>
         <location line="+33"/>
         <location line="+35"/>
-        <location line="+259"/>
-        <location line="+34"/>
-        <location line="+34"/>
+        <location line="+265"/>
+        <location line="+42"/>
+        <location line="+42"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation>SQLite-Datenbank nicht verfügbar. Daten können nicht verarbeitet werden.</translation>
     </message>
+    <message id="libfuoten-err-invalid-article-object">
+        <location line="-343"/>
+        <source>Invalid article object.</source>
+        <translation>Ungültiges Artikelobjekt.</translation>
+    </message>
     <message id="libfuoten-err-invalid-id-type">
-        <location line="-177"/>
+        <location line="+145"/>
         <source>Invalid ID type.</source>
         <translation>Ungültiger ID-Typ.</translation>
     </message>
     <message id="libfuoten-err-invalid-feed-id">
-        <location filename="../Fuoten/API/deletefeed.cpp" line="+91"/>
+        <location filename="../Fuoten/API/deletefeed.cpp" line="+96"/>
         <location filename="../Fuoten/API/markfeedread.cpp" line="+79"/>
         <location filename="../Fuoten/API/movefeed.cpp" line="+80"/>
         <location filename="../Fuoten/API/renamefeed.cpp" line="+114"/>
         <location filename="../Fuoten/API/staritem.cpp" line="+88"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2177"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2178"/>
         <location line="+983"/>
         <location line="+37"/>
         <location line="+49"/>
         <location line="+39"/>
-        <location line="+1184"/>
+        <location line="+1190"/>
         <source>The feed ID is not valid.</source>
         <translation>Die Feed-ID ist ungültig.</translation>
     </message>
     <message id="libfuoten-err-empty-feed-name">
         <location filename="../Fuoten/API/renamefeed.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1229"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1235"/>
         <source>The feed name can not be empty.</source>
         <translation>Der Fee-Titel darf nicht leer sein.</translation>
     </message>
@@ -431,7 +450,7 @@
         <location line="+39"/>
         <location line="+39"/>
         <location line="+33"/>
-        <location line="+90"/>
+        <location line="+91"/>
         <location line="+91"/>
         <location line="+50"/>
         <source>Failed to prepare database query.</source>
@@ -448,11 +467,11 @@
         <location filename="../Fuoten/API/markfolderread.cpp" line="+81"/>
         <location filename="../Fuoten/API/movefeed.cpp" line="-22"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+81"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2239"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2240"/>
         <location line="+330"/>
         <location line="+111"/>
         <location line="+591"/>
-        <location line="+1300"/>
+        <location line="+1314"/>
         <source>The folder ID is not valid.</source>
         <oldsource>Failed to rename the folder. The folder ID is not valid.</oldsource>
         <translation>Die Ordner-ID ist ungültig.</translation>
@@ -470,14 +489,14 @@
     <message id="libfuoten-err-empty-folder-name">
         <location filename="../Fuoten/API/createfolder.cpp" line="+79"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2008"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2022"/>
         <source>The folder name can not be empty.</source>
         <oldsource>Failed to rename the folder. The new folder name is empty.</oldsource>
         <translation>Der Ordnername darf nicht leer sein.</translation>
     </message>
     <message id="libfuoten-err-no-folders-array-in-reply">
         <location line="+22"/>
-        <location filename="../Fuoten/API/getfolders.cpp" line="+98"/>
+        <location filename="../Fuoten/API/getfolders.cpp" line="+90"/>
         <source>The data the server replied does not contain a &quot;folders&quot; array.</source>
         <translation>Die vom Server erhaltenen Daten enthalten kein &quot;folders&quot; Array.</translation>
     </message>
@@ -508,20 +527,20 @@
         <location filename="../Fuoten/API/markfeedread.cpp" line="-36"/>
         <location filename="../Fuoten/API/markfolderread.cpp" line="-36"/>
         <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+796"/>
-        <location line="+1184"/>
-        <location line="+34"/>
+        <location line="+1190"/>
+        <location line="+42"/>
         <source>The item ID is not valid.</source>
         <translation>Die Artikel-ID ist ungültig.</translation>
     </message>
     <message id="libfuoten-err-no-feeds-array-in-reply">
         <location filename="../Fuoten/API/createfeed.cpp" line="-27"/>
-        <location filename="../Fuoten/API/getfeeds.cpp" line="+95"/>
+        <location filename="../Fuoten/API/getfeeds.cpp" line="+87"/>
         <source>The data the server replied does not contain a &quot;feeds&quot; array.</source>
         <translation>Die vom Server gelieferten Daten enthalten kein Feeds-Array.</translation>
     </message>
     <message id="libfuoten-err-no-items-array-in-reply">
-        <location filename="../Fuoten/API/getitems.cpp" line="+121"/>
-        <location filename="../Fuoten/API/getupdateditems.cpp" line="+110"/>
+        <location filename="../Fuoten/API/getitems.cpp" line="+112"/>
+        <location filename="../Fuoten/API/getupdateditems.cpp" line="+101"/>
         <source>The data the server replied does not contain an &quot;items&quot; array.</source>
         <translation>Die vom Server erhaltenen Daten enthalten kein &quot;items&quot; Array.</translation>
     </message>
@@ -573,7 +592,7 @@
         <translation>Der Artikel wurde auf dem Server nicht gefunden.</translation>
     </message>
     <message id="libfuoten-err-empty-id-list">
-        <location filename="../Fuoten/API/markmultipleitems.cpp" line="+98"/>
+        <location filename="../Fuoten/API/markmultipleitems.cpp" line="+97"/>
         <source>The list of IDs to mark is empty.</source>
         <translation>Die Liste zu markierender IDs ist leer.</translation>
     </message>
@@ -586,6 +605,59 @@
         <location filename="../Fuoten/API/starmultipleitems.cpp" line="+102"/>
         <source>The list of articles to star/unstar can not be empty.</source>
         <translation>Die Artikelliste die favorisiert/entfavorisiert werden soll, darf nicht leer sein.</translation>
+    </message>
+    <message id="libfuoten-err-no-storage">
+        <location filename="../Fuoten/article.cpp" line="-40"/>
+        <location line="+48"/>
+        <location filename="../Fuoten/feed.cpp" line="+6"/>
+        <location filename="../Fuoten/folder.cpp" line="+6"/>
+        <source>No storage available.</source>
+        <translation>Keine Speicherklasse verfügbar.</translation>
+    </message>
+    <message id="libfuoten-sync-unread-articles">
+        <location filename="../Fuoten/Helpers/synchronizer.cpp" line="+130"/>
+        <source>Synchronizing unread articles</source>
+        <translation>Synchronisiere ungelesene Artikel</translation>
+    </message>
+    <message id="libfuoten-sync-read-articles">
+        <location line="+27"/>
+        <source>Synchronizing read articles</source>
+        <translation>Synchronisiere gelesene Artikel</translation>
+    </message>
+    <message id="libfuoten-sync-starred-articles">
+        <location line="+25"/>
+        <source>Synchronizing starred articles</source>
+        <translation>Synchronisiere favorisierte Artikel</translation>
+    </message>
+    <message id="libfuoten-sync-unstarred-articles">
+        <location line="+23"/>
+        <source>Synchronizing unstarred articles</source>
+        <translation>Synchronisiere unfavorisierte Artikel</translation>
+    </message>
+    <message id="libfuoten-sync-folders">
+        <location line="+19"/>
+        <source>Requesting folders</source>
+        <translation>Rufe Ordner ab</translation>
+    </message>
+    <message id="libfuoten-sync-feeds">
+        <location line="+23"/>
+        <source>Requesting feeds</source>
+        <translation>Rufe Feeds ab</translation>
+    </message>
+    <message id="libfuoten-sync-req-articles">
+        <location line="+38"/>
+        <source>Requesting unread articles</source>
+        <translation>Rufe ungelesene Artikel ab</translation>
+    </message>
+    <message id="libfuoten-sync-req-starred-articles">
+        <location line="+26"/>
+        <source>Requesting starred articles</source>
+        <translation>Rufe favorisierte Artikel ab</translation>
+    </message>
+    <message id="libfuoten-sync-req-updated-articles">
+        <location line="+26"/>
+        <source>Requesting updated and new articles</source>
+        <translation>Rufe aktualisierte und neue Artikel ab</translation>
     </message>
 </context>
 </TS>
