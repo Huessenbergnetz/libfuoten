@@ -107,6 +107,7 @@ void AbstractArticleModel::handleStorageChanged()
     connect(s, &AbstractStorage::starredItems, this, &AbstractArticleModel::itemsStarred);
     connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractArticleModel::allItemsMarkedRead);
     connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractArticleModel::allItemsMarkedReadInQueue);
+    connect(s, &AbstractStorage::queueCleared, this, &AbstractArticleModel::queueCleared);
 }
 
 
@@ -666,4 +667,20 @@ void AbstractArticleModel::allItemsMarkedReadInQueue()
     }
 
     Q_EMIT dataChanged(index(0, 0), index(rowCount()-1, 0), QVector<int>(1, Qt::DisplayRole));
+}
+
+
+
+
+void AbstractArticleModel::queueCleared()
+{
+    if (rowCount() <= 0) {
+
+    }
+
+    const ArticleList as = articles();
+
+    for (Article *a : as) {
+        a->setQueue(FuotenEnums::QueueActions(0));
+    }
 }

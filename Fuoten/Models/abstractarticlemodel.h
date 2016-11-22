@@ -297,6 +297,14 @@ protected Q_SLOTS:
      */
     void allItemsMarkedReadInQueue();
 
+    /*!
+     * \brief Updates the model after the local queue has been cleared.
+     *
+     * Will set the Article::queue property of every article in the model to FuotenEnums::NoQueueAction.
+     * handleStorageChanged() will connect the AbstractStorage::queueCleared() signal to this slot.
+     */
+    void queueCleared();
+
 protected:
     AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent = nullptr);
 

@@ -2101,6 +2101,10 @@ void ItemsRequestedWorker::run()
 
                     if (delStrat == FuotenEnums::DeleteItemsByCount) {
 
+#ifdef QT_DEBUG
+                        qDebug() << "Removing all items more than" << delVal << "from the feed with ID" << fId;
+#endif
+
                         if (!q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 ORDER BY id DESC"))) {
                             //% "Failed to prepare database query."
                             Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
@@ -2121,6 +2125,10 @@ void ItemsRequestedWorker::run()
                         }
 
                         if (iIds.count() > delVal) {
+
+#ifdef QT_DEBUG
+                            qDebug() << "Removing all items more than" << delVal << "from the feed with ID" << fId;
+#endif
 
                             QStringList iIdsToDelete;
                             for (int i = 0; i < iIds.count(); ++i) {
@@ -2143,6 +2151,47 @@ void ItemsRequestedWorker::run()
 
                     } else {
 
+                        QDateTime tt = QDateTime::currentDateTimeUtc().addDays(delVal * -1);
+
+
+#ifdef QT_DEBUG
+                        qDebug() << "Removing all items older than" << tt << "from the feed with ID" << fId;
+#endif
+
+
+                        if (!q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 AND pubDate < ?"))) {
+                            //% "Failed to prepare database query."
+                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
+                            return;
+                        }
+
+                        q.addBindValue(fId);
+                        q.addBindValue(tt.toTime_t());
+
+                        if (!q.exec()) {
+                            //% "Failed to execute database query."
+                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
+                            return;
+                        }
+
+                        while (q.next()) {
+                            removedItemIds.append(q.value(0).toLongLong());
+                        }
+
+                        if (!q.prepare(QStringLiteral("DELETE FROM items WHERE feedId = ? AND starred = 0 AND pubDate < ?"))) {
+                            //% "Failed to prepare database query."
+                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
+                            return;
+                        }
+
+                        q.addBindValue(fId);
+                        q.addBindValue(tt.toTime_t());
+
+                        if (!q.exec()) {
+                            //% "Failed to execute database query."
+                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
+                            return;
+                        }
                     }
                 }
             }
@@ -2820,4 +2869,37 @@ bool SQLiteStorage::enqueueMarkAllItemsRead()
     worker->start();
 
     return true;
+}
+
+
+
+void SQLiteStorage::clearQueue()
+{
+    if (inOperation()) {
+        qWarning("Still in operation. Returning.");
+        return;
+    }
+
+    if (!ready()) {
+        //% "SQLite database not ready. Can not process requested data."
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
+
+    setInOperation(true);
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (!q.exec(QStringLiteral("UPDATE items SET queue = 0"))) {
+        setInOperation(false);
+        //% "Failed to execute database query."
+        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    Q_EMIT queueCleared();
+
+    setInOperation(false);
 }

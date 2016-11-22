@@ -331,6 +331,14 @@ public:
      */
     void setConfiguration(AbstractConfiguration *nConfiguration);
 
+    /*!
+     * \brief Clears the local queue. Does not revert the action itself.
+     *
+     * The default implementation does nothing. When reimplementing this function, only remove the queue entry
+     * but do not revert the action already done locally. It will be called after working the queue.
+     */
+    virtual void clearQueue();
+
 public Q_SLOTS:
     /*!
      * \brief Receives the reply data of the GetFolders request.
@@ -842,6 +850,14 @@ Q_SIGNALS:
      * \sa AbstractStorage::configuration(), AbstractStorage::setConfiguration()
      */
     void configurationChanged(AbstractConfiguration *configuration);
+
+
+    /*!
+     * \brief This is emitted after the local queue has been cleared.
+     *
+     * Emit this in your implementation of clearQueue().
+     */
+    void queueCleared();
 
 
 private:

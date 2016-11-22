@@ -162,6 +162,11 @@ public:
      */
     bool enqueueMarkAllItemsRead() override;
 
+    /*!
+     * \brief Resets the queue column after the queue has been worked.
+     */
+    void clearQueue() override;
+
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;

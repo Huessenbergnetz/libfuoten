@@ -417,6 +417,9 @@ void Synchronizer::requestUpdated()
 void Synchronizer::finished()
 {
     Q_D(Synchronizer);
+    if (d->storage) {
+        d->storage->clearQueue();
+    }
     d->configuration->setLastSync(QDateTime::currentDateTimeUtc());
     d->setInOperation(false);
     Q_EMIT succeeded();

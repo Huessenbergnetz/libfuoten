@@ -217,3 +217,9 @@ void AbstractStorage::setConfiguration(AbstractConfiguration *nConfiguration)
     }
 }
 
+
+
+void AbstractStorage::clearQueue()
+{
+
+}
