@@ -70,9 +70,9 @@ void Synchronizer::start()
     d->setInOperation(true);
 
     if (d->configuration->getLastSync().isValid()) {
-        d->totalActions = 3;
-    } else {
         d->totalActions = 4;
+    } else {
+        d->totalActions = 5;
     }
 
     if (d->storage) {
@@ -420,6 +420,7 @@ void Synchronizer::finished()
     if (d->storage) {
         d->storage->clearQueue();
     }
+    setProgress(++d->performedActions/d->totalActions);
     d->configuration->setLastSync(QDateTime::currentDateTimeUtc());
     d->setInOperation(false);
     Q_EMIT succeeded();
