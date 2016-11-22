@@ -177,6 +177,25 @@ private:
 };
 
 
+
+class ClearQueueWorker : public QThread
+{
+    Q_OBJECT
+public:
+    ClearQueueWorker(const QString &dbpath, QObject *parent = nullptr);
+
+Q_SIGNALS:
+    void failed(Error *e);
+    void queueCleared();
+
+protected:
+    void run() override;
+
+private:
+    QSqlDatabase m_db;
+};
+
+
 }
 
 #endif // SQLITESTORAGE_P

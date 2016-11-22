@@ -2796,7 +2796,7 @@ bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
     connect(worker, &EnqueueMarkReadWorker::markedReadFeedInQueue, this, &SQLiteStorage::markedReadFeedInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
     connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
-    connect(worker, &EnqueueMarkReadWorker::finished, [=] () {setInOperation(false);});
+    connect(worker, &QThread::finished, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
@@ -2838,7 +2838,7 @@ bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
     connect(worker, &EnqueueMarkReadWorker::markedReadFolderInQueue, this, &SQLiteStorage::markedReadFolderInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
     connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
-    connect(worker, &EnqueueMarkReadWorker::finished, [=] () {setInOperation(false);});
+    connect(worker, &QThread::finished, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
@@ -2868,11 +2868,44 @@ bool SQLiteStorage::enqueueMarkAllItemsRead()
     connect(worker, &EnqueueMarkReadWorker::markedAllItemsReadInQueue, this, &SQLiteStorage::markedAllItemsReadInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
     connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
-    connect(worker, &EnqueueMarkReadWorker::finished, [=] () {setInOperation(false);});
+    connect(worker, &QThread::finished, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
     return true;
+}
+
+
+
+ClearQueueWorker::ClearQueueWorker(const QString &dbpath, QObject *parent) :
+    QThread(parent)
+{
+    if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
+        m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
+        m_db.setDatabaseName(dbpath);
+    } else {
+        m_db = QSqlDatabase::database(QStringLiteral("fuotendb"));
+    }
+}
+
+
+void ClearQueueWorker::run()
+{
+    QSqlQuery q(m_db);
+
+    if (!q.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
+        //% "Failed to execute database query."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    if (!q.exec(QStringLiteral("UPDATE items SET queue = 0"))) {
+        //% "Failed to execute database query."
+        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
+        return;
+    }
+
+    Q_EMIT queueCleared();
 }
 
 
@@ -2894,16 +2927,10 @@ void SQLiteStorage::clearQueue()
 
     Q_D(SQLiteStorage);
 
-    QSqlQuery q(d->db);
-
-    if (!q.exec(QStringLiteral("UPDATE items SET queue = 0"))) {
-        setInOperation(false);
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
-
-    Q_EMIT queueCleared();
-
-    setInOperation(false);
+    ClearQueueWorker *worker = new ClearQueueWorker(d->db.databaseName(), this);
+    connect(worker, &ClearQueueWorker::queueCleared, this, &AbstractStorage::queueCleared);
+    connect(worker, &ClearQueueWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, [=] () {setInOperation(false);});
+    connect(worker, &QThread::finished, worker, &QObject::deleteLater);
+    worker->start();
 }
