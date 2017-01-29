@@ -1,3 +1,6 @@
+libfuoten 0.5.1 - 2017-01-29
+* improved: translation updates
+
 libfuoten 0.5.0 - 2016-11-22
 * new: per feed item deletion (#33)
 * new: queue marking all items read (#34)
