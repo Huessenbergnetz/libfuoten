@@ -9,7 +9,7 @@
     <message id="err-conn-timeout" numerus="yes">
         <location line="+127"/>
         <source>The connection to the server timed out after %n second(s).</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>Tidsudløb på serverforbindelse efter %n sekund.</numerusform><numerusform>Tidsudløb på serverforbindelse efter %n sekunder.</numerusform></translation>
     </message>
     <message id="id-err-no-config">
         <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+68"/>
@@ -59,17 +59,17 @@
     <message id="err-no-json-array">
         <location line="+7"/>
         <source>It was expected that the request returns a JSON array, but it returned something else.</source>
-        <translation type="unfinished"/>
+        <translation>Der blev returneret noget andet end det forventede JSON-objekt.</translation>
     </message>
     <message id="err-no-json-object">
         <location line="+7"/>
         <source>It was expected that the request returns a JSON object, but it returned something else.</source>
-        <translation type="unfinished"/>
+        <translation>Der blev returneret noget andet end det forventede JSON-objekt.</translation>
     </message>
     <message id="err-net-reply-1">
         <location filename="../Fuoten/error.cpp" line="+68"/>
         <source>The remote server at %1 refused the connection.</source>
-        <translation type="unfinished"/>
+        <translation>Den eksterne server %1 afviser forbindelsen.</translation>
     </message>
     <message id="err-net-reply-2">
         <location line="+4"/>
@@ -84,12 +84,12 @@
     <message id="err-net-reply-4">
         <location line="+4"/>
         <source>The connection to the server at %1 timed out.</source>
-        <translation type="unfinished"/>
+        <translation>Tidsudløb på forbindelsen til server %1.</translation>
     </message>
     <message id="err-net-reply-5">
         <location line="+4"/>
         <source>The operation was canceled before it was finished.</source>
-        <translation type="unfinished"/>
+        <translation>Operationen blev afbrudt før den blev færdig.</translation>
     </message>
     <message id="err-net-reply-6">
         <location line="+4"/>
@@ -99,7 +99,7 @@
     <message id="err-net-reply-7">
         <location line="+4"/>
         <source>The connection was broken due to disconnection from the network.</source>
-        <translation type="unfinished"/>
+        <translation>Forbindelsen blev afbrudt, på grund af frakobling fra netnærket.</translation>
     </message>
     <message id="err-net-reply-8">
         <location line="+4"/>
@@ -109,7 +109,7 @@
     <message id="err-net-reply-9">
         <location line="+4"/>
         <source>The background request is not currently allowed due to platform policy.</source>
-        <translation type="unfinished"/>
+        <translation>Forespørgsler i baggrunden er ikke tilladt på grund af platformspolitik.</translation>
     </message>
     <message id="err-net-reply-10">
         <location line="+5"/>
@@ -134,12 +134,12 @@
     <message id="err-net-reply-103">
         <location line="+4"/>
         <source>The proxy host name was not found (invalid proxy hostname).</source>
-        <translation type="unfinished"/>
+        <translation>Proxyserver ikke fundet (Ugyldigt proxy værtsnavn).</translation>
     </message>
     <message id="err-net-reply-104">
         <location line="+4"/>
         <source>The connection to the proxy timed out or the proxy did not reply in time to the request sent</source>
-        <translation type="unfinished"/>
+        <translation>Forbindelsen til proxyserveren løb ud, eller proxyserveren svarede ikke i tide</translation>
     </message>
     <message id="err-net-reply-105">
         <location line="+4"/>
@@ -189,12 +189,12 @@
     <message id="err-net-reply-402">
         <location line="+4"/>
         <source>The server does not support the functionality required to fulfill the request.</source>
-        <translation type="unfinished"/>
+        <translation>Serveren understøtter ikke funktionaliteten der skal til for at fuldføre forespørgslen.</translation>
     </message>
     <message id="err-net-reply-403">
         <location line="+4"/>
         <source>The server is unable to handle the request at this time.</source>
-        <translation type="unfinished"/>
+        <translation>Serveren kan ikke håndtere forespørgslen på nuværende tidspunkt.</translation>
     </message>
     <message id="err-net-reply-301">
         <location line="+5"/>
@@ -235,7 +235,7 @@
     <message id="id-err-version-low-status-user">
         <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+21"/>
         <source>The version of your News App is lower than 5.2.4. Status and user information can not be queried.</source>
-        <translation type="unfinished"/>
+        <translation>Din News App er ældre end 5.2.4, status og brugerinformation gives ikke.</translation>
     </message>
     <message id="id-err-version-low-user">
         <location line="+22"/>
@@ -246,7 +246,7 @@
         <location filename="../Fuoten/API/getstatus.cpp" line="+94"/>
         <location filename="../Fuoten/API/getversion.cpp" line="+91"/>
         <source>Can not find the version information in the server reply.</source>
-        <translation type="unfinished"/>
+        <translation>Kan ikke finde versionsinformation i serversvar.</translation>
     </message>
     <message id="err-warnings-not-found">
         <location line="+7"/>
@@ -335,12 +335,13 @@
         <location line="+35"/>
         <location line="+48"/>
         <location line="+17"/>
-        <location line="+159"/>
+        <location line="+155"/>
+        <location line="+6"/>
         <source>Failed to execute database query.</source>
         <translation>Kan ikke udføre databaseforespørgsel.</translation>
     </message>
     <message id="fuoten-error-transaction-begin">
-        <location line="-2815"/>
+        <location line="-2817"/>
         <location line="+431"/>
         <location line="+548"/>
         <location line="+62"/>
@@ -383,12 +384,12 @@
         <location line="+265"/>
         <location line="+42"/>
         <location line="+42"/>
-        <location line="+30"/>
+        <location line="+63"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation>SQLite database ikke klar. Kan ikke behandle ønsket data.</translation>
     </message>
     <message id="libfuoten-err-invalid-article-object">
-        <location line="-373"/>
+        <location line="-406"/>
         <source>Invalid article object.</source>
         <translation>Ugyldigt artikelobjekt.</translation>
     </message>
@@ -424,12 +425,12 @@
         <location filename="../Fuoten/API/movefeed.cpp" line="+30"/>
         <location filename="../Fuoten/API/renamefeed.cpp" line="+42"/>
         <source>The feed was not found on the server.</source>
-        <translation type="unfinished"/>
+        <translation>Feedet blev ikke fundet på serveren.</translation>
     </message>
     <message id="fuoten-failed-query-folders">
         <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-972"/>
         <source>Failed to query the folders from the local database.</source>
-        <translation type="unfinished"/>
+        <translation>Kunne ikke hente folderne fra den lokale database.</translation>
     </message>
     <message id="fuoten-error-failed-prepare-query">
         <location line="-58"/>
@@ -489,12 +490,12 @@
     <message id="libfuoten-err-feed-exists">
         <location line="+45"/>
         <source>The feed does already exist on the server.</source>
-        <translation type="unfinished"/>
+        <translation>Feedet eksisterer allerede på serveren.</translation>
     </message>
     <message id="libfuoten-err-feed-unreadable">
         <location line="+4"/>
         <source>The feed can not be read (most likely contains errors).</source>
-        <translation type="unfinished"/>
+        <translation>Feedet kan ikke indlæses (indeholder sandsynligvis fejl)</translation>
     </message>
     <message id="libfuoten-err-empty-folder-name">
         <location filename="../Fuoten/API/createfolder.cpp" line="+79"/>
@@ -593,13 +594,13 @@
     <message id="libfuoten-err-invalid-article-id">
         <location filename="../Fuoten/API/markitem.cpp" line="+88"/>
         <source>The article ID is not valid.</source>
-        <translation type="unfinished"/>
+        <translation>ArtikleID er ugyldigt.</translation>
     </message>
     <message id="libfuoten-err-article-not-exists">
         <location line="+36"/>
         <location filename="../Fuoten/API/staritem.cpp" line="+44"/>
         <source>The article was not found on the server.</source>
-        <translation type="unfinished"/>
+        <translation>Artiklen kunne ikke findes på serveren.</translation>
     </message>
     <message id="libfuoten-err-empty-id-list">
         <location filename="../Fuoten/API/markmultipleitems.cpp" line="+97"/>
@@ -627,7 +628,7 @@
     <message id="libfuoten-sync-unread-articles">
         <location filename="../Fuoten/Helpers/synchronizer.cpp" line="+130"/>
         <source>Synchronizing unread articles</source>
-        <translation type="unfinished"/>
+        <translation>Ajourfør ulæste artikler</translation>
     </message>
     <message id="libfuoten-sync-read-articles">
         <location line="+27"/>
@@ -647,27 +648,27 @@
     <message id="libfuoten-sync-folders">
         <location line="+19"/>
         <source>Requesting folders</source>
-        <translation type="unfinished"/>
+        <translation>Anmoder om foldere</translation>
     </message>
     <message id="libfuoten-sync-feeds">
         <location line="+23"/>
         <source>Requesting feeds</source>
-        <translation type="unfinished"/>
+        <translation>Anmoder om feeds</translation>
     </message>
     <message id="libfuoten-sync-req-articles">
         <location line="+38"/>
         <source>Requesting unread articles</source>
-        <translation type="unfinished"/>
+        <translation>Anmoder om ulæste artikler</translation>
     </message>
     <message id="libfuoten-sync-req-starred-articles">
         <location line="+26"/>
         <source>Requesting starred articles</source>
-        <translation type="unfinished"/>
+        <translation>Anmoder om favoritartikler</translation>
     </message>
     <message id="libfuoten-sync-req-updated-articles">
         <location line="+26"/>
         <source>Requesting updated and new articles</source>
-        <translation type="unfinished"/>
+        <translation>Anmoder om ajourførte og nye artikler</translation>
     </message>
 </context>
 </TS>
