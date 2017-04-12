@@ -49,7 +49,7 @@
     <message id="err-no-payloud">
         <location line="+7"/>
         <source>Empty payload when trying to perform a PUT or POST network operation.</source>
-        <translation type="unfinished"/>
+        <translation>Tom pakke ved forsøg på udførelse af PUT og POST operationer.</translation>
     </message>
     <message id="err-empty-answer">
         <location line="+26"/>
@@ -174,7 +174,7 @@
     <message id="err-net-reply-206">
         <location line="+5"/>
         <source>The request could not be completed due to a conflict with the current state of the resource.</source>
-        <translation type="unfinished"/>
+        <translation>Forespørgslen kunne ikke udføres på grund af en tilstandskonflikt.</translation>
     </message>
     <message id="err-net-reply-207">
         <location line="+4"/>
@@ -610,7 +610,7 @@
     <message id="libfuoten-err-empty-guidhash">
         <location filename="../Fuoten/API/staritem.cpp" line="-36"/>
         <source>The GUID hash can not be empty.</source>
-        <translation type="unfinished"/>
+        <translation>GUID hashen kan ikke være tom.</translation>
     </message>
     <message id="libfuoten-err-articles-star-unstar-list">
         <location filename="../Fuoten/API/starmultipleitems.cpp" line="+102"/>
