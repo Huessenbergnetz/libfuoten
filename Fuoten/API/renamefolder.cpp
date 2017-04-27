@@ -45,7 +45,7 @@ RenameFolder::RenameFolder(RenameFolderPrivate &dd, QObject *parent) :
 
 void RenameFolder::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -74,9 +74,9 @@ void RenameFolder::execute()
 
 bool RenameFolder::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (folderId() == 0) {
+        if (Q_UNLIKELY(folderId() == 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
             setInOperation(false);
@@ -84,7 +84,7 @@ bool RenameFolder::checkInput()
             return false;
         }
 
-        if (newName().isEmpty()) {
+        if (Q_UNLIKELY(newName().isEmpty())) {
             //% "The folder name can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
             setInOperation(false);
@@ -151,7 +151,7 @@ qint64 RenameFolder::folderId() const { Q_D(const RenameFolder); return d->folde
 
 void RenameFolder::setFolderId(qint64 nFolderId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "folderId");
         return;
     }
@@ -173,7 +173,7 @@ QString RenameFolder::newName() const { Q_D(const RenameFolder); return d->newNa
 
 void RenameFolder::setNewName(const QString &nNewName)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "newName");
         return;
     }

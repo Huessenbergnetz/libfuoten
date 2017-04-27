@@ -42,7 +42,7 @@ DeleteFolder::DeleteFolder(DeleteFolderPrivate &dd, QObject *parent) :
 
 void DeleteFolder::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -68,9 +68,9 @@ void DeleteFolder::execute()
 
 bool DeleteFolder::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (folderId() <= 0) {
+        if (Q_UNLIKELY(folderId() <= 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
             setInOperation(false);
@@ -107,15 +107,12 @@ void DeleteFolder::successCallback()
 
 void DeleteFolder::extractError(QNetworkReply *reply)
 {
-    if (reply) {
-        if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
-            //% "The folder was not found on the server."
-            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-not-exists"), QString(), this));
-        } else {
-            setError(new Error(reply, this));
-        }
+    Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
+    if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
+        //% "The folder was not found on the server."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-not-exists"), QString(), this));
     } else {
-        qFatal("Invalid QNetworkReply!");
+        setError(new Error(reply, this));
     }
 
     setInOperation(false);
@@ -128,7 +125,7 @@ qint64 DeleteFolder::folderId() const { Q_D(const DeleteFolder); return d->folde
 
 void DeleteFolder::setFolderId(qint64 nFolderId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "folderId");
         return;
     }

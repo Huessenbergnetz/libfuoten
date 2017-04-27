@@ -70,10 +70,7 @@ void AbstractFeedModel::handleStorageChanged()
 
 void AbstractFeedModel::load()
 {
-    if (!storage()) {
-        qWarning("Can not load feeds, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "load feed model", "no storage available");
 
     if (!storage()->ready() || loaded()) {
         return;
@@ -108,9 +105,10 @@ void AbstractFeedModel::load()
 
 QModelIndex AbstractFeedModel::findByID(qint64 id) const
 {
+    QModelIndex modidx;
     Q_D(const AbstractFeedModel);
     if (d->feeds.isEmpty()) {
-        return QModelIndex();
+        return modidx;
     }
 
     int idx = -1;
@@ -122,16 +120,20 @@ QModelIndex AbstractFeedModel::findByID(qint64 id) const
         }
     }
 
-    return (idx > -1) ? index(idx, 0) : QModelIndex();
+    if (idx > -1) {
+        modidx = index(idx, 0);
+    }
+
+    return modidx;
 }
 
 
 
 QHash<qint64, QModelIndex> AbstractFeedModel::findByIDs(const IdList &ids) const
 {
-    Q_D(const AbstractFeedModel);
-
     QHash<qint64, QModelIndex> idxs;
+
+    Q_D(const AbstractFeedModel);
 
     if (d->feeds.isEmpty()) {
         return idxs;
@@ -158,10 +160,7 @@ QList<Feed*> AbstractFeedModel::feeds() const
 
 void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds)
 {
-    if (!storage()) {
-        qWarning("Can not load feeds, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "load feeds", "no storage available");
 
 #ifdef QT_DEBUG
     qDebug() << "Feeds requested. Updating feeds model.";
@@ -270,10 +269,7 @@ void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList 
 
 void AbstractFeedModel::feedCreated(qint64 id, qint64 folderId)
 {
-    if (!storage()) {
-        qWarning("Can not add feed, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "create feed", "no storage available");
 
     if (parentId() < 0 || parentId() == folderId) {
 
@@ -349,10 +345,7 @@ void AbstractFeedModel::feedMarkedRead(qint64 id, qint64 newestItemId)
 
 void AbstractFeedModel::feedMoved(qint64 id, qint64 targetFolderId)
 {
-    if (!storage()) {
-        qWarning("Can not move feed, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "move feed", "no storage available");
 
     Feed *f = storage()->getFeed(id);
 
@@ -517,10 +510,7 @@ void AbstractFeedModel::itemsRquested(const IdList &updatedItems, const IdList &
     Q_UNUSED(newItems)
     Q_UNUSED(deletedItems)
 
-    if (!storage()) {
-        qWarning("Can not update feeds, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "update feeds", "no storage available");
 
     QueryArgs qa;
     qa.parentId = parentId();
@@ -552,10 +542,7 @@ void AbstractFeedModel::itemMarked(qint64 itemId, bool unread)
         return;
     }
 
-    if (!storage()) {
-        qWarning("Can not update feeds, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "mark items", "no storage available");
 
     Article *a = storage()->getArticle(itemId, -1);
 
@@ -590,10 +577,7 @@ void AbstractFeedModel::itemsMarked()
         return;
     }
 
-    if (!storage()) {
-        qWarning("Can not update feeds, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "mark items", "no storage available");
 
     QueryArgs qa;
     qa.parentId = parentId();

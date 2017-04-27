@@ -106,19 +106,11 @@ void Folder::setUnreadCount(uint nUnreadCount)
 
 void Folder::rename(const QString &newName, AbstractConfiguration *config, AbstractStorage *storage)
 {
-    if (inOperation()) {
+    Q_ASSERT_X(config, "rename folder", "missing configuratoin");
+    Q_ASSERT_X(!newName.isEmpty(), "rename folder", "empty new name");
+
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Folder is still in operation.");
-        return;
-    }
-
-    if (id() == 0) {
-        qWarning("Can not change the folder name. No ID available.");
-        return;
-    }
-
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -127,14 +119,14 @@ void Folder::rename(const QString &newName, AbstractConfiguration *config, Abstr
     rf->setStorage(storage);
     rf->setFolderId(id());
     rf->setNewName(newName);
-    if (!storage) {
+    if (storage) {
+        connect(rf, &RenameFolder::succeeded, [=] () {setComponent(nullptr);});
+    } else {
         connect(rf, &RenameFolder::succeeded, [=] (qint64 id, const QString &newName) {
             Q_UNUSED(id)
             setName(newName);
             setComponent(nullptr);
         });
-    } else {
-        connect(rf, &RenameFolder::succeeded, [=] () {setComponent(nullptr);});
     }
     connect(rf, &RenameFolder::succeeded, rf, &QObject::deleteLater);
     setComponent(rf);
@@ -146,14 +138,10 @@ void Folder::rename(const QString &newName, AbstractConfiguration *config, Abstr
 
 void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
 {
-    if (inOperation()) {
-        qWarning("Folder is still in operation.");
-        return;
-    }
+    Q_ASSERT_X(config, "remove folder", "missing configuration");
 
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+    if (Q_UNLIKELY(inOperation())) {
+        qWarning("Folder is still in operation.");
         return;
     }
 
@@ -171,20 +159,10 @@ void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
 
 void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
 {
-    if (inOperation()) {
+    Q_ASSERT_X(config, "mark folder as read", "missing configuration");
+
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Folder is still in operation.");
-        return;
-    }
-
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
-        return;
-    }
-
-    if (!storage) {
-        //% "No storage available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-storage"), QString(), this));
         return;
     }
 
@@ -192,6 +170,7 @@ void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage,
 
     if (enqueue) {
 
+        Q_ASSERT_X(storage, "enqueue mark folder as read", "missing storage");
         if (!storage->enqueueMarkFolderRead(id(), newestItemId)) {
             setError(storage->error());
         }

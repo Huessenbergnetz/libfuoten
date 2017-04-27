@@ -42,7 +42,7 @@ MarkFeedRead::MarkFeedRead(MarkFeedReadPrivate &dd, QObject *parent) :
 
 void MarkFeedRead::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -72,9 +72,9 @@ void MarkFeedRead::execute()
 
 bool MarkFeedRead::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (feedId() <= 0) {
+        if (Q_UNLIKELY(feedId() <= 0)) {
             //% "The feed ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
             setInOperation(false);
@@ -82,7 +82,7 @@ bool MarkFeedRead::checkInput()
             return false;
         }
 
-        if (newestItemId() <= 0) {
+        if (Q_UNLIKELY(newestItemId() <= 0)) {
             //% "The item ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
             setInOperation(false);
@@ -117,15 +117,13 @@ void MarkFeedRead::successCallback()
 
 void MarkFeedRead::extractError(QNetworkReply *reply)
 {
-    if (reply) {
-        if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
-            //% "The feed was not found on the server."
-            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-feed-not-exists"), QString(), this));
-        } else {
-            setError(new Error(reply, this));
-        }
+    Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
+
+    if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
+        //% "The feed was not found on the server."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-feed-not-exists"), QString(), this));
     } else {
-        qFatal("Invalid QNetworkReply!");
+        setError(new Error(reply, this));
     }
 
     setInOperation(false);
@@ -138,7 +136,7 @@ qint64 MarkFeedRead::feedId() const { Q_D(const MarkFeedRead); return d->feedId;
 
 void MarkFeedRead::setFeedId(qint64 nFeedId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "feedId");
         return;
     }
@@ -160,7 +158,7 @@ qint64 MarkFeedRead::newestItemId() const { Q_D(const MarkFeedRead); return d->n
 
 void MarkFeedRead::setNewestItemId(qint64 nNewestItemId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "newestItemId");
         return;
     }

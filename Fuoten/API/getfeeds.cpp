@@ -45,7 +45,7 @@ GetFeeds::GetFeeds(GetFeedsPrivate &dd, QObject *parent) :
 
 void GetFeeds::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -80,9 +80,9 @@ void GetFeeds::successCallback()
 
 bool GetFeeds::checkOutput()
 {
-    if (Component::checkOutput()) {
+    if (Q_LIKELY(Component::checkOutput())) {
 
-        if (!jsonResult().object().value(QStringLiteral("feeds")).isArray()) {
+        if (Q_UNLIKELY(!jsonResult().object().value(QStringLiteral("feeds")).isArray())) {
             //% "The data the server replied does not contain a \"feeds\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-feeds-array-in-reply"), QString(), this));
             setInOperation(false);

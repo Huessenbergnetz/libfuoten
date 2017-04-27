@@ -114,10 +114,7 @@ void AbstractArticleModel::handleStorageChanged()
 
 void AbstractArticleModel::load()
 {
-    if (!storage()) {
-        qWarning("Can not load articles, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "load articles", "no storage available");
 
     if (!storage()->ready() || loaded() || inOperation()) {
         return;
@@ -143,7 +140,7 @@ void AbstractArticleModel::load()
 
 void AbstractArticleModel::gotArticlesAsync(const ArticleList &articles)
 {
-    if (!articles.isEmpty()) {
+    if (Q_LIKELY(!articles.isEmpty())) {
 
         Q_D(AbstractArticleModel);
 
@@ -170,33 +167,39 @@ void AbstractArticleModel::gotArticlesAsync(const ArticleList &articles)
 
 QModelIndex AbstractArticleModel::findByID(qint64 id) const
 {
+    QModelIndex idx;
+
     Q_D(const AbstractArticleModel);
 
-    if (d->articles.isEmpty()) {
-        return QModelIndex();
+    if (Q_UNLIKELY(d->articles.isEmpty())) {
+        return idx;
     }
 
-    int idx = -1;
+    int idxInt = -1;
 
     for (int i = 0; i < d->articles.count(); ++i) {
         if (d->articles.at(i)->id() == id) {
-            idx = i;
+            idxInt = i;
             break;
         }
     }
 
-    return (idx > -1) ? index(idx, 0) : QModelIndex();
+    if (idxInt > -1) {
+        idx = index(idxInt, 0);
+    }
+
+    return idx;
 }
 
 
 
 QHash<qint64, QModelIndex> AbstractArticleModel::findByIDs(const IdList &ids) const
 {
-    Q_D(const AbstractArticleModel);
-
     QHash<qint64, QModelIndex> idxs;
 
-    if (d->articles.isEmpty()) {
+    Q_D(const AbstractArticleModel);
+
+    if (Q_UNLIKELY(d->articles.isEmpty())) {
         return idxs;
     }
 
@@ -225,7 +228,7 @@ void AbstractArticleModel::clear()
 {
     Q_D(AbstractArticleModel);
 
-    if (!d->articles.isEmpty()) {
+    if (Q_LIKELY(!d->articles.isEmpty())) {
 
         beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
 
@@ -240,10 +243,7 @@ void AbstractArticleModel::clear()
 
 void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems)
 {
-    if (!storage()) {
-        qWarning("Can not update articles, no storage available.");
-        return;
-    }
+    Q_ASSERT_X(storage(), "update articles", "no storage available");
 
     if (rowCount() == 0) {
         reload();
@@ -463,12 +463,9 @@ void AbstractArticleModel::feedMarkedReadInQueue(qint64 feedId, qint64 newestIte
 
 void AbstractArticleModel::folderDeleted(qint64 folderId)
 {
-    if (rowCount() <= 0) {
-        return;
-    }
+    Q_ASSERT_X(storage(), "remove articles", "no storage available");
 
-    if (!storage()) {
-        qWarning("Can not remove articles from model. No storage available.");
+    if (rowCount() <= 0) {
         return;
     }
 
@@ -502,12 +499,9 @@ void AbstractArticleModel::folderDeleted(qint64 folderId)
 
 void AbstractArticleModel::feedDeleted(qint64 feedId)
 {
-    if (rowCount() <= 0) {
-        return;
-    }
+    Q_ASSERT_X(storage(), "remove articles", "no storage available");
 
-    if (!storage()) {
-        qWarning("Can not remove articles from model. No storage available.");
+    if (rowCount() <= 0) {
         return;
     }
 
@@ -561,12 +555,9 @@ void AbstractArticleModel::itemMarked(qint64 itemId, bool unread)
 
 void AbstractArticleModel::itemsMarked(const IdList &itemIds, bool unread)
 {
-    if (rowCount() <= 0) {
-        return;
-    }
+    Q_ASSERT_X(!itemIds.isEmpty(), "mark items as read", "empty id list");
 
-    if (itemIds.isEmpty()) {
-        qWarning("The list of item ids to be marked as read is empty.");
+    if (rowCount() <= 0) {
         return;
     }
 
@@ -613,12 +604,10 @@ void AbstractArticleModel::itemStarred(qint64 feedId, const QString &guidHash, b
 
 void AbstractArticleModel::itemsStarred(const QList<QPair<qint64, QString> > &articles, bool starred)
 {
+    Q_ASSERT_X(!articles.empty(), "star items", "empty articles list");
+
     if (rowCount() <= 0) {
         return;
-    }
-
-    if (articles.isEmpty()) {
-        qWarning("Articles list is empty. Will not update anything.");
     }
 
     for (const QPair<qint64, QString> &p : articles) {

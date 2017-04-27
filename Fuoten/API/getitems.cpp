@@ -52,7 +52,7 @@ GetItems::GetItems(GetItemsPrivate &dd, QObject *parent) :
 
 void GetItems::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -105,9 +105,9 @@ void GetItems::successCallback()
 
 bool GetItems::checkOutput()
 {
-    if (Component::checkOutput()) {
+    if (Q_LIKELY(Component::checkOutput())) {
 
-        if (!jsonResult().object().value(QStringLiteral("items")).isArray()) {
+        if (Q_UNLIKELY(!jsonResult().object().value(QStringLiteral("items")).isArray())) {
             //% "The data the server replied does not contain an \"items\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-items-array-in-reply"), QString(), this));
             setInOperation(false);
@@ -129,9 +129,9 @@ bool GetItems::checkOutput()
 
 bool GetItems::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (parentId() < 0) {
+        if (Q_UNLIKELY(parentId() < 0)) {
             //% "Invalid ID"
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-error-invalid-id"), QString::number(parentId()), this));
             setInOperation(false);

@@ -49,7 +49,7 @@ MarkItem::MarkItem(MarkItemPrivate &dd, QObject *parent) :
 
 void MarkItem::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -81,9 +81,9 @@ void MarkItem::execute()
 
 bool MarkItem::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (itemId() <= 0) {
+        if (Q_UNLIKELY(itemId() <= 0)) {
             //% "The article ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-article-id"), QString(), this));
             setInOperation(false);
@@ -118,15 +118,13 @@ void MarkItem::successCallback()
 
 void MarkItem::extractError(QNetworkReply *reply)
 {
-    if (reply) {
-        if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
-            //% "The article was not found on the server."
-            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-article-not-exists"), QString(), this));
-        } else {
-            setError(new Error(reply, this));
-        }
+    Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
+
+    if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
+        //% "The article was not found on the server."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-article-not-exists"), QString(), this));
     } else {
-        qFatal("Invalid QNetworkReply!");
+        setError(new Error(reply, this));
     }
 
     setInOperation(false);
@@ -141,7 +139,7 @@ qint64 MarkItem::itemId() const { Q_D(const MarkItem); return d->itemId; }
 
 void MarkItem::setItemId(qint64 nItemId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "itemId");
         return;
     }
@@ -163,7 +161,7 @@ bool MarkItem::unread() const { Q_D(const MarkItem); return d->unread; }
 
 void MarkItem::setUnread(bool nUnread)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "unread");
         return;
     }

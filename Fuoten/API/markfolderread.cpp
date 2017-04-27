@@ -44,7 +44,7 @@ MarkFolderRead::MarkFolderRead(MarkFolderReadPrivate &dd, QObject *parent) :
 
 void MarkFolderRead::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -74,9 +74,9 @@ void MarkFolderRead::execute()
 
 bool MarkFolderRead::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (folderId() <= 0) {
+        if (Q_UNLIKELY(folderId() <= 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
             setInOperation(false);
@@ -84,7 +84,7 @@ bool MarkFolderRead::checkInput()
             return false;
         }
 
-        if (newestItemId() <= 0) {
+        if (Q_UNLIKELY(newestItemId() <= 0)) {
             //% "The item ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
             setInOperation(false);
@@ -119,15 +119,13 @@ void MarkFolderRead::successCallback()
 
 void MarkFolderRead::extractError(QNetworkReply *reply)
 {
-    if (reply) {
-        if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
-            //% "The folder was not found on the server."
-            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-not-exists"), QString(), this));
-        } else {
-            setError(new Error(reply, this));
-        }
+    Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
+
+    if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
+        //% "The folder was not found on the server."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-not-exists"), QString(), this));
     } else {
-        qFatal("Invalid QNetworkReply!");
+        setError(new Error(reply, this));
     }
 
     setInOperation(false);
@@ -140,7 +138,7 @@ qint64 MarkFolderRead::folderId() const { Q_D(const MarkFolderRead); return d->f
 
 void MarkFolderRead::setFolderId(qint64 nFolderId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "folderId");
         return;
     }
@@ -162,7 +160,7 @@ qint64 MarkFolderRead::newestItemId() const { Q_D(const MarkFolderRead); return 
 
 void MarkFolderRead::setNewestItemId(qint64 nNewestItemId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "newestItemId");
         return;
     }

@@ -48,7 +48,7 @@ GetFolders::GetFolders(GetFoldersPrivate &dd, QObject *parent) :
 
 void GetFolders::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -83,9 +83,9 @@ void GetFolders::successCallback()
 
 bool GetFolders::checkOutput()
 {
-    if (Component::checkOutput()) {
+    if (Q_LIKELY(Component::checkOutput())) {
 
-        if (!jsonResult().object().value(QStringLiteral("folders")).isArray()) {
+        if (Q_UNLIKELY(!jsonResult().object().value(QStringLiteral("folders")).isArray())) {
             //% "The data the server replied does not contain a \"folders\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-folders-array-in-reply"), QString(), this));
             setInOperation(false);

@@ -45,7 +45,7 @@ GetStatus::GetStatus(GetStatusPrivate &dd, QObject *parent) :
 
 void GetStatus::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -63,12 +63,10 @@ void GetStatus::execute()
 void GetStatus::successCallback()
 {
     Q_D(const GetStatus);
-    if (configuration()) {
-        configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
-        const QJsonObject w = d->resultObject.value(QStringLiteral("warnings")).toObject();
-        if (!w.isEmpty()) {
-            configuration()->setImproperlyConfiguredCron(w.value(QStringLiteral("improperlyConfiguredCron")).toBool());
-        }
+    configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
+    const QJsonObject w = d->resultObject.value(QStringLiteral("warnings")).toObject();
+    if (Q_UNLIKELY(!w.isEmpty())) {
+        configuration()->setImproperlyConfiguredCron(w.value(QStringLiteral("improperlyConfiguredCron")).toBool());
     }
     setInOperation(false);
 
@@ -83,20 +81,20 @@ void GetStatus::successCallback()
 
 bool GetStatus::checkOutput()
 {
-    if (Component::checkOutput()) {
+    if (Q_LIKELY(Component::checkOutput())) {
 
         Q_D(GetStatus);
 
         d->resultObject = jsonResult().object();
 
-        if (!d->resultObject.contains(QStringLiteral("version"))) {
+        if (Q_UNLIKELY(!d->resultObject.contains(QStringLiteral("version")))) {
             //% "Can not find the version information in the server reply."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-not-found"), QString(), this));
             Q_EMIT failed(error());
             return false;
         }
 
-        if (!d->resultObject.contains(QStringLiteral("warnings"))) {
+        if (Q_UNLIKELY(!d->resultObject.contains(QStringLiteral("warnings")))) {
             //% "Can not find the warnings information in the server reply."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-warnings-not-found"), QString(), this));
             Q_EMIT failed(error());

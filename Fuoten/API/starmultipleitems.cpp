@@ -53,7 +53,7 @@ StarMultipleItems::StarMultipleItems(StarMultipleItemsPrivate &dd, QObject *pare
 
 void StarMultipleItems::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -95,9 +95,9 @@ void StarMultipleItems::execute()
 
 bool StarMultipleItems::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (itemsToStar().isEmpty()) {
+        if (Q_UNLIKELY(itemsToStar().isEmpty())) {
             //% "The list of articles to star/unstar can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-articles-star-unstar-list"), QString(), this));
             setInOperation(false);
@@ -137,7 +137,7 @@ QList<QPair<qint64,QString>> StarMultipleItems::itemsToStar() const { Q_D(const 
 
 void StarMultipleItems::setItemsToStar(const QList<QPair<qint64, QString> > &items)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not set items, still in operation.");
         return;
     }
@@ -149,7 +149,7 @@ void StarMultipleItems::setItemsToStar(const QList<QPair<qint64, QString> > &ite
 
 void StarMultipleItems::addItem(qint64 feedId, const QString &guidHash)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not add the item, still in operation.");
         return;
     }
@@ -164,7 +164,7 @@ bool StarMultipleItems::starred() const { Q_D(const StarMultipleItems); return d
 
 void StarMultipleItems::setStarred(bool nStarred)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "starred");
         return;
     }

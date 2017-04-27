@@ -55,12 +55,16 @@ void Component::sendRequest()
 {
     Q_D(Component);
 
+    Q_ASSERT_X(d->configuration, "send request", "no configuration available");
+    Q_ASSERT_X(!d->configuration->getHost().isEmpty(), "send request", "empty host name");
+    Q_ASSERT_X(!d->apiRoute.isEmpty(), "send request", "empty API route");
+
     setError(nullptr);
 
     d->result.clear();
     d->jsonResult = QJsonDocument();
 
-    if (!checkInput()) {
+    if (Q_UNLIKELY(!checkInput())) {
         setInOperation(false);
         return;
     }
@@ -89,13 +93,7 @@ void Component::sendRequest()
         url.setQuery(d->urlQuery);
     }
 
-    if (!url.isValid()) {
-        //% "Invalid API URL"
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("invalid-api-url"), url.toString(), this));
-        Q_EMIT failed(error());
-        setInOperation(false);
-        return;
-    }
+    Q_ASSERT_X(url.isValid(), "send request", "invalid API URL");
 
     if (!d->networkAccessManager) {
         setNetworkAccessManager(new QNetworkAccessManager(this));
@@ -151,7 +149,7 @@ void Component::sendRequest()
     }
 #endif
 
-    if (d->requestTimeout > 0) {
+    if (Q_LIKELY(d->requestTimeout > 0)) {
         if (!d->timeoutTimer) {
             d->timeoutTimer = new QTimer(this);
             d->timeoutTimer->setSingleShot(true);
@@ -172,7 +170,7 @@ void Component::_requestFinished()
 {
     Q_D(Component);
 
-    if (d->timeoutTimer && d->timeoutTimer->isActive()) {
+    if (Q_LIKELY(d->timeoutTimer && d->timeoutTimer->isActive())) {
         d->timeoutTimer->stop();
     }
 
@@ -183,7 +181,7 @@ void Component::_requestFinished()
 //    fprintf(stderr, "Request result: \n%s\n", d->result.constData());
 #endif
 
-    if (d->reply->error() == QNetworkReply::NoError) {
+    if (Q_LIKELY(d->reply->error() == QNetworkReply::NoError)) {
 
         if (checkOutput()) {
             successCallback();
@@ -202,11 +200,9 @@ void Component::_requestFinished()
 
 void Component::extractError(QNetworkReply *reply)
 {
-    if (reply) {
-        setError(new Error(reply, this));
-    } else {
-        qFatal("Invalid QNetworkReply!");
-    }
+    Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
+
+    setError(new Error(reply, this));
 
     setInOperation(false);
     Q_EMIT failed(error());
@@ -240,30 +236,9 @@ bool Component::checkInput()
 {
     Q_D(Component);
 
-    if (!d->configuration) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
-        Q_EMIT failed(error());
-        return false;
-    }
-
-    if (d->requiresAuth && (d->configuration->getUsername().isEmpty() || d->configuration->getPassword().isEmpty())) {
+    if (Q_UNLIKELY(d->requiresAuth && (d->configuration->getUsername().isEmpty() || d->configuration->getPassword().isEmpty()))) {
         //% "You have to specify a username and a password."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("err-username-pass-missing"), QString(), this));
-        Q_EMIT failed(error());
-        return false;
-    }
-
-    if (d->configuration->getHost().isEmpty()) {
-        //% "No host specified"
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("err-no-host"), QString(), this));
-        Q_EMIT failed(error());
-        return false;
-    }
-
-    if (d->apiRoute.isEmpty()) {
-        //% "No API route specified."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("err-no-route"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
@@ -294,21 +269,21 @@ bool Component::checkOutput()
         }
     }
 
-    if ((d->jsonResult.isNull() || d->jsonResult.isEmpty()) && !(d->expectedJSONType == Empty)) {
+    if (Q_UNLIKELY((d->expectedJSONType != Empty) && (d->jsonResult.isNull() || d->jsonResult.isEmpty()))) {
         //% "The request replied an empty answer, but there was content expected."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-empty-answer"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
-    if ((d->expectedJSONType == Array) && !d->jsonResult.isArray()) {
+    if (Q_UNLIKELY((d->expectedJSONType == Array) && !d->jsonResult.isArray())) {
         //% "It was expected that the request returns a JSON array, but it returned something else."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-array"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
 
-    if ((d->expectedJSONType == Object && !d->jsonResult.isObject())) {
+    if (Q_UNLIKELY((d->expectedJSONType == Object && !d->jsonResult.isObject()))) {
         //% "It was expected that the request returns a JSON object, but it returned something else."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-object"), QString(), this));
         Q_EMIT failed(error());
@@ -327,7 +302,7 @@ void Component::setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessMan
 {
     Q_D(Component);
 
-    if (d->networkAccessManager && inOperation()) {
+    if (Q_UNLIKELY(d->networkAccessManager && inOperation())) {
         qWarning("Can not change property %s, still in operation.", "networkAccessManager");
         return;
     }
@@ -403,7 +378,7 @@ AbstractConfiguration *Component::configuration() const { Q_D(const Component); 
 
 void Component::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "configuration");
         return;
     }
@@ -424,7 +399,7 @@ AbstractStorage *Component::storage() const { Q_D(const Component); return d->st
 
 void Component::setStorage(AbstractStorage *localStorage)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "storage");
         return;
     }

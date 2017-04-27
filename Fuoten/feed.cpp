@@ -281,14 +281,10 @@ void Feed::copy(Fuoten::BaseItem *other)
 
 void Feed::rename(const QString &newName, AbstractConfiguration *config, AbstractStorage *storage)
 {
-    if (inOperation()) {
-        qWarning("Folder is still in operation.");
-        return;
-    }
+    Q_ASSERT_X(config, "rename feed", "invalid configuration");
 
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+    if (Q_UNLIKELY(inOperation())) {
+        qWarning("Folder is still in operation.");
         return;
     }
 
@@ -317,14 +313,10 @@ void Feed::rename(const QString &newName, AbstractConfiguration *config, Abstrac
 
 void Feed::remove(AbstractConfiguration *config, AbstractStorage *storage)
 {
+    Q_ASSERT_X(config, "remove feed", "invalid configuration");
+
     if (inOperation()) {
         qWarning("Feed is still in operation.");
-        return;
-    }
-
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -342,14 +334,10 @@ void Feed::remove(AbstractConfiguration *config, AbstractStorage *storage)
 
 void Feed::move(qint64 targetFolderId, AbstractConfiguration *config, AbstractStorage *storage)
 {
+    Q_ASSERT_X(config, "move feed", "invalid configuration");
+
     if (inOperation()) {
         qWarning("Feed is still in operation.");
-        return;
-    }
-
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
         return;
     }
 
@@ -377,20 +365,10 @@ void Feed::move(qint64 targetFolderId, AbstractConfiguration *config, AbstractSt
 
 void Feed::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
 {
-    if (inOperation()) {
+    Q_ASSERT_X(config, "enqueue mark feed as read", "missing configuration object");
+
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Folder is still in operation.");
-        return;
-    }
-
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
-        return;
-    }
-
-    if (!storage) {
-        //% "No storage available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-storage"), QString(), this));
         return;
     }
 
@@ -398,6 +376,7 @@ void Feed::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, b
 
     if (enqueue) {
 
+        Q_ASSERT_X(storage, "enqueue mark feed as read", "no storage object available");
         if (!storage->enqueueMarkFeedRead(id(), newestItemId)) {
             setError(storage->error());
         }

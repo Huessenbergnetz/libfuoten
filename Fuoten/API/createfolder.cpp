@@ -47,7 +47,7 @@ CreateFolder::CreateFolder(CreateFolderPrivate &dd, QObject *parent) :
 
 void CreateFolder::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -72,9 +72,9 @@ void CreateFolder::execute()
 
 bool CreateFolder::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (name().isEmpty()) {
+        if (Q_UNLIKELY(name().isEmpty())) {
             //% "The folder name can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
             setInOperation(false);
@@ -94,9 +94,9 @@ bool CreateFolder::checkInput()
 
 bool CreateFolder::checkOutput()
 {
-    if (Component::checkOutput()) {
+    if (Q_LIKELY(Component::checkOutput())) {
 
-        if (jsonResult().object().value(QStringLiteral("folders")).toArray().isEmpty()) {
+        if (Q_UNLIKELY(jsonResult().object().value(QStringLiteral("folders")).toArray().isEmpty())) {
             //% "The data the server replied does not contain a \"folders\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-folders-array-in-reply"), QString(), this));
             setInOperation(false);
@@ -158,7 +158,7 @@ QString CreateFolder::name() const { Q_D(const CreateFolder); return d->name; }
 
 void CreateFolder::setName(const QString &nName)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "name");
         return;
     }

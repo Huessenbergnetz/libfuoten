@@ -47,7 +47,7 @@ MarkAllItemsRead::MarkAllItemsRead(MarkAllItemsReadPrivate &dd, QObject *parent)
 
 void MarkAllItemsRead::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -72,9 +72,9 @@ void MarkAllItemsRead::execute()
 
 bool MarkAllItemsRead::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (newestItemId() <= 0) {
+        if (Q_UNLIKELY(newestItemId() <= 0)) {
             //% "The item ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
             setInOperation(false);
@@ -111,7 +111,7 @@ qint64 MarkAllItemsRead::newestItemId() const { Q_D(const MarkAllItemsRead); ret
 
 void MarkAllItemsRead::setNewestItemId(qint64 nNewestItemId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "newestItemId");
         return;
     }

@@ -44,7 +44,7 @@ qint64 DeleteFeed::feedId() const { Q_D(const DeleteFeed); return d->feedId; }
 
 void DeleteFeed::setFeedId(qint64 nFeedId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "feedId");
         return;
     }
@@ -64,7 +64,7 @@ void DeleteFeed::setFeedId(qint64 nFeedId)
 
 void DeleteFeed::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -89,9 +89,9 @@ void DeleteFeed::execute()
 
 bool DeleteFeed::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (feedId() <= 0) {
+        if (Q_UNLIKELY(feedId() <= 0)) {
             //% "The feed ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
             setInOperation(false);
@@ -128,15 +128,12 @@ void DeleteFeed::successCallback()
 
 void DeleteFeed::extractError(QNetworkReply *reply)
 {
-    if (reply) {
-        if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
-            //% "The feed was not found on the server."
-            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-feed-not-exists"), QString(), this));
-        } else {
-            setError(new Error(reply, this));
-        }
+    Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
+    if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
+        //% "The feed was not found on the server."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-feed-not-exists"), QString(), this));
     } else {
-        qFatal("Invalid QNetworkReply!");
+        setError(new Error(reply, this));
     }
 
     setInOperation(false);

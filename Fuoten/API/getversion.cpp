@@ -45,7 +45,7 @@ GetVersion::GetVersion(GetVersionPrivate &dd, QObject *parent) :
 
 void GetVersion::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -63,9 +63,7 @@ void GetVersion::execute()
 void GetVersion::successCallback()
 {
     Q_D(const GetVersion);
-    if (configuration()) {
-        configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
-    }
+    configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
     setInOperation(false);
 
 #ifdef QT_DEBUG
@@ -80,13 +78,13 @@ void GetVersion::successCallback()
 
 bool GetVersion::checkOutput()
 {
-    if (Component::checkOutput()) {
+    if (Q_LIKELY(Component::checkOutput())) {
 
         Q_D(GetVersion);
 
         d->resultObject = jsonResult().object();
 
-        if (!d->resultObject.contains(QStringLiteral("version"))) {
+        if (Q_UNLIKELY(!d->resultObject.contains(QStringLiteral("version")))) {
             //% "Can not find the version information in the server reply."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-not-found"), QString(), this));
             Q_EMIT failed(error());
@@ -97,7 +95,7 @@ bool GetVersion::checkOutput()
         }
 
     } else {
-        if (configuration()) { configuration()->setServerVersion(QStringLiteral("0.0.0")); }
+        configuration()->setServerVersion(QStringLiteral("0.0.0"));
         return false;
     }
 }

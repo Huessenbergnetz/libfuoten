@@ -46,7 +46,7 @@ GetUser::GetUser(GetUserPrivate &dd, QObject *parent) :
 
 void GetUser::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -65,14 +65,12 @@ void GetUser::execute()
 void GetUser::successCallback()
 {
     Q_D(const GetUser);
-    if (configuration()) {
-        configuration()->setDisplayName(d->resultObject.value(QStringLiteral("displayName")).toString());
-        const QJsonObject a = d->resultObject.value(QStringLiteral("avatar")).toObject();
-        if (!a.isEmpty()) {
-            configuration()->setAvatar(a.value(QStringLiteral("data")).toString(), a.value(QStringLiteral("mime")).toString());
-        } else {
-            configuration()->setAvatar(QString(), QString());
-        }
+    configuration()->setDisplayName(d->resultObject.value(QStringLiteral("displayName")).toString());
+    const QJsonObject a = d->resultObject.value(QStringLiteral("avatar")).toObject();
+    if (!a.isEmpty()) {
+        configuration()->setAvatar(a.value(QStringLiteral("data")).toString(), a.value(QStringLiteral("mime")).toString());
+    } else {
+        configuration()->setAvatar(QString(), QString());
     }
 
     setInOperation(false);
@@ -88,13 +86,13 @@ void GetUser::successCallback()
 
 bool GetUser::checkOutput()
 {
-    if (Component::checkOutput()) {
+    if (Q_LIKELY(Component::checkOutput())) {
 
         Q_D(GetUser);
 
         d->resultObject = jsonResult().object();
 
-        if (!d->resultObject.contains(QStringLiteral("displayName"))) {
+        if (Q_UNLIKELY(!d->resultObject.contains(QStringLiteral("displayName")))) {
             //% "Can not find the user's display name in the server reply."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-displayname-not-found"), QString(), this));
             Q_EMIT failed(error());

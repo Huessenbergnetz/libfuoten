@@ -50,14 +50,10 @@ void Synchronizer::start()
 {
     Q_D(Synchronizer);
 
-    if (d->inOperation) {
-        qWarning("Still in operation. Returning.");
-        return;
-    }
+    Q_ASSERT_X(d->configuration, "start synchronizing", "invalid configuration object");
 
-    if (!d->configuration) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+    if (Q_UNLIKELY(d->inOperation)) {
+        qWarning("Still in operation. Returning.");
         return;
     }
 
@@ -69,11 +65,7 @@ void Synchronizer::start()
 
     d->setInOperation(true);
 
-    if (d->configuration->getLastSync().isValid()) {
-        d->totalActions = 4;
-    } else {
-        d->totalActions = 5;
-    }
+    d->totalActions = d->configuration->getLastSync().isValid() ? 4 : 5;
 
     if (d->storage) {
         QueryArgs qa;
@@ -437,7 +429,7 @@ AbstractConfiguration *Synchronizer::configuration() const { Q_D(const Synchroni
 
 void Synchronizer::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "configuration");
         return;
     }
@@ -459,7 +451,7 @@ AbstractStorage *Synchronizer::storage() const { Q_D(const Synchronizer); return
 
 void Synchronizer::setStorage(AbstractStorage *nStorageHandler)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "storage");
         return;
     }

@@ -74,9 +74,9 @@ void CreateFeed::execute()
 
 bool CreateFeed::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (!url().isValid()) {
+        if (Q_UNLIKELY(!url().isValid())) {
             //% "The URL of the feed is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-url"), url().toString(), this));
             setInOperation(false);
@@ -84,7 +84,7 @@ bool CreateFeed::checkInput()
             return false;
         }
 
-        if (folderId() < 0) {
+        if (Q_UNLIKELY(folderId() < 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
             setInOperation(false);
@@ -104,9 +104,9 @@ bool CreateFeed::checkInput()
 
 bool CreateFeed::checkOutput()
 {
-    if (Component::checkOutput()) {
+    if (Q_LIKELY(Component::checkOutput())) {
 
-        if (jsonResult().object().value(QStringLiteral("feeds")).toArray().isEmpty()) {
+        if (Q_UNLIKELY(jsonResult().object().value(QStringLiteral("feeds")).toArray().isEmpty())) {
             //% "The data the server replied does not contain a \"feeds\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-feeds-array-in-reply"), QString(), this));
             setInOperation(false);
@@ -168,7 +168,7 @@ QUrl CreateFeed::url() const { Q_D(const CreateFeed); return d->url; }
 
 void CreateFeed::setUrl(const QUrl &nUrl)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "url");
         return;
     }
@@ -190,7 +190,7 @@ qint64 CreateFeed::folderId() const { Q_D(const CreateFeed); return d->folderId;
 
 void CreateFeed::setFolderId(qint64 nFolderId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "folderId");
         return;
     }

@@ -51,7 +51,7 @@ MarkMultipleItems::MarkMultipleItems(MarkMultipleItemsPrivate &dd, QObject *pare
 
 void MarkMultipleItems::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -90,9 +90,9 @@ void MarkMultipleItems::execute()
 
 bool MarkMultipleItems::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (itemIds().isEmpty()) {
+        if (Q_UNLIKELY(itemIds().isEmpty())) {
             //% "The list of IDs to mark is empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-id-list"), QString(), this));
             setInOperation(false);
@@ -131,7 +131,7 @@ IdList MarkMultipleItems::itemIds() const { Q_D(const MarkMultipleItems); return
 
 void MarkMultipleItems::setItemIds(const IdList &nItemIds)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "itemIds");
         return;
     }
@@ -153,7 +153,7 @@ bool MarkMultipleItems::unread() const { Q_D(const MarkMultipleItems); return d-
 
 void MarkMultipleItems::setUnread(bool nUnread)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "unread");
         return;
     }

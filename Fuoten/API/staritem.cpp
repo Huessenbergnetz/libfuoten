@@ -49,7 +49,7 @@ StarItem::StarItem(StarItemPrivate &dd, QObject *parent) :
 
 void StarItem::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -81,9 +81,9 @@ void StarItem::execute()
 
 bool StarItem::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (feedId() <= 0) {
+        if (Q_UNLIKELY(feedId() <= 0)) {
             //% "The feed ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
             setInOperation(false);
@@ -91,7 +91,7 @@ bool StarItem::checkInput()
             return false;
         }
 
-        if (guidHash().isEmpty()) {
+        if (Q_UNLIKELY(guidHash().isEmpty())) {
             //% "The GUID hash can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-guidhash"), QString(), this));
             setInOperation(false);
@@ -126,15 +126,13 @@ void StarItem::successCallback()
 
 void StarItem::extractError(QNetworkReply *reply)
 {
-    if (reply) {
-        if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
-            //% "The article was not found on the server."
-            setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-article-not-exists"), QString(), this));
-        } else {
-            setError(new Error(reply, this));
-        }
+    Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
+
+    if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
+        //% "The article was not found on the server."
+        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-article-not-exists"), QString(), this));
     } else {
-        qFatal("Invalid QNetworkReply!");
+        setError(new Error(reply, this));
     }
 
     setInOperation(false);
@@ -150,7 +148,7 @@ qint64 StarItem::feedId() const { Q_D(const StarItem); return d->feedId; }
 
 void StarItem::setFeedId(qint64 nFeedId)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "feedId");
         return;
     }
@@ -172,7 +170,7 @@ QString StarItem::guidHash() const { Q_D(const StarItem); return d->guidHash; }
 
 void StarItem::setGuidHash(const QString &nGuidHash)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "guidHash");
         return;
     }
@@ -194,7 +192,7 @@ bool StarItem::starred() const { Q_D(const StarItem); return d->starred; }
 
 void StarItem::setStarred(bool nStarred)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "starred");
         return;
     }

@@ -47,8 +47,8 @@ AccountValidator::~AccountValidator()
 
 
 void AccountValidator::start()
-{
-    if (inOperation()) {
+{    
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -59,16 +59,11 @@ void AccountValidator::start()
 
     Q_D(AccountValidator);
 
+    Q_ASSERT_X(d->configuration, "start account validation", "invalid configuration object");
+
     setError(nullptr);
 
     d->setInOperatin(true);
-
-    if (!configuration()) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("id-err-no-config"), QString(), this));
-        Q_EMIT failed(error());
-        return;
-    }
 
     if (!d->version) {
         d->version = new GetVersion(this);
@@ -144,7 +139,7 @@ AbstractConfiguration *AccountValidator::configuration() const { Q_D(const Accou
 
 void AccountValidator::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Can not change property %s, still in operation.", "configuration");
         return;
     }

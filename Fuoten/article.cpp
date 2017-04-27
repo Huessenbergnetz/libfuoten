@@ -391,24 +391,16 @@ void Article::copy(BaseItem *other)
 
 void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
 {
-    if (inOperation()) {
-        qWarning("Item is still in operation.");
-        return;
-    }
+    Q_ASSERT_X(config, "mark article as read", "invalid configuration");
 
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+    if (Q_UNLIKELY(inOperation())) {
+        qWarning("Item is still in operation.");
         return;
     }
 
     if (enqueue) {
 
-        if (!storage) {
-            //% "No storage available."
-            setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-storage"), QString(), this));
-            return;
-        }
+        Q_ASSERT_X(storage, "enqueue mark article", "invalid storage");
 
         FuotenEnums::QueueAction action = FuotenEnums::MarkAsRead;
         if (unread) {
@@ -439,24 +431,16 @@ void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *
 
 void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
 {
-    if (inOperation()) {
-        qWarning("Item is still in operation.");
-        return;
-    }
+    Q_ASSERT_X(config, "star article", "invalid configuration");
 
-    if (!config) {
-        //% "No configuration available."
-        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-config"), QString(), this));
+    if (Q_UNLIKELY(inOperation())) {
+        qWarning("Item is still in operation.");
         return;
     }
 
     if (enqueue) {
 
-        if (!storage) {
-            //% "No storage available."
-            setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-no-storage"), QString(), this));
-            return;
-        }
+        Q_ASSERT_X(storage, "enqueue star article", "invalid storage");
 
         FuotenEnums::QueueAction action = FuotenEnums::Unstar;
         if (starred) {

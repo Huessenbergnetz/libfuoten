@@ -75,7 +75,7 @@ void RenameFeed::setNewName(const QString &nNewName)
 
 void RenameFeed::execute()
 {
-    if (inOperation()) {
+    if (Q_UNLIKELY(inOperation())) {
         qWarning("Still in operation. Returning.");
         return;
     }
@@ -107,9 +107,9 @@ void RenameFeed::execute()
 
 bool RenameFeed::checkInput()
 {
-    if (Component::checkInput()) {
+    if (Q_LIKELY(Component::checkInput())) {
 
-        if (feedId() == 0) {
+        if (Q_UNLIKELY(feedId() == 0)) {
             //% "The feed ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
             setInOperation(false);
@@ -117,7 +117,7 @@ bool RenameFeed::checkInput()
             return false;
         }
 
-        if (newName().isEmpty()) {
+        if (Q_UNLIKELY(newName().isEmpty())) {
             //% "The feed name can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-feed-name"), QString(), this));
             setInOperation(false);
