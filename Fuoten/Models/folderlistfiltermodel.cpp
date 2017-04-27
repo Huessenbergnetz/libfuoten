@@ -146,9 +146,9 @@ bool FolderListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &
     } else if (search().isEmpty() && hideRead()) {
         return (sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>()->unreadCount() > 0);
     } else if (!search().isEmpty() && !hideRead()) {
-        return sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>()->name().contains(search(), Qt::CaseInsensitive);
+        return find(sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>()->name());
     } else {
         Folder *f = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>();
-        return (f->name().contains(search(), Qt::CaseInsensitive) && (f->unreadCount() > 0));
+        return (find(f->name()) && (f->unreadCount() > 0));
     }
 }

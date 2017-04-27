@@ -22,6 +22,7 @@
 #define FUOTENBASEFILTERMODEL_P_H
 
 #include "basefiltermodel.h"
+#include <QStringMatcher>
 
 namespace Fuoten {
 
@@ -32,13 +33,15 @@ public:
         sortingRole(FuotenEnums::ID),
         sortOrder(Qt::AscendingOrder),
         hideRead(false)
-    {}
+    {
+        search.setCaseSensitivity(Qt::CaseInsensitive);
+    }
 
     virtual ~BaseFilterModelPrivate() {}
 
     FuotenEnums::SortingRole sortingRole;
     Qt::SortOrder sortOrder;
-    QString search;
+    QStringMatcher search;
     bool hideRead;
 
 private:

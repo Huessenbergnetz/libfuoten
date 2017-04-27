@@ -218,10 +218,10 @@ bool FeedListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &so
     } else if (search().isEmpty() && hideRead()) {
         return (sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Feed*>()->unreadCount() > 0);
     } else if (!search().isEmpty() && !hideRead()) {
-        return sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Feed*>()->title().contains(search(), Qt::CaseInsensitive);
+        return find(sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Feed*>()->title());
     } else {
         Feed *f = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Feed*>();
-        return (f->title().contains(search(), Qt::CaseInsensitive) && (f->unreadCount() > 0));
+        return (find(f->title()) && (f->unreadCount() > 0));
     }
 }
 

@@ -65,10 +65,10 @@ bool ArticleListFilterModel::filterAcceptsRow(int source_row, const QModelIndex 
     } else if (search().isEmpty() && hideRead()) {
         return (sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Article*>()->unread());
     } else if (!search().isEmpty() && !hideRead()) {
-        return sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Article*>()->title().contains(search(), Qt::CaseInsensitive);
+        return find(sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Article*>()->title());
     } else {
         Article *a = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Article*>();
-        return (a->title().contains(search(), Qt::CaseInsensitive) && (a->unread()));
+        return (find(a->title()) && a->unread());
     }
 }
 

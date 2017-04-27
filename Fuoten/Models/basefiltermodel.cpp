@@ -82,21 +82,26 @@ void BaseFilterModel::setSortOrder(Qt::SortOrder nSortOrder)
 
 
 
-QString BaseFilterModel::search() const { Q_D(const BaseFilterModel); return d->search; }
+QString BaseFilterModel::search() const { Q_D(const BaseFilterModel); return d->search.pattern(); }
 
 void BaseFilterModel::setSearch(const QString &nSearch)
 {
     Q_D(BaseFilterModel);
-    if (nSearch != d->search) {
-        d->search = nSearch;
+    if (nSearch != d->search.pattern()) {
+        d->search.setPattern(nSearch);
 #ifdef QT_DEBUG
-        qDebug() << "Changed search to" << d->search;
+        qDebug() << "Changed search to" << d->search.pattern();
 #endif
         Q_EMIT searchChanged(search());
         invalidateFilter();
     }
 }
 
+bool BaseFilterModel::find(const QString &str) const
+{
+    Q_D(const BaseFilterModel);
+    return (d->search.indexIn(str) > -1);
+}
 
 
 bool BaseFilterModel::hideRead() const { Q_D(const BaseFilterModel); return d->hideRead; }

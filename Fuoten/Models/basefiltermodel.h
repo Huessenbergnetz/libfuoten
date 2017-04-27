@@ -164,7 +164,7 @@ public:
 
     /*!
      * \brief Returns the currently set serach string.
-     * \sa serach
+     * \sa setSearch
      */
     QString search() const;
 
@@ -200,7 +200,7 @@ public:
 
     /*!
      * \brief Sets the search string.
-     * \sa search
+     * \sa search find
      */
     void setSearch(const QString &nSearch);
 
@@ -281,6 +281,12 @@ Q_SIGNALS:
 protected:
     const QScopedPointer<BaseFilterModelPrivate> d_ptr;
     BaseFilterModel(BaseFilterModelPrivate &dd, QObject *parent = nullptr);
+
+    /*!
+     * \brief Returns \c true if the string set by setSearch() is part of \a str.
+     * \sa setSearch
+     */
+    bool find(const QString &str) const;
 
 private:
     Q_DISABLE_COPY(BaseFilterModel)
