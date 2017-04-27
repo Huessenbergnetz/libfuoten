@@ -64,118 +64,86 @@ void SQLiteStorageManager::setFailed(const QSqlError &sqlError, const QString &t
 
 void SQLiteStorageManager::run()
 {
-    if (!m_db.open()) {
-        //% "Failed to open the SQLite database."
-        setFailed(m_db.lastError(), qtTrId("libfuoten-err-failed-open-db"));
-        return;
-    }
+    bool result = m_db.open();
+    Q_ASSERT_X(result, "init database", "failed to open database");
 
 #ifdef QT_DEBUG
     qDebug() << "Start checking database scheme";
 #endif
 
     QSqlQuery q(m_db);
+    result = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
+    Q_ASSERT_X(result, "init database", "failed to activate foreign keys");
 
-    if (!q.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = m_db.transaction();
+    Q_ASSERT_X(result, "init dtabase", "failed to start transaction");
 
-    if (!m_db.transaction()) {
-        //% "Failed to begin a database transaction."
-        setFailed(q.lastError(), qtTrId("fuoten-error-transaction-begin"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS system "
+                                   "(id INTEGER PRIMARY KEY NOT NULL, "
+                                   "key TEXT NOT NULL, "
+                                   "value TEXT NO NULL)"
+                                   ));
+    Q_ASSERT_X(result, "init database", "failed to create system table");
 
-    if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS system "
-                               "(id INTEGER PRIMARY KEY NOT NULL, "
-                               "key TEXT NOT NULL, "
-                               "value TEXT NO NULL)"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS folders "
+                                   "(id INTEGER PRIMARY KEY NOT NULL, "
+                                   "name TEXT NOT NULL, "
+                                   "unreadCount INTEGER DEFAULT 0, "
+                                   "feedCount INTEGER DEFAULT 0)"
+                                   ));
+    Q_ASSERT_X(result, "init database", "failed to create folders table");
 
-    if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS folders "
-                               "(id INTEGER PRIMARY KEY NOT NULL, "
-                               "name TEXT NOT NULL, "
-                               "unreadCount INTEGER DEFAULT 0, "
-                               "feedCount INTEGER DEFAULT 0)"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("INSERT OR IGNORE INTO folders (id, name) VALUES (0, '')"));
+    Q_ASSERT_X(result, "init database", "failed to inser base folder into database");
 
-    if (!q.exec(QStringLiteral("INSERT OR IGNORE INTO folders (id, name) VALUES (0, '')"))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
 
-    if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS feeds "
-                               "(id INTEGER PRIMARY KEY NOT NULL, "
-                               "folderId INTEGER NOT NULL, "
-                               "title TEXT NOT NULL, "
-                               "url TEXT NOT NULL, "
-                               "link TEXT NOT NULL, "
-                               "added INTEGER NOT NULL, "
-                               "unreadCount INTEGER DEFAULT 0, "
-                               "ordering INTEGER NOT NULL, "
-                               "pinned INTEGER NOT NULL, "
-                               "updateErrorCount INTEGER NOT NULL, "
-                               "lastUpdateError TEXT, "
-                               "faviconLink TEXT, "
-                               "FOREIGN KEY(folderId) REFERENCES folders(id) ON DELETE CASCADE)"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS feeds "
+                                   "(id INTEGER PRIMARY KEY NOT NULL, "
+                                   "folderId INTEGER NOT NULL, "
+                                   "title TEXT NOT NULL, "
+                                   "url TEXT NOT NULL, "
+                                   "link TEXT NOT NULL, "
+                                   "added INTEGER NOT NULL, "
+                                   "unreadCount INTEGER DEFAULT 0, "
+                                   "ordering INTEGER NOT NULL, "
+                                   "pinned INTEGER NOT NULL, "
+                                   "updateErrorCount INTEGER NOT NULL, "
+                                   "lastUpdateError TEXT, "
+                                   "faviconLink TEXT, "
+                                   "FOREIGN KEY(folderId) REFERENCES folders(id) ON DELETE CASCADE)"
+                                   ));
+    Q_ASSERT_X(result, "init database", "failed to create feeds table");
 
-    if (!q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS items "
-                               "(id INTEGER PRIMARY KEY NOT NULL, "
-                               "feedId INTEGER NOT NULL, "
-                               "guid TEXT NOT NULL, "
-                               "guidHash TEXT NOT NULL, "
-                               "url TEXT NOT NULL, "
-                               "title TEXT NOT NULL, "
-                               "author TEXT NOT NULL, "
-                               "pubDate INTEGER NOT NULL, "
-                               "body TEXT NOT NULL, "
-                               "enclosureMime TEXT, "
-                               "enclosureLink TEXT, "
-                               "unread INTEGER NOT NULL, "
-                               "starred INTEGER NOT NULL, "
-                               "lastModified INTEGER NOT NULL, "
-                               "fingerprint TEXT NOT NULL, "
-                               "queue INTEGER DEFAULT 0, "
-                               "FOREIGN KEY(feedId) REFERENCES feeds(id) ON DELETE CASCADE)"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS items "
+                                   "(id INTEGER PRIMARY KEY NOT NULL, "
+                                   "feedId INTEGER NOT NULL, "
+                                   "guid TEXT NOT NULL, "
+                                   "guidHash TEXT NOT NULL, "
+                                   "url TEXT NOT NULL, "
+                                   "title TEXT NOT NULL, "
+                                   "author TEXT NOT NULL, "
+                                   "pubDate INTEGER NOT NULL, "
+                                   "body TEXT NOT NULL, "
+                                   "enclosureMime TEXT, "
+                                   "enclosureLink TEXT, "
+                                   "unread INTEGER NOT NULL, "
+                                   "starred INTEGER NOT NULL, "
+                                   "lastModified INTEGER NOT NULL, "
+                                   "fingerprint TEXT NOT NULL, "
+                                   "queue INTEGER DEFAULT 0, "
+                                   "FOREIGN KEY(feedId) REFERENCES feeds(id) ON DELETE CASCADE)"
+                                   ));
+    Q_ASSERT_X(result, "init database", "failed to create items table");
 
-    if (!q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS feeds_folder_id_index ON feeds (folderId)"))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS feeds_folder_id_index ON feeds (folderId)"));
+    Q_ASSERT_X(result, "init database", "failed to create feeds_folder_id_index");
 
-    if (!q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS items_item_guid ON items (guidHash, feedId)"))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS items_item_guid ON items (guidHash, feedId)"));
+    Q_ASSERT_X(result, "init database", "failed to create items_item_guid index");
 
-    if (!q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS items_feed_id_index ON items (feedId)"))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS items_feed_id_index ON items (feedId)"));
+    Q_ASSERT_X(result, "init database", "failed to create items_feed_id_index");
+
 
     if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_update_item AFTER UPDATE OF unread ON items "
                                "BEGIN "
@@ -250,28 +218,19 @@ void SQLiteStorageManager::run()
         return;
     }
 
-    if (!m_db.commit()) {
-        //% "Failed to commit a database transaction."
-        setFailed(m_db.lastError(), qtTrId("fuoten-error-transaction-commit"));
-        return;
+    result = m_db.commit();
+    Q_ASSERT_X(result, "init database", "failed to commit database queries");
+
+    result = q.exec(QStringLiteral("SELECT value FROM system WHERE key = 'schema_version'"));
+    Q_ASSERT_X(result, "init database", "failed to query installed schema version");
+
+    if (Q_LIKELY(q.next())) {
+        m_currentDbVersion = q.value(0).toUInt();
     }
 
-    if (q.exec(QStringLiteral("SELECT value FROM system WHERE key = 'schema_version'"))) {
-        if (q.next()) {
-            m_currentDbVersion = q.value(0).toUInt();
-        }
-    } else {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
-
-    if (m_currentDbVersion == 0) {
-        if (!q.exec(QStringLiteral("INSERT INTO system (key, value) VALUES ('schema_version', '1')"))) {
-            //% "Failed to execute database query."
-            setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-            return;
-        }
+    if (Q_UNLIKELY(m_currentDbVersion == 0)) {
+        result = q.exec(QStringLiteral("INSERT INTO system (key, value) VALUES ('schema_version', '1')"));
+        Q_ASSERT_X(result, "init database", "failed to insert schema version into database");
     }
 
     Q_EMIT succeeded();
@@ -295,34 +254,25 @@ void SQLiteStorage::init()
 
     SQLiteStorageManager *sm = new SQLiteStorageManager(d->db.databaseName(), this);
     connect(sm, &SQLiteStorageManager::succeeded, [=] () {
-        if (d->db.open()) {
-            QSqlQuery q(d->db);
-            q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
-            if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
-                //% "Failed to execute database query."
-                setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                return;
-            }
+        bool result = d->db.open();
+        Q_ASSERT_X(result, "init database", "failed to open database");
 
-            if (q.next()) {
-                setTotalUnread(q.value(0).toInt());
-            }
+        QSqlQuery q(d->db);
 
-            if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE starred = 1"))) {
-                //% "Failed to execute database query."
-                setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                return;
-            }
+        result = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
+        Q_ASSERT_X(result, "init databse", "failed to enable foreign keys support");
 
-            if (q.next()) {
-                setStarred(q.value(0).toInt());
-            }
+        result = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+        Q_ASSERT_X(result, "init database", "failed to query unread items from database");
 
-            setReady(true);
-        } else {
-            //% "Failed to open the SQLite database."
-            setError(new Error(d->db.lastError(), qtTrId("libfuoten-err-failed-open-db"), this));
-        }
+        setTotalUnread(q.value(0).toInt());
+
+        result = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE starred = 1")) && q.next());
+        Q_ASSERT_X(result, "init database", "failed to query starred items from database");
+
+        setStarred(q.value(0).toInt());
+
+        setReady(true);
     });
     connect(sm, &SQLiteStorageManager::failed, this, &SQLiteStorage::setError);
     connect(sm, &SQLiteStorageManager::finished, sm, &QObject::deleteLater);
@@ -370,30 +320,22 @@ qint64 SQLiteStorage::getNewestItemId(FuotenEnums::Type type, qint64 id)
     Q_D(SQLiteStorage);
 
     QSqlQuery q(d->db);
+    bool qresult = true;
 
     if (type == FuotenEnums::All) {
 
-        if (!q.exec(qs)) {
-            //% "Failed to execute database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return -1;
-        }
+        qresult = q.exec(qs);
+        Q_ASSERT_X(qresult, "get newest item ID", "failed to execute database query");
 
     } else {
 
-        if (!q.prepare(qs)) {
-            //% "Failed to prepare database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-            return -1;
-        }
+        qresult = q.prepare(qs);
+        Q_ASSERT_X(qresult, "get newest item ID", "failed to prepare database query");
 
         q.addBindValue(id);
 
-        if (!q.exec()) {
-            //% "Failed to execute database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return -1;
-        }
+        qresult = q.exec();
+        Q_ASSERT_X(qresult, "get newest item ID", "failed to execute database query");
     }
 
     if (q.next()) {
@@ -429,7 +371,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
     for (const QJsonValue &f : folders) {
         QJsonObject o = f.toObject();
-        if (!o.isEmpty()) {
+        if (Q_LIKELY(!o.isEmpty())) {
             reqFolders.insert(o.value(QStringLiteral("id")).toVariant().toLongLong(), o.value(QStringLiteral("name")).toString());
         }
     }
@@ -439,11 +381,8 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     // query the currently local available folders in the database
     QHash<qint64, QString> currentFolders;
 
-    if (!q.exec(QStringLiteral("SELECT id, name FROM folders"))) {
-        //% "Failed to query the folders from the local database."
-        setError(new Error(q.lastError(), qtTrId("fuoten-failed-query-folders"), this));
-        return;
-    }
+    bool qresult = q.exec(QStringLiteral("SELECT id, name FROM folders"));
+    Q_ASSERT_X(qresult, "folders requested", "failed query folders from database");
 
     while (q.next()) {
         currentFolders.insert(q.value(0).toLongLong(), q.value(1).toString());
@@ -513,11 +452,8 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         qDebug() << "Start updating the folders table.";
 #endif
 
-        if (!d->db.transaction()) {
-            //% "Failed to begin a database transaction."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
-            return;
-        }
+        qresult = d->db.transaction();
+        Q_ASSERT_X(qresult, "folders requested", "failed to start database transaction");
 
         if (!deletedIds.isEmpty()) {
 
@@ -525,11 +461,8 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
             qDebug() << "Deleting folders with IDs" << deletedIds << "from local database.";
 #endif
 
-            if (!q.exec(QStringLiteral("DELETE FROM folders WHERE id IN (%1)").arg(d->intListToString(deletedIds)))) {
-                //% "Failed to execute database query."
-                setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                return;
-            }
+            qresult = q.exec(QStringLiteral("DELETE FROM folders WHERE id IN (%1)").arg(d->intListToString(deletedIds)));
+            Q_ASSERT_X(qresult, "folders requested", "failed to delete folders from database");
         }
 
         if (!updatedFolders.isEmpty()) {
@@ -540,22 +473,15 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
                 qDebug() << "Updating name of folder with ID" << updatedFolders.at(i).first << "in local database to:" << updatedFolders.at(i).second;
 #endif
 
-                if (!q.prepare(QStringLiteral("UPDATE folders SET name = ? WHERE id = ?"))) {
-                    //% "Failed to prepare database query."
-                    setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-                    return;
-                }
+                qresult = q.prepare(QStringLiteral("UPDATE folders SET name = ? WHERE id = ?"));
+                Q_ASSERT_X(qresult, "folders requested", "failed to prepare updating folders in database");
 
                 q.addBindValue(updatedFolders.at(i).second);
                 q.addBindValue(updatedFolders.at(i).first);
 
-                if (!q.exec()) {
-                    //% "Failed to execute database query."
-                    setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                    return;
-                }
+                qresult = q.exec();
+                Q_ASSERT_X(qresult, "folders requested", "failed to update folders in datbase");
             }
-
         }
 
 
@@ -566,30 +492,20 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 #ifdef QT_DEBUG
                 qDebug() << "Adding folder" << newFolders.at(i).second << "with ID" << newFolders.at(i).first << "to the local database.";
 #endif
-                if (!q.prepare(QStringLiteral("INSERT INTO folders (id, name) VALUES (?, ?)"))) {
-                    //% "Failed to prepare database query."
-                    setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-                    return;
-                }
+                qresult = q.prepare(QStringLiteral("INSERT INTO folders (id, name) VALUES (?, ?)"));
+                Q_ASSERT_X(qresult, "folders requested", "failed to prepare insertion of new folders in database");
 
                 q.addBindValue(newFolders.at(i).first);
                 q.addBindValue(newFolders.at(i).second);
 
-                if (!q.exec()) {
-                    //% "Failed to execute database query."
-                    setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                    return;
-                }
+                qresult = q.exec();
+                Q_ASSERT_X(qresult, "folders requested", "failed to insert new folders into database");
             }
         }
 
 
-
-        if (!d->db.commit()) {
-            //% "Failed to commit a database transaction."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
-            return;
-        }
+        qresult = d->db.commit();
+        Q_ASSERT_X(qresult, "folders requested", "failed to perform database commit");
 
     }
 
@@ -634,21 +550,16 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
     Q_D(SQLiteStorage);
 
     QSqlQuery q(d->db);
+    bool qresult = true;
 
-    if (!q.prepare(QStringLiteral("INSERT INTO folders (id, name) VALUES (?, ?)"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    qresult = q.prepare(QStringLiteral("INSERT INTO folders (id, name) VALUES (?, ?)"));
+    Q_ASSERT_X(qresult, "folder created", "failed to prepare insertion of new folder into database");
 
     q.addBindValue(id);
     q.addBindValue(name);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "folder created", "failed to insert new folder into database");
 
     Q_EMIT createdFolder(id, name);
 
@@ -679,21 +590,16 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
     Q_D(SQLiteStorage);
 
     QSqlQuery q(d->db);
+    bool qresult = true;
 
-    if (!q.prepare(QStringLiteral("UPDATE folders SET name = ? WHERE id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    qresult = q.prepare(QStringLiteral("UPDATE folders SET name = ? WHERE id = ?"));
+    Q_ASSERT_X(qresult, "folder renamed", "failed to prepare updating folder in database");
 
     q.addBindValue(newName);
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "folder renamed", "failed to update folder in database");
 
     Q_EMIT renamedFolder(id, newName);
 }
@@ -710,8 +616,6 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
     }
 
     Q_D(SQLiteStorage);
-
-    QSqlQuery q(d->db);
 
     QString qs = QStringLiteral("SELECT id, name, feedCount, unreadCount FROM folders ORDER BY ");
 
@@ -751,14 +655,14 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
         qs.append(QLatin1String(" LIMIT ")).append(QString::number(limit));
     }
 
-    if (!q.exec(qs)) {
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return folders;
-    }
+    QSqlQuery q(d->db);
+
+    bool qresult = q.exec(qs);
+    Q_ASSERT_X(qresult, "get folders", "failed to execute datbase query");
 
     while (q.next()) {
         qint64 id = q.value(0).toLongLong();
-        if (id > 0) {
+        if (Q_LIKELY(id > 0)) {
             folders.append(new Folder(
                                q.value(0).toLongLong(),
                                q.value(1).toString(),
@@ -791,19 +695,13 @@ void SQLiteStorage::folderDeleted(qint64 id)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("DELETE FROM folders WHERE id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("DELETE FROM folders WHERE id = ?"));
+    Q_ASSERT_X(qresult, "folder deleted", "failed to prepare qurey to delete folder from database");
 
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "folder deleted", "failed to delete folder from database");
 
     Q_EMIT deletedFolder(id);
 }
@@ -816,29 +714,19 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId IN (SELECT id FROM feeds WHERE folderId = ?)"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId IN (SELECT id FROM feeds WHERE folderId = ?)"));
+    Q_ASSERT_X(qresult, "folder marked read", "failed to prepare database query");
+
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "folder marked read", "failed to execute database query");
 
-    if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+    Q_ASSERT_X(qresult, "folder marked read", "failed to query total unread items count");
 
-    if (q.next()) {
-        setTotalUnread(q.value(0).toInt());
-    }
+    setTotalUnread(q.value(0).toInt());
 
     Q_EMIT markedReadFolder(id, newestItem);
 }
@@ -857,8 +745,6 @@ QList<Feed*> SQLiteStorage::getFeeds(const QueryArgs &args)
     }
 
     Q_D(SQLiteStorage);
-
-    QSqlQuery q(d->db);
 
     QString qs = QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId");
 
@@ -916,10 +802,9 @@ QList<Feed*> SQLiteStorage::getFeeds(const QueryArgs &args)
         qs.append(QLatin1String(" LIMIT ")).append(QString::number(args.limit));
     }
 
-    if (!q.exec(qs)) {
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return feeds;
-    }
+    QSqlQuery q(d->db);
+    bool qresult = q.exec(qs);
+    Q_ASSERT_X(qresult, "get feeds", "failed to query feeds from database");
 
     while (q.next()) {
         feeds.append(new Feed(
@@ -955,22 +840,16 @@ Feed *SQLiteStorage::getFeed(qint64 id)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return nullptr;
-    }
+    bool qresult = q.prepare(QStringLiteral("SELECT fe.id, fe.folderId, fe.title, fe.url, fe.link, fe.added, fe.unreadCount, fe.ordering, fe.pinned, fe.updateErrorCount, fe.lastUpdateError, fe.faviconLink, fo.name AS folderName FROM feeds fe LEFT JOIN folders fo ON fo.id = fe.folderId WHERE fe.id = ?"));
+    Q_ASSERT_X(qresult, "get feed", "failed to prepare database query");
 
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return nullptr;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "get feed", "failed to execute database query");
 
 
-    if (q.next()) {
+    if (Q_LIKELY(q.next())) {
         Feed *f = new Feed(
                         q.value(0).toLongLong(),
                         q.value(1).toLongLong(),
@@ -1013,6 +892,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
     }
 
     QSqlQuery q(d->db);
+    bool qresult = true;
 
     const QJsonArray feeds = json.object().value(QStringLiteral("feeds")).toArray();
 
@@ -1047,11 +927,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
             deletedFeedIds.append(f->id());
         }
 
-        if (!q.exec(QStringLiteral("DELETE FROM feeds"))) {
-            //% "Failed to execute database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return;
-        }
+        qresult = q.exec(QStringLiteral("DELETE FROM feeds"));
+        Q_ASSERT_X(qresult, "feeds requested", "failed to delete all feeds from database");
 
     } else if (!feeds.isEmpty() && currentFeeds.isEmpty()) {
 
@@ -1061,24 +938,18 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
         newFeedIds.reserve(feeds.size());
 
-        if (!d->db.transaction()) {
-            //% "Failed to begin a database transaction."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
-            return;
-        }
+        qresult = d->db.transaction();
+        Q_ASSERT_X(qresult, "feeds requested", "failed to start database transaction");
 
         for (const QJsonValue &f : feeds) {
             QJsonObject o = f.toObject();
-            if (!o.isEmpty()) {
+            if (Q_LIKELY(!o.isEmpty())) {
                 newFeedIds.append(o.value(QStringLiteral("id")).toVariant().toLongLong());
 
-                if (!q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
-                                              "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-                                              ))) {
-                    //% "Failed to prepare database query."
-                    setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-                    return;
-                }
+                qresult = q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
+                                                   "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                                                   ));
+                Q_ASSERT_X(qresult, "feeds requested", "failed to prepare to insert new feed into database");
 
                 q.addBindValue(o.value(QStringLiteral("id")).toVariant().toLongLong());
                 q.addBindValue(o.value(QStringLiteral("folderId")).toVariant().toLongLong());
@@ -1092,21 +963,13 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                 q.addBindValue(o.value(QStringLiteral("lastUpdateError")).toString());
                 q.addBindValue(o.value(QStringLiteral("faviconLink")).toString());
 
-
-                if (!q.exec()) {
-                    //% "Failed to execute database query."
-                    setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                    return;
-                }
+                qresult = q.exec();
+                Q_ASSERT_X(qresult, "feeds requested", "failed to insert new feed into database");
             }
         }
 
-
-        if (!d->db.commit()) {
-            //% "Failed to commit a database transaction."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
-            return;
-        }
+        qresult = d->db.commit();
+        Q_ASSERT_X(qresult, "feeds requested", "failed to commit database transaction");
 
 
     } else {
@@ -1123,15 +986,12 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
             cfh.insert(f->id(), f);
         }
 
-        if (!d->db.transaction()) {
-            //% "Failed to begin a database transaction."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
-            return;
-        }
+        qresult = d->db.transaction();
+        Q_ASSERT_X(qresult, "feeds requested", "failed to start database transaction");
 
         for (const QJsonValue &f : feeds) {
             QJsonObject o = f.toObject();
-            if (!o.isEmpty()) {
+            if (Q_UNLIKELY(!o.isEmpty())) {
                 qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
                 requestedFeedIds.append(id);
 
@@ -1141,14 +1001,10 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 #ifdef QT_DEBUG
                     qDebug() << "Adding new feed" << o.value(QStringLiteral("title")).toString() << "with ID" << id << "to the database.";
 #endif
-
-                    if (!q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
-                                                  "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-                                                  ))) {
-                        //% "Failed to prepare database query."
-                        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-                        return;
-                    }
+                    qresult = q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
+                                                       "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                                                       ));
+                    Q_ASSERT_X(qresult, "feeds requested", "failed to prepare inserting new feed into database");
 
                     q.addBindValue(id);
                     q.addBindValue(o.value(QStringLiteral("folderId")).toVariant().toLongLong());
@@ -1162,14 +1018,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                     q.addBindValue(o.value(QStringLiteral("lastUpdateError")).toString());
                     q.addBindValue(o.value(QStringLiteral("faviconLink")).toString());
 
-
-                    if (!q.exec()) {
-                        //% "Failed to execute database query."
-                        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                        return;
-                    }
-
-
+                    qresult = q.exec();
+                    Q_ASSERT_X(qresult, "feeds requested", "failed to insert new feed into database");
 
                 } else {
 
@@ -1191,11 +1041,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 #endif
                         updatedFeedIds.append(id);
 
-                        if (!q.prepare(QStringLiteral("UPDATE feeds SET folderId = ?, title = ?, link = ?, ordering = ?, pinned = ?, updateErrorCount = ?, lastUpdateError = ?, faviconLink = ? WHERE id = ?"))) {
-                            //% "Failed to prepare database query."
-                            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-                            return;
-                        }
+                        qresult = q.prepare(QStringLiteral("UPDATE feeds SET folderId = ?, title = ?, link = ?, ordering = ?, pinned = ?, updateErrorCount = ?, lastUpdateError = ?, faviconLink = ? WHERE id = ?"));
+                        Q_ASSERT_X(qresult, "feeds requested", "failed to prepare updating feed in database");
 
                         q.addBindValue(rFolderId);
                         q.addBindValue(rTitle);
@@ -1207,11 +1054,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                         q.addBindValue(rFaviconLink.toString());
                         q.addBindValue(id);
 
-                        if (!q.exec()) {
-                            //% "Failed to execute database query."
-                            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                            return;
-                        }
+                        qresult = q.exec();
+                        Q_ASSERT_X(qresult, "feeds requested", "failed to update feed in database");
                     }
                 }
             }
@@ -1232,24 +1076,13 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
             qDebug() << "The feeds with the following IDS have been deleted on the server:" << deletedFeedIds;
 #endif
 
-            if (!q.exec(QStringLiteral("DELETE FROM feeds WHERE id IN (%1)").arg(d->intListToString(deletedFeedIds)))) {
-                //% "Failed to execute database query."
-                setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-                return;
-            }
+            qresult = q.exec(QStringLiteral("DELETE FROM feeds WHERE id IN (%1)").arg(d->intListToString(deletedFeedIds)));
+            Q_ASSERT_X(qresult, "feeds requested", "failed to delete feeds from database");
         }
 
-
-
-        if (!d->db.commit()) {
-            //% "Failed to commit a database transaction."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
-            return;
-        }
-
+        qresult = d->db.commit();
+        Q_ASSERT_X(qresult, "feeds requested", "failed to commit changes to database");
     }
-
-
 
     Q_EMIT requestedFeeds(updatedFeedIds, newFeedIds, deletedFeedIds);
 }
@@ -1288,13 +1121,10 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
-                                  "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-                                  ))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
+                                            "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                                            ));
+    Q_ASSERT_X(qresult, "feed created", "failed to prepare database query");
 
     qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
     qint64 folderId = o.value(QStringLiteral("folderId")).toVariant().toLongLong();
@@ -1311,12 +1141,8 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
     q.addBindValue(o.value(QStringLiteral("lastUpdateError")).toString());
     q.addBindValue(o.value(QStringLiteral("faviconLink")).toString());
 
-
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "feed created", "failed to execute database query");
 
     Q_EMIT createdFeed(id, folderId);
 }
@@ -1341,19 +1167,13 @@ void SQLiteStorage::feedDeleted(qint64 id)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("DELETE FROM feeds WHERE id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("DELETE FROM feeds WHERE id = ?"));
+    Q_ASSERT_X(qresult, "feed deleted", "failed to prepare database query");
 
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "feed deleted", "failed to execute database query");
 
     Q_EMIT deletedFeed(id);
 }
@@ -1384,20 +1204,14 @@ void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE feeds SET folderId = ? WHERE id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("UPDATE feeds SET folderId = ? WHERE id = ?"));
+    Q_ASSERT_X(qresult, "feed moved", "failed to prepare database query");
 
     q.addBindValue(targetFolder);
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "feed moved", "failed to execute database query");
 
     Q_EMIT movedFeed(id, targetFolder);
 }
@@ -1428,20 +1242,14 @@ void SQLiteStorage::feedRenamed(qint64 id, const QString &newTitle)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE feeds SET title = ? WHERE id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("UPDATE feeds SET title = ? WHERE id = ?"));
+    Q_ASSERT_X(qresult, "feed renamed", "failed to prepare database query");
 
     q.addBindValue(newTitle);
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "feed renamed", "failed to execute database query");
 
     Q_EMIT renamedFeed(id, newTitle);
 }
@@ -1472,31 +1280,20 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId = ? AND id <= ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId = ? AND id <= ?"));
+    Q_ASSERT_X(qresult, "feed marked read", "failed to prepare database query");
 
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
     q.addBindValue(id);
     q.addBindValue(newestItem);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "feed marked read", "failed to execute database query");
 
-    if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+    Q_ASSERT_X(qresult, "feed marked read", "failed to query all unread items from database");
 
-    if (q.next()) {
-        setTotalUnread(q.value(0).toInt());
-    }
+    setTotalUnread(q.value(0).toInt());
 
     Q_EMIT markedReadFeed(id, newestItem);
 }
@@ -1516,19 +1313,13 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId WHERE it.id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return nullptr;
-    }
+    bool qresult = q.prepare(QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId WHERE it.id = ?"));
+    Q_ASSERT_X(qresult, "get article", "failed to prepare database query");
 
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return nullptr;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "get article", "failed to execute database query");
 
     QString body;
 
@@ -1539,7 +1330,7 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
     }
 
 
-    if (q.next()) {
+    if (Q_LIKELY(q.next())) {
         Article *a = new Article(q.value(0).toLongLong(),
                                  q.value(1).toLongLong(),
                                  q.value(2).toString(),
@@ -1582,8 +1373,6 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
     }
 
     Q_D(SQLiteStorage);
-
-    QSqlQuery q(d->db);
 
     QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
@@ -1670,10 +1459,10 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
     qDebug() << qs;
 #endif
 
-    if (!q.exec(qs)) {
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return articles;
-    }
+    QSqlQuery q(d->db);
+
+    bool qresult = q.exec(qs);
+    Q_ASSERT_X(qresult, "get article", "failed to execute database query");
 
     while (q.next()) {
         QString body;
@@ -1737,12 +1526,8 @@ void GetArticlesAsyncWorker::run()
 
     QSqlQuery q(m_db);
 
-    if (!q.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-        Q_EMIT gotArticles(articles);
-        return;
-    }
+    bool qresult = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
+    Q_ASSERT_X(qresult, "get articles async", "failed to enable foreign keys support");
 
     QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
@@ -1844,11 +1629,8 @@ void GetArticlesAsyncWorker::run()
     qDebug() << qs;
 #endif
 
-    if (!q.exec(qs)) {
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-        Q_EMIT gotArticles(articles);
-        return;
-    }
+    qresult = q.exec(qs);
+    Q_ASSERT_X(qresult, "get articles async", "failed to execute database query");
 
     while (q.next()) {
         QString body;
@@ -1930,12 +1712,8 @@ void ItemsRequestedWorker::run()
 {
     QSqlQuery q(m_db);
 
-    if (!q.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-        return;
-    }
-
+    bool qresult = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
+    Q_ASSERT_X(qresult, "items requested worker", "failed to enable foreign keys support");
 
     const QJsonArray items = m_json.object().value(QStringLiteral("items")).toArray();
 
@@ -1953,27 +1731,19 @@ void ItemsRequestedWorker::run()
 
     QHash<qint64, uint> currentItems; // contains the ids and last modified time stamps of the local items
 
-    if (!q.exec(QStringLiteral("SELECT id, lastModified FROM items"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-        return;
-    }
+    qresult = q.exec(QStringLiteral("SELECT id, lastModified FROM items"));
+    Q_ASSERT_X(qresult, "items requested worker", "failed to query current items from database");
 
     while(q.next()) {
         currentItems.insert(q.value(0).toLongLong(), q.value(1).toUInt());
     }
 
-
-
-    if (!m_db.transaction()) {
-        //% "Failed to begin a database transaction."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin")));
-        return;
-    }
+    qresult = m_db.transaction();
+    Q_ASSERT_X(qresult, "items requested worker", "failed to start database transaction");
 
     for (const QJsonValue &i : items) {
         QJsonObject o = i.toObject();
-        if (!o.isEmpty()) {
+        if (Q_LIKELY(!o.isEmpty())) {
             qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
 
             if (!currentItems.isEmpty() && currentItems.contains(id)) {
@@ -1989,25 +1759,21 @@ void ItemsRequestedWorker::run()
                     qDebug() << "Updating the article" << o.value(QStringLiteral("title")).toString() << "with ID" << id << "in the database.";
 #endif
 
-
-                    if (!q.prepare(QStringLiteral("UPDATE items SET "
-                                                  "title = ?, "
-                                                  "url = ?, "
-                                                  "author = ?, "
-                                                  "pubDate = ?, "
-                                                  "enclosureMime = ?, "
-                                                  "enclosureLink = ?, "
-                                                  "unread = ?, "
-                                                  "starred = ?, "
-                                                  "lastModified = ?,"
-                                                  "fingerprint = ?, "
-                                                  "queue = 0 "
-                                                  "WHERE id = ?"
-                                                  ))) {
-                        //% "Failed to prepare database query."
-                        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
-                        return;
-                    }
+                    qresult = q.prepare(QStringLiteral("UPDATE items SET "
+                                                       "title = ?, "
+                                                       "url = ?, "
+                                                       "author = ?, "
+                                                       "pubDate = ?, "
+                                                       "enclosureMime = ?, "
+                                                       "enclosureLink = ?, "
+                                                       "unread = ?, "
+                                                       "starred = ?, "
+                                                       "lastModified = ?,"
+                                                       "fingerprint = ?, "
+                                                       "queue = 0 "
+                                                       "WHERE id = ?"
+                                                       ));
+                    Q_ASSERT_X(qresult, "items requested worker", "failed to prepare update of item into database");
 
                     q.addBindValue(o.value(QStringLiteral("title")).toString());
                     q.addBindValue(o.value(QStringLiteral("url")).toString());
@@ -2021,11 +1787,8 @@ void ItemsRequestedWorker::run()
                     q.addBindValue(o.value(QStringLiteral("fingerprint")).toString());
                     q.addBindValue(id);
 
-                    if (!q.exec()) {
-                        //% "Failed to execute database query."
-                        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-                        return;
-                    }
+                    qresult = q.exec();
+                    Q_ASSERT_X(qresult, "items requested worker", "failed to update item in databae");
                 }
 
             } else {
@@ -2036,13 +1799,10 @@ void ItemsRequestedWorker::run()
                 qDebug() << "Adding a new article" << o.value(QStringLiteral("title")).toString() << "with ID" << id << "to the database.";
 #endif
 
-                if (!q.prepare(QStringLiteral("INSERT INTO items (id, feedId, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint) "
-                                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                                              ))) {
-                    //% "Failed to prepare database query."
-                    Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
-                    return;
-                }
+                qresult = q.prepare(QStringLiteral("INSERT INTO items (id, feedId, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint) "
+                                                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                                                   ));
+                Q_ASSERT_X(qresult, "items requested worker", "failed to prepare insertion of new item into database");
 
                 q.addBindValue(id);
                 q.addBindValue(o.value(QStringLiteral("feedId")).toVariant().toLongLong());
@@ -2060,39 +1820,30 @@ void ItemsRequestedWorker::run()
                 q.addBindValue(o.value(QStringLiteral("lastModified")).toInt());
                 q.addBindValue(o.value(QStringLiteral("fingerprint")).toString());
 
-                if (!q.exec()) {
-                    //% "Failed to execute database query."
-                    Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-                    return;
-                }
+                qresult = q.exec();
+                Q_ASSERT_X(qresult, "items requested worker", "failed to execute insertion of new item into database");
             }
         }
     }
 
-    if (!m_db.commit()) {
-        //% "Failed to commit a database transaction."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit")));
-        return;
-    }
+    qresult = m_db.commit();
+    Q_ASSERT_X(qresult, "items requested worker", "failed to commit database transaction");
 
 
     // cleaning feeds by deleting items over threshold
     // but check for valid configuration object first
 
-    if (m_config) {
+    if (Q_LIKELY(m_config)) {
 
         IdList fIds;
-        if (!q.exec(QStringLiteral("SELECT id FROM feeds"))) {
-            //% "Failed to execute database query."
-            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-            return;
-        }
+        qresult = q.exec(QStringLiteral("SELECT id FROM feeds"));
+        Q_ASSERT_X(qresult, "items requested worker", "failed to query feed IDs from database");
 
         while(q.next()) {
             fIds.append(q.value(0).toLongLong());
         }
 
-        if (!fIds.isEmpty()) {
+        if (Q_LIKELY(!fIds.isEmpty())) {
 
             const IdList cfIds = fIds; // current feed IDs
             IdList iIds; // item IDs
@@ -2109,19 +1860,13 @@ void ItemsRequestedWorker::run()
                         qDebug() << "Removing all items more than" << delVal << "from the feed with ID" << fId;
 #endif
 
-                        if (!q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 ORDER BY id DESC"))) {
-                            //% "Failed to prepare database query."
-                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
-                            return;
-                        }
+                        qresult = q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 ORDER BY id DESC"));
+                        Q_ASSERT_X(qresult, "items requested worker", "failed to preparey querying item IDs from database");
 
                         q.addBindValue(fId);
 
-                        if (!q.exec()) {
-                            //% "Failed to execute database query."
-                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-                            return;
-                        }
+                        qresult = q.exec();
+                        Q_ASSERT_X(qresult, "items requested worker", "failed to execute querying item IDs from database");
 
                         iIds.clear();
                         while (q.next()) {
@@ -2143,13 +1888,8 @@ void ItemsRequestedWorker::run()
                             }
 
                             if (!iIdsToDelete.isEmpty()) {
-
-                                if (!q.exec(QStringLiteral("DELETE FROM items WHERE id IN (%1)").arg(iIdsToDelete.join(QChar(','))))) {
-                                    //% "Failed to execute database query."
-                                    Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-                                    return;
-                                }
-
+                                qresult = q.exec(QStringLiteral("DELETE FROM items WHERE id IN (%1)").arg(iIdsToDelete.join(QChar(','))));
+                                Q_ASSERT_X(qresult, "items requested worker", "failed to delete items from database");
                             }
                         }
 
@@ -2162,40 +1902,27 @@ void ItemsRequestedWorker::run()
                         qDebug() << "Removing all items older than" << tt << "from the feed with ID" << fId;
 #endif
 
-
-                        if (!q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 AND pubDate < ?"))) {
-                            //% "Failed to prepare database query."
-                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
-                            return;
-                        }
+                        qresult = q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 AND pubDate < ?"));
+                        Q_ASSERT_X(qresult, "items requested worker", "failed to prepare selecting item IDs from database");
 
                         q.addBindValue(fId);
                         q.addBindValue(tt.toTime_t());
 
-                        if (!q.exec()) {
-                            //% "Failed to execute database query."
-                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-                            return;
-                        }
+                        qresult = q.exec();
+                        Q_ASSERT_X(qresult, "items requested worker", "failed to selecting item IDs from database");
 
                         while (q.next()) {
                             removedItemIds.append(q.value(0).toLongLong());
                         }
 
-                        if (!q.prepare(QStringLiteral("DELETE FROM items WHERE feedId = ? AND starred = 0 AND pubDate < ?"))) {
-                            //% "Failed to prepare database query."
-                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query")));
-                            return;
-                        }
+                        qresult = q.prepare(QStringLiteral("DELETE FROM items WHERE feedId = ? AND starred = 0 AND pubDate < ?"));
+                        Q_ASSERT_X(qresult, "items requested worker", "failed to prepare item deletion from database");
 
                         q.addBindValue(fId);
                         q.addBindValue(tt.toTime_t());
 
-                        if (!q.exec()) {
-                            //% "Failed to execute database query."
-                            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-                            return;
-                        }
+                        qresult = q.exec();
+                        Q_ASSERT_X(qresult, "items requested worker", "failed to execute item deletion from database");
                     }
                 }
             }
@@ -2203,26 +1930,13 @@ void ItemsRequestedWorker::run()
     }
 
 
+    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+    Q_ASSERT_X(qresult, "items requested worker", "failed to select total unread item count from database");
+    Q_EMIT gotTotalUnread(q.value(0).toUInt());
 
-    if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-        return;
-    }
-
-    if (q.next()) {
-        Q_EMIT gotTotalUnread(q.value(0).toUInt());
-    }
-
-    if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE starred = 1"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query")));
-        return;
-    }
-
-    if (q.next()) {
-        Q_EMIT gotStarred(q.value(0).toUInt());
-    }
+    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE starred = 1")) && q.next());
+    Q_ASSERT_X(qresult, "items requested worker", "failed to select total starred item count from database");
+    Q_EMIT gotStarred(q.value(0).toUInt());
 
     Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
 }
@@ -2272,21 +1986,14 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
     Q_D(SQLiteStorage);
 
     QSqlQuery q(d->db);
-
-    if (!q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id IN (%1)").arg(d->intListToString(itemIds)))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id IN (%1)").arg(d->intListToString(itemIds)));
+    Q_ASSERT_X(qresult, "items marked", "failed to prepare database query");
 
     q.addBindValue(unread);
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "items marked", "failed to execute databae query");
 
     if (unread) {
         setTotalUnread(totalUnread() + itemIds.count());
@@ -2314,38 +2021,26 @@ void SQLiteStorage::itemsStarred(const QList<QPair<qint64, QString> > &articles,
 
     QSqlQuery q(d->db);
 
-    if (!d->db.transaction()) {
-        //% "Failed to begin a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
-        return;
-    }
+    bool qresult = d->db.transaction();
+    Q_ASSERT_X(qresult, "items starred", "failed to start database transaction");
 
     for (const QPair<qint64,QString> &p : articles) {
 
-        if (!q.prepare(QStringLiteral("UPDATE items SET starred = ?, lastModified = ? WHERE feedId = ? and guidHash = ?"))) {
-            //% "Failed to prepare database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-            return;
-        }
+        qresult = q.prepare(QStringLiteral("UPDATE items SET starred = ?, lastModified = ? WHERE feedId = ? and guidHash = ?"));
+        Q_ASSERT_X(qresult, "items starred", "failed to prepare updating item in database");
 
         q.addBindValue(star);
         q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
         q.addBindValue(p.first);
         q.addBindValue(p.second);
 
-        if (!q.exec()) {
-            //% "Failed to execute database query."
-            setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return;
-        }
+        qresult = q.exec();
+        Q_ASSERT_X(qresult, "items starred", "failed to execute updating item in database");
 
     }
 
-    if (!d->db.commit()) {
-        //% "Failed to commit a database transaction."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
-        return;
-    }
+    qresult = d->db.commit();
+    Q_ASSERT_X(qresult, "items starred", "failed to commit database transaction");
 
     if (star) {
         setStarred(starred() + articles.count());
@@ -2369,21 +2064,15 @@ void SQLiteStorage::itemMarked(qint64 itemId, bool unread)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id = ?"));
+    Q_ASSERT_X(qresult, "item marked", "failed to prepare database transaction");
 
     q.addBindValue(unread);
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
     q.addBindValue(itemId);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "item marked", "failed to execute database transaction");
 
     if (unread) {
         setTotalUnread(totalUnread()+1);
@@ -2408,22 +2097,16 @@ void SQLiteStorage::itemStarred(qint64 feedId, const QString &guidHash, bool sta
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE items SET starred = ?, lastModified = ? WHERE feedId = ? and guidHash = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("UPDATE items SET starred = ?, lastModified = ? WHERE feedId = ? and guidHash = ?"));
+    Q_ASSERT_X(qresult, "item starred", "failed to prepare database transaction");
 
     q.addBindValue(star);
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
     q.addBindValue(feedId);
     q.addBindValue(guidHash);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "item starred", "failed to execute database transaction");
 
     if (star) {
         setStarred(starred() + 1);
@@ -2447,19 +2130,13 @@ void SQLiteStorage::allItemsMarkedRead(qint64 newestItemId)
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE id <= ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE id <= ?"));
+    Q_ASSERT_X(qresult, "all items marked read", "failed to prepare database transaciton");
 
     q.addBindValue(newestItemId);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "all items marked read", "failed to execute database transaction");
 
     setTotalUnread(0);
 
@@ -2470,35 +2147,31 @@ void SQLiteStorage::allItemsMarkedRead(qint64 newestItemId)
 
 QString SQLiteStorage::getArticleBody(qint64 id)
 {
+    QString body;
+
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        return QString();
+        return body;
     }
 
     Q_D(SQLiteStorage);
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(QStringLiteral("SELECT body FROM items WHERE id = ?"))) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return QString();
-    }
+    bool qresult = q.prepare(QStringLiteral("SELECT body FROM items WHERE id = ?"));
+    Q_ASSERT_X(qresult, "get article body", "failed to prepare database transaction");
 
     q.addBindValue(id);
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return QString();
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "get article body", "failed to execute database query");
+
+    if (Q_LIKELY(q.next())) {
+        body = q.value(0).toString();
     }
 
-    if (q.next()) {
-        return q.value(0).toString();
-    } else {
-        return QString();
-    }
+    return body;
 }
 
 
@@ -2571,11 +2244,8 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
 
     QSqlQuery q(d->db);
 
-    if (!q.prepare(qs)) {
-        //% "Failed to prepare database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return false;
-    }
+    bool qresult = q.prepare(qs);
+    Q_ASSERT_X(qresult, "enqueue item", "failed to prepare datbase query");
 
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t()-10);
     q.addBindValue((int)aq);
@@ -2587,11 +2257,8 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
         q.addBindValue(article->guidHash());
     }
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        setError(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return false;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "enqueue item", "failed to execute database query");
 
     article->setQueue(aq);
 
@@ -2638,11 +2305,8 @@ void EnqueueMarkReadWorker::run()
 {
     QSqlQuery q(m_db);
 
-    if (!q.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    bool qresult = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
+    Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to enable foreign keys support");
 
     QString qs; // query string
 
@@ -2662,22 +2326,16 @@ void EnqueueMarkReadWorker::run()
         return;
     }
 
-    if (!q.prepare(qs)) {
-        //% "Failed to prepare database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-        return;
-    }
+    qresult = q.prepare(qs);
+    Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to prepare database query");
 
     if (m_idType != FuotenEnums::All) {
         q.addBindValue(m_newestItemId);
         q.addBindValue(m_id);
     }
 
-    if (!q.exec()) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec();
+    Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to execute database query");
 
     QHash<qint64,FuotenEnums::QueueActions> idsAndQueue;
 
@@ -2703,50 +2361,30 @@ void EnqueueMarkReadWorker::run()
         ++i;
     }
 
-    if (!m_db.transaction()) {
-        //% "Failed to begin a database transaction."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-transaction-begin"), this));
-        return;
-    }
+    qresult = m_db.transaction();
+    Q_ASSERT_X(qresult, "equeue mark read worker", "failed to start database transaction");
 
     QHash<qint64,FuotenEnums::QueueActions>::const_iterator ii = idsAndQueueUpdated.constBegin();
     while (ii != idsAndQueueUpdated.constEnd()) {
 
-        if (!q.prepare(QStringLiteral("UPDATE items SET unread = 0, queue = ? WHERE id = ?"))) {
-            //% "Failed to prepare database query."
-            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-prepare-query"), this));
-            return;
-        }
+        qresult = q.prepare(QStringLiteral("UPDATE items SET unread = 0, queue = ? WHERE id = ?"));
+        Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to prepary database query");
 
         q.addBindValue((int)ii.value());
         q.addBindValue(ii.key());
 
-        if (!q.exec()) {
-            //% "Failed to execute database query."
-            Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-            return;
-        }
+        qresult = q.exec();
+        Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to execute database query");
 
         ++ii;
     }
 
+    qresult = m_db.commit();
+    Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to commit database transaction");
 
-    if (!m_db.commit()) {
-        //% "Failed to commit a database transaction."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-transaction-commit"), this));
-        return;
-    }
-
-
-    if (!q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
-
-    if (q.next()) {
-        Q_EMIT gotTotalUnread(q.value(0).toUInt());
-    }
+    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+    Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to query totol unread item count from database");
+    Q_EMIT gotTotalUnread(q.value(0).toUInt());
 
     switch (m_idType) {
     case FuotenEnums::Feed:
@@ -2893,17 +2531,11 @@ void ClearQueueWorker::run()
 {
     QSqlQuery q(m_db);
 
-    if (!q.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    bool qresult = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
+    Q_ASSERT_X(qresult, "clear queue worker", "failed to enable foreign keys support");
 
-    if (!q.exec(QStringLiteral("UPDATE items SET queue = 0"))) {
-        //% "Failed to execute database query."
-        Q_EMIT failed(new Error(q.lastError(), qtTrId("fuoten-error-failed-execute-query"), this));
-        return;
-    }
+    qresult = q.exec(QStringLiteral("UPDATE items SET queue = 0"));
+    Q_ASSERT_X(qresult, "clear queue worker", "failed to execute databae query");
 
     Q_EMIT queueCleared();
 }
