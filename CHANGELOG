@@ -1,3 +1,10 @@
+* new: global default values for configuration and storage
+* changed: use network access manager factory instead of setting netwoak
+  access manager via property
+
+libfuoten 0.5.2 - 2017-03-19
+* new: Dutch translation by Nathan Follens
+
 libfuoten 0.5.1 - 2017-01-29
 * improved: translation updates
 
