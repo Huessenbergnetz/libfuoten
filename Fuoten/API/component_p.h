@@ -24,6 +24,7 @@
 #include "component.h"
 #include "../Helpers/abstractconfiguration.h"
 #include "../Storage/abstractstorage.h"
+#include "../Helpers/abstractnamfactory.h"
 #include <QTimer>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -94,6 +95,8 @@ public:
     static void setDefaultConfiguration(AbstractConfiguration *config);
     static AbstractStorage *defaultStorage();
     static void setDefaultStorage(AbstractStorage *storage);
+    static AbstractNamFactory *networkAccessManagerFactory();
+    static void setNetworkAccessManagerFactory(AbstractNamFactory *factory);
 
 private:
     Q_DISABLE_COPY(ComponentPrivate)

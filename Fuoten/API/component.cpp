@@ -53,9 +53,20 @@ public:
         m_defaultStorage = storage;
     }
 
+    AbstractNamFactory *networkAccessManagerFactory() const
+    {
+        return m_namFactory;
+    }
+
+    void setNetworkAccessManagerFactory(AbstractNamFactory *factory)
+    {
+        m_namFactory = factory;
+    }
+
 private:
     AbstractConfiguration *m_defaultConfig = nullptr;
     AbstractStorage *m_defaultStorage = nullptr;
+    AbstractNamFactory *m_namFactory = nullptr;
 };
 Q_GLOBAL_STATIC(DefaultValues, defVals)
 
@@ -108,6 +119,30 @@ void ComponentPrivate::setDefaultStorage(AbstractStorage *storage)
 }
 
 
+AbstractNamFactory *ComponentPrivate::networkAccessManagerFactory()
+{
+    const DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+
+    defs->lock.lockForRead();
+    AbstractNamFactory *nam = defs->networkAccessManagerFactory();
+    defs->lock.unlock();
+
+    return nam;
+}
+
+
+void ComponentPrivate::setNetworkAccessManagerFactory(AbstractNamFactory *factory)
+{
+    qDebug("Setting network access manager factory to %p.", factory);
+    DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+    QWriteLocker locker(&defs->lock);
+
+    defs->setNetworkAccessManagerFactory(factory);
+}
+
+
 Component::Component(QObject *parent) :
     QObject(parent), d_ptr(new ComponentPrivate)
 {
@@ -117,17 +152,12 @@ Component::Component(QObject *parent) :
 Component::Component(ComponentPrivate &dd, QObject *parent) :
     QObject(parent), d_ptr(&dd)
 {
-
 }
-
 
 
 Component::~Component()
 {
 }
-
-
-
 
 
 void Component::sendRequest()
@@ -179,15 +209,18 @@ void Component::sendRequest()
     Q_ASSERT_X(url.isValid(), "send request", "invalid API URL");
 
     if (!d->networkAccessManager) {
-        setNetworkAccessManager(new QNetworkAccessManager(this));
+        AbstractNamFactory *namf = Component::networkAccessManagerFactory();
+        if (namf) {
+            d->networkAccessManager = namf->create(this);
+        } else {
+            d->networkAccessManager = new QNetworkAccessManager(this);
+        }
         if (d->configuration->getIgnoreSSLErrors()) {
             connect(d->networkAccessManager, &QNetworkAccessManager::sslErrors, this, &Component::_ignoreSSLErrors);
         }
     }
 
-    QNetworkRequest nr;
-
-    nr.setUrl(url);
+    QNetworkRequest nr(url);
 
     if (!d->requestHeaders.isEmpty()) {
         QHash<QByteArray, QByteArray>::const_iterator i = d->requestHeaders.constBegin();
@@ -245,8 +278,6 @@ void Component::sendRequest()
     d->performNetworkOperation(nr);
     connect(d->reply, &QNetworkReply::finished, this, &Component::_requestFinished);
 }
-
-
 
 
 void Component::_requestFinished()
@@ -332,7 +363,6 @@ bool Component::checkInput()
 }
 
 
-
 bool Component::checkOutput()
 {
     Q_D(Component);
@@ -372,29 +402,6 @@ bool Component::checkOutput()
 }
 
 
-
-
-QNetworkAccessManager *Component::networkAccessManager() const { Q_D(const Component); return d->networkAccessManager; }
-
-void Component::setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessManager)
-{
-    Q_D(Component);
-
-    if (Q_UNLIKELY(d->networkAccessManager && inOperation())) {
-        qWarning("Can not change property %s, still in operation.", "networkAccessManager");
-        return;
-    }
-
-    if (nNetworkAccessManager != d->networkAccessManager) {
-        d->networkAccessManager = nNetworkAccessManager;
-        qDebug("Changed networkAccessManager to %p.", d->networkAccessManager);
-        Q_EMIT networkAccessManagerChanged(networkAccessManager());
-    }
-}
-
-
-
-
 bool Component::inOperation() const { Q_D(const Component); return d->inOperation; }
 
 void Component::setInOperation(bool nInOperation)
@@ -408,8 +415,6 @@ void Component::setInOperation(bool nInOperation)
 }
 
 
-
-
 quint8 Component::requestTimeout() const { Q_D(const Component); return d->requestTimeout; }
 
 void Component::setRequestTimeout(quint8 seconds)
@@ -421,8 +426,6 @@ void Component::setRequestTimeout(quint8 seconds)
         Q_EMIT requestTimeoutChanged(requestTimeout());
     }
 }
-
-
 
 
 Error *Component::error() const { Q_D(const Component); return d->error; }
@@ -442,8 +445,6 @@ void Component::setError(Error *nError)
 }
 
 
-
-
 AbstractConfiguration *Component::configuration() const
 {
     Q_D(const Component);
@@ -454,6 +455,7 @@ AbstractConfiguration *Component::configuration() const
     Q_ASSERT(_config);
     return _config;
 }
+
 
 void Component::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
@@ -471,7 +473,6 @@ void Component::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 }
 
 
-
 AbstractStorage *Component::storage() const
 {
     Q_D(const Component);
@@ -481,6 +482,7 @@ AbstractStorage *Component::storage() const
     }
     return _storage;
 }
+
 
 void Component::setStorage(AbstractStorage *localStorage)
 {
@@ -522,12 +524,23 @@ AbstractStorage *Component::defaultStorage()
 }
 
 
+void Component::setNetworkAccessManagerFactory(AbstractNamFactory *factory)
+{
+    ComponentPrivate::setNetworkAccessManagerFactory(factory);
+}
+
+
+AbstractNamFactory *Component::networkAccessManagerFactory()
+{
+    return ComponentPrivate::networkAccessManagerFactory();
+}
+
+
 void Component::setExpectedJSONType(ExpectedJSONType type)
 {
     Q_D(Component);
     d->expectedJSONType = type;
 }
-
 
 
 void Component::setApiRoute(const QString &route)
@@ -537,13 +550,11 @@ void Component::setApiRoute(const QString &route)
 }
 
 
-
 void Component::setApiRoute(const QStringList &routeParts)
 {
     Q_D(Component);
     d->apiRoute = QStringLiteral("/").append(routeParts.join(QChar('/')));
 }
-
 
 
 
@@ -559,7 +570,6 @@ void Component::setNetworkOperation(QNetworkAccessManager::Operation operation)
     Q_D(Component);
     d->namOperation = operation;
 }
-
 
 
 QHash<QByteArray, QByteArray> Component::requestHeaders() const
@@ -587,7 +597,6 @@ void Component::addRequestHeader(const QByteArray &headerName, const QByteArray 
 }
 
 
-
 void Component::addRequestHeaders(const QHash<QByteArray, QByteArray> &headers)
 {
     if (headers.isEmpty()) {
@@ -604,7 +613,6 @@ void Component::addRequestHeaders(const QHash<QByteArray, QByteArray> &headers)
 }
 
 
-
 void Component::setPayload(const QByteArray &payload)
 {
     Q_D(Component);
@@ -619,13 +627,11 @@ void Component::setPayload(const QJsonObject &payload)
 }
 
 
-
 void Component::setUrlQuery(const QUrlQuery &query)
 {
     Q_D(Component);
     d->urlQuery = query;
 }
-
 
 
 void Component::setRequiresAuth(bool reqAuth)

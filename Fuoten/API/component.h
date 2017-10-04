@@ -36,6 +36,7 @@ class ComponentPrivate;
 class Error;
 class AbstractConfiguration;
 class AbstractStorage;
+class AbstractNamFactory;
 
 /*!
  * \brief Base class for all API requests.
@@ -161,22 +162,6 @@ class FUOTENSHARED_EXPORT Component : public QObject
 {
     Q_OBJECT
     /*!
-     * \brief Pointer to a custom QNetworkAccessManager to perform network operations.
-     *
-     * When no custom QNetworkAccessManager is set, a new one will be created when sending the API
-     * request via sendRequest(). The internal created network manager will be a child object of
-     * this class. If you set your own custom QNetworkAccessManager, this will not automatically be
-     * a child object of this class.
-     *
-     * This property can not be changed while Component::inOperation() returns \c true.
-     *
-     * \par Access functions:
-     * <TABLE><TR><TD>QNetworkAccessManager*</TD><TD>networkAccessManager() const</TD></TR><TR><TD>void</TD><TD>setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessManager)</TD></TR></TABLE>
-     * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>networkAccessManagerChanged(QNetworkAccessManager *networkAccessManager)</TD></TR></TABLE>
-     */
-    Q_PROPERTY(QNetworkAccessManager *networkAccessManager READ networkAccessManager WRITE setNetworkAccessManager NOTIFY networkAccessManagerChanged)
-    /*!
      * \brief Returns true while the request is in operation.
      *
      * \sa setInOperation()
@@ -288,13 +273,6 @@ public:
     Q_INVOKABLE virtual void execute() = 0;
 
     /*!
-     * \brief Returns a pointer to the currently set QNetworkAccessManager.
-     *
-     * \sa networkAccessManager
-     */
-    QNetworkAccessManager *networkAccessManager() const;
-
-    /*!
      * \brief Returns true while the API request is running.
      *
      * This might also include the local storage operation, if Component::storage is set to a valid AbstractStorage sublcass.
@@ -330,15 +308,6 @@ public:
      * \sa storage
      */
     AbstractStorage *storage() const;
-
-    /*!
-     * \brief Sets a pointer to a QNetworkAccessManager to use for the API request.
-     *
-     * If no network manager has been set, one will created internally.
-     *
-     * \sa networkAccessManager
-     */
-    void setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessManager);
 
     /*!
      * \brief Sets the timeout for the API request in seconds.
@@ -385,13 +354,22 @@ public:
      */
     static AbstractStorage *defaultStorage();
 
-Q_SIGNALS:
     /*!
-     * \brief This signal is emitted when the pointer to the network access manager changes.
-     * \sa networkAccessManager
+     * \brief Sets the network access manager \a factory.
+     * The factory will be used to create QNetworkAccessManager objects on demand.
+     * If no factory is set, a default QNetworkAccessManager object will be created.
+     * The Component class will take ownership of the created QNetworkAccessManager.
+     * \sa networkAccessManagerFactory()
      */
-    void networkAccessManagerChanged(QNetworkAccessManager *networkAccessManager);
+    static void setNetworkAccessManagerFactory(AbstractNamFactory *factory);
 
+    /*!
+     * \brief Returns the currently set network access manager factory.
+     * \sa setNetworkAccessManagerFactory()
+     */
+    static AbstractNamFactory *networkAccessManagerFactory();
+
+Q_SIGNALS:
     /*!
      * \brief This signal is emitted when the in operation status changes.
      * \sa inOperation

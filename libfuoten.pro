@@ -238,7 +238,8 @@ HEADERS += \
     Fuoten/API/starmultipleitems_p.h \
     Fuoten/API/starmultipleitems.h \
     Fuoten/API/markallitemsread.h \
-    Fuoten/API/markallitemsread_p.h
+    Fuoten/API/markallitemsread_p.h \
+    Fuoten/Helpers/abstractnamfactory.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -284,7 +285,8 @@ SOURCES += \
     Fuoten/API/markmultipleitems.cpp \
     Fuoten/API/staritem.cpp \
     Fuoten/API/starmultipleitems.cpp \
-    Fuoten/API/markallitemsread.cpp
+    Fuoten/API/markallitemsread.cpp \
+    Fuoten/Helpers/abstractnamfactory.cpp
 
 DISTFILES += \
     fuoten.pc.in
