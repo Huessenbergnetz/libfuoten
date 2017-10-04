@@ -23,6 +23,9 @@ CONFIG(release, debug|release) {
     DEFINES += QT_NO_DEBUG_OUTPUT
 }
 
+QMAKE_CXXFLAGS_DEBUG += "-fsanitize=address -fno-omit-frame-pointer -Wformat -Werror=format-security -Werror=array-bounds -g"
+QMAKE_LFLAGS_DEBUG += "-fsanitize=address"
+
 isEmpty(PREFIX): PREFIX = $$[QT_INSTALL_PREFIX]
 isEmpty(INSTALL_LIB_DIR): INSTALL_LIB_DIR = $$[QT_INSTALL_LIBS]
 isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRANSLATIONS]
