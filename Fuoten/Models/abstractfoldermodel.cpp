@@ -23,10 +23,6 @@
 #include "../fuoten.h"
 #include "../article.h"
 
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
-
 using namespace Fuoten;
 
 AbstractFolderModel::AbstractFolderModel(QObject *parent) :
@@ -276,9 +272,7 @@ void AbstractFolderModel::feedsRequested(const IdList &updatedFeeds, const IdLis
 {
     Q_ASSERT_X(storage(), "feeds requested", "no storage available");
 
-#ifdef QT_DEBUG
-    qDebug() << "Feeds requested. Updating folder model.";
-#endif
+    qDebug("%s", "Feeds requested. Updateing folder model.");
 
     if (!updatedFeeds.isEmpty() || !newFeeds.isEmpty() || !deletedFeeds.isEmpty()) {
 

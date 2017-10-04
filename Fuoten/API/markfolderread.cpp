@@ -22,9 +22,6 @@
 #include "../error.h"
 #include <QJsonObject>
 #include <QJsonValue>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -49,9 +46,7 @@ void MarkFolderRead::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to mark all items in folder as read on server.";
-#endif
+    qDebug("Start to mark all items in folder with ID %lli as read on the server. Newest item ID: %lli.", folderId(), newestItemId());
 
     setInOperation(true);
 
@@ -109,9 +104,7 @@ void MarkFolderRead::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully marked the folder as read on the server.";
-#endif
+    qDebug("Successfully marked the folder with ID %lli as read on the server. Newest item ID: %lli.", folderId(), newestItemId());
 
     Q_EMIT succeeded(folderId(), newestItemId());
 }
@@ -146,9 +139,7 @@ void MarkFolderRead::setFolderId(qint64 nFolderId)
     Q_D(MarkFolderRead);
     if (nFolderId != d->folderId) {
         d->folderId = nFolderId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
-#endif
+        qDebug("Changed folderId to %lli.", d->folderId);
         Q_EMIT folderIdChanged(folderId());
     }
 }
@@ -168,9 +159,7 @@ void MarkFolderRead::setNewestItemId(qint64 nNewestItemId)
     Q_D(MarkFolderRead);
     if (nNewestItemId != d->newestItemId) {
         d->newestItemId = nNewestItemId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed newestItemId to" << d->newestItemId;
-#endif
+        qDebug("Changed newestItemId to %lli.", d->newestItemId);
         Q_EMIT newestItemIdChanged(newestItemId());
     }
 }

@@ -20,9 +20,6 @@
 
 #include "articlelistmodel_p.h"
 #include "../article.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 

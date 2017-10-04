@@ -21,9 +21,6 @@
 #include "abstractfeedmodel_p.h"
 #include "../Storage/abstractstorage.h"
 #include "../article.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -162,9 +159,7 @@ void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList 
 {
     Q_ASSERT_X(storage(), "load feeds", "no storage available");
 
-#ifdef QT_DEBUG
-    qDebug() << "Feeds requested. Updating feeds model.";
-#endif
+    qDebug("%s", "Feeds requested. Updating feeds model.");
 
     Q_D(AbstractFeedModel);
 

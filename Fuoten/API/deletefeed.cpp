@@ -20,9 +20,6 @@
 
 #include "deletefeed_p.h"
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -52,9 +49,7 @@ void DeleteFeed::setFeedId(qint64 nFeedId)
     Q_D(DeleteFeed); 
     if (nFeedId != d->feedId) {
         d->feedId = nFeedId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed feedId to" << d->feedId;
-#endif
+        qDebug("Changed feedId to %lli.", d->feedId);
         Q_EMIT feedIdChanged(feedId());
     }
 }
@@ -69,9 +64,7 @@ void DeleteFeed::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to delete a feed on the server.";
-#endif
+    qDebug("Start to delete feed with ID %lli.", feedId());
 
     setInOperation(true);
 
@@ -117,9 +110,7 @@ void DeleteFeed::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully deleted the feed on the server.";
-#endif
+    qDebug("Successfully deleted feed with ID %lli.", feedId());
 
     Q_EMIT succeeded(feedId());
 }

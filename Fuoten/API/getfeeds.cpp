@@ -23,9 +23,6 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonDocument>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -50,9 +47,7 @@ void GetFeeds::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start requesting feeds from the server.";
-#endif
+    qDebug("%s", "Start requesting feeds from the server.");
 
     setInOperation(true);
 
@@ -68,9 +63,7 @@ void GetFeeds::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully requested the feed list from the server.";
-#endif
+    qDebug("Successfully requested the feed list from the server.");
 
     Q_EMIT succeeded(jsonResult());
 }

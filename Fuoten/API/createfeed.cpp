@@ -23,9 +23,6 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonArray>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -54,9 +51,7 @@ void CreateFeed::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to create a feed on the server.";
-#endif
+    qDebug("%s", "Start to create a feed on the server.");
 
     setInOperation(true);
 
@@ -155,9 +150,7 @@ void CreateFeed::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully create the feed on the server.";
-#endif
+    qDebug("%s", "Successfully create the feed on the server.");
 
     Q_EMIT succeeded(jsonResult());
 }
@@ -176,9 +169,7 @@ void CreateFeed::setUrl(const QUrl &nUrl)
     Q_D(CreateFeed); 
     if (nUrl != d->url) {
         d->url = nUrl;
-#ifdef QT_DEBUG
-        qDebug() << "Changed url to" << d->url;
-#endif
+        qDebug("Changed URL to %s.", d->url.toString().toLocal8Bit().constData());
         Q_EMIT urlChanged(url());
     }
 }
@@ -198,9 +189,7 @@ void CreateFeed::setFolderId(qint64 nFolderId)
     Q_D(CreateFeed); 
     if (nFolderId != d->folderId) {
         d->folderId = nFolderId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
-#endif
+        qDebug("Changed folderId to %lli.", d->folderId);
         Q_EMIT folderIdChanged(folderId());
     }
 }

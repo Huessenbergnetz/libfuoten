@@ -25,9 +25,6 @@
 #include "API/renamefolder.h"
 #include "API/markfolderread.h"
 #include "error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -60,9 +57,7 @@ void Folder::setName(const QString &nName)
     Q_D(Folder);
     if (nName != d->name) {
         d->name = nName;
-#ifdef QT_DEBUG
-        qDebug() << "Changed name to" << d->name;
-#endif
+        qDebug("Changed name to %s.", qUtf8Printable(d->name));
         Q_EMIT nameChanged(name());
     }
 }
@@ -77,9 +72,7 @@ void Folder::setFeedCount(uint nFeedCount)
     Q_D(Folder);
     if (nFeedCount != d->feedCount) {
         d->feedCount = nFeedCount;
-#ifdef QT_DEBUG
-        qDebug() << "Changed feedCount to" << d->feedCount;
-#endif
+        qDebug("Changed feedCount to %u.", d->feedCount);
         Q_EMIT feedCountChanged(feedCount());
     }
 }
@@ -94,9 +87,7 @@ void Folder::setUnreadCount(uint nUnreadCount)
     Q_D(Folder);
     if (nUnreadCount != d->unreadCount) {
         d->unreadCount = nUnreadCount;
-#ifdef QT_DEBUG
-        qDebug() << "Changed unreadCount to" << d->unreadCount;
-#endif
+        qDebug("Changed unreadCount to %u.", d->unreadCount);
         Q_EMIT unreadCountChanged(unreadCount());
     }
 }

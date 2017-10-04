@@ -21,10 +21,6 @@
 #include "getstatus_p.h"
 #include "../error.h"
 #include <QJsonValue>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
-
 
 using namespace Fuoten;
 
@@ -50,9 +46,7 @@ void GetStatus::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start requesting the status from the server.";
-#endif
+    qDebug("%s", "Start requesting the status from the server.");
 
     setInOperation(true);
 
@@ -70,9 +64,7 @@ void GetStatus::successCallback()
     }
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully requested the status from the server.";
-#endif
+    qDebug("%s", "Successfully requested the status from the server.");
 
     Q_EMIT succeeded(jsonResult());
 }

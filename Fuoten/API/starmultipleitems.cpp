@@ -23,9 +23,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -58,9 +55,7 @@ void StarMultipleItems::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to" << (starred() ? "star" : "unstar") << "the items on the remove server.";
-#endif
+    qDebug("Start to %s multiple items on the remote server.", starred() ? "start" : "unstar");
 
     setInOperation(true);
 
@@ -122,9 +117,7 @@ void StarMultipleItems::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully" << (starred() ? "starred" : "unstarred") << "the items on the remote server.";
-#endif
+    qDebug("Successfully %s multiple items on the remote server.", starred() ? "starred" : "unstarred");
 
     Q_EMIT succeeded(itemsToStar(), starred());
 }
@@ -142,6 +135,8 @@ void StarMultipleItems::setItemsToStar(const QList<QPair<qint64, QString> > &ite
         return;
     }
 
+    qDebug("Set %i items to star/unstar.", items.size());
+
     Q_D(StarMultipleItems);
     d->itemsToStar = items;
 }
@@ -153,6 +148,8 @@ void StarMultipleItems::addItem(qint64 feedId, const QString &guidHash)
         qWarning("Can not add the item, still in operation.");
         return;
     }
+
+    qDebug("Add item to star/unstar. Feed ID %lli, GUID: %s", feedId, qUtf8Printable(guidHash));
 
     Q_D(StarMultipleItems);
     d->itemsToStar.append(qMakePair(feedId, guidHash));
@@ -172,9 +169,7 @@ void StarMultipleItems::setStarred(bool nStarred)
     Q_D(StarMultipleItems); 
     if (nStarred != d->starred) {
         d->starred = nStarred;
-#ifdef QT_DEBUG
-        qDebug() << "Changed starred to" << d->starred;
-#endif
+        qDebug("Changed starred to %s.", d->starred ? "true" : "false");
         Q_EMIT starredChanged(starred());
     }
 }

@@ -25,9 +25,7 @@
 #include "API/movefeed.h"
 #include "API/markfeedread.h"
 #include "error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
+#include <QMetaEnum>
 
 using namespace Fuoten;
 
@@ -59,9 +57,7 @@ void Feed::setUrl(const QUrl &nUrl)
     Q_D(Feed); 
     if (nUrl != d->url) {
         d->url = nUrl;
-#ifdef QT_DEBUG
-        qDebug() << "Changed url to" << d->url;
-#endif
+        qDebug("Changed URL to %s.", qUtf8Printable(d->url.toString()));
         Q_EMIT urlChanged(url());
     }
 }
@@ -76,9 +72,7 @@ void Feed::setTitle(const QString &nTitle)
     Q_D(Feed); 
     if (nTitle != d->title) {
         d->title = nTitle;
-#ifdef QT_DEBUG
-        qDebug() << "Changed title to" << d->title;
-#endif
+        qDebug("Changed title to %s.", qUtf8Printable(d->title));
         Q_EMIT titleChanged(title());
     }
 }
@@ -93,9 +87,7 @@ void Feed::setAdded(const QDateTime &nAdded)
     Q_D(Feed); 
     if (nAdded != d->added) {
         d->added = nAdded;
-#ifdef QT_DEBUG
-        qDebug() << "Changed added to" << d->added;
-#endif
+        qDebug("Changed added to %s.", qUtf8Printable(d->added.toString(Qt::ISODate)));
         Q_EMIT addedChanged(added());
     }
 }
@@ -110,9 +102,7 @@ void Feed::setFolderId(qint64 nFolderId)
     Q_D(Feed); 
     if (nFolderId != d->folderId) {
         d->folderId = nFolderId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
-#endif
+        qDebug("Changed folderId to %lli.", d->folderId);
         Q_EMIT folderIdChanged(folderId());
     }
 }
@@ -127,9 +117,7 @@ void Feed::setFolderName(const QString &nFolderName)
     Q_D(Feed); 
     if (nFolderName != d->folderName) {
         d->folderName = nFolderName;
-#ifdef QT_DEBUG
-        qDebug() << "Changed folderName to" << d->folderName;
-#endif
+        qDebug("Changed folderName to %s.", qUtf8Printable(d->folderName));
         Q_EMIT folderNameChanged(folderName());
     }
 }
@@ -144,9 +132,7 @@ void Feed::setUnreadCount(uint nUnreadCount)
     Q_D(Feed); 
     if (nUnreadCount != d->unreadCount) {
         d->unreadCount = nUnreadCount;
-#ifdef QT_DEBUG
-        qDebug() << "Changed unreadCount to" << d->unreadCount;
-#endif
+        qDebug("Changed unreadCount to %u.", d->unreadCount);
         Q_EMIT unreadCountChanged(unreadCount());
     }
 }
@@ -161,9 +147,7 @@ void Feed::setOrdering(FeedOrdering nOrdering)
     Q_D(Feed); 
     if (nOrdering != d->ordering) {
         d->ordering = nOrdering;
-#ifdef QT_DEBUG
-        qDebug() << "Changed ordering to" << d->ordering;
-#endif
+        qDebug("Changed ordering to %s.", metaObject()->enumerator(metaObject()->indexOfEnumerator("FeedOrdering")).valueToKey(d->ordering));
         Q_EMIT orderingChanged(ordering());
     }
 }
@@ -178,9 +162,7 @@ void Feed::setLink(const QUrl &nLink)
     Q_D(Feed); 
     if (nLink != d->link) {
         d->link = nLink;
-#ifdef QT_DEBUG
-        qDebug() << "Changed link to" << d->link;
-#endif
+        qDebug("Changed link to %s.", qUtf8Printable(d->link.toString()));
         Q_EMIT linkChanged(link());
     }
 }
@@ -195,9 +177,7 @@ void Feed::setPinned(bool nPinned)
     Q_D(Feed); 
     if (nPinned != d->pinned) {
         d->pinned = nPinned;
-#ifdef QT_DEBUG
-        qDebug() << "Changed pinned to" << d->pinned;
-#endif
+        qDebug("Changed pinned to %s.", d->pinned ? "true" : "false");
         Q_EMIT pinnedChanged(pinned());
     }
 }
@@ -212,9 +192,7 @@ void Feed::setUpdateErrorCount(uint nUpdateErrorCount)
     Q_D(Feed); 
     if (nUpdateErrorCount != d->updateErrorCount) {
         d->updateErrorCount = nUpdateErrorCount;
-#ifdef QT_DEBUG
-        qDebug() << "Changed updateErrorCount to" << d->updateErrorCount;
-#endif
+        qDebug("Changed updateErrorCount to %u.", d->updateErrorCount);
         Q_EMIT updateErrorCountChanged(updateErrorCount());
     }
 }
@@ -229,9 +207,7 @@ void Feed::setLastUpdateError(const QString &nLastUpdateError)
     Q_D(Feed); 
     if (nLastUpdateError != d->lastUpdateError) {
         d->lastUpdateError = nLastUpdateError;
-#ifdef QT_DEBUG
-        qDebug() << "Changed lastUpdateErro to" << d->lastUpdateError;
-#endif
+        qDebug("Changed lastUpdateError to %s.", qUtf8Printable(d->lastUpdateError));
         Q_EMIT lastUpdateErrorChanged(lastUpdateError());
     }
 }
@@ -246,9 +222,7 @@ void Feed::setFaviconLink(const QUrl &nFaviconLink)
     Q_D(Feed); 
     if (nFaviconLink != d->faviconLink) {
         d->faviconLink = nFaviconLink;
-#ifdef QT_DEBUG
-        qDebug() << "Changed faviconLink to" << d->faviconLink;
-#endif
+        qDebug("Changed faviconLink to %s.", qUtf8Printable(d->faviconLink.toString()));
         Q_EMIT faviconLinkChanged(faviconLink());
     }
 }

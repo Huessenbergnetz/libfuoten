@@ -23,9 +23,6 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -56,9 +53,7 @@ void CreateFolder::execute()
 
     setError(nullptr);
 
-#ifdef QT_DEBUG
-    qDebug() << "Start creating a folder on the server.";
-#endif
+    qDebug("Start creating folder \"%s\" on the server.", qUtf8Printable(name()));
 
     QJsonObject plo; // payload object
     plo.insert(QStringLiteral("name"), QJsonValue(name()));
@@ -145,9 +140,7 @@ void CreateFolder::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully created the foler on the server.";
-#endif
+    qDebug("Successfully created the folder \"%s\" on the server.", qUtf8Printable(name()));
 
     Q_EMIT succeeded(jsonResult());
 }
@@ -166,9 +159,7 @@ void CreateFolder::setName(const QString &nName)
     Q_D(CreateFolder); 
     if (nName.simplified() != d->name) {
         d->name = nName.simplified();
-#ifdef QT_DEBUG
-        qDebug() << "Changed name to" << d->name;
-#endif
+        qDebug("Changed name to \"%s\".", qUtf8Printable(d->name));
         Q_EMIT nameChanged(name());
     }
 }

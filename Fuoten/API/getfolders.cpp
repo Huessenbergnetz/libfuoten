@@ -23,9 +23,6 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonDocument>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -53,9 +50,7 @@ void GetFolders::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start requesting folders from the server.";
-#endif
+    qDebug("%s", "Start requesting folders from the server.");
 
     setInOperation(true);
 
@@ -71,9 +66,7 @@ void GetFolders::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully requested the folder list from the server.";
-#endif
+    qDebug("Successfully requested the folder list from the server.");
 
     Q_EMIT succeeded(jsonResult());
 }

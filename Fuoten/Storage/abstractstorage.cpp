@@ -23,9 +23,6 @@
 #include "../Helpers/abstractconfiguration.h"
 #include "../API/component.h"
 #include <QRegularExpression>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -56,9 +53,7 @@ void AbstractStorage::setReady(bool nReady)
     Q_D(AbstractStorage);
     if (nReady != d->ready) {
         d->ready = nReady;
-#ifdef QT_DEBUG
-        qDebug() << "Changed ready to" << d->ready;
-#endif
+        qDebug("Changed ready to %s.", d->ready ? "true" : "false");
         Q_EMIT readyChanged(ready());
     }
 }
@@ -88,9 +83,7 @@ void AbstractStorage::setError(Error *nError)
         } else {
             d->error = new Error(nError->type(), nError->severity(), nError->text(), nError->data(), this);
         }
-#ifdef QT_DEBUG
-        qDebug() << "Changed error to" << d->error;
-#endif
+        qDebug("Changed error to %p.", d->error);
         Q_EMIT errorChanged(error());
 
         if (old && old->parent() == this) {
@@ -108,9 +101,7 @@ void AbstractStorage::setTotalUnread(quint16 nTotalUnread)
     Q_D(AbstractStorage);
     if (nTotalUnread != d->totalUnread) {
         d->totalUnread = nTotalUnread;
-#ifdef QT_DEBUG
-        qDebug() << "Changed totalUnread to" << d->totalUnread;
-#endif
+        qDebug("Changed totalUnread to %i.", d->totalUnread);
         Q_EMIT totalUnreadChanged(totalUnread());
     }
 }
@@ -125,9 +116,7 @@ void AbstractStorage::setStarred(quint16 nStarred)
     Q_D(AbstractStorage);
     if (nStarred != d->starred) {
         d->starred = nStarred;
-#ifdef QT_DEBUG
-        qDebug() << "Changed starred to" << d->starred;
-#endif
+        qDebug("Changed starred to %i.", d->starred);
         Q_EMIT starredChanged(starred());
     }
 }
@@ -196,9 +185,7 @@ void AbstractStorage::setInOperation(bool nInOperation)
     Q_D(AbstractStorage);
     if (nInOperation != d->inOperation) {
         d->inOperation = nInOperation;
-#ifdef QT_DEBUG
-        qDebug() << "Changed inOperation to" << d->inOperation;
-#endif
+        qDebug("Changed inOperation to %s.", d->inOperation ? "true" : "false");
         Q_EMIT inOperationChanged(inOperation());
     }
 }
@@ -219,9 +206,7 @@ void AbstractStorage::setConfiguration(AbstractConfiguration *nConfiguration)
     Q_D(AbstractStorage);
     if (nConfiguration != d->configuration) {
         d->configuration = nConfiguration;
-#ifdef QT_DEBUG
-        qDebug() << "Changed configuration to" << d->configuration;
-#endif
+        qDebug("Changed configuration to %p.", d->configuration);
         Q_EMIT configurationChanged(configuration());
     }
 }

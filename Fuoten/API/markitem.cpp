@@ -20,9 +20,6 @@
 
 #include "markitem_p.h"
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -54,9 +51,7 @@ void MarkItem::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to mark the item on server as" << (unread() ? "unread" : "read");
-#endif
+    qDebug("Start to mark item with ID %lli as %s on the server.", itemId(), unread() ? "unread" : "read");
 
     setInOperation(true);
 
@@ -108,9 +103,7 @@ void MarkItem::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully marked the item on the server as" << (unread() ? "unread" : "read");
-#endif
+    qDebug("Successfully marked the item with ID %lli as %s on the server.", itemId(), unread() ? "unread" : "read");
 
     Q_EMIT succeeded(itemId(), unread());
 }
@@ -147,9 +140,7 @@ void MarkItem::setItemId(qint64 nItemId)
     Q_D(MarkItem); 
     if (nItemId != d->itemId) {
         d->itemId = nItemId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed itemId to" << d->itemId;
-#endif
+        qDebug("Changed itemId to %lli.", d->itemId);
         Q_EMIT itemIdChanged(itemId());
     }
 }
@@ -169,9 +160,7 @@ void MarkItem::setUnread(bool nUnread)
     Q_D(MarkItem); 
     if (nUnread != d->unread) {
         d->unread = nUnread;
-#ifdef QT_DEBUG
-        qDebug() << "Changed unread to" << d->unread;
-#endif
+        qDebug("Changed unread to %s.", d->unread ? "true" : "false");
         Q_EMIT unreadChanged(unread());
     }
 }

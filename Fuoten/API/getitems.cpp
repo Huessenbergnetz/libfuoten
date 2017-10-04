@@ -23,9 +23,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QUrlQuery>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
+#include <QMetaEnum>
 
 using namespace Fuoten;
 
@@ -57,9 +55,7 @@ void GetItems::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start requesting items from the server.";
-#endif
+    qDebug("%s", "Start requesting items from the server.");
 
     setInOperation(true);
 
@@ -94,9 +90,7 @@ void GetItems::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully requested the items from the server.";
-#endif
+    qDebug("Successfully requested the items from the server.");
 
     Q_EMIT succeeded(jsonResult());
 }
@@ -163,9 +157,7 @@ void GetItems::setBatchSize(int nBatchSize)
     Q_D(GetItems); 
     if (nBatchSize != d->batchSize) {
         d->batchSize = nBatchSize;
-#ifdef QT_DEBUG
-        qDebug() << "Changed batchSize to" << d->batchSize;
-#endif
+        qDebug("Changed batchSize to %i.", d->batchSize);
         Q_EMIT batchSizeChanged(batchSize());
     }
 }
@@ -185,9 +177,7 @@ void GetItems::setOffset(qint64 nOffset)
     Q_D(GetItems); 
     if (nOffset != d->offset) {
         d->offset = nOffset;
-#ifdef QT_DEBUG
-        qDebug() << "Changed offset to" << d->offset;
-#endif
+        qDebug("Changed offset to %lli.", d->offset);
         Q_EMIT offsetChanged(offset());
     }
 }
@@ -207,9 +197,7 @@ void GetItems::setType(FuotenEnums::Type nType)
     Q_D(GetItems); 
     if (nType != d->type) {
         d->type = nType;
-#ifdef QT_DEBUG
-        qDebug() << "Changed type to" << d->type;
-#endif
+        qDebug("Changed type to %s.", FuotenEnums::staticMetaObject.enumerator(FuotenEnums::staticMetaObject.indexOfEnumerator("Type")).valueToKey(d->type));
         Q_EMIT typeChanged(type());
     }
 }
@@ -229,9 +217,7 @@ void GetItems::setParentId(qint64 nParentId)
     Q_D(GetItems); 
     if (nParentId != d->parentId) {
         d->parentId = nParentId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed parentId to" << d->parentId;
-#endif
+        qDebug("Changed parentId to %lli.", d->parentId);
         Q_EMIT parentIdChanged(parentId());
     }
 }
@@ -251,9 +237,7 @@ void GetItems::setGetRead(bool nGetRead)
     Q_D(GetItems); 
     if (nGetRead != d->getRead) {
         d->getRead = nGetRead;
-#ifdef QT_DEBUG
-        qDebug() << "Changed getRead to" << d->getRead;
-#endif
+        qDebug("Changed getRead to %s.", d->getRead ? "true" : "false");
         Q_EMIT getReadChanged(getRead());
     }
 }
@@ -273,9 +257,7 @@ void GetItems::setOldestFirst(bool nOldestFirst)
     Q_D(GetItems); 
     if (nOldestFirst != d->oldestFirst) {
         d->oldestFirst = nOldestFirst;
-#ifdef QT_DEBUG
-        qDebug() << "Changed oldestFirst to" << d->oldestFirst;
-#endif
+        qDebug("Changed oldestFirst to %s.", d->oldestFirst ? "true" : "false");
         Q_EMIT oldestFirstChanged(oldestFirst());
     }
 }

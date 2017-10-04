@@ -23,9 +23,6 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -56,9 +53,7 @@ void MarkMultipleItems::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to mark the items on server as" << (unread() ? "unread" : "read");
-#endif
+    qDebug("Start to mark mutltiple items as %s on the server.", unread() ? "unread" : "read");
 
     setInOperation(true);
 
@@ -117,9 +112,7 @@ void MarkMultipleItems::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully marked the items on the server as" << (unread() ? "unread" : "read");
-#endif
+    qDebug("Successfully marked multiple items as %s on the server.", unread() ? "unread" : "read");
 
     Q_EMIT succeeded(itemIds(), unread());
 }
@@ -139,9 +132,7 @@ void MarkMultipleItems::setItemIds(const IdList &nItemIds)
     Q_D(MarkMultipleItems); 
     if (nItemIds != d->itemIds) {
         d->itemIds = nItemIds;
-#ifdef QT_DEBUG
-        qDebug() << "Changed itemIds to" << d->itemIds;
-#endif
+        qDebug("Changed itemIds.");
         Q_EMIT itemIdsChanged(itemIds());
     }
 }
@@ -161,9 +152,7 @@ void MarkMultipleItems::setUnread(bool nUnread)
     Q_D(MarkMultipleItems); 
     if (nUnread != d->unread) {
         d->unread = nUnread;
-#ifdef QT_DEBUG
-        qDebug() << "Changed unread to" << d->unread;
-#endif
+        qDebug("Changed unread to %s.", d->unread ? "true" : "false");
         Q_EMIT unreadChanged(unread());
     }
 }

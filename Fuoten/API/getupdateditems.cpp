@@ -23,9 +23,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QUrlQuery>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
+#include <QMetaEnum>
 
 using namespace Fuoten;
 
@@ -58,9 +56,7 @@ void GetUpdatedItems::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start requesting updated items from the server.";
-#endif
+    qDebug("%s", "Start requesting updated items from the server.");
 
     setInOperation(true);
 
@@ -83,9 +79,7 @@ void GetUpdatedItems::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully requested updated items from the server.";
-#endif
+    qDebug("%s", "Successfully requested updated items from the server.");
 
     Q_EMIT succeeded(jsonResult());
 }
@@ -162,9 +156,7 @@ void GetUpdatedItems::setLastModified(const QDateTime &nLastModified)
     Q_D(GetUpdatedItems); 
     if (nLastModified != d->lastModified) {
         d->lastModified = nLastModified;
-#ifdef QT_DEBUG
-        qDebug() << "Changed lastModified to" << d->lastModified;
-#endif
+        qDebug("Changed lastModified to %s.", qUtf8Printable(d->lastModified.toString(Qt::ISODate)));
         Q_EMIT lastModifiedChanged(lastModified());
     }
 }
@@ -184,9 +176,7 @@ void GetUpdatedItems::setType(FuotenEnums::Type nType)
     Q_D(GetUpdatedItems); 
     if (nType != d->type) {
         d->type = nType;
-#ifdef QT_DEBUG
-        qDebug() << "Changed type to" << d->type;
-#endif
+        qDebug("Changed type to %s.", FuotenEnums::staticMetaObject.enumerator(FuotenEnums::staticMetaObject.indexOfEnumerator("Type")).valueToKey(d->type));
         Q_EMIT typeChanged(type());
     }
 }
@@ -206,9 +196,7 @@ void GetUpdatedItems::setParentId(qint64 nParentId)
     Q_D(GetUpdatedItems); 
     if (nParentId != d->parentId) {
         d->parentId = nParentId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed parentId to" << d->parentId;
-#endif
+        qDebug("Changed parentId to %lli.", d->parentId);
         Q_EMIT parentIdChanged(parentId());
     }
 }

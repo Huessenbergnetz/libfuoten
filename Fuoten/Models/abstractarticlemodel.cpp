@@ -20,9 +20,7 @@
 
 #include "abstractarticlemodel_p.h"
 #include "../Storage/abstractstorage.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
+#include <QMetaEnum>
 
 using namespace Fuoten;
 
@@ -45,9 +43,7 @@ void AbstractArticleModel::setParentIdType(FuotenEnums::Type nParentIdType)
     Q_D(AbstractArticleModel);
     if (nParentIdType != d->parentIdType) {
         d->parentIdType = nParentIdType;
-#ifdef QT_DEBUG
-        qDebug() << "Changed parentIdType to" << d->parentIdType;
-#endif
+        qDebug("Changed parentIdType to %s.", FuotenEnums::staticMetaObject.enumerator(FuotenEnums::staticMetaObject.indexOfEnumerator("Type")).valueToKey(d->parentIdType));
         Q_EMIT parentIdTypeChanged(parentIdType());
     }
 }
@@ -61,9 +57,7 @@ void AbstractArticleModel::setStarredOnly(bool nStarredOnly)
     Q_D(AbstractArticleModel);
     if (nStarredOnly != d->starredOnly) {
         d->starredOnly = nStarredOnly;
-#ifdef QT_DEBUG
-        qDebug() << "Changed starredOnly to" << d->starredOnly;
-#endif
+        qDebug("Changed starredOnly to %s.", d->starredOnly ? "true" : "false");
         Q_EMIT starredOnlyChanged(starredOnly());
     }
 }
@@ -78,9 +72,7 @@ void AbstractArticleModel::setBodyLimit(int nBodyLimit)
     Q_D(AbstractArticleModel);
     if (nBodyLimit != d->bodyLimit) {
         d->bodyLimit = nBodyLimit;
-#ifdef QT_DEBUG
-        qDebug() << "Changed bodyLimit to" << d->bodyLimit;
-#endif
+        qDebug("Changed bodyLimit to %i.", d->bodyLimit);
         Q_EMIT bodyLimitChanged(bodyLimit());
     }
 }

@@ -22,9 +22,6 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -54,9 +51,7 @@ void RenameFolder::execute()
 
     setError(nullptr);
 
-#ifdef QT_DEBUG
-    qDebug() << "Start renaming a folder on the server.";
-#endif
+    qDebug("Start to rename folder with ID %lli to \"%s\".", folderId(), qUtf8Printable(newName()));
 
     QStringList rl(QStringLiteral("folders"));
     rl.append(QString::number(folderId()));
@@ -110,9 +105,7 @@ void RenameFolder::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully renamed the folder on the server.";
-#endif
+    qDebug("Successfully renamed folder with ID %lli to \"%s\".", folderId(), qUtf8Printable(newName()));
 
     Q_EMIT succeeded(folderId(), newName());
 }
@@ -159,9 +152,7 @@ void RenameFolder::setFolderId(qint64 nFolderId)
     Q_D(RenameFolder);
     if (nFolderId != d->folderId) {
         d->folderId = nFolderId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
-#endif
+        qDebug("Changed folderId to %lli.", d->folderId);
         Q_EMIT folderIdChanged(folderId());
     }
 }
@@ -181,9 +172,7 @@ void RenameFolder::setNewName(const QString &nNewName)
     Q_D(RenameFolder);
     if (nNewName.simplified() != d->newName) {
         d->newName = nNewName.simplified();
-#ifdef QT_DEBUG
-        qDebug() << "Changed newName to" << d->newName;
-#endif
+        qDebug("Changed newName to \"%s\".", qUtf8Printable(d->newName));
         Q_EMIT newNameChanged(newName());
     }
 }

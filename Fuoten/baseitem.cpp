@@ -20,9 +20,6 @@
 
 #include "baseitem_p.h"
 #include "error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -67,9 +64,7 @@ void BaseItem::setId(qint64 nId)
     Q_D(BaseItem); 
     if (nId != d->id) {
         d->id = nId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed id to" << d->id;
-#endif
+        qDebug("Changed id to %lli.", d->id);
         Q_EMIT idChanged(id());
     }
 }
@@ -98,9 +93,7 @@ void BaseItem::setError(Error *nError)
             d->error = nError;
         }
 
-#ifdef QT_DEBUG
-        qDebug() << "Changed error to" << d->error;
-#endif
+        qDebug("Changed error to %p.", d->error);
         Q_EMIT errorChanged(error());
 
         if (old) {

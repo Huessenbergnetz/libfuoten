@@ -20,9 +20,6 @@
 
 #include "deletefolder_p.h"
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -47,9 +44,7 @@ void DeleteFolder::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to delete a folder on the server.";
-#endif
+    qDebug("Start to delete folder with ID %lli.", folderId());
 
     setInOperation(true);
 
@@ -95,9 +90,7 @@ void DeleteFolder::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully deleted the folder on the server.";
-#endif
+    qDebug("Successfully deleted folder with ID %lli.", folderId());
 
     Q_EMIT succeeded(folderId());
 }
@@ -133,9 +126,7 @@ void DeleteFolder::setFolderId(qint64 nFolderId)
     Q_D(DeleteFolder);
     if (nFolderId != d->folderId) {
         d->folderId = nFolderId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
-#endif
+        qDebug("Changed folderId to %lli.", d->folderId);
         Q_EMIT folderIdChanged(folderId());
     }
 }

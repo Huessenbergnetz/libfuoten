@@ -21,9 +21,6 @@
 #include "markfeedread_p.h"
 #include <QJsonObject>
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -47,9 +44,7 @@ void MarkFeedRead::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to mark all items in feed as read on server.";
-#endif
+    qDebug("Start to mark all items in feed with ID %lli as read on server. Newest item ID: %lli.", feedId(), newestItemId());
 
     setInOperation(true);
 
@@ -107,9 +102,7 @@ void MarkFeedRead::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully marked the feed as read on the server.";
-#endif
+    qDebug("Successfully marked the feed with ID %lli as read on the server. Newest itme ID: %lli.", feedId(), newestItemId());
 
     Q_EMIT succeeded(feedId(), newestItemId());
 }
@@ -144,9 +137,7 @@ void MarkFeedRead::setFeedId(qint64 nFeedId)
     Q_D(MarkFeedRead); 
     if (nFeedId != d->feedId) {
         d->feedId = nFeedId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed feedId to" << d->feedId;
-#endif
+        qDebug("Changed feedId to %lli.", d->feedId);
         Q_EMIT feedIdChanged(feedId());
     }
 }
@@ -166,9 +157,7 @@ void MarkFeedRead::setNewestItemId(qint64 nNewestItemId)
     Q_D(MarkFeedRead); 
     if (nNewestItemId != d->newestItemId) {
         d->newestItemId = nNewestItemId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed newestItemId to" << d->newestItemId;
-#endif
+        qDebug("Changed newestItemId to %lli.", d->newestItemId);
         Q_EMIT newestItemIdChanged(newestItemId());
     }
 }

@@ -22,9 +22,6 @@
 #include "../Storage/abstractstorage.h"
 #include "../feed.h"
 #include <QLocale>
-#ifdef QT_DEBUG
-#include <QDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -234,9 +231,7 @@ void FeedListFilterModel::setRespectPinned(bool nRespectPinned)
     Q_D(FeedListFilterModel);
     if (nRespectPinned != d->respectPinned) {
         d->respectPinned = nRespectPinned;
-#ifdef QT_DEBUG
-        qDebug() << "Changed respectPinned to" << d->respectPinned;
-#endif
+        qDebug("Changed respectPinned to %s.", d->respectPinned ? "true" : "false");
         Q_EMIT respectPinnedChanged(respectPinned());
         invalidate();
     }
@@ -249,9 +244,7 @@ void FeedListFilterModel::setSortByFolder(bool nSortByFolder)
     Q_D(FeedListFilterModel);
     if (nSortByFolder != d->sortByFolder) {
         d->sortByFolder = nSortByFolder;
-#ifdef QT_DEBUG
-        qDebug() << "Changed sortByFolder to" << d->sortByFolder;
-#endif
+        qDebug("Changed sortByFolder to %s.", d->sortByFolder ? "true" : "false");
         Q_EMIT sortByFolderChanged(sortByFolder());
         invalidate();
     }

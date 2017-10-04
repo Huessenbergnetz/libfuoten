@@ -20,9 +20,6 @@
 
 #include "staritem_p.h"
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -54,9 +51,7 @@ void StarItem::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to" << (starred() ? "star" : "unstar") << "the item on the remote server.";
-#endif
+    qDebug("Start to %s the item with GUID %s on the server.", starred() ? "start" : "unstar", qUtf8Printable(guidHash()));
 
     setInOperation(true);
 
@@ -116,9 +111,7 @@ void StarItem::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully" << (starred() ? "starred" : "unstarred") << "the item on the remote server.";
-#endif
+    qDebug("Successfully %s the item with GUID %s on the server.", starred() ? "starred" : "unstarred", qUtf8Printable(guidHash()));
 
     Q_EMIT succeeded(feedId(), guidHash(), starred());
 }
@@ -156,9 +149,7 @@ void StarItem::setFeedId(qint64 nFeedId)
     Q_D(StarItem);
     if (nFeedId != d->feedId) {
         d->feedId = nFeedId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed feedId to" << d->feedId;
-#endif
+        qDebug("Changed feedId to %lli.", d->feedId);
         Q_EMIT feedIdChanged(feedId());
     }
 }
@@ -178,9 +169,7 @@ void StarItem::setGuidHash(const QString &nGuidHash)
     Q_D(StarItem);
     if (nGuidHash != d->guidHash) {
         d->guidHash = nGuidHash;
-#ifdef QT_DEBUG
-        qDebug() << "Changed guidHash to" << d->guidHash;
-#endif
+        qDebug("Changed guidHash to \"%s\".", qUtf8Printable(d->guidHash));
         Q_EMIT guidHashChanged(guidHash());
     }
 }
@@ -200,9 +189,7 @@ void StarItem::setStarred(bool nStarred)
     Q_D(StarItem);
     if (nStarred != d->starred) {
         d->starred = nStarred;
-#ifdef QT_DEBUG
-        qDebug() << "Changed starred to" << d->starred;
-#endif
+        qDebug("Changed starred to %s.", d->starred ? "true" : "false");
         Q_EMIT starredChanged(starred());
     }
 }

@@ -21,9 +21,6 @@
 #include "renamefeed_p.h"
 #include "../error.h"
 #include <QJsonObject>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -47,9 +44,7 @@ void RenameFeed::setFeedId(qint64 nFeedId)
     Q_D(RenameFeed); 
     if (nFeedId != d->feedId) {
         d->feedId = nFeedId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed feedId to" << d->feedId;
-#endif
+        qDebug("Changed feedId to %lli.", d->feedId);
         Q_EMIT feedIdChanged(feedId());
     }
 }
@@ -64,9 +59,7 @@ void RenameFeed::setNewName(const QString &nNewName)
     Q_D(RenameFeed); 
     if (nNewName != d->newName) {
         d->newName = nNewName;
-#ifdef QT_DEBUG
-        qDebug() << "Changed newName to" << d->newName;
-#endif
+        qDebug("Changed newName to \"%s\".", qUtf8Printable(d->newName));
         Q_EMIT newNameChanged(newName());
     }
 }
@@ -84,9 +77,7 @@ void RenameFeed::execute()
 
     setError(nullptr);
 
-#ifdef QT_DEBUG
-    qDebug() << "Start renaming a feed on the server.";
-#endif
+    qDebug("Start renaming feed with ID %lli to \"%s\".", feedId(), qUtf8Printable(newName()));
 
     QStringList rl(QStringLiteral("feeds"));
     rl.append(QString::number(feedId()));
@@ -143,9 +134,7 @@ void RenameFeed::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully renamed the feed on the server.";
-#endif
+    qDebug("Successfully renamed feed with ID %lli to \"%s\".", feedId(), qUtf8Printable(newName()));
 
     Q_EMIT succeeded(feedId(), newName());
 }

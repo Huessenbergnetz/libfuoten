@@ -22,9 +22,6 @@
 #include "../article.h"
 #include "../API/component.h"
 #include <QPair>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -62,9 +59,7 @@ void Synchronizer::start()
         return;
     }
 
-#ifdef QT_DEBUG
-        qDebug() << "Start synchronizing";
-#endif
+    qDebug("%s", "Start synchronizing.");
 
     setError(nullptr);
 
@@ -155,9 +150,7 @@ void Synchronizer::setError(Error *nError)
             d->error = nError;
         }
 
-#ifdef QT_DEBUG
-        qDebug() << "Changed error to" << d->error;
-#endif
+        qDebug("Changed error to %p.", d->error);
         Q_EMIT errorChanged(d->error);
 
         if (old) {
@@ -303,7 +296,7 @@ void Synchronizer::requestFeeds()
         //% "Requesting feeds"
         setCurrentAction(qtTrId("libfuoten-sync-feeds"));
 
-#ifdef QT_DEBUG
+#ifndef QT_NO_DEBUG_OUTPUT
         if (d->configuration->getLastSync().isValid()) {
             qDebug() << "We have a valid last sync time. Calling GetUpdatedItems after receiving feeds.";
         } else {
@@ -423,9 +416,7 @@ void Synchronizer::finished()
     Q_EMIT succeeded();
     d->cleanup();
 
-#ifdef QT_DEBUG
-        qDebug() << "Finished synchronizing";
-#endif
+    qDebug("%s", "Finished synchronizing");
 }
 
 
@@ -450,9 +441,7 @@ void Synchronizer::setConfiguration(AbstractConfiguration *nAbstractConfiguratio
     Q_D(Synchronizer);
     if (nAbstractConfiguration != d->configuration) {
         d->configuration = nAbstractConfiguration;
-#ifdef QT_DEBUG
-        qDebug() << "Changed configuration to" << d->configuration;
-#endif
+        qDebug("Changed configuration to %p.", d->configuration);
         Q_EMIT configurationChanged(configuration());
     }
 }
@@ -480,9 +469,7 @@ void Synchronizer::setStorage(AbstractStorage *nStorageHandler)
     Q_D(Synchronizer);
     if (nStorageHandler != d->storage) {
         d->storage = nStorageHandler;
-#ifdef QT_DEBUG
-        qDebug() << "Changed storage to" << d->storage;
-#endif
+        qDebug("Changed storage to %p.", d->storage);
         Q_EMIT storageChanged(storage());
     }
 }
@@ -503,9 +490,7 @@ void Synchronizer::setProgress(qreal nProgress)
     Q_D(Synchronizer);
     if (nProgress != d->progress) {
         d->progress = nProgress;
-#ifdef QT_DEBUG
-        qDebug() << "Changed progress to" << d->progress;
-#endif
+        qDebug("Changed progress to %f.", d->progress);
         Q_EMIT progressChanged(progress());
     }
 }
@@ -520,9 +505,7 @@ void Synchronizer::setCurrentAction(const QString &nCurrentAction)
     Q_D(Synchronizer);
     if (nCurrentAction != d->currentAction) {
         d->currentAction = nCurrentAction;
-#ifdef QT_DEBUG
-        qDebug() << "Changed currentAction to" << d->currentAction;
-#endif
+        qDebug("Changed currentAction to %s.", qUtf8Printable(d->currentAction));
         Q_EMIT currentActionChanged(currentAction());
     }
 }

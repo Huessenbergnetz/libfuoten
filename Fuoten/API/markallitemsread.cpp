@@ -21,9 +21,6 @@
 #include "markallitemsread_p.h"
 #include <QJsonObject>
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -52,9 +49,7 @@ void MarkAllItemsRead::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to mark all items on the server as read.";
-#endif
+    qDebug("%s", "Start to mark all items on the server as read.");
 
     setInOperation(true);
 
@@ -99,9 +94,7 @@ void MarkAllItemsRead::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully marked all items as read on the server.";
-#endif
+    qDebug("%s", "Successfully marked all items as read on the server.");
 
     Q_EMIT succeeded(newestItemId());
 }
@@ -119,13 +112,7 @@ void MarkAllItemsRead::setNewestItemId(qint64 nNewestItemId)
     Q_D(MarkAllItemsRead); 
     if (nNewestItemId != d->newestItemId) {
         d->newestItemId = nNewestItemId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed newestItemId to" << d->newestItemId;
-#endif
+        qDebug("Changed newestItemId to %lli.", d->newestItemId);
         Q_EMIT newestItemIdChanged(newestItemId());
     }
 }
-
-
-
-

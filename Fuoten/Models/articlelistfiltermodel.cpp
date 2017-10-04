@@ -22,9 +22,6 @@
 #include "../Storage/abstractstorage.h"
 #include "../article.h"
 #include <QLocale>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 

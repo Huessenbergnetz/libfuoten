@@ -28,9 +28,6 @@
 #include <QVersionNumber>
 #endif
 
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -54,9 +51,7 @@ void AccountValidator::start()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start validating account data.";
-#endif
+    qDebug("%s", "Start validating account data.");
 
     Q_D(AccountValidator);
 
@@ -131,9 +126,7 @@ void AccountValidator::gotUser()
     Q_D(AccountValidator);
     d->setInOperatin(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully validated account data";
-#endif
+    qDebug("%s", "Successfully validated account data.");
 
     Q_EMIT succeeded();
 }
@@ -160,9 +153,7 @@ void AccountValidator::setConfiguration(AbstractConfiguration *nAbstractConfigur
     Q_D(AccountValidator); 
     if (nAbstractConfiguration != d->configuration) {
         d->configuration = nAbstractConfiguration;
-#ifdef QT_DEBUG
-        qDebug() << "Changed configuration to" << d->configuration;
-#endif
+        qDebug("Changed configuration to %p.", d->configuration);
         Q_EMIT configurationChanged(configuration());
     }
 }
@@ -173,8 +164,6 @@ void AccountValidator::setConfiguration(AbstractConfiguration *nAbstractConfigur
 bool AccountValidator::inOperation() const { Q_D(const AccountValidator); return d->inOperation; }
 
 
-
-
 Error *AccountValidator::error() const { Q_D(const AccountValidator); return d->error; }
 
 void AccountValidator::setError(Error *nError)
@@ -183,9 +172,7 @@ void AccountValidator::setError(Error *nError)
     if (nError != d->error) {
         Error *old = d->error;
         d->error = nError;
-#ifdef QT_DEBUG
-        qDebug() << "Changed error to" << d->error;
-#endif
+        qDebug("Changed error to %p.", d->error);
         Q_EMIT errorChanged(error());
 
         if (old && old->parent() == this) {

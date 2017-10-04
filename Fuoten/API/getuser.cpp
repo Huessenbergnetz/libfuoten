@@ -21,9 +21,6 @@
 #include "getuser_p.h"
 #include "../error.h"
 #include <QJsonValue>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -51,9 +48,7 @@ void GetUser::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start requesting user information from the server.";
-#endif
+    qDebug("%s", "Start requesting user information from the server.");
 
     setInOperation(true);
 
@@ -75,10 +70,7 @@ void GetUser::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully requested user information from the server.";
-#endif
-
+    qDebug("%s", "Successfully requested user information from the server.");
     Q_EMIT succeeded(jsonResult());
 }
 

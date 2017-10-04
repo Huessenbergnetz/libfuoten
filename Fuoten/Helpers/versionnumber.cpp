@@ -23,8 +23,6 @@
 #include <QRegularExpressionMatch>
 #include <QRegularExpressionMatchIterator>
 
-#include <QtDebug>
-
 using namespace Fuoten;
 
 VersionNumber::VersionNumber()

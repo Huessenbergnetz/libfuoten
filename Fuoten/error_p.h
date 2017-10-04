@@ -22,9 +22,8 @@
 #define FUOTENERROR_P_H
 
 #include "error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
+#include <QMetaEnum>
+#include <QMetaObject>
 
 namespace Fuoten {
 
@@ -36,29 +35,29 @@ public:
     QString data;
     Error::Severity severity = Error::Nothing;
 
-#ifdef QT_DEBUG
     void printOut()
     {
         switch(severity) {
         case Error::Warning:
-            qWarning() << text;
+            qWarning("%s: %s", Error::staticMetaObject.enumerator(Error::staticMetaObject.indexOfEnumerator("Type")).valueToKey(type), qUtf8Printable(text));
             break;
         case Error::Critical:
-            qCritical() << text;
+            qCritical("%s: %s", Error::staticMetaObject.enumerator(Error::staticMetaObject.indexOfEnumerator("Type")).valueToKey(type), qUtf8Printable(text));
             break;
         case Error::Fatal:
-            qFatal("%s", text.toUtf8().constData());
+            qFatal("%s: %s", Error::staticMetaObject.enumerator(Error::staticMetaObject.indexOfEnumerator("Type")).valueToKey(type), qUtf8Printable(text));
             break;
         case Error::Nothing:
         default:
             break;
         }
 
+#ifndef QT_NO_DEBUG_OUTPUT
         if (!data.isEmpty()) {
-            qDebug() << data;
+            qDebug("Error data: %s", qUtf8Printable(data));
         }
-    }
 #endif
+    }
 
 };
 

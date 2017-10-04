@@ -32,10 +32,6 @@
 #include "../feed.h"
 #include "../article.h"
 
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
-
 using namespace Fuoten;
 
 
@@ -67,9 +63,7 @@ void SQLiteStorageManager::run()
     bool result = m_db.open();
     Q_ASSERT_X(result, "init database", "failed to open database");
 
-#ifdef QT_DEBUG
-    qDebug() << "Start checking database scheme";
-#endif
+    qDebug("%s", "Start checking database scheme.");
 
     QSqlQuery q(m_db);
     result = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
@@ -235,9 +229,7 @@ void SQLiteStorageManager::run()
 
     Q_EMIT succeeded();
 
-#ifdef QT_DEBUG
-    qDebug() << "Finished checking database scheme";
-#endif
+    qDebug("%s", "Finished checking databsae scheme.");
 }
 
 
@@ -363,9 +355,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
     const QJsonArray folders = json.object().value(QStringLiteral("folders")).toArray();
 
-#ifdef QT_DEBUG
-    qDebug() << "Processing" << folders.size() << "folders requested from the remote server.";
-#endif
+    qDebug("Processing %i folders requested from the remote server.", folders.size());
 
     QHash<qint64, QString> reqFolders({{0, QStringLiteral("")}});
 
@@ -389,9 +379,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     }
 
     if (reqFolders.isEmpty() && currentFolders.isEmpty()) {
-#ifdef QT_DEBUG
-        qDebug() << "Nothing to do. Returning.";
-#endif
+        qDebug("%s", "Nothing to do. Returning.");
         return;
     }
 
@@ -401,9 +389,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
     if (currentFolders.isEmpty()) {
 
-#ifdef QT_DEBUG
-        qDebug() << "No local folders. Adding all requested folders as new.";
-#endif
+        qDebug("%s", "No local folders. Adding all requested folders as new.");
 
         QHash<qint64, QString>::const_iterator i = reqFolders.constBegin();
         while (i != reqFolders.constEnd()) {
@@ -413,17 +399,13 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
     } else if (reqFolders.isEmpty()) {
 
-#ifdef QT_DEBUG
-        qDebug() << "Requested folders list is empty. Adding all local folders to deleted.";
-#endif
+        qDebug("%s", "Requested folders list is empty. Adding all local folders to deleted.");
 
         deletedIds = currentFolders.keys();
 
     } else {
 
-#ifdef QT_DEBUG
-        qDebug() << "Checking for updated and deleted folders.";
-#endif
+        qDebug("%s", "Checking for updated and deleted folders.");
 
         for (QHash<qint64, QString>::const_iterator i = currentFolders.constBegin(); i != currentFolders.constEnd(); ++i) {
             if (reqFolders.contains(i.key())) {
@@ -435,9 +417,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
             }
         }
 
-#ifdef QT_DEBUG
-        qDebug() << "Checking for new folders.";
-#endif
+        qDebug("%s", "Checking for new folders.");
         for (QHash<qint64, QString>::const_iterator i = reqFolders.constBegin(); i != reqFolders.constEnd(); ++i) {
             if (!currentFolders.contains(i.key())) {
                 newFolders.append(qMakePair(i.key(), i.value()));
@@ -448,17 +428,20 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
     if (!deletedIds.isEmpty() || !newFolders.isEmpty() || !updatedFolders.isEmpty()) {
 
-#ifdef QT_DEBUG
-        qDebug() << "Start updating the folders table.";
-#endif
+        qDebug("%s", "Start updating the folders table.");
 
         qresult = d->db.transaction();
         Q_ASSERT_X(qresult, "folders requested", "failed to start database transaction");
 
         if (!deletedIds.isEmpty()) {
 
-#ifdef QT_DEBUG
-            qDebug() << "Deleting folders with IDs" << deletedIds << "from local database.";
+#ifndef QT_NO_DEBUG_OUTPUT
+            QString printIdList;
+            for (qint64 id : deletedIds) {
+                printIdList.append(QString::number(id)).append(QLatin1Char(','));
+            }
+            printIdList.chop(1);
+            qDebug("Deleting folders with IDs %s from local database.", qUtf8Printable(printIdList));
 #endif
 
             qresult = q.exec(QStringLiteral("DELETE FROM folders WHERE id IN (%1)").arg(d->intListToString(deletedIds)));
@@ -469,9 +452,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
             for (int i = 0; i < updatedFolders.size(); ++i) {
 
-#ifdef QT_DEBUG
-                qDebug() << "Updating name of folder with ID" << updatedFolders.at(i).first << "in local database to:" << updatedFolders.at(i).second;
-#endif
+                qDebug("Updating name of folder with ID %lli in local database to %s.", updatedFolders.at(i).first, qUtf8Printable(updatedFolders.at(i).second));
 
                 qresult = q.prepare(QStringLiteral("UPDATE folders SET name = ? WHERE id = ?"));
                 Q_ASSERT_X(qresult, "folders requested", "failed to prepare updating folders in database");
@@ -489,9 +470,8 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
             for (int i = 0; i < newFolders.size(); ++i) {
 
-#ifdef QT_DEBUG
-                qDebug() << "Adding folder" << newFolders.at(i).second << "with ID" << newFolders.at(i).first << "to the local database.";
-#endif
+                qDebug("Adding folder \"%s\" with ID %lli to the local database.", qUtf8Printable(newFolders.at(i).second), newFolders.at(i).first);
+
                 qresult = q.prepare(QStringLiteral("INSERT INTO folders (id, name) VALUES (?, ?)"));
                 Q_ASSERT_X(qresult, "folders requested", "failed to prepare insertion of new folders in database");
 
@@ -896,9 +876,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
     const QJsonArray feeds = json.object().value(QStringLiteral("feeds")).toArray();
 
-#ifdef QT_DEBUG
-    qDebug() << "Processing" << feeds.size() << "feeds requested from the remote server.";
-#endif
+    qDebug("Processing %i feeds requested from the remote server.", feeds.size());
 
     QueryArgs qa;
     const QList<Feed*> currentFeeds = getFeeds(qa);
@@ -909,18 +887,14 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
     if (feeds.isEmpty() && currentFeeds.isEmpty()) {
 
-#ifdef QT_DEBUG
-        qDebug() << "Nothing to do. Local feeds and remote feeds are empty.";
-#endif
+        qDebug("%s", "Nothing to do. Local feeds and remote feeds are empty.");
 
         Q_EMIT requestedFeeds(updatedFeedIds, newFeedIds, deletedFeedIds);
         return;
 
     } else if (feeds.isEmpty() && !currentFeeds.isEmpty()) {
 
-#ifdef QT_DEBUG
-        qDebug() << "All feeds have been deleted on the server. Deleting local ones.";
-#endif
+        qDebug("%s", "All feeds have been deleted on the server. Deleting local ones.");
 
         deletedFeedIds.reserve(currentFeeds.size());
         for (Feed *f : currentFeeds) {
@@ -932,9 +906,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
     } else if (!feeds.isEmpty() && currentFeeds.isEmpty()) {
 
-#ifdef QT_DEBUG
-        qDebug() << "No local feeds. Adding all requested feeds as new feeds.";
-#endif
+        qDebug("%s", "No local feeds. Adding all requested feeds as new feeds.");
 
         newFeedIds.reserve(feeds.size());
 
@@ -975,9 +947,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
     } else {
 
 
-#ifdef QT_DEBUG
-        qDebug() << "Checking for updated, new and deleted feeds.";
-#endif
+        qDebug("%s", "Checking for updated, new and deleted feeds.");
 
         QHash<qint64, Feed*> cfh; // current feeds hash
         IdList requestedFeedIds;
@@ -998,9 +968,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                 if (!cfh.contains(id)) {
                     newFeedIds.append(id);
 
-#ifdef QT_DEBUG
-                    qDebug() << "Adding new feed" << o.value(QStringLiteral("title")).toString() << "with ID" << id << "to the database.";
-#endif
+                    qDebug("Adding new feed \"%s\" with ID %lli to the database.", qUtf8Printable(o.value(QStringLiteral("title")).toString()), id);
+
                     qresult = q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
                                                        "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
                                                        ));
@@ -1036,9 +1005,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
                     if ((f->title() != rTitle) || (f->faviconLink() != rFaviconLink) || (f->folderId() != rFolderId) || (f->ordering() != rOrdering) || (f->link() != rLink) || (f->pinned() != rPinned) || (f->updateErrorCount() != rUpdateErrorCount) || (f->lastUpdateError() != rLastUpdateError)) {
 
-#ifdef QT_DEBUG
-                        qDebug() << "Updating feed" << f->title() << "with ID" << id << "in the database";
-#endif
+                        qDebug("Updating feed \"%s\" with ID %lli in the database.", qUtf8Printable(f->title()), id);
+
                         updatedFeedIds.append(id);
 
                         qresult = q.prepare(QStringLiteral("UPDATE feeds SET folderId = ?, title = ?, link = ?, ordering = ?, pinned = ?, updateErrorCount = ?, lastUpdateError = ?, faviconLink = ? WHERE id = ?"));
@@ -1072,8 +1040,13 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         }
 
         if (!deletedFeedIds.isEmpty()) {
-#ifdef QT_DEBUG
-            qDebug() << "The feeds with the following IDS have been deleted on the server:" << deletedFeedIds;
+#ifndef QT_NO_DEBUG_OUTPUT
+            QString printIdsString;
+            for (qint64 id : deletedFeedIds) {
+                printIdsString.append(QString::number(id)).append(QLatin1Char(','));
+            }
+            printIdsString.chop(1);
+            qDebug("The feeds with the following IDs have been deleted on the server: %s", qUtf8Printable(printIdsString));
 #endif
 
             qresult = q.exec(QStringLiteral("DELETE FROM feeds WHERE id IN (%1)").arg(d->intListToString(deletedFeedIds)));
@@ -1454,10 +1427,7 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
         qs.append(QLatin1String(" LIMIT ")).append(QString::number(args.limit));
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to query articles from the local SQLite database using the following query:";
-    qDebug() << qs;
-#endif
+    qDebug("Start to query articles from the local SQLite database using the following query: %s", qUtf8Printable(qs));
 
     QSqlQuery q(d->db);
 
@@ -1624,10 +1594,7 @@ void GetArticlesAsyncWorker::run()
         qs.append(QLatin1String(" LIMIT ")).append(QString::number(m_args.limit));
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to query articles from the local SQLite database using the following query:";
-    qDebug() << qs;
-#endif
+    qDebug("Start to query articles fromt the local SQLite database using the following query: %s", qUtf8Printable(qs));
 
     qresult = q.exec(qs);
     Q_ASSERT_X(qresult, "get articles async", "failed to execute database query");
@@ -1723,9 +1690,7 @@ void ItemsRequestedWorker::run()
 
     if (items.isEmpty()) {
         Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
-#ifdef QT_DEBUG
-        qDebug() << "Nothing to do, no items.";
-#endif
+        qDebug("%s", "Nothing to do. No Items.");
         return;
     }
 
@@ -1755,9 +1720,7 @@ void ItemsRequestedWorker::run()
                     updatedItemIds.append(id);
 
 
-#ifdef QT_DEBUG
-                    qDebug() << "Updating the article" << o.value(QStringLiteral("title")).toString() << "with ID" << id << "in the database.";
-#endif
+                    qDebug("Updating the article \"%s\" with ID %lli in the database.", qUtf8Printable(o.value(QStringLiteral("title")).toString()), id);
 
                     qresult = q.prepare(QStringLiteral("UPDATE items SET "
                                                        "title = ?, "
@@ -1795,9 +1758,7 @@ void ItemsRequestedWorker::run()
 
                 newItemIds.append(id);
 
-#ifdef QT_DEBUG
-                qDebug() << "Adding a new article" << o.value(QStringLiteral("title")).toString() << "with ID" << id << "to the database.";
-#endif
+                qDebug("Adding new article \"%s\" with ID %lli to the database.", qUtf8Printable(o.value(QStringLiteral("title")).toString()), id);
 
                 qresult = q.prepare(QStringLiteral("INSERT INTO items (id, feedId, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint) "
                                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
@@ -1856,10 +1817,6 @@ void ItemsRequestedWorker::run()
 
                     if (delStrat == FuotenEnums::DeleteItemsByCount) {
 
-#ifdef QT_DEBUG
-                        qDebug() << "Removing all items more than" << delVal << "from the feed with ID" << fId;
-#endif
-
                         qresult = q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 ORDER BY id DESC"));
                         Q_ASSERT_X(qresult, "items requested worker", "failed to preparey querying item IDs from database");
 
@@ -1875,9 +1832,7 @@ void ItemsRequestedWorker::run()
 
                         if (iIds.count() > delVal) {
 
-#ifdef QT_DEBUG
-                            qDebug() << "Removing all items more than" << delVal << "from the feed with ID" << fId;
-#endif
+                            qDebug("Removing all items from feed with ID %lli, keeping only %i most recent items.", fId, delVal);
 
                             QStringList iIdsToDelete;
                             for (int i = 0; i < iIds.count(); ++i) {
@@ -1897,10 +1852,7 @@ void ItemsRequestedWorker::run()
 
                         QDateTime tt = QDateTime::currentDateTimeUtc().addDays(delVal * -1);
 
-
-#ifdef QT_DEBUG
-                        qDebug() << "Removing all items older than" << tt << "from the feed with ID" << fId;
-#endif
+                        qDebug("Removing all items older thant %s from the feed with ID %lli.", qUtf8Printable(tt.toString(Qt::ISODate)), fId);
 
                         qresult = q.prepare(QStringLiteral("SELECT id FROM items WHERE feedId = ? AND starred = 0 AND pubDate < ?"));
                         Q_ASSERT_X(qresult, "items requested worker", "failed to prepare selecting item IDs from database");

@@ -19,9 +19,7 @@
  */
 
 #include "basefiltermodel_p.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
+#include <QMetaEnum>
 
 using namespace Fuoten;
 
@@ -53,9 +51,7 @@ void BaseFilterModel::setSortingRole(FuotenEnums::SortingRole nSortingRole)
     Q_D(BaseFilterModel); 
     if (nSortingRole != d->sortingRole) {
         d->sortingRole = nSortingRole;
-#ifdef QT_DEBUG
-        qDebug() << "Changed sortingRole to" << d->sortingRole;
-#endif
+        qDebug("Changed sortingRole to %s.", FuotenEnums::staticMetaObject.enumerator(FuotenEnums::staticMetaObject.indexOfEnumerator("Type")).valueToKey(d->sortingRole));
         Q_EMIT sortingRoleChanged(sortingRole());
         invalidate();
     }
@@ -71,9 +67,7 @@ void BaseFilterModel::setSortOrder(Qt::SortOrder nSortOrder)
     Q_D(BaseFilterModel); 
     if (nSortOrder != d->sortOrder) {
         d->sortOrder = nSortOrder;
-#ifdef QT_DEBUG
-        qDebug() << "Changed sortOrder to" << d->sortOrder;
-#endif
+        qDebug("Changed sortOrder to %i.", d->sortOrder);
         Q_EMIT sortOrderChanged(sortOrder());
         invalidate();
     }
@@ -89,9 +83,7 @@ void BaseFilterModel::setSearch(const QString &nSearch)
     Q_D(BaseFilterModel);
     if (nSearch != d->search.pattern()) {
         d->search.setPattern(nSearch);
-#ifdef QT_DEBUG
-        qDebug() << "Changed search to" << d->search.pattern();
-#endif
+        qDebug("Changed search to %s.", qUtf8Printable(d->search.pattern()));
         Q_EMIT searchChanged(search());
         invalidateFilter();
     }
@@ -111,9 +103,7 @@ void BaseFilterModel::setHideRead(bool nHideRead)
     Q_D(BaseFilterModel);
     if (nHideRead != d->hideRead) {
         d->hideRead = nHideRead;
-#ifdef QT_DEBUG
-        qDebug() << "Changed hideRead to" << d->hideRead;
-#endif
+        qDebug("Changed hideRead to %s.", d->hideRead ? "true" : "false");
         Q_EMIT hideReadChanged(hideRead());
         invalidateFilter();
     }

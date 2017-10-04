@@ -21,9 +21,6 @@
 #include "getversion_p.h"
 #include "../error.h"
 #include <QJsonValue>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -50,9 +47,7 @@ void GetVersion::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start requesting version information from the server.";
-#endif
+    qDebug("%s", "Start requesting version information from the server.");
 
     setInOperation(true);
 
@@ -66,9 +61,7 @@ void GetVersion::successCallback()
     configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully requested version information from the server.";
-#endif
+    qDebug("%s", "Successfully requested version information from the server.");
 
     Q_EMIT succeeded(jsonResult());
 }

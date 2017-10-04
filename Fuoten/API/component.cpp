@@ -24,9 +24,6 @@
 #include <QUrl>
 #include <QReadWriteLock>
 #include <QGlobalStatic>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -78,7 +75,7 @@ AbstractConfiguration *ComponentPrivate::defaultConfiguration()
 
 void ComponentPrivate::setDefaultConfiguration(AbstractConfiguration *config)
 {
-    qDebug("Settings default configuration to %p.", config);
+    qDebug("Setting default configuration to %p.", config);
     DefaultValues *defs = defVals();
     Q_ASSERT(defs);
     QWriteLocker locker(&defs->lock);
@@ -102,7 +99,7 @@ AbstractStorage *ComponentPrivate::defaultStorage()
 
 void ComponentPrivate::setDefaultStorage(AbstractStorage *storage)
 {
-    qDebug("Setting default stora to %p.", storage);
+    qDebug("Setting default storage to %p.", storage);
     DefaultValues *defs = defVals();
     Q_ASSERT(defs);
     QWriteLocker locker(&defs->lock);
@@ -220,18 +217,18 @@ void Component::sendRequest()
     }
 
 #ifdef QT_DEBUG
-    qDebug() << "Start performing network operation.";
-    qDebug() << "API URL:" << url;
+    qDebug("Start performing network operation.");
+    qDebug("API URL: %s", qUtf8Printable(url.toString()));
     if (!nr.rawHeaderList().isEmpty()) {
         const QList<QByteArray> hl = nr.rawHeaderList();
         for (const QByteArray &h : hl) {
             if (h != QByteArrayLiteral("Authorization")) {
-                qDebug() << h << nr.rawHeader(h);
+                qDebug("%s: %s", h.constData(), nr.rawHeader(h).constData());
             }
         }
     }
     if (!d->payload.isEmpty()) {
-        qDebug() << "Payload:" << d->payload;
+        qDebug("Paylod: %s", d->payload.constData());
     }
 #endif
 
@@ -261,11 +258,6 @@ void Component::_requestFinished()
     }
 
     d->result = d->reply->readAll();
-
-#ifdef QT_DEBUG
-//    qDebug() << "Request result:" << d->result;
-//    fprintf(stderr, "Request result: \n%s\n", d->result.constData());
-#endif
 
     if (Q_LIKELY(d->reply->error() == QNetworkReply::NoError)) {
 
@@ -395,9 +387,7 @@ void Component::setNetworkAccessManager(QNetworkAccessManager *nNetworkAccessMan
 
     if (nNetworkAccessManager != d->networkAccessManager) {
         d->networkAccessManager = nNetworkAccessManager;
-#ifdef QT_DEBUG
-        qDebug() << "Changed networkAccessManager to" << d->networkAccessManager;
-#endif
+        qDebug("Changed networkAccessManager to %p.", d->networkAccessManager);
         Q_EMIT networkAccessManagerChanged(networkAccessManager());
     }
 }
@@ -412,9 +402,7 @@ void Component::setInOperation(bool nInOperation)
     Q_D(Component); 
     if (nInOperation != d->inOperation) {
         d->inOperation = nInOperation;
-#ifdef QT_DEBUG
-        qDebug() << "Changed inOperation to" << d->inOperation;
-#endif
+        qDebug("Changed inOperation to %s.", d->inOperation ? "true" : "false");
         Q_EMIT inOperationChanged(inOperation());
     }
 }
@@ -429,9 +417,7 @@ void Component::setRequestTimeout(quint8 seconds)
     Q_D(Component); 
     if (seconds != d->requestTimeout) {
         d->requestTimeout = seconds;
-#ifdef QT_DEBUG
-        qDebug() << "Changed requestTimeout to" << d->requestTimeout;
-#endif
+        qDebug("Changed requestTimeout to %u seconds.", d->requestTimeout);
         Q_EMIT requestTimeoutChanged(requestTimeout());
     }
 }
@@ -450,9 +436,7 @@ void Component::setError(Error *nError)
         if (oldError) {
             delete oldError;
         }
-#ifdef QT_DEBUG
-        qDebug() << "Changed error to" << d->error;
-#endif
+        qDebug("Changed error to %p.", d->error);
         Q_EMIT errorChanged(error());
     }
 }
@@ -481,9 +465,7 @@ void Component::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
     Q_D(Component);
     if (nAbstractConfiguration != d->configuration) {
         d->configuration = nAbstractConfiguration;
-#ifdef QT_DEBUG
-        qDebug() << "Changed configuration to" << d->configuration;
-#endif
+        qDebug("Changed configuration to %p.", d->configuration);
         Q_EMIT configurationChanged(configuration());
     }
 }
@@ -510,9 +492,7 @@ void Component::setStorage(AbstractStorage *localStorage)
     Q_D(Component);
     if (localStorage != d->storage) {
         d->storage = localStorage;
-#ifdef QT_DEBUG
-        qDebug() << "Changed storage to" << d->storage;
-#endif
+        qDebug("Changed storage to %p.", d->storage);
         Q_EMIT storageChanged(storage());
     }
 }

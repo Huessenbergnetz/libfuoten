@@ -22,9 +22,6 @@
 #include <QNetworkReply>
 #include <QJsonParseError>
 #include <QSqlError>
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -45,9 +42,7 @@ Error::Error(Type errorType, Severity errorSeverity, const QString &errorText, c
     d->text = errorText;
     d->data = errorData;
 
-#ifdef QT_DEBUG
     d->printOut();
-#endif
 }
 
 
@@ -209,10 +204,7 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
 
         d->data = reply->request().url().toString();
 
-#ifdef QT_DEBUG
         d->printOut();
-#endif
-
     }
 }
 
@@ -230,13 +222,8 @@ Error::Error(QJsonParseError jsonError, QObject *parent) :
         d->text = jsonError.errorString();
     }
 
-#ifdef QT_DEBUG
-        d->printOut();
-#endif
+    d->printOut();
 }
-
-
-
 
 
 Error::Error(const QSqlError &sqlError, const QString &errorText, QObject *parent) :
@@ -256,21 +243,13 @@ Error::Error(const QSqlError &sqlError, const QString &errorText, QObject *paren
         d->data = sqlError.text();
     }
 
-#ifdef QT_DEBUG
-        d->printOut();
-#endif
+    d->printOut();
 }
-
-
 
 
 Error::~Error()
 {
 }
-
-
-
-
 
 
 QString Error::text() const { Q_D(const Error); return d->text; }
@@ -280,14 +259,10 @@ void Error::setText(const QString &nText)
     Q_D(Error); 
     if (nText != d->text) {
         d->text = nText;
-#ifdef QT_DEBUG
-        qDebug() << "Changed text to" << d->text;
-#endif
+        qDebug("Changed text to \"%s\".", qUtf8Printable(d->text));
         Q_EMIT textChanged(text());
     }
 }
-
-
 
 
 Error::Type Error::type() const { Q_D(const Error); return d->type; }
@@ -297,14 +272,10 @@ void Error::setType(Type nType)
     Q_D(Error); 
     if (nType != d->type) {
         d->type = nType;
-#ifdef QT_DEBUG
-        qDebug() << "Changed type to" << d->type;
-#endif
+        qDebug("Changed type to %s.", metaObject()->enumerator(metaObject()->indexOfEnumerator("Type")).valueToKey(d->type));
         Q_EMIT typeChanged(type());
     }
 }
-
-
 
 
 QString Error::data() const { Q_D(const Error); return d->data; }
@@ -314,9 +285,7 @@ void Error::setData(const QString &nData)
     Q_D(Error); 
     if (nData != d->data) {
         d->data = nData;
-#ifdef QT_DEBUG
-        qDebug() << "Changed data to" << d->data;
-#endif
+        qDebug("Changed data to \"%s\".", qUtf8Printable(d->data));
         Q_EMIT dataChanged(data());
     }
 }
@@ -331,13 +300,9 @@ void Error::setSeverity(Severity nSeverity)
     Q_D(Error); 
     if (nSeverity != d->severity) {
         d->severity = nSeverity;
-#ifdef QT_DEBUG
-        qDebug() << "Changed severity to" << d->severity;
-#endif
+        qDebug("Changed severity to %s.", metaObject()->enumerator(metaObject()->indexOfEnumerator("Severity")).valueToKey(d->severity));
         Q_EMIT severityChanged(severity());
     }
 }
 
-
-
-
+#include "moc_error.cpp"

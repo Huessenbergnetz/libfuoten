@@ -22,9 +22,6 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include "../error.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
 
 using namespace Fuoten;
 
@@ -48,9 +45,7 @@ void MoveFeed::execute()
         return;
     }
 
-#ifdef QT_DEBUG
-    qDebug() << "Start to move a feed on the server.";
-#endif
+    qDebug("Start to move feed with ID %lli to folder with ID %lli.", feedId(), folderId());
 
     setInOperation(true);
 
@@ -127,9 +122,7 @@ void MoveFeed::successCallback()
 
     setInOperation(false);
 
-#ifdef QT_DEBUG
-    qDebug() << "Successfully create the feed on the server.";
-#endif
+    qDebug("Successfully moved feed with ID %lli to folder with ID %lli.", feedId(), folderId());
 
     Q_EMIT succeeded(feedId(), folderId());
 }
@@ -148,9 +141,7 @@ void MoveFeed::setFeedId(qint64 nFeedId)
     Q_D(MoveFeed); 
     if (nFeedId != d->feedId) {
         d->feedId = nFeedId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed feedId to" << d->feedId;
-#endif
+        qDebug("Changed feedId to %lli.", d->feedId);
         Q_EMIT feedIdChanged(feedId());
     }
 }
@@ -170,9 +161,7 @@ void MoveFeed::setFolderId(qint64 nFolderId)
     Q_D(MoveFeed); 
     if (nFolderId != d->folderId) {
         d->folderId = nFolderId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed folderId to" << d->folderId;
-#endif
+        qDebug("Changed folderId to %lli.", d->folderId);
         Q_EMIT folderIdChanged(folderId());
     }
 }

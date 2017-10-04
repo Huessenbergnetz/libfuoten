@@ -20,9 +20,7 @@
 
 #include "basemodel_p.h"
 #include "../API/component.h"
-#ifdef QT_DEBUG
-#include <QtDebug>
-#endif
+#include <QMetaEnum>
 
 using namespace Fuoten;
 
@@ -52,9 +50,7 @@ void BaseModel::setInOperation(bool nInOperation)
     Q_D(BaseModel); 
     if (nInOperation != d->inOperation) {
         d->inOperation = nInOperation;
-#ifdef QT_DEBUG
-        qDebug() << "Changed inOperation to" << d->inOperation;
-#endif
+        qDebug("Changed inOperation to %s.", d->inOperation ? "true" : "false");
         Q_EMIT inOperationChanged(inOperation());
     }
 }
@@ -77,9 +73,7 @@ void BaseModel::setStorage(AbstractStorage *nStorage)
     Q_D(BaseModel);
     if (nStorage != d->storage) {
         d->storage = nStorage;
-#ifdef QT_DEBUG
-        qDebug() << "Changed storage to" << d->storage;
-#endif
+        qDebug("Changed storage to %p.", d->storage);
         Q_EMIT storageChanged(storage());
 
         handleStorageChanged();
@@ -130,9 +124,7 @@ void BaseModel::setParentId(qint64 nParentId)
     Q_D(BaseModel);
     if (nParentId != d->parentId) {
         d->parentId = nParentId;
-#ifdef QT_DEBUG
-        qDebug() << "Changed parentId to" << d->parentId;
-#endif
+        qDebug("Changed parentId to %lli.", d->parentId);
         Q_EMIT parentIdChanged(parentId());
         Q_EMIT doubleParentIdChanged(doubleParentId());
     }
@@ -155,9 +147,7 @@ void BaseModel::setSortingRole(FuotenEnums::SortingRole nSortingRole)
     Q_D(BaseModel);
     if (nSortingRole != d->sortingRole) {
         d->sortingRole = nSortingRole;
-#ifdef QT_DEBUG
-        qDebug() << "Changed sortingRole to" << d->sortingRole;
-#endif
+        qDebug("Changed sortinRole to %s.", FuotenEnums::staticMetaObject.enumerator(FuotenEnums::staticMetaObject.indexOfEnumerator("SortingRole")).valueToKey(d->sortingRole));
         Q_EMIT sortingRoleChanged(sortingRole());
     }
 }
@@ -172,9 +162,7 @@ void BaseModel::setSortOrder(Qt::SortOrder nSortOrder)
     Q_D(BaseModel);
     if (nSortOrder != d->sortOrder) {
         d->sortOrder = nSortOrder;
-#ifdef QT_DEBUG
-        qDebug() << "Changed sortOrder to" << d->sortOrder;
-#endif
+        qDebug("Changed sortOrder to %i.", d->sortOrder);
         Q_EMIT sortOrderChanged(sortOrder());
     }
 }
@@ -189,9 +177,7 @@ void BaseModel::setUnreadOnly(bool nUnreadOnly)
     Q_D(BaseModel);
     if (nUnreadOnly != d->unreadOnly) {
         d->unreadOnly = nUnreadOnly;
-#ifdef QT_DEBUG
-        qDebug() << "Changed unreadOnly to" << d->unreadOnly;
-#endif
+        qDebug("Changed unreadOnly to %s.", d->unreadOnly ? "true" : "false");
         Q_EMIT unreadOnlyChanged(unreadOnly());
     }
 }
@@ -206,9 +192,7 @@ void BaseModel::setLimit(int nLimit)
     Q_D(BaseModel);
     if (nLimit != d->limit) {
         d->limit = nLimit;
-#ifdef QT_DEBUG
-        qDebug() << "Changed limit to" << d->limit;
-#endif
+        qDebug("Changed limit to %i.", d->limit);
         Q_EMIT limitChanged(limit());
     }
 }
