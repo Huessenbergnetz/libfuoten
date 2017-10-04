@@ -1959,7 +1959,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
         return;
     }
 
-    ItemsRequestedWorker *worker = new ItemsRequestedWorker(d->db.databaseName(), json, d->configuration, this);
+    ItemsRequestedWorker *worker = new ItemsRequestedWorker(d->db.databaseName(), json, configuration(), this);
     connect(worker, &ItemsRequestedWorker::requestedItems, this, &SQLiteStorage::requestedItems);
     connect(worker, &ItemsRequestedWorker::gotStarred, this, &SQLiteStorage::setStarred);
     connect(worker, &ItemsRequestedWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);

@@ -19,6 +19,7 @@
  */
 
 #include "article_p.h"
+#include "API/component.h"
 #include "API/markitem.h"
 #include "API/staritem.h"
 #include "fuoten.h"
@@ -428,6 +429,12 @@ void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *
 }
 
 
+void Article::mark(bool unread, bool enqueue)
+{
+    mark(unread, Component::defaultConfiguration(), Component::defaultStorage(), enqueue);
+}
+
+
 
 void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
 {
@@ -465,4 +472,9 @@ void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage 
         component()->execute();
         Q_EMIT inOperationChanged(inOperation());
     }
+}
+
+void Article::star(bool starred, bool enqueue)
+{
+    star(starred, Component::defaultConfiguration(), Component::defaultStorage(), enqueue);
 }

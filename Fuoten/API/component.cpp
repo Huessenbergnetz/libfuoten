@@ -22,11 +22,93 @@
 #include "../error.h"
 #include <QJsonParseError>
 #include <QUrl>
+#include <QReadWriteLock>
+#include <QGlobalStatic>
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
 
 using namespace Fuoten;
+
+
+class DefaultValues
+{
+public:
+    mutable QReadWriteLock lock;
+
+    AbstractConfiguration *configuration() const
+    {
+        return m_defaultConfig;
+    }
+
+    void setConfiguration(AbstractConfiguration *config)
+    {
+        m_defaultConfig = config;
+    }
+
+    AbstractStorage *storage() const
+    {
+        return m_defaultStorage;
+    }
+
+    void setStorage(AbstractStorage *storage)
+    {
+        m_defaultStorage = storage;
+    }
+
+private:
+    AbstractConfiguration *m_defaultConfig = nullptr;
+    AbstractStorage *m_defaultStorage = nullptr;
+};
+Q_GLOBAL_STATIC(DefaultValues, defVals)
+
+
+AbstractConfiguration *ComponentPrivate::defaultConfiguration()
+{
+    const DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+
+    defs->lock.lockForRead();
+    AbstractConfiguration *config = defs->configuration();
+    defs->lock.unlock();
+
+    return config;
+}
+
+
+void ComponentPrivate::setDefaultConfiguration(AbstractConfiguration *config)
+{
+    qDebug("Settings default configuration to %p.", config);
+    DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+    QWriteLocker locker(&defs->lock);
+
+    defs->setConfiguration(config);
+}
+
+
+AbstractStorage *ComponentPrivate::defaultStorage()
+{
+    const DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+
+    defs->lock.lockForRead();
+    AbstractStorage *storage = defs->storage();
+    defs->lock.unlock();
+
+    return storage;
+}
+
+
+void ComponentPrivate::setDefaultStorage(AbstractStorage *storage)
+{
+    qDebug("Setting default stora to %p.", storage);
+    DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+    QWriteLocker locker(&defs->lock);
+
+    defs->setStorage(storage);
+}
 
 
 Component::Component(QObject *parent) :
@@ -54,6 +136,10 @@ Component::~Component()
 void Component::sendRequest()
 {
     Q_D(Component);
+
+    if (!d->configuration) {
+        setConfiguration(ComponentPrivate::defaultConfiguration());
+    }
 
     Q_ASSERT_X(d->configuration, "send request", "no configuration available");
     Q_ASSERT_X(!d->configuration->getHost().isEmpty(), "send request", "empty host name");
@@ -84,7 +170,7 @@ void Component::sendRequest()
     url.setHost(d->configuration->getHost());
 
     QString urlPath = d->configuration->getInstallPath();
-    urlPath.append(QStringLiteral("/index.php/apps/news/api/v1-2"));
+    urlPath.append(QLatin1String("/index.php/apps/news/api/v1-2"));
     urlPath.append(d->apiRoute);
 
     url.setPath(urlPath);
@@ -374,7 +460,16 @@ void Component::setError(Error *nError)
 
 
 
-AbstractConfiguration *Component::configuration() const { Q_D(const Component); return d->configuration; }
+AbstractConfiguration *Component::configuration() const
+{
+    Q_D(const Component);
+    AbstractConfiguration *_config = d->configuration;
+    if (!_config) {
+        _config = ComponentPrivate::defaultConfiguration();
+    }
+    Q_ASSERT(_config);
+    return _config;
+}
 
 void Component::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
@@ -395,7 +490,15 @@ void Component::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 
 
 
-AbstractStorage *Component::storage() const { Q_D(const Component); return d->storage; }
+AbstractStorage *Component::storage() const
+{
+    Q_D(const Component);
+    AbstractStorage *_storage = d->storage;
+    if (!_storage) {
+        _storage = ComponentPrivate::defaultStorage();
+    }
+    return _storage;
+}
 
 void Component::setStorage(AbstractStorage *localStorage)
 {
@@ -415,7 +518,28 @@ void Component::setStorage(AbstractStorage *localStorage)
 }
 
 
+void Component::setDefaultConfiguration(AbstractConfiguration *config)
+{
+    ComponentPrivate::setDefaultConfiguration(config);
+}
 
+
+AbstractConfiguration *Component::defaultConfiguration()
+{
+    return ComponentPrivate::defaultConfiguration();
+}
+
+
+void Component::setDefaultStorage(AbstractStorage *storage)
+{
+    ComponentPrivate::setDefaultStorage(storage);
+}
+
+
+AbstractStorage *Component::defaultStorage()
+{
+    return ComponentPrivate::defaultStorage();
+}
 
 
 void Component::setExpectedJSONType(ExpectedJSONType type)

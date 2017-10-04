@@ -19,6 +19,7 @@
  */
 
 #include "basemodel_p.h"
+#include "../API/component.h"
 #ifdef QT_DEBUG
 #include <QtDebug>
 #endif
@@ -61,7 +62,15 @@ void BaseModel::setInOperation(bool nInOperation)
 
 
 
-AbstractStorage *BaseModel::storage() const { Q_D(const BaseModel); return d->storage; }
+AbstractStorage *BaseModel::storage() const
+{
+    Q_D(const BaseModel);
+    AbstractStorage *_storage = d->storage;
+    if (!_storage) {
+        _storage = Component::defaultStorage();
+    }
+    return _storage;
+}
 
 void BaseModel::setStorage(AbstractStorage *nStorage)
 {

@@ -90,6 +90,11 @@ public:
     QByteArray result;
     bool requiresAuth;
 
+    static AbstractConfiguration *defaultConfiguration();
+    static void setDefaultConfiguration(AbstractConfiguration *config);
+    static AbstractStorage *defaultStorage();
+    static void setDefaultStorage(AbstractStorage *storage);
+
 private:
     Q_DISABLE_COPY(ComponentPrivate)
 };

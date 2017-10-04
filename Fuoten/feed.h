@@ -317,6 +317,15 @@ public:
 
 
     /*!
+     * \brief Sets a new name for the feed on the remote server.
+     * \overload
+     *
+     * This uses Component::defaultConfiguration() and Component::defaultStorage()
+     */
+    Q_INVOKABLE void rename(const QString &newName);
+
+
+    /*!
      * \brief Removes this feed from the remote server.
      *
      * Will also remove the feed from the local \a storage if a valid AbstractStorage object has been set.
@@ -325,6 +334,15 @@ public:
      * \param storage   pointer to an AbstractStorage subclass to remove the feed from the local storage
      */
     Q_INVOKABLE void remove(Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr);
+
+
+    /*!
+     * \brief Removes this feed from the remote server.
+     * \overload
+     *
+     * This uses Component::defaultConfiguration() and Component::defaultStorage()
+     */
+    Q_INVOKABLE void remove();
 
 
     /*!
@@ -340,6 +358,15 @@ public:
 
 
     /*!
+     * \brief Moves this feed to a different folder on the remote server.
+     * \overload
+     *
+     * This uses Component::defaultConfiguration() and Component::defaultStorage()
+     */
+    Q_INVOKABLE void move(qint64 targetFolderId);
+
+
+    /*!
      * \brief Marks the complete feed as read on the remote server and local.
      *
      * \param config    pointer to an AbstractConfiguration subclass to get the account configuration
@@ -347,6 +374,15 @@ public:
      * \param enqueue   \c true to enqueue the marking local up to the next sync, valid \c storage has to be available
      */
     Q_INVOKABLE void markAsRead(Fuoten::AbstractConfiguration * config, Fuoten::AbstractStorage *storage, bool enqueue = false);
+
+
+    /*!
+     * \brief Marks the complete feed as read on the remote server and local.
+     * \overload
+     *
+     * This uses Component::defaultConfiguration() and Component::defaultStorage()
+     */
+    Q_INVOKABLE void markAsRead(bool enqueue = false);
 
 Q_SIGNALS:
     /*!

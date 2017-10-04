@@ -454,6 +454,14 @@ public:
      */
     Q_INVOKABLE void mark(bool unread, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr, bool enqueue = false);
 
+    /*!
+     * \brief Marks this article as \a read or \a unread on the server.
+     * \overload
+     *
+     * This uses Component::defaultConfiguration() and Component::defaultStorage().
+     */
+    Q_INVOKABLE void mark(bool unread, bool enqueue = false);
+
 
     /*!
      * \brief Marks this article as \a starred or \a unstarred on the remote server.
@@ -466,6 +474,14 @@ public:
      * \param enqueue   \c true to enqueue the un/starring local up to the next sync, valid \c storage has to be available
      */
     Q_INVOKABLE void star(bool starred, Fuoten::AbstractConfiguration *config, Fuoten::AbstractStorage *storage = nullptr, bool enqueue = false);
+
+    /*!
+     * \brief Marks this article as \a starred or \a unstarred on the remote server.
+     * \overload
+     *
+     * This uses Component::defaultConfiguration() and Component::defaultStorage().
+     */
+    Q_INVOKABLE void star(bool starred, bool enqueue = false);
 
 
 Q_SIGNALS:

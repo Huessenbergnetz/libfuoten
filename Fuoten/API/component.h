@@ -40,20 +40,33 @@ class AbstractStorage;
 /*!
  * \brief Base class for all API requests.
  *
- * This is the base class for all other classes that implement API operations. When creating a subclass
- * of Component, you have to reimplement successCallback(), extractError() and checkOutput(). Optionally you should reimplement
- * checkInput() if your derived class provides own input properties that should be checked before starting the network request.
+ * This is the base class for all other classes that implement API operations. Most
+ * important property to set when using this class or derived classes is the
+ * \link Component::configuration configuration \endlink property. This can either be
+ * done per instance direclty via the property or on a global scope via setDefaultConfiguration().
+ * The \link Component::storage storage \endlink property can be set on a global scope
+ * via setDefaultStorage().
  *
- * When reimplementing checkOutput() and checkInput() you have to call the implementations of the class from which you derive
- * to also include their checks and perform some basic operations. In the function that starts the request, set setInOperation() to true
- * and call sendRequest(). In your error handling and successCallback() functions you should afterwards set inOpeartion back to false.
+ * When creating a subclass of Component, you have to reimplement successCallback(),
+ * extractError() and checkOutput(). Optionally you should reimplement checkInput()
+ * if your derived class provides own input properties that should be checked before
+ * starting the network request.
  *
- * In your reimplementation of successCallback() you should work on the content requested from the News App API that can be
- * obtained by jsonResult(). The content returned by jsonResult() will be set by Component::checkOutput().
+ * When reimplementing checkOutput() and checkInput() you have to call the
+ * implementations of the class from which you derive to also include their checks and
+ * perform some basic operations. In the function that starts the request, set
+ * setInOperation() to \c true and call sendRequest(). In your error handling and
+ * successCallback() functions you should afterwards set inOpeartion back to \c false.
  *
- * In the constructor of your class you should set the API route to use and the expected result, that will be checked by Component::checkOutput().
+ * In your reimplementation of successCallback() you should work on the content
+ * requested from the News App API that can be obtained by jsonResult(). The content
+ * returned by jsonResult() will be set by Component::checkOutput().
  *
- * Component and its subclasses in libfuoten using a <a href="https://techbase.kde.org/Policies/Library_Code_Policy/Shared_D-Pointer_Example">shared D-pointer</a>.
+ * In the constructor of your class you should set the API route to use and the
+ * expected result, that will be checked by Component::checkOutput().
+ *
+ * Component and its subclasses in libfuoten using a
+ * <a href="https://techbase.kde.org/Policies/Library_Code_Policy/Shared_D-Pointer_Example">shared D-pointer</a>.
  *
  * \par Subclassing exmaple
  *
@@ -348,6 +361,30 @@ public:
      */
     void setStorage(AbstractStorage *localStorage);
 
+    /*!
+     * \brief Sets the global default configuration.
+     * \sa defaultConfiguration()
+     */
+    static void setDefaultConfiguration(AbstractConfiguration *config);
+
+    /*!
+     * \brief Returns the global default configuration.
+     * \sa setDefaultConfiguration()
+     */
+    static AbstractConfiguration *defaultConfiguration();
+
+    /*!
+     * \brief Sets the global default storage.
+     * \sa defaultStorage()
+     */
+    static void setDefaultStorage(AbstractStorage *storage);
+
+    /*!
+     * \brief Returns the global default storage.
+     * \sa setDefaultStorage()
+     */
+    static AbstractStorage *defaultStorage();
+
 Q_SIGNALS:
     /*!
      * \brief This signal is emitted when the pointer to the network access manager changes.
@@ -583,9 +620,9 @@ protected:
      *
      * Reimplement this in a subclass to extract errors from the request result. The simplest implementation is to create
      * a new Error object from the QNetworkReply and set it to the Component::error property. You should than also
-     * emit the failed() signal.#
+     * emit the failed() signal.
      *
-     * The basic implementation uses the overloaded Error constructor to extract reply errors, set the new Error to the error
+     * The basic implementation uses the overloaded Error constructor to extract reply errors, sets the new Error to the error
      * property, sets inOperation to \c false and emits the failed() signal.
      *
      * \par Implementation example

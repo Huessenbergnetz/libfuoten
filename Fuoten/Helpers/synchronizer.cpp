@@ -20,6 +20,7 @@
 
 #include "synchronizer_p.h"
 #include "../article.h"
+#include "../API/component.h"
 #include <QPair>
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -49,6 +50,10 @@ void Synchronizer::sync()
 void Synchronizer::start()
 {
     Q_D(Synchronizer);
+
+    if (!d->configuration) {
+        setConfiguration(Component::defaultConfiguration());
+    }
 
     Q_ASSERT_X(d->configuration, "start synchronizing", "invalid configuration object");
 
@@ -425,7 +430,15 @@ void Synchronizer::finished()
 
 
 
-AbstractConfiguration *Synchronizer::configuration() const { Q_D(const Synchronizer); return d->configuration; }
+AbstractConfiguration *Synchronizer::configuration() const
+{
+    Q_D(const Synchronizer);
+    AbstractConfiguration *c = d->configuration;
+    if (!c) {
+        c = Component::defaultConfiguration();
+    }
+    return c;
+}
 
 void Synchronizer::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
@@ -447,7 +460,15 @@ void Synchronizer::setConfiguration(AbstractConfiguration *nAbstractConfiguratio
 
 
 
-AbstractStorage *Synchronizer::storage() const { Q_D(const Synchronizer); return d->storage; }
+AbstractStorage *Synchronizer::storage() const
+{
+    Q_D(const Synchronizer);
+    AbstractStorage *s = d->storage;
+    if (!s) {
+        s = Component::defaultStorage();
+    }
+    return s;
+}
 
 void Synchronizer::setStorage(AbstractStorage *nStorageHandler)
 {

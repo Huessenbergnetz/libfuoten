@@ -507,6 +507,8 @@ public Q_SLOTS:
      * You may want to emit requestedItems() in your implementation after you processed the data.
      *
      * \par Example JSON response data
+     *
+     * \code{.json}
      * {
      *    "items": [
      *       {
@@ -528,8 +530,6 @@ public Q_SLOTS:
      *       }, // etc
      *    ]
      * }
-     * \code{.json}
-     *
      * \endcode
      */
     virtual void itemsRequested(const QJsonDocument &json) = 0;

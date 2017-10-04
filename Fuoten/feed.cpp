@@ -19,6 +19,7 @@
  */
 
 #include "feed_p.h"
+#include "API/component.h"
 #include "API/renamefeed.h"
 #include "API/deletefeed.h"
 #include "API/movefeed.h"
@@ -309,6 +310,10 @@ void Feed::rename(const QString &newName, AbstractConfiguration *config, Abstrac
 }
 
 
+void Feed::rename(const QString &newName)
+{
+    rename(newName, Component::defaultConfiguration(), Component::defaultStorage());
+}
 
 
 void Feed::remove(AbstractConfiguration *config, AbstractStorage *storage)
@@ -330,6 +335,11 @@ void Feed::remove(AbstractConfiguration *config, AbstractStorage *storage)
     Q_EMIT inOperationChanged(inOperation());
 }
 
+
+void Feed::remove()
+{
+    remove(Component::defaultConfiguration(), Component::defaultStorage());
+}
 
 
 void Feed::move(qint64 targetFolderId, AbstractConfiguration *config, AbstractStorage *storage)
@@ -361,6 +371,11 @@ void Feed::move(qint64 targetFolderId, AbstractConfiguration *config, AbstractSt
     Q_EMIT inOperationChanged(inOperation());
 }
 
+
+void Feed::move(qint64 targetFolderId)
+{
+    move(targetFolderId, Component::defaultConfiguration(), Component::defaultStorage());
+}
 
 
 void Feed::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
@@ -398,4 +413,10 @@ void Feed::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, b
         Q_EMIT inOperationChanged(inOperation());
 
     }
+}
+
+
+void Feed::markAsRead(bool enqueue)
+{
+    markAsRead(Component::defaultConfiguration(), Component::defaultStorage(), enqueue);
 }

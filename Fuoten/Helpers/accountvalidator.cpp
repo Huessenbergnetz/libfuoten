@@ -20,6 +20,7 @@
 
 #include "accountvalidator_p.h"
 #include "abstractconfiguration.h"
+#include "../API/component.h"
 #include "../error.h"
 #if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
 #include "versionnumber.h"
@@ -58,6 +59,10 @@ void AccountValidator::start()
 #endif
 
     Q_D(AccountValidator);
+
+    if (!d->configuration) {
+        setConfiguration(Component::defaultConfiguration());
+    }
 
     Q_ASSERT_X(d->configuration, "start account validation", "invalid configuration object");
 
@@ -135,7 +140,15 @@ void AccountValidator::gotUser()
 
 
 
-AbstractConfiguration *AccountValidator::configuration() const { Q_D(const AccountValidator); return d->configuration; }
+AbstractConfiguration *AccountValidator::configuration() const
+{
+    Q_D(const AccountValidator);
+    AbstractConfiguration *_config = d->configuration;
+    if (!_config) {
+        _config = Component::defaultConfiguration();
+    }
+    return _config;
+}
 
 void AccountValidator::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {

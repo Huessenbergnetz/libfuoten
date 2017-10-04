@@ -21,6 +21,7 @@
 #include "abstractstorage_p.h"
 #include "../article.h"
 #include "../Helpers/abstractconfiguration.h"
+#include "../API/component.h"
 #include <QRegularExpression>
 #ifdef QT_DEBUG
 #include <QtDebug>
@@ -203,7 +204,15 @@ void AbstractStorage::setInOperation(bool nInOperation)
 }
 
 
-AbstractConfiguration *AbstractStorage::configuration() const { Q_D(const AbstractStorage); return d->configuration; }
+AbstractConfiguration *AbstractStorage::configuration() const
+{
+    Q_D(const AbstractStorage);
+    AbstractConfiguration *_config = d->configuration;
+    if (!_config) {
+        _config = Component::defaultConfiguration();
+    }
+    return _config;
+}
 
 void AbstractStorage::setConfiguration(AbstractConfiguration *nConfiguration)
 {

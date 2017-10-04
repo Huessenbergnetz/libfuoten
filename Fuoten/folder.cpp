@@ -135,6 +135,11 @@ void Folder::rename(const QString &newName, AbstractConfiguration *config, Abstr
 }
 
 
+void Folder::rename(const QString &newName)
+{
+    rename(newName, Component::defaultConfiguration(), Component::defaultStorage());
+}
+
 
 void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
 {
@@ -155,6 +160,11 @@ void Folder::remove(AbstractConfiguration *config, AbstractStorage *storage)
     Q_EMIT inOperationChanged(inOperation());
 }
 
+
+void Folder::remove()
+{
+    remove(Component::defaultConfiguration(), Component::defaultStorage());
+}
 
 
 void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, bool enqueue)
@@ -191,6 +201,12 @@ void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage,
         component()->execute();
         Q_EMIT inOperationChanged(true);
     }
+}
+
+
+void Folder::markAsRead(bool enqueue)
+{
+    markAsRead(Component::defaultConfiguration(), Component::defaultStorage(), enqueue);
 }
 
 
