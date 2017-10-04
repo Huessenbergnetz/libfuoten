@@ -120,7 +120,9 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/API/StarMultipleItems \
         Fuoten/API/starmultipleitems.h \
         Fuoten/API/MarkAllItemsRead \
-        Fuoten/API/markallitemsread.h
+        Fuoten/API/markallitemsread.h \
+        Fuoten/Helpers/abstractnamfactory.h \
+        Fuoten/Helpers/AbstractNamFactory
 
     basePath = $${dirname(PWD)}
     for(header, INSTALL_HEADERS) {

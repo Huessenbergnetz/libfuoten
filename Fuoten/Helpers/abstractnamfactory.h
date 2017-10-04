@@ -35,6 +35,8 @@ namespace Fuoten {
  *
  * To implement a factory, subclass AbstractNamFactory and implement the virtual create() method, then
  * assign it to the Fuoten API classes engine using Component::setNetworkAccessManagerFactory().
+ *
+ * \headerfile "" <Fuoten/Helpers/AbstractNamFactory>
  */
 class AbstractNamFactory
 {
