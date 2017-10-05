@@ -34,6 +34,8 @@
 
 using namespace Fuoten;
 
+#define SEL_TOTAL_UNREAD "SELECT * FROM total_unread"
+#define SEL_TOTAL_STARRED "SELECT * FROM total_starred"
 
 
 SQLiteStorageManager::SQLiteStorageManager(const QString &dbpath, QObject *parent) :
@@ -139,78 +141,89 @@ void SQLiteStorageManager::run()
     Q_ASSERT_X(result, "init database", "failed to create items_feed_id_index");
 
 
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_update_item AFTER UPDATE OF unread ON items "
-                               "BEGIN "
-                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = old.feedId) WHERE id = old.feedId; "
-                               "END"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
+//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_update_item AFTER UPDATE OF unread ON items "
+//                               "BEGIN "
+//                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = old.feedId) WHERE id = old.feedId; "
+//                               "END"
+//                               ))) {
+//        //% "Failed to execute database query."
+//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+//        return;
+//    }
+
+//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_delete_item AFTER DELETE ON items "
+//                               "BEGIN "
+//                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = old.feedId) WHERE id = old.feedId; "
+//                               "END"
+//                               ))) {
+//        //% "Failed to execute database query."
+//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+//        return;
+//    }
+
+//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_insert_item AFTER INSERT ON items "
+//                               "BEGIN "
+//                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = new.feedId) WHERE id = new.feedId; "
+//                               "END"
+//                               ))) {
+//        //% "Failed to execute database query."
+//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+//        return;
+//    }
+
+//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_update_feed AFTER UPDATE OF unreadCount ON feeds "
+//                               "BEGIN "
+//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+//                               "END"
+//                               ))) {
+//        //% "Failed to execute database query."
+//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+//        return;
+//    }
+
+//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_delete_feed AFTER DELETE ON feeds "
+//                               "BEGIN "
+//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+//                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+//                               "END"))) {
+//        //% "Failed to execute database query."
+//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+//        return;
+//    }
+
+//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_insert_feed AFTER INSERT ON feeds "
+//                               "BEGIN "
+//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
+//                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
+//                               "END"
+//                               ))) {
+//        //% "Failed to execute database query."
+//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+//        return;
+//    }
+
+//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_move_feed AFTER UPDATE OF folderId ON feeds "
+//                               "BEGIN "
+//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
+//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+//                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
+//                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
+//                               "END"))) {
+//        //% "Failed to execute database query."
+//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
+//        return;
+//    }
+
+    for (const QString &trigger : {QStringLiteral("feeds_unreadCount_update_item"), QStringLiteral("feeds_unreadCount_delete_item"), QStringLiteral("feeds_unreadCount_insert_item"), QStringLiteral("folders_unreadCount_update_feed"), QStringLiteral("folders_counts_delete_feed"), QStringLiteral("folders_counts_insert_feed"), QStringLiteral("folders_counts_move_feed")}) {
+        result = q.exec(QStringLiteral("DROP TRIGGER IF EXISTS %1").arg(trigger));
+        Q_ASSERT_X(result, "init database", "failed to drop obsolete trigger");
     }
 
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_delete_item AFTER DELETE ON items "
-                               "BEGIN "
-                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = old.feedId) WHERE id = old.feedId; "
-                               "END"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE VIEW IF NOT EXISTS total_unread AS SELECT COUNT(id) FROM items WHERE unread = 1"));
+    Q_ASSERT_X(result, "init database", "failed to create total_unread view");
 
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_insert_item AFTER INSERT ON items "
-                               "BEGIN "
-                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = new.feedId) WHERE id = new.feedId; "
-                               "END"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
-
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_update_feed AFTER UPDATE OF unreadCount ON feeds "
-                               "BEGIN "
-                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-                               "END"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
-
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_delete_feed AFTER DELETE ON feeds "
-                               "BEGIN "
-                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-                               "END"))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
-
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_insert_feed AFTER INSERT ON feeds "
-                               "BEGIN "
-                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
-                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
-                               "END"
-                               ))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
-
-    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_move_feed AFTER UPDATE OF folderId ON feeds "
-                               "BEGIN "
-                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
-                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
-                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-                               "END"))) {
-        //% "Failed to execute database query."
-        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-        return;
-    }
+    result = q.exec(QStringLiteral("CREATE VIEW IF NOT EXISTS total_starred AS SELECT COUNT(id) FROM items WHERE starred = 1"));
+    Q_ASSERT_X(result, "init database", "failed to create total_starred view");
 
     result = m_db.commit();
     Q_ASSERT_X(result, "init database", "failed to commit database queries");
@@ -254,12 +267,12 @@ void SQLiteStorage::init()
         result = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
         Q_ASSERT_X(result, "init databse", "failed to enable foreign keys support");
 
-        result = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+        result = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
         Q_ASSERT_X(result, "init database", "failed to query unread items from database");
 
         setTotalUnread(q.value(0).toInt());
 
-        result = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE starred = 1")) && q.next());
+        result = (q.exec(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
         Q_ASSERT_X(result, "init database", "failed to query starred items from database");
 
         setStarred(q.value(0).toInt());
@@ -487,6 +500,14 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         qresult = d->db.commit();
         Q_ASSERT_X(qresult, "folders requested", "failed to perform database commit");
 
+        qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
+        Q_ASSERT(qresult);
+        setTotalUnread(q.value(0).value<quint16>());
+
+        qresult = (q.exec(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
+        Q_ASSERT(qresult);
+        setStarred(q.value(0).value<quint16>());
+
     }
 
     Q_EMIT requestedFolders(updatedFolders, newFolders, deletedIds);
@@ -683,6 +704,16 @@ void SQLiteStorage::folderDeleted(qint64 id)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "folder deleted", "failed to delete folder from database");
 
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
+    Q_ASSERT(qresult);
+
+    setTotalUnread(q.value(0).value<quint16>());
+
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
+    Q_ASSERT(qresult);
+
+    setStarred(q.value(0).value<quint16>());
+
     Q_EMIT deletedFolder(id);
 }
 
@@ -703,15 +734,44 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "folder marked read", "failed to execute database query");
 
-    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+    qresult = q.prepare(QStringLiteral("SELECT id FROM feeds WHERE folderId = ?"));
+    Q_ASSERT_X(qresult, "folder marked read", "failed to prepare database query");
+
+    q.addBindValue(id);
+
+    qresult = q.exec();
+    Q_ASSERT(qresult);
+
+    IdList feedIds;
+    while (q.next()) {
+        feedIds.push_back(q.value(0).value<qint64>());
+    }
+
+    if (!feedIds.empty()) {
+        for (int i = 0; i < feedIds.size(); ++i) {
+            const qint64 feedId = feedIds.at(i);
+
+            qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
+            Q_ASSERT(qresult);
+            q.bindValue(QStringLiteral(":feedId"), feedId);
+            qresult = q.exec();
+            Q_ASSERT(qresult);
+        }
+    }
+
+    qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+    Q_ASSERT(qresult);
+    q.bindValue(QStringLiteral(":folderId"), id);
+    qresult = q.exec();
+    Q_ASSERT(qresult);
+
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
     Q_ASSERT_X(qresult, "folder marked read", "failed to query total unread items count");
 
     setTotalUnread(q.value(0).toInt());
 
     Q_EMIT markedReadFolder(id, newestItem);
 }
-
-
 
 
 
@@ -1055,7 +1115,38 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
         qresult = d->db.commit();
         Q_ASSERT_X(qresult, "feeds requested", "failed to commit changes to database");
+
+        cfh.clear();
     }
+
+    qDeleteAll(currentFeeds);
+
+    qresult = q.exec(QStringLiteral("SELECT id FROM folders"));
+    Q_ASSERT(qresult);
+
+    IdList folderIds;
+    while (q.next()) {
+        folderIds.push_back(q.value(0).value<qint64>());
+    }
+
+    if (!folderIds.empty()) {
+        for (int i = 0; i < folderIds.size(); ++i) {
+            const qint64 folderId = folderIds.at(i);
+            qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId), feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+            Q_ASSERT(qresult);
+            q.bindValue(QStringLiteral(":folderId"), folderId);
+            qresult = q.exec();
+            Q_ASSERT(qresult);
+        }
+    }
+
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
+    Q_ASSERT(qresult);
+    setTotalUnread(q.value(0).value<quint16>());
+
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
+    Q_ASSERT(qresult);
+    setStarred(q.value(0).value<quint16>());
 
     Q_EMIT requestedFeeds(updatedFeedIds, newFeedIds, deletedFeedIds);
 }
@@ -1117,6 +1208,12 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "feed created", "failed to execute database query");
 
+    qresult = q.prepare(QStringLiteral("UPDATE folders SET feedCount = feedCount + 1, unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+    Q_ASSERT(qresult);
+    q.bindValue(QStringLiteral(":folderId"), folderId);
+    qresult = q.exec();
+    Q_ASSERT(qresult);
+
     Q_EMIT createdFeed(id, folderId);
 }
 
@@ -1140,13 +1237,34 @@ void SQLiteStorage::feedDeleted(qint64 id)
 
     QSqlQuery q(d->db);
 
-    bool qresult = q.prepare(QStringLiteral("DELETE FROM feeds WHERE id = ?"));
+    bool qresult = q.prepare(QStringLiteral("SELECT folderId FROM feeds WHERE id = ?"));
+    Q_ASSERT(qresult);
+    q.addBindValue(id);
+    qresult = (q.exec() && q.next());
+    Q_ASSERT(qresult);
+    const qint64 folderId = q.value(0).value<qint64>();
+
+    qresult = q.prepare(QStringLiteral("DELETE FROM feeds WHERE id = ?"));
     Q_ASSERT_X(qresult, "feed deleted", "failed to prepare database query");
 
     q.addBindValue(id);
 
     qresult = q.exec();
     Q_ASSERT_X(qresult, "feed deleted", "failed to execute database query");
+
+    qresult = q.prepare(QStringLiteral("UPDATE folders SET feedCount = feedCount - 1, unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+    Q_ASSERT(qresult);
+    q.bindValue(QStringLiteral(":folderId"), folderId);
+    qresult = q.exec();
+    Q_ASSERT(qresult);
+
+    qresult = (q.prepare(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
+    Q_ASSERT(qresult);
+    setTotalUnread(q.value(0).value<quint16>());
+
+    qresult = (q.prepare(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
+    Q_ASSERT(qresult);
+    setStarred(q.value(0).value<quint16>());
 
     Q_EMIT deletedFeed(id);
 }
@@ -1177,7 +1295,14 @@ void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
 
     QSqlQuery q(d->db);
 
-    bool qresult = q.prepare(QStringLiteral("UPDATE feeds SET folderId = ? WHERE id = ?"));
+    bool qresult = q.prepare(QStringLiteral("SELECT folderId FROM feeds WHERE id = ?"));
+    Q_ASSERT(qresult);
+    q.addBindValue(id);
+    qresult = (q.exec() && q.next());
+    Q_ASSERT(qresult);
+    const qint64 oldFolderId = q.value(0).value<qint64>();
+
+    qresult = q.prepare(QStringLiteral("UPDATE feeds SET folderId = ? WHERE id = ?"));
     Q_ASSERT_X(qresult, "feed moved", "failed to prepare database query");
 
     q.addBindValue(targetFolder);
@@ -1185,6 +1310,14 @@ void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
 
     qresult = q.exec();
     Q_ASSERT_X(qresult, "feed moved", "failed to execute database query");
+
+    for (qint64 fid : {targetFolder, oldFolderId}) {
+        qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId), feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+        Q_ASSERT(qresult);
+        q.bindValue(QStringLiteral(":folderId"), fid);
+        qresult = q.exec();
+        Q_ASSERT(qresult);
+    }
 
     Q_EMIT movedFeed(id, targetFolder);
 }
@@ -1263,7 +1396,26 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "feed marked read", "failed to execute database query");
 
-    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+    qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
+    Q_ASSERT(qresult);
+    q.bindValue(QStringLiteral(":feedId"), id);
+    qresult = q.exec();
+    Q_ASSERT(qresult);
+
+    qresult = q.prepare(QStringLiteral("SELECT folderId FROM feeds WHERE id = ?"));
+    Q_ASSERT(qresult);
+    q.addBindValue(id);
+    qresult = (q.exec() && q.next());
+
+    const qint64 folderId = q.value(0).value<qint64>();
+
+    qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+    Q_ASSERT(qresult);
+    q.bindValue(QStringLiteral(":folderId"), folderId);
+    qresult = q.exec();
+    Q_ASSERT(qresult);
+
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
     Q_ASSERT_X(qresult, "feed marked read", "failed to query all unread items from database");
 
     setTotalUnread(q.value(0).toInt());
@@ -1881,12 +2033,53 @@ void ItemsRequestedWorker::run()
         }
     }
 
+    IdList feedIds;
+    qresult = q.exec(QStringLiteral("SELECT id FROM feeds"));
+    Q_ASSERT(qresult);
+    while (q.next()) {
+        feedIds.push_back(q.value(0).value<qint64>());
+    }
 
-    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+    if (!feedIds.empty()) {
+        qresult = m_db.transaction();
+        Q_ASSERT(qresult);
+        for (const qint64 id : feedIds) {
+            qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
+            Q_ASSERT(qresult);
+            q.bindValue(QStringLiteral(":feedId"), id);
+            qresult = q.exec();
+            Q_ASSERT(qresult);
+        }
+        qresult = m_db.commit();
+        Q_ASSERT(qresult);
+    }
+
+    IdList folderIds;
+    qresult = q.exec(QStringLiteral("SELECT id FROM folders"));
+    Q_ASSERT(qresult);
+    while (q.next()) {
+        folderIds.push_back(q.value(0).value<qint64>());
+    }
+
+    if (!folderIds.empty()) {
+        qresult = m_db.transaction();
+        Q_ASSERT(qresult);
+        for (const qint64 id : folderIds) {
+            qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+            Q_ASSERT(qresult);
+            q.bindValue(QStringLiteral(":folderId"), id);
+            qresult = q.exec();
+            Q_ASSERT(qresult);
+        }
+        qresult = m_db.commit();
+        Q_ASSERT(qresult);
+    }
+
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
     Q_ASSERT_X(qresult, "items requested worker", "failed to select total unread item count from database");
     Q_EMIT gotTotalUnread(q.value(0).toUInt());
 
-    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE starred = 1")) && q.next());
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
     Q_ASSERT_X(qresult, "items requested worker", "failed to select total starred item count from database");
     Q_EMIT gotStarred(q.value(0).toUInt());
 
@@ -1937,8 +2130,10 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
 
     Q_D(SQLiteStorage);
 
+    const QString idListString = d->intListToString(itemIds);
+
     QSqlQuery q(d->db);
-    bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id IN (%1)").arg(d->intListToString(itemIds)));
+    bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id IN (%1)").arg(idListString));
     Q_ASSERT_X(qresult, "items marked", "failed to prepare database query");
 
     q.addBindValue(unread);
@@ -1947,11 +2142,48 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "items marked", "failed to execute databae query");
 
-    if (unread) {
-        setTotalUnread(totalUnread() + itemIds.count());
-    } else {
-        setTotalUnread(totalUnread() - itemIds.count());
+    qresult = q.exec(QStringLiteral("SELECT DISTINCT feedId FROM items WHERE id IN (%1)").arg(idListString));
+    Q_ASSERT(qresult);
+    IdList feedIds;
+    while (q.next()) {
+        feedIds.push_back(q.value(0).value<qint64>());
     }
+    if (!feedIds.empty()) {
+        qresult = d->db.transaction();
+        Q_ASSERT(qresult);
+        for (const qint64 id : feedIds) {
+            qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
+            Q_ASSERT(qresult);
+            q.bindValue(QStringLiteral(":feedId"), id);
+            qresult = q.exec();
+        }
+        qresult = d->db.commit();
+        Q_ASSERT(qresult);
+    }
+
+    qresult = q.exec(QStringLiteral("SELECT DISTINCT folderId FROM feeds WHERE id IN (%1)").arg(d->intListToString(feedIds)));
+    Q_ASSERT(qresult);
+    IdList folderIds;
+    while (q.next()) {
+        folderIds.push_back(q.value(0).value<qint64>());
+    }
+    if (!folderIds.empty()) {
+        qresult = d->db.transaction();
+        Q_ASSERT(qresult);
+        for (const qint64 id : folderIds) {
+            qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+            Q_ASSERT(qresult);
+            q.bindValue(QStringLiteral(":folderId"), id);
+            qresult = q.exec();
+            Q_ASSERT(qresult);
+        }
+        qresult = d->db.commit();
+        Q_ASSERT(qresult);
+    }
+
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
+    Q_ASSERT(qresult);
+    setTotalUnread(q.value(0).value<quint16>());
 
     Q_EMIT markedItems(itemIds, unread);
 }
@@ -2026,6 +2258,29 @@ void SQLiteStorage::itemMarked(qint64 itemId, bool unread)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "item marked", "failed to execute database transaction");
 
+    qresult = q.prepare(QStringLiteral("SELECT it.feedId, fe.folderId FROM items it JOIN feeds fe ON fe.id = it.feedId WHERE it.id = ?"));
+    Q_ASSERT(qresult);
+    q.addBindValue(itemId);
+    qresult = (q.exec() && q.next());
+    Q_ASSERT(qresult);
+
+    const qint64 feedId = q.value(0).value<qint64>();
+    const qint64 folderId = q.value(1).value<qint64>();
+
+    qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = unreadCount + ? WHERE id = ?"));
+    Q_ASSERT(qresult);
+    q.addBindValue(unread ? 1 : -1);
+    q.addBindValue(feedId);
+    qresult = q.exec();
+    Q_ASSERT(qresult);
+
+    qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = unreadCount + ? WHERE id = ?"));
+    Q_ASSERT(qresult);
+    q.addBindValue(unread ? 1 : -1);
+    q.addBindValue(folderId);
+    qresult = q.exec();
+    Q_ASSERT(qresult);
+
     if (unread) {
         setTotalUnread(totalUnread()+1);
     } else {
@@ -2089,6 +2344,12 @@ void SQLiteStorage::allItemsMarkedRead(qint64 newestItemId)
 
     qresult = q.exec();
     Q_ASSERT_X(qresult, "all items marked read", "failed to execute database transaction");
+
+    qresult = q.exec(QStringLiteral("UPDATE feeds SET unreadCount = 0"));
+    Q_ASSERT(qresult);
+
+    qresult = q.exec(QStringLiteral("UPDATE folders SET unreadCount = 0"));
+    Q_ASSERT(qresult);
 
     setTotalUnread(0);
 
@@ -2214,6 +2475,22 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
 
     article->setQueue(aq);
 
+    if ((action == FuotenEnums::MarkAsUnread) || (action == FuotenEnums::MarkAsRead)) {
+        qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = unreadCount + ? WHERE id = ?"));
+        Q_ASSERT(qresult);
+        q.addBindValue((action == FuotenEnums::MarkAsUnread) ? 1 : -1);
+        q.addBindValue(article->feedId());
+        qresult = q.exec();
+        Q_ASSERT(qresult);
+
+        qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = unreadCount + ? WHERE id = ?"));
+        Q_ASSERT(qresult);
+        q.addBindValue((action == FuotenEnums::MarkAsUnread) ? 1 : -1);
+        q.addBindValue(article->folderId());
+        qresult = q.exec();
+        Q_ASSERT(qresult);
+    }
+
     switch (action) {
     case FuotenEnums::MarkAsRead:
         Q_EMIT markedItem(article->id(), false);
@@ -2334,7 +2611,47 @@ void EnqueueMarkReadWorker::run()
     qresult = m_db.commit();
     Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to commit database transaction");
 
-    qresult = (q.exec(QStringLiteral("SELECT COUNT(id) FROM items WHERE unread = 1")) && q.next());
+    qresult = q.exec(QStringLiteral("SELECT id FROM feeds"));
+    Q_ASSERT(qresult);
+    IdList feedIds;
+    while (q.next()) {
+        feedIds.push_back(q.value(0).value<qint64>());
+    }
+    if (!feedIds.empty()) {
+        qresult = m_db.transaction();
+        Q_ASSERT(qresult);
+        for (const qint64 id : feedIds) {
+            qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
+            Q_ASSERT(qresult);
+            q.bindValue(QStringLiteral(":feedId"), id);
+            qresult = q.exec();
+            Q_ASSERT(qresult);
+        }
+        qresult = m_db.commit();
+        Q_ASSERT(qresult);
+    }
+
+    qresult = q.exec(QStringLiteral("SELECT id FROM folders"));
+    Q_ASSERT(qresult);
+    IdList folderIds;
+    while (q.next()) {
+        folderIds.push_back(q.value(0).value<qint64>());
+    }
+    if (!folderIds.empty()) {
+        qresult = m_db.transaction();
+        Q_ASSERT(qresult);
+        for (const qint64 id : folderIds) {
+            qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+            Q_ASSERT(qresult);
+            q.bindValue(QStringLiteral(":folderId"), id);
+            qresult = q.exec();
+            Q_ASSERT(qresult);
+        }
+        qresult = m_db.commit();
+        Q_ASSERT(qresult);
+    }
+
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
     Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to query totol unread item count from database");
     Q_EMIT gotTotalUnread(q.value(0).toUInt());
 
