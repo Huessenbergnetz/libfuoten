@@ -21,46 +21,54 @@
 #include "abstractfeedmodel_p.h"
 #include "../Storage/abstractstorage.h"
 #include "../article.h"
+#include "../API/component.h"
 
 using namespace Fuoten;
 
 AbstractFeedModel::AbstractFeedModel(QObject *parent) :
     BaseModel(* new AbstractFeedModelPrivate, parent)
 {
-
+    setStorage(Component::defaultStorage());
 }
 
 
 AbstractFeedModel::AbstractFeedModel(AbstractFeedModelPrivate &dd, QObject *parent) :
     BaseModel(dd, parent)
 {
-
+    setStorage(Component::defaultStorage());
 }
 
 
 
-void AbstractFeedModel::handleStorageChanged()
+void AbstractFeedModel::handleStorageChanged(Fuoten::AbstractStorage *old)
 {
+    if (old) {
+        old->disconnect(this);
+    }
+
     AbstractStorage *s = storage();
-    connect(s, &AbstractStorage::readyChanged, this, &AbstractFeedModel::load);
 
-    connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFeedModel::folderMarkedRead);
-    connect(s, &AbstractStorage::markedReadFolderInQueue, this, &AbstractFeedModel::folderMarkedRead);
-    connect(s, &AbstractStorage::deletedFolder, this, &AbstractFeedModel::folderDeleted);
+    if (s) {
+        connect(s, &AbstractStorage::readyChanged, this, &AbstractFeedModel::load);
 
-    connect(s, &AbstractStorage::requestedFeeds, this, &AbstractFeedModel::feedsRequested);
-    connect(s, &AbstractStorage::createdFeed, this, &AbstractFeedModel::feedCreated);
-    connect(s, &AbstractStorage::deletedFeed, this, &AbstractFeedModel::feedDeleted);
-    connect(s, &AbstractStorage::movedFeed, this, &AbstractFeedModel::feedMoved);
-    connect(s, &AbstractStorage::renamedFeed, this, &AbstractFeedModel::feedRenamed);
-    connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFeedModel::feedMarkedRead);
-    connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractFeedModel::feedMarkedRead);
+        connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFeedModel::folderMarkedRead);
+        connect(s, &AbstractStorage::markedReadFolderInQueue, this, &AbstractFeedModel::folderMarkedRead);
+        connect(s, &AbstractStorage::deletedFolder, this, &AbstractFeedModel::folderDeleted);
 
-    connect(s, &AbstractStorage::requestedItems, this, &AbstractFeedModel::itemsRquested);
-    connect(s, &AbstractStorage::markedItem, this, &AbstractFeedModel::itemMarked);
-    connect(s, &AbstractStorage::markedItems, this, &AbstractFeedModel::itemsMarked);
-    connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractFeedModel::itemsMarked);
-    connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractFeedModel::itemsMarked);
+        connect(s, &AbstractStorage::requestedFeeds, this, &AbstractFeedModel::feedsRequested);
+        connect(s, &AbstractStorage::createdFeed, this, &AbstractFeedModel::feedCreated);
+        connect(s, &AbstractStorage::deletedFeed, this, &AbstractFeedModel::feedDeleted);
+        connect(s, &AbstractStorage::movedFeed, this, &AbstractFeedModel::feedMoved);
+        connect(s, &AbstractStorage::renamedFeed, this, &AbstractFeedModel::feedRenamed);
+        connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFeedModel::feedMarkedRead);
+        connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractFeedModel::feedMarkedRead);
+
+        connect(s, &AbstractStorage::requestedItems, this, &AbstractFeedModel::itemsRquested);
+        connect(s, &AbstractStorage::markedItem, this, &AbstractFeedModel::itemMarked);
+        connect(s, &AbstractStorage::markedItems, this, &AbstractFeedModel::itemsMarked);
+        connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractFeedModel::itemsMarked);
+        connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractFeedModel::itemsMarked);
+    }
 }
 
 

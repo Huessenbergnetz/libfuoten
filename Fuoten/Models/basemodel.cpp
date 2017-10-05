@@ -19,7 +19,6 @@
  */
 
 #include "basemodel_p.h"
-#include "../API/component.h"
 #include <QMetaEnum>
 
 using namespace Fuoten;
@@ -35,7 +34,6 @@ BaseModel::BaseModel(BaseModelPrivate &dd, QObject *parent) :
     QAbstractItemModel(parent), d_ptr(&dd)
 {
 }
-
 
 
 BaseModel::~BaseModel()
@@ -56,35 +54,25 @@ void BaseModel::setInOperation(bool nInOperation)
 }
 
 
-
-
-AbstractStorage *BaseModel::storage() const
-{
-    Q_D(const BaseModel);
-    AbstractStorage *_storage = d->storage;
-    if (!_storage) {
-        _storage = Component::defaultStorage();
-    }
-    return _storage;
-}
+AbstractStorage *BaseModel::storage() const { Q_D(const BaseModel); return d->storage; }
 
 void BaseModel::setStorage(AbstractStorage *nStorage)
 {
     Q_D(BaseModel);
     if (nStorage != d->storage) {
+        AbstractStorage *old = d->storage;
         d->storage = nStorage;
         qDebug("Changed storage to %p.", d->storage);
         Q_EMIT storageChanged(storage());
 
-        handleStorageChanged();
+        handleStorageChanged(old);
     }
 }
 
 
-
-void BaseModel::handleStorageChanged()
+void BaseModel::handleStorageChanged(AbstractStorage *old)
 {
-
+    Q_UNUSED(old)
 }
 
 
@@ -100,7 +88,6 @@ QHash<qint64, QModelIndex> BaseModel::findByIDs(const IdList &ids) const
     Q_UNUSED(ids)
     return QHash<qint64, QModelIndex>();
 }
-
 
 
 bool BaseModel::loaded() const
@@ -131,7 +118,6 @@ void BaseModel::setParentId(qint64 nParentId)
 }
 
 
-
 double BaseModel::doubleParentId() const { Q_D(const BaseModel); return static_cast<double>(d->parentId); }
 
 void BaseModel::setDoubleParentId(double nDoubleParentId)
@@ -153,8 +139,6 @@ void BaseModel::setSortingRole(FuotenEnums::SortingRole nSortingRole)
 }
 
 
-
-
 Qt::SortOrder BaseModel::sortOrder() const { Q_D(const BaseModel); return d->sortOrder; }
 
 void BaseModel::setSortOrder(Qt::SortOrder nSortOrder)
@@ -166,8 +150,6 @@ void BaseModel::setSortOrder(Qt::SortOrder nSortOrder)
         Q_EMIT sortOrderChanged(sortOrder());
     }
 }
-
-
 
 
 bool BaseModel::unreadOnly() const { Q_D(const BaseModel); return d->unreadOnly; }
@@ -183,8 +165,6 @@ void BaseModel::setUnreadOnly(bool nUnreadOnly)
 }
 
 
-
-
 int BaseModel::limit() const { Q_D(const BaseModel); return d->limit; }
 
 void BaseModel::setLimit(int nLimit)
@@ -196,8 +176,6 @@ void BaseModel::setLimit(int nLimit)
         Q_EMIT limitChanged(limit());
     }
 }
-
-
 
 
 void BaseModel::reload()

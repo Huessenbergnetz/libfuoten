@@ -367,7 +367,7 @@ protected:
      *
      * \endcode
      */
-    virtual void handleStorageChanged();
+    virtual void handleStorageChanged(AbstractStorage *old);
 
     /*!
      * \brief Returns true if the model has initially loaded its data.

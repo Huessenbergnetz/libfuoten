@@ -20,6 +20,7 @@
 
 #include "abstractarticlemodel_p.h"
 #include "../Storage/abstractstorage.h"
+#include "../API/component.h"
 #include <QMetaEnum>
 
 using namespace Fuoten;
@@ -27,12 +28,14 @@ using namespace Fuoten;
 AbstractArticleModel::AbstractArticleModel(QObject *parent) :
     BaseModel(* new AbstractArticleModelPrivate, parent)
 {
+    setStorage(Component::defaultStorage());
 }
 
 
 AbstractArticleModel::AbstractArticleModel(AbstractArticleModelPrivate &dd, QObject *parent) :
     BaseModel(dd, parent)
 {
+    setStorage(Component::defaultStorage());
 }
 
 
@@ -82,24 +85,31 @@ void AbstractArticleModel::setBodyLimit(int nBodyLimit)
 
 
 
-void AbstractArticleModel::handleStorageChanged()
+void AbstractArticleModel::handleStorageChanged(AbstractStorage *old)
 {
+    if (old) {
+        old->disconnect(this);
+    }
+
     AbstractStorage *s = storage();
-    connect(s, &AbstractStorage::gotArticlesAsync, this, &AbstractArticleModel::gotArticlesAsync);
-    connect(s, &AbstractStorage::requestedItems, this, &AbstractArticleModel::itemsRequested);
-    connect(s, &AbstractStorage::markedReadFolder, this, &AbstractArticleModel::folderMarkedRead);
-    connect(s, &AbstractStorage::markedReadFolderInQueue, this, &AbstractArticleModel::folderMarkedReadInQueue);
-    connect(s, &AbstractStorage::markedReadFeed, this, &AbstractArticleModel::feedMarkedRead);
-    connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractArticleModel::feedMarkedReadInQueue);
-    connect(s, &AbstractStorage::deletedFolder, this, &AbstractArticleModel::folderDeleted);
-    connect(s, &AbstractStorage::deletedFeed, this, &AbstractArticleModel::feedDeleted);
-    connect(s, &AbstractStorage::markedItem, this, &AbstractArticleModel::itemMarked);
-    connect(s, &AbstractStorage::markedItems, this, &AbstractArticleModel::itemsMarked);
-    connect(s, &AbstractStorage::starredItem, this, &AbstractArticleModel::itemStarred);
-    connect(s, &AbstractStorage::starredItems, this, &AbstractArticleModel::itemsStarred);
-    connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractArticleModel::allItemsMarkedRead);
-    connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractArticleModel::allItemsMarkedReadInQueue);
-    connect(s, &AbstractStorage::queueCleared, this, &AbstractArticleModel::queueCleared);
+
+    if (s) {
+        connect(s, &AbstractStorage::gotArticlesAsync, this, &AbstractArticleModel::gotArticlesAsync);
+        connect(s, &AbstractStorage::requestedItems, this, &AbstractArticleModel::itemsRequested);
+        connect(s, &AbstractStorage::markedReadFolder, this, &AbstractArticleModel::folderMarkedRead);
+        connect(s, &AbstractStorage::markedReadFolderInQueue, this, &AbstractArticleModel::folderMarkedReadInQueue);
+        connect(s, &AbstractStorage::markedReadFeed, this, &AbstractArticleModel::feedMarkedRead);
+        connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractArticleModel::feedMarkedReadInQueue);
+        connect(s, &AbstractStorage::deletedFolder, this, &AbstractArticleModel::folderDeleted);
+        connect(s, &AbstractStorage::deletedFeed, this, &AbstractArticleModel::feedDeleted);
+        connect(s, &AbstractStorage::markedItem, this, &AbstractArticleModel::itemMarked);
+        connect(s, &AbstractStorage::markedItems, this, &AbstractArticleModel::itemsMarked);
+        connect(s, &AbstractStorage::starredItem, this, &AbstractArticleModel::itemStarred);
+        connect(s, &AbstractStorage::starredItems, this, &AbstractArticleModel::itemsStarred);
+        connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractArticleModel::allItemsMarkedRead);
+        connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractArticleModel::allItemsMarkedReadInQueue);
+        connect(s, &AbstractStorage::queueCleared, this, &AbstractArticleModel::queueCleared);
+    }
 }
 
 

@@ -63,7 +63,7 @@ protected:
     /*!
      * \brief Connetcs the folder related signals of AbstractStorage to the model's slots.
      */
-    void handleStorageChanged() override;
+    void handleStorageChanged(AbstractStorage *old) override;
 
     /*!
      * \brief Returns the list of Folder objects in the model.

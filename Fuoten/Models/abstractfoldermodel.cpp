@@ -22,13 +22,14 @@
 #include "../Storage/abstractstorage.h"
 #include "../fuoten.h"
 #include "../article.h"
+#include "../API/component.h"
 
 using namespace Fuoten;
 
 AbstractFolderModel::AbstractFolderModel(QObject *parent) :
     BaseModel(* new AbstractFolderModelPrivate, parent)
 {
-
+    setStorage(Component::defaultStorage());
 }
 
 
@@ -36,34 +37,41 @@ AbstractFolderModel::AbstractFolderModel(QObject *parent) :
 AbstractFolderModel::AbstractFolderModel(AbstractFolderModelPrivate &dd, QObject *parent) :
     BaseModel(dd, parent)
 {
-
+    setStorage(Component::defaultStorage());
 }
 
 
 
-void AbstractFolderModel::handleStorageChanged()
+void AbstractFolderModel::handleStorageChanged(Fuoten::AbstractStorage *old)
 {
+    if (old) {
+        old->disconnect(this);
+    }
+
     AbstractStorage *s = storage();
-    connect(s, &AbstractStorage::readyChanged, this, &AbstractFolderModel::load);
-    connect(s, &AbstractStorage::requestedFolders, this, &AbstractFolderModel::foldersRequested);
-    connect(s, &AbstractStorage::renamedFolder, this, &AbstractFolderModel::folderRenamed);
-    connect(s, &AbstractStorage::createdFolder, this, &AbstractFolderModel::folderCreated);
-    connect(s, &AbstractStorage::deletedFolder, this, &AbstractFolderModel::folderDeleted);
-    connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFolderModel::folderMarkedRead);
-    connect(s, &AbstractStorage::markedReadFolderInQueue, this, &AbstractFolderModel::folderMarkedRead);
 
-    connect(s, &AbstractStorage::requestedFeeds, this, &AbstractFolderModel::feedsRequested);
-    connect(s, &AbstractStorage::createdFeed, this, &AbstractFolderModel::feedCreated);
-    connect(s, &AbstractStorage::deletedFeed, this, &AbstractFolderModel::updateCountValues);
-    connect(s, &AbstractStorage::movedFeed, this, &AbstractFolderModel::updateCountValues);
-    connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFolderModel::feedMarkedRead);
-    connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractFolderModel::feedMarkedRead);
+    if (s) {
+        connect(s, &AbstractStorage::readyChanged, this, &AbstractFolderModel::load);
+        connect(s, &AbstractStorage::requestedFolders, this, &AbstractFolderModel::foldersRequested);
+        connect(s, &AbstractStorage::renamedFolder, this, &AbstractFolderModel::folderRenamed);
+        connect(s, &AbstractStorage::createdFolder, this, &AbstractFolderModel::folderCreated);
+        connect(s, &AbstractStorage::deletedFolder, this, &AbstractFolderModel::folderDeleted);
+        connect(s, &AbstractStorage::markedReadFolder, this, &AbstractFolderModel::folderMarkedRead);
+        connect(s, &AbstractStorage::markedReadFolderInQueue, this, &AbstractFolderModel::folderMarkedRead);
 
-    connect(s, &AbstractStorage::requestedItems, this, &AbstractFolderModel::updateCountValues);
-    connect(s, &AbstractStorage::markedItems, this, &AbstractFolderModel::updateCountValues);
-    connect(s, &AbstractStorage::markedItem, this, &AbstractFolderModel::itemMarked);
-    connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractFolderModel::updateCountValues);
-    connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractFolderModel::updateCountValues);
+        connect(s, &AbstractStorage::requestedFeeds, this, &AbstractFolderModel::feedsRequested);
+        connect(s, &AbstractStorage::createdFeed, this, &AbstractFolderModel::feedCreated);
+        connect(s, &AbstractStorage::deletedFeed, this, &AbstractFolderModel::updateCountValues);
+        connect(s, &AbstractStorage::movedFeed, this, &AbstractFolderModel::updateCountValues);
+        connect(s, &AbstractStorage::markedReadFeed, this, &AbstractFolderModel::feedMarkedRead);
+        connect(s, &AbstractStorage::markedReadFeedInQueue, this, &AbstractFolderModel::feedMarkedRead);
+
+        connect(s, &AbstractStorage::requestedItems, this, &AbstractFolderModel::updateCountValues);
+        connect(s, &AbstractStorage::markedItems, this, &AbstractFolderModel::updateCountValues);
+        connect(s, &AbstractStorage::markedItem, this, &AbstractFolderModel::itemMarked);
+        connect(s, &AbstractStorage::markedAllItemsRead, this, &AbstractFolderModel::updateCountValues);
+        connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractFolderModel::updateCountValues);
+    }
 }
 
 

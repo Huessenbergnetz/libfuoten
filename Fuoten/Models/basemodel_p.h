@@ -28,27 +28,18 @@ namespace Fuoten {
 class BaseModelPrivate
 {
 public:
-    BaseModelPrivate() :
-        inOperation(false),
-        storage(nullptr),
-        loaded(false),
-        parentId(-1),
-        sortingRole(FuotenEnums::ID),
-        sortOrder(Qt::AscendingOrder),
-        unreadOnly(false),
-        limit(0)
-    {}
+    BaseModelPrivate() {}
 
     virtual ~BaseModelPrivate() {}
 
-    bool inOperation;
-    AbstractStorage *storage;
-    bool loaded;
-    qint64 parentId;
-    FuotenEnums::SortingRole sortingRole;
-    Qt::SortOrder sortOrder;
-    bool unreadOnly;
-    int limit;
+    bool inOperation = false;
+    AbstractStorage *storage = nullptr;
+    bool loaded = false;
+    qint64 parentId = -1;
+    FuotenEnums::SortingRole sortingRole = FuotenEnums::ID;
+    Qt::SortOrder sortOrder = Qt::AscendingOrder;
+    bool unreadOnly = false;
+    int limit = 0;
 
 private:
     Q_DISABLE_COPY(BaseModelPrivate)

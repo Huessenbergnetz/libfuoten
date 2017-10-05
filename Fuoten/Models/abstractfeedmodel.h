@@ -187,7 +187,7 @@ protected:
     /*!
      * \brief Connects the feed realted signals of AbstractStorage to the model's slots.
      */
-    void handleStorageChanged() override;
+    void handleStorageChanged(AbstractStorage *old) override;
 
     /*!
      * \brief Returns the list of Feed objects in the model.
