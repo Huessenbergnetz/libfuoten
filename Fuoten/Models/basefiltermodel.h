@@ -94,7 +94,7 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
      */
     Q_PROPERTY(QString search READ search WRITE setSearch NOTIFY searchChanged)
     /*!
-     * \brief When true, items with no unread items will be hidden.
+     * \brief When \c true, items with no unread items will be hidden.
      *
      * \par Access functions:
      * <TABLE><TR><TD>bool</TD><TD>hideRead() const</TD></TR><TR><TD>void</TD><TD>setHideRead(bool nHideRead)</TD></TR></TABLE>
@@ -111,6 +111,16 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
      * <TABLE><TR><TD>void</TD><TD>doubleParentIdChanged(double doubleParentId)</TD></TR></TABLE>
      */
     Q_PROPERTY(double doubleParentId READ doubleParentId WRITE setDoubleParentId NOTIFY doubleParentIdChanged)
+    /*!
+     * \brief This property holds \c true after the source model has initially loaded its data.
+     *
+     * \par Access functions:
+     * bool loaded() const
+     *
+     * \par Notifier signal:
+     * void loadedChanged(bool loaded)
+     */
+    Q_PROPERTY(bool loaded READ loaded NOTIFY loadedChanged)
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
     Q_ENUMS(Fuoten::FuotenEnums::SortingRole)
 #endif
@@ -173,6 +183,11 @@ public:
      */
     bool hideRead() const;
 
+    /*!
+     * \brief Returns \c true if the source model has initially loaded its data.
+     */
+    virtual bool loaded() const = 0;
+
 
     /*!
      * \brief Sets the local storage handler for the underlying model.
@@ -229,8 +244,16 @@ public:
     Q_INVOKABLE virtual void reload(const QString &locale = QString()) = 0;
 
 
+    /*!
+     * \brief Getter function for the \link BaseModel::doubleParentId doubleParentId \endlink property.
+     * \sa setDoubleParentId(), doubleParentIdChanged()
+     */
     double doubleParentId() const;
 
+    /*!
+     * \brief Setter function for the \link BaseModel::doubleParentId doubleParentId \endlink property.
+     * \sa doubleParentId(), doubleParentIdChanged()
+     */
     void setDoubleParentId(double nDoubleParentId);
 
 Q_SIGNALS:
@@ -276,6 +299,16 @@ Q_SIGNALS:
      */
     void hideReadChanged(bool hideRead);
 
+    /*!
+     * \brief This signal is emitted if the loaded property changes.
+     * \sa loaded
+     */
+    void loadedChanged(bool loaded);
+
+    /*!
+     * \brief This signal is emitted if the doubleParentId property changes.
+     * \sa doubleParentId
+     */
     void doubleParentIdChanged(double doubleParentId);
 
 protected:

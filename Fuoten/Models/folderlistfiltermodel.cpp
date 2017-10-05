@@ -33,6 +33,7 @@ FolderListFilterModel::FolderListFilterModel(QObject *parent) :
     connect(d->flm.data(), &FolderListModel::storageChanged, this, &FolderListFilterModel::storageChanged);
     connect(d->flm.data(), &FolderListModel::parentIdChanged, this, &FolderListFilterModel::parentIdChanged);
     connect(d->flm.data(), &FolderListModel::doubleParentIdChanged, this, &FolderListFilterModel::doubleParentIdChanged);
+    connect(d->flm.data(), &FolderListModel::loadedChanged, this, &FolderListFilterModel::loadedChanged);
     setSourceModel(d->flm.data());
 }
 
@@ -45,6 +46,7 @@ FolderListFilterModel::FolderListFilterModel(FolderListFilterModelPrivate &dd, Q
     connect(d->flm.data(), &FolderListModel::storageChanged, this, &FolderListFilterModel::storageChanged);
     connect(d->flm.data(), &FolderListModel::parentIdChanged, this, &FolderListFilterModel::parentIdChanged);
     connect(d->flm.data(), &FolderListModel::doubleParentIdChanged, this, &FolderListFilterModel::doubleParentIdChanged);
+    connect(d->flm.data(), &FolderListModel::loadedChanged, this, &FolderListFilterModel::loadedChanged);
     setSourceModel(d->flm.data());
 }
 
@@ -150,5 +152,15 @@ bool FolderListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &
     } else {
         Folder *f = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent)).value<Folder*>();
         return (find(f->name()) && (f->unreadCount() > 0));
+    }
+}
+
+bool FolderListFilterModel::loaded() const
+{
+    Q_D(const FolderListFilterModel);
+    if (d->flm) {
+        return d->flm->loaded();
+    } else {
+        return false;
     }
 }

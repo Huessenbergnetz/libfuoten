@@ -133,6 +133,7 @@ public:
      */
     void setParentIdType(FuotenEnums::Type nParentIdType);
 
+    bool loaded() const override;
 
 Q_SIGNALS:
     /*!

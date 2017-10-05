@@ -35,6 +35,7 @@ ArticleListFilterModel::ArticleListFilterModel(QObject *parent) :
     connect(d->alm.data(), &ArticleListModel::doubleParentIdChanged, this, &BaseFilterModel::doubleParentIdChanged);
     connect(d->alm.data(), &ArticleListModel::parentIdTypeChanged, this, &ArticleListFilterModel::parentIdChanged);
     connect(d->alm.data(), &ArticleListModel::bodyLimitChanged, this, &ArticleListFilterModel::bodyLimitChanged);
+    connect(d->alm.data(), &ArticleListModel::loadedChanged, this, &BaseFilterModel::loadedChanged);
     setSourceModel(d->alm.data());
 }
 
@@ -49,6 +50,7 @@ ArticleListFilterModel::ArticleListFilterModel(ArticleListFilterModelPrivate &&d
     connect(d->alm.data(), &ArticleListModel::doubleParentIdChanged, this, &BaseFilterModel::doubleParentIdChanged);
     connect(d->alm.data(), &ArticleListModel::parentIdTypeChanged, this, &ArticleListFilterModel::parentIdChanged);
     connect(d->alm.data(), &ArticleListModel::bodyLimitChanged, this, &ArticleListFilterModel::bodyLimitChanged);
+    connect(d->alm.data(), &ArticleListModel::loadedChanged, this, &BaseFilterModel::loadedChanged);
     setSourceModel(d->alm.data());
 }
 
@@ -198,5 +200,15 @@ void ArticleListFilterModel::setBodyLimit(int nBodyLimit)
     Q_D(ArticleListFilterModel);
     if (d->alm) {
         d->alm->setBodyLimit(nBodyLimit);
+    }
+}
+
+bool ArticleListFilterModel::loaded() const
+{
+    Q_D(const ArticleListFilterModel);
+    if (d->alm) {
+        return d->alm->loaded();
+    } else {
+        return false;
     }
 }

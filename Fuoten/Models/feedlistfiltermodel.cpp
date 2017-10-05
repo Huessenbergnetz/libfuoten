@@ -33,6 +33,7 @@ FeedListFilterModel::FeedListFilterModel(QObject *parent) :
     connect(d->flm.data(), &FeedListModel::storageChanged, this, &FeedListFilterModel::storageChanged);
     connect(d->flm.data(), &FeedListModel::parentIdChanged, this, &FeedListFilterModel::parentIdChanged);
     connect(d->flm.data(), &FeedListModel::doubleParentIdChanged, this, &FeedListFilterModel::doubleParentIdChanged);
+    connect(d->flm.data(), &FeedListModel::loadedChanged, this, &FeedListFilterModel::loadedChanged);
     setSourceModel(d->flm.data());
 }
 
@@ -45,6 +46,7 @@ FeedListFilterModel::FeedListFilterModel(FeedListFilterModelPrivate &dd, QObject
     connect(d->flm.data(), &FeedListModel::storageChanged, this, &FeedListFilterModel::storageChanged);
     connect(d->flm.data(), &FeedListModel::parentIdChanged, this, &FeedListFilterModel::parentIdChanged);
     connect(d->flm.data(), &FeedListModel::doubleParentIdChanged, this, &FeedListFilterModel::doubleParentIdChanged);
+    connect(d->flm.data(), &FeedListModel::loadedChanged, this, &FeedListFilterModel::loadedChanged);
     setSourceModel(d->flm.data());
 }
 
@@ -247,5 +249,16 @@ void FeedListFilterModel::setSortByFolder(bool nSortByFolder)
         qDebug("Changed sortByFolder to %s.", d->sortByFolder ? "true" : "false");
         Q_EMIT sortByFolderChanged(sortByFolder());
         invalidate();
+    }
+}
+
+
+bool FeedListFilterModel::loaded() const
+{
+    Q_D(const FeedListFilterModel);
+    if (d->flm) {
+        return d->flm->loaded();
+    } else {
+        return false;
     }
 }

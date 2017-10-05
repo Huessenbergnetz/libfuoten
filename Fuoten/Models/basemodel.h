@@ -121,6 +121,21 @@ class FUOTENSHARED_EXPORT BaseModel : public QAbstractItemModel
      * <TABLE><TR><TD>void</TD><TD>limitChanged(int limit)</TD></TR></TABLE>
      */
     Q_PROPERTY(int limit READ limit WRITE setLimit NOTIFY limitChanged)
+    /*!
+     * \brief This property holds \c true if the model has initially loaded the data.
+     *
+     * While it is \c true, load() will return immediately without loading data. Use reload() instead.
+     * When creating a derived class, you should use setLoaded() after your model has initially loaded
+     * the data.
+     *
+     * \par Access functions:
+     * void setLoaded(bool loaded)
+     * bool loaded() const
+     *
+     * \par Notifier signal:
+     * void loadedChanged(bool loaded)
+     */
+    Q_PROPERTY(bool loaded READ loaded NOTIFY loadedChanged)
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
     Q_ENUMS(Fuoten::FuotenEnums::SortingRole)
 #endif
@@ -194,6 +209,11 @@ public:
      * \sa BaseModel::setLimit(), BaseModel::limitChanged()
      */
     int limit() const;
+    /*!
+     * \brief Getter function for the \link BaseModel::loaded loaded \endlink property.     *
+     * \sa setLoaded(), loadedChanged()
+     */
+    bool loaded() const;
 
 
 
@@ -286,7 +306,7 @@ public Q_SLOTS:
     /*!
      * \brief Reloads the complete model.
      *
-     * Will call clear(), will than set loaded() to false and will then call load().
+     * Will call clear(), will than set \link BaseModel::loaded loaded \endlink to false and will then call load().
      */
     virtual void reload();
 
@@ -331,6 +351,11 @@ Q_SIGNALS:
      * \sa BaseModel::limit(), BaseModel::setLimit()
      */
     void limitChanged(int limit);
+    /*!
+     * \brief This is emitted if the value of the \link BaseModel::loaded loaded \endlink property changes.
+     * \sa loaded(), setLoaded()
+     */
+    void loadedChanged(bool loaded);
 
 
 protected:
@@ -370,19 +395,12 @@ protected:
     virtual void handleStorageChanged(AbstractStorage *old);
 
     /*!
-     * \brief Returns true if the model has initially loaded its data.
+     * \brief Set this to \c true if the model has initially loaded its data.
      *
-     * \sa setLoaded()
-     */
-    bool loaded() const;
-
-    /*!
-     * \brief Set this to true if the model has initially loaded its data.
-     *
-     * In the implementation of a BaseModel this should be set in the implementation of the load() function,
+     * In the reimplementation of a BaseModel this should be set in the implementation of the load() function,
      * after the initial data has been loaded.
      *
-     * \sa loaded()
+     * \sa BaseModel::loaded
      */
     void setLoaded(bool loaded);
 

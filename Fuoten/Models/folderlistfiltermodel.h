@@ -81,6 +81,8 @@ public:
      */
     Q_INVOKABLE void reload(const QString &locale = QString()) override;
 
+    bool loaded() const;
+
 protected:
     FolderListFilterModel(FolderListFilterModelPrivate &dd, QObject *parent = nullptr);
 

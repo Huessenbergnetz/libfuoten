@@ -100,7 +100,10 @@ bool BaseModel::loaded() const
 void BaseModel::setLoaded(bool loaded)
 {
     Q_D(BaseModel);
-    d->loaded = loaded;
+    if (d->loaded != loaded) {
+        d->loaded = loaded;
+        Q_EMIT loadedChanged(d->loaded);
+    }
 }
 
 

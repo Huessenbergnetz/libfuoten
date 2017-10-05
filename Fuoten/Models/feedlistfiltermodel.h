@@ -123,6 +123,8 @@ public:
      */
     void setSortByFolder(bool nSortByFolder);
 
+    bool loaded() const override;
+
 Q_SIGNALS:
     /*!
      * \brief This is emitted if the \link FeedListFilterModel::respectPinned \endlink property changes.
