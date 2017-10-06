@@ -94,7 +94,6 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
             //% "The background request is not currently allowed due to platform policy."
             d->text = qtTrId("err-net-reply-9");
             break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
         case QNetworkReply::TooManyRedirectsError:
             //% "While following redirects, the maximum limit was reached."
             d->text = qtTrId("err-net-reply-10");
@@ -103,7 +102,6 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
             //% "While following redirects, the network access API detected a redirect from an encrypted protocol (https) to an unencrypted one (http)."
             d->text = qtTrId("err-net-reply-11");
             break;
-#endif
         case QNetworkReply::ProxyConnectionRefusedError:
             //% "The connection to the proxy server was refused (the proxy server is not accepting requests)."
             d->text = qtTrId("err-net-reply-101");
@@ -144,7 +142,6 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
             //% "The request needed to be sent again, but this failed for example because the upload data could not be read a second time."
             d->text = qtTrId("err-net-reply-205");
             break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
         case QNetworkReply::ContentConflictError:
             //% "The request could not be completed due to a conflict with the current state of the resource."
             d->text = qtTrId("err-net-reply-206");
@@ -165,7 +162,6 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
             //% "The server is unable to handle the request at this time."
             d->text = qtTrId("err-net-reply-403");
             break;
-#endif
         case QNetworkReply::ProtocolUnknownError:
             //% "The Network Access API cannot honor the request because the protocol is not known."
             d->text = qtTrId("err-net-reply-301");
@@ -190,12 +186,10 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
             //% "A breakdown in protocol was detected (parsing error, invalid or unexpected responses, etc.)."
             d->text = qtTrId("err-net-reply-399");
             break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
         case QNetworkReply::UnknownServerError:
             //% "An unknown error related to the server response was detected."
             d->text = qtTrId("err-net-reply-499");
             break;
-#endif
         default:
             //% "An unknown error related to the server response was detected."
             d->text = qtTrId("err-net-reply-499");

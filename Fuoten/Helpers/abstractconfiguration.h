@@ -23,11 +23,7 @@
 
 #include <QSettings>
 #include <QDateTime>
-#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-#include "versionnumber.h"
-#else
 #include <QVersionNumber>
-#endif
 #include "../fuoten_global.h"
 #include "../fuoten.h"
 

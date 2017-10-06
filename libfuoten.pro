@@ -175,7 +175,6 @@ HEADERS += \
     Fuoten/Helpers/accountvalidator.h \
     Fuoten/Helpers/accountvalidator_p.h \
     Fuoten/fuoten.h \
-    Fuoten/Helpers/versionnumber.h \
     Fuoten/baseitem.h \
     Fuoten/baseitem_p.h \
     Fuoten/folder.h \
@@ -258,7 +257,6 @@ SOURCES += \
     Fuoten/API/getstatus.cpp \
     Fuoten/API/getuser.cpp \
     Fuoten/Helpers/accountvalidator.cpp \
-    Fuoten/Helpers/versionnumber.cpp \
     Fuoten/baseitem.cpp \
     Fuoten/folder.cpp \
     Fuoten/Storage/abstractstorage.cpp \

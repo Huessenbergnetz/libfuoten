@@ -90,11 +90,7 @@ public:
         ApplicationError    = 6,    /**< An error occurred in the local application. */
         StorageError        = 7     /**< An error occurred on the storage layer. */
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Type)
-#else
-    Q_ENUMS(Type)
-#endif
 
 
     /*!
@@ -106,11 +102,7 @@ public:
         Critical    = 2,    /**< A critical error has occurred, the operation has been canceled */
         Fatal       = 3     /**< A fatal error has occurred, the application will be exited */
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Severity)
-#else
-    Q_ENUMS(Severity)
-#endif
 
     /*!
      * \brief Constructs a new empty Error object.
@@ -223,11 +215,5 @@ private:
 };
 
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Fuoten::Error::Type)
-Q_DECLARE_METATYPE(Fuoten::Error::Severity)
-#endif
-
 
 #endif // FUOTENERROR_H

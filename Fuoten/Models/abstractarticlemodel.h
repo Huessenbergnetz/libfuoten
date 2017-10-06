@@ -72,9 +72,6 @@ class FUOTENSHARED_EXPORT AbstractArticleModel : public BaseModel
      * <TABLE><TR><TD>void</TD><TD>bodyLimitChanged(int bodyLimit)</TD></TR></TABLE>
      */
     Q_PROPERTY(int bodyLimit READ bodyLimit WRITE setBodyLimit NOTIFY bodyLimitChanged)
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-    Q_ENUMS(Fuoten::FuotenEnums::Type)
-#endif
 public:
     /*!
      * \brief Constructs a new empty abstract Article model with the given \a parent.

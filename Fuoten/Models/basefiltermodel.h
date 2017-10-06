@@ -121,9 +121,6 @@ class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
      * void loadedChanged(bool loaded)
      */
     Q_PROPERTY(bool loaded READ loaded NOTIFY loadedChanged)
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-    Q_ENUMS(Fuoten::FuotenEnums::SortingRole)
-#endif
 public:
     /*!
      * \brief Constructs a new base filter model with the given \a parent.

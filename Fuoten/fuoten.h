@@ -45,11 +45,7 @@ public:
         All     = 3,    /**< All items/articles */
         Item    = 4     /**< Item/Article */
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(Type)
-#else
-    Q_ENUMS(Type)
-#endif
 
     /*!
      * \brief Sorting role.
@@ -62,11 +58,7 @@ public:
         FeedCount   = 4,    /**< Sort by feed count (only applicable to folders) */
         FolderName  = 5     /**< Sort by folder name (only applicable to feeds) */
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(SortingRole)
-#else
-    Q_ENUMS(SortingRole)
-#endif
 
     /*!
      * \brief Actions for the local queue.
@@ -79,12 +71,7 @@ public:
         Unstar          = 0x8     /**< The item has been unstarred. */
     };
     Q_DECLARE_FLAGS(QueueActions, QueueAction)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_FLAG(QueueActions)
-#else
-    Q_ENUMS(QueueAction)
-    Q_FLAGS(QueueActions)
-#endif
 
     /*!
      * \brief Item per feed deletion strategy.
@@ -94,11 +81,7 @@ public:
         DeleteItemsByTime   = 1,    /**< Items will be deleted if they are older than a specific time. */
         DeleteItemsByCount  = 2     /**< Items will deleted if the feed contains more than a specific count. */
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(ItemDeletionStrategy)
-#else
-    Q_ENUMS(ItemDeletionStrategy)
-#endif
 
 private:
     FuotenEnums();
@@ -106,12 +89,6 @@ private:
 };
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Fuoten::FuotenEnums::Type)
-Q_DECLARE_METATYPE(Fuoten::FuotenEnums::SortingRole)
-Q_DECLARE_METATYPE(Fuoten::FuotenEnums::QueueAction)
-Q_DECLARE_METATYPE(Fuoten::FuotenEnums::ItemDeletionStrategy)
-#endif
 Q_DECLARE_OPERATORS_FOR_FLAGS(Fuoten::FuotenEnums::QueueActions)
 
 #endif // FUOTEN

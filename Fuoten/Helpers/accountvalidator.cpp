@@ -22,11 +22,7 @@
 #include "abstractconfiguration.h"
 #include "../API/component.h"
 #include "../error.h"
-#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-#include "versionnumber.h"
-#else
 #include <QVersionNumber>
-#endif
 
 
 using namespace Fuoten;

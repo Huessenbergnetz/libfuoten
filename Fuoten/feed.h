@@ -156,12 +156,7 @@ public:
         OldestFirst = 1,    /**< Oldest first */
         NewestFirst = 2,    /**< Newest first */
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(FeedOrdering)
-#else
-    Q_ENUMS(FeedOrdering)
-#endif
-
 
     /*!
      * \brief Constructs a new empty Feed object with the given \a parent.
@@ -456,10 +451,5 @@ private:
 };
 
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Fuoten::Feed::FeedOrdering)
-#endif
-
 
 #endif // FUOTENFEED_H
