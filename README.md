@@ -28,7 +28,7 @@ Translation is done on [Transifex](https://www.transifex.com/buschtrommel/libfuo
 * [openSUSE](https://software.opensuse.org/package/libfuoten)
 
 ## Building libfuoten
-Either clone the git repository or download one of the [release](https://github.com/Buschtrommel/libfuoten/releases) tarballs. Qt 5.2 or newer
+Either clone the git repository or download one of the [release](https://github.com/Buschtrommel/libfuoten/releases) tarballs. Qt 5.6 or newer
 is required to build libfuoten as well as the following Qt modules: Qt5Core, Qt5Network and Qt5Sql.
 
 ### Install dependencies
