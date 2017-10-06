@@ -1258,11 +1258,11 @@ void SQLiteStorage::feedDeleted(qint64 id)
     qresult = q.exec();
     Q_ASSERT(qresult);
 
-    qresult = (q.prepare(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
     Q_ASSERT(qresult);
     setTotalUnread(q.value(0).value<quint16>());
 
-    qresult = (q.prepare(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
+    qresult = (q.exec(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
     Q_ASSERT(qresult);
     setStarred(q.value(0).value<quint16>());
 
