@@ -199,7 +199,7 @@ void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList 
                             mf->copy(f);
                         } else {
                             // the feed is not longer part of this folder
-                            movedIds.append(f->id());
+                            movedIds.append(f->id()); //clazy:exclude=reserve-candidates
                         }
                         Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
                     }

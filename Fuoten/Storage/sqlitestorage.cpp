@@ -450,7 +450,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
 #ifndef QT_NO_DEBUG_OUTPUT
             QString printIdList;
-            for (qint64 id : deletedIds) {
+            for (const qint64 id : deletedIds) { // clazy:exclude=range-loop
                 printIdList.append(QString::number(id)).append(QLatin1Char(','));
             }
             printIdList.chop(1);
@@ -1102,7 +1102,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         if (!deletedFeedIds.isEmpty()) {
 #ifndef QT_NO_DEBUG_OUTPUT
             QString printIdsString;
-            for (qint64 id : deletedFeedIds) {
+            for (const qint64 id : deletedFeedIds) { // clazy:exclude=range-loop
                 printIdsString.append(QString::number(id)).append(QLatin1Char(','));
             }
             printIdsString.chop(1);

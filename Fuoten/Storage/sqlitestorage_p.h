@@ -116,7 +116,7 @@ public:
     ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, AbstractConfiguration *config = nullptr, QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void requestedItems( IdList updatedItems, IdList newItems, IdList deletedItems);
+    void requestedItems(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
     void gotTotalUnread(quint16 tu);
     void gotStarred(quint16 st);
     void failed(Error *e);
@@ -140,7 +140,7 @@ public:
     GetArticlesAsyncWorker(const QString &dbpath, const QueryArgs &args, QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void gotArticles(ArticleList articles);
+    void gotArticles(const ArticleList &articles);
     void failed(Error *e);
 
 protected:

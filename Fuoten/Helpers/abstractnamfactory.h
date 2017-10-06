@@ -21,7 +21,7 @@
 #ifndef FUOTENABSTRACTNAMFACTORY_H
 #define FUOTENABSTRACTNAMFACTORY_H
 
-class QObject;
+#include <QObject>
 class QNetworkAccessManager;
 
 namespace Fuoten {
@@ -40,6 +40,7 @@ namespace Fuoten {
  */
 class AbstractNamFactory
 {
+    Q_DISABLE_COPY(AbstractNamFactory)
 public:
     /*!
      * \brief Destroys the factory. The default implementation does nothing.
