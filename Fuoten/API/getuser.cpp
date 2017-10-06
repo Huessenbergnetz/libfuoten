@@ -40,7 +40,6 @@ GetUser::GetUser(GetUserPrivate &dd, QObject *parent) :
 }
 
 
-
 void GetUser::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -54,7 +53,6 @@ void GetUser::execute()
 
     sendRequest();
 }
-
 
 
 void GetUser::successCallback()
@@ -73,7 +71,6 @@ void GetUser::successCallback()
     qDebug("%s", "Successfully requested user information from the server.");
     Q_EMIT succeeded(jsonResult());
 }
-
 
 
 bool GetUser::checkOutput()
@@ -97,3 +94,5 @@ bool GetUser::checkOutput()
 
     return true;
 }
+
+#include "moc_getuser.cpp"

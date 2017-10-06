@@ -30,13 +30,11 @@ FeedListModel::FeedListModel(QObject *parent) :
 }
 
 
-
 FeedListModel::FeedListModel(FeedListModelPrivate &dd, QObject *parent) :
     AbstractFeedModel(dd, parent)
 {
 
 }
-
 
 
 QModelIndex FeedListModel::index(int row, int column, const QModelIndex &parent) const
@@ -45,14 +43,11 @@ QModelIndex FeedListModel::index(int row, int column, const QModelIndex &parent)
 }
 
 
-
-
 QModelIndex FeedListModel::parent(const QModelIndex &child) const
 {
     Q_UNUSED(child)
     return QModelIndex();
 }
-
 
 
 QModelIndex FeedListModel::sibling(int row, int column, const QModelIndex &idx) const
@@ -71,7 +66,6 @@ Qt::ItemFlags FeedListModel::flags(const QModelIndex &index) const
 
     return f;
 }
-
 
 
 int FeedListModel::columnCount(const QModelIndex &parent) const
@@ -108,3 +102,5 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 }
+
+#include "moc_feedlistmodel.cpp"

@@ -93,7 +93,6 @@ void AbstractStorage::setError(Error *nError)
 }
 
 
-
 quint16 AbstractStorage::totalUnread() const { Q_D(const AbstractStorage); return d->totalUnread; }
 
 void AbstractStorage::setTotalUnread(quint16 nTotalUnread)
@@ -105,8 +104,6 @@ void AbstractStorage::setTotalUnread(quint16 nTotalUnread)
         Q_EMIT totalUnreadChanged(totalUnread());
     }
 }
-
-
 
 
 quint16 AbstractStorage::starred() const { Q_D(const AbstractStorage); return d->starred; }
@@ -122,9 +119,6 @@ void AbstractStorage::setStarred(quint16 nStarred)
 }
 
 
-
-
-
 QString AbstractStorage::limitBody(const QString &body, int limit) const
 {
     if (body.isEmpty() || body.length() < limit) {
@@ -138,14 +132,12 @@ QString AbstractStorage::limitBody(const QString &body, int limit) const
 }
 
 
-
 void AbstractStorage::getArticlesAsync(const QueryArgs &args)
 {
     const ArticleList articles = getArticles(args);
 
     Q_EMIT gotArticlesAsync(articles);
 }
-
 
 
 bool AbstractStorage::enqueueItem(FuotenEnums::QueueAction action, Article *article)
@@ -212,8 +204,9 @@ void AbstractStorage::setConfiguration(AbstractConfiguration *nConfiguration)
 }
 
 
-
 void AbstractStorage::clearQueue()
 {
 
 }
+
+#include "moc_abstractstorage.cpp"

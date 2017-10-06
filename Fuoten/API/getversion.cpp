@@ -67,8 +67,6 @@ void GetVersion::successCallback()
 }
 
 
-
-
 bool GetVersion::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
@@ -92,3 +90,5 @@ bool GetVersion::checkOutput()
         return false;
     }
 }
+
+#include "moc_getversion.cpp"

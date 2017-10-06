@@ -32,7 +32,6 @@ MarkFolderRead::MarkFolderRead(QObject *parent) :
 }
 
 
-
 MarkFolderRead::MarkFolderRead(MarkFolderReadPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
@@ -64,7 +63,6 @@ void MarkFolderRead::execute()
 
     sendRequest();
 }
-
 
 
 bool MarkFolderRead::checkInput()
@@ -126,7 +124,6 @@ void MarkFolderRead::extractError(QNetworkReply *reply)
 }
 
 
-
 qint64 MarkFolderRead::folderId() const { Q_D(const MarkFolderRead); return d->folderId; }
 
 void MarkFolderRead::setFolderId(qint64 nFolderId)
@@ -143,8 +140,6 @@ void MarkFolderRead::setFolderId(qint64 nFolderId)
         Q_EMIT folderIdChanged(folderId());
     }
 }
-
-
 
 
 qint64 MarkFolderRead::newestItemId() const { Q_D(const MarkFolderRead); return d->newestItemId; }
@@ -164,6 +159,4 @@ void MarkFolderRead::setNewestItemId(qint64 nNewestItemId)
     }
 }
 
-
-
-
+#include "moc_markfolderread.cpp"

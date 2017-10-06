@@ -27,8 +27,6 @@ AbstractConfiguration::AbstractConfiguration(QObject *parent) : QSettings(parent
 
 }
 
-
-
 void AbstractConfiguration::checkAccountValidity()
 {
     setIsAccountValid((!getUsername().isEmpty() && !getPassword().isEmpty() && !getHost().isEmpty() && !getServerVersion().isNull()));
@@ -41,12 +39,10 @@ QString AbstractConfiguration::getUserAgent() const
 }
 
 
-
 bool AbstractConfiguration::getUseSSL() const
 {
     return true;
 }
-
 
 
 int AbstractConfiguration::getServerPort() const
@@ -55,12 +51,10 @@ int AbstractConfiguration::getServerPort() const
 }
 
 
-
 bool AbstractConfiguration::getIgnoreSSLErrors() const
 {
     return false;
 }
-
 
 
 void AbstractConfiguration::setAvatar(const QString &data, const QString &mime)
@@ -74,7 +68,6 @@ void AbstractConfiguration::setDisplayName(const QString &nDisplayName)
 {
     Q_UNUSED(nDisplayName)
 }
-
 
 
 void AbstractConfiguration::setImproperlyConfiguredCron(bool nImproperlyConfiguredCron)
@@ -108,3 +101,5 @@ quint16 AbstractConfiguration::getPerFeedDeletionValue(qint64 feedId) const
     Q_UNUSED(feedId)
     return 0;
 }
+
+#include "moc_abstractconfiguration.cpp"

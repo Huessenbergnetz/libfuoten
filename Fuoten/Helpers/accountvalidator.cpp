@@ -34,7 +34,6 @@ AccountValidator::AccountValidator(QObject *parent) :
 }
 
 
-
 AccountValidator::~AccountValidator()
 {
 }
@@ -70,7 +69,6 @@ void AccountValidator::start()
 
     d->version->execute();
 }
-
 
 
 void AccountValidator::gotVersion()
@@ -128,7 +126,6 @@ void AccountValidator::gotUser()
 }
 
 
-
 AbstractConfiguration *AccountValidator::configuration() const
 {
     Q_D(const AccountValidator);
@@ -138,6 +135,7 @@ AbstractConfiguration *AccountValidator::configuration() const
     }
     return _config;
 }
+
 
 void AccountValidator::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
@@ -153,8 +151,6 @@ void AccountValidator::setConfiguration(AbstractConfiguration *nAbstractConfigur
         Q_EMIT configurationChanged(configuration());
     }
 }
-
-
 
 
 bool AccountValidator::inOperation() const { Q_D(const AccountValidator); return d->inOperation; }
@@ -183,4 +179,4 @@ void AccountValidator::setError(Error *nError)
     }
 }
 
-
+#include "moc_accountvalidator.cpp"

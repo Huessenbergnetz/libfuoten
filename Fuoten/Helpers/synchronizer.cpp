@@ -32,7 +32,6 @@ Synchronizer::Synchronizer(QObject *parent) :
 }
 
 
-
 Synchronizer::~Synchronizer()
 {
 }
@@ -143,9 +142,6 @@ void Synchronizer::start()
 }
 
 
-
-
-
 Error *Synchronizer::error() const { Q_D(const Synchronizer); return d->error; }
 
 void Synchronizer::setError(Error *nError)
@@ -182,9 +178,6 @@ void Synchronizer::setError(Error *nError)
         }
     }
 }
-
-
-
 
 
 void Synchronizer::notifyAboutUnread()
@@ -303,7 +296,6 @@ void Synchronizer::requestFolders()
 }
 
 
-
 void Synchronizer::requestFeeds()
 {
     Q_D(Synchronizer);
@@ -339,7 +331,6 @@ void Synchronizer::requestFeeds()
         d->getFeeds->execute();
     }
 }
-
 
 
 void Synchronizer::requestUnread()
@@ -393,7 +384,6 @@ void Synchronizer::requestStarred()
 }
 
 
-
 void Synchronizer::requestUpdated()
 {
     Q_D(Synchronizer);
@@ -419,7 +409,6 @@ void Synchronizer::requestUpdated()
 }
 
 
-
 void Synchronizer::finished()
 {
     Q_D(Synchronizer);
@@ -436,7 +425,6 @@ void Synchronizer::finished()
 }
 
 
-
 AbstractConfiguration *Synchronizer::configuration() const
 {
     Q_D(const Synchronizer);
@@ -446,6 +434,7 @@ AbstractConfiguration *Synchronizer::configuration() const
     }
     return c;
 }
+
 
 void Synchronizer::setConfiguration(AbstractConfiguration *nAbstractConfiguration)
 {
@@ -463,8 +452,6 @@ void Synchronizer::setConfiguration(AbstractConfiguration *nAbstractConfiguratio
 }
 
 
-
-
 AbstractStorage *Synchronizer::storage() const
 {
     Q_D(const Synchronizer);
@@ -474,6 +461,7 @@ AbstractStorage *Synchronizer::storage() const
     }
     return s;
 }
+
 
 void Synchronizer::setStorage(AbstractStorage *nStorageHandler)
 {
@@ -489,7 +477,6 @@ void Synchronizer::setStorage(AbstractStorage *nStorageHandler)
         Q_EMIT storageChanged(storage());
     }
 }
-
 
 
 bool Synchronizer::inOperation() const
@@ -512,8 +499,6 @@ void Synchronizer::setProgress(qreal nProgress)
 }
 
 
-
-
 QString Synchronizer::currentAction() const { Q_D(const Synchronizer); return d->currentAction; }
 
 void Synchronizer::setCurrentAction(const QString &nCurrentAction)
@@ -527,8 +512,9 @@ void Synchronizer::setCurrentAction(const QString &nCurrentAction)
 }
 
 
-
 void Synchronizer::clearError()
 {
     setError(nullptr);
 }
+
+#include "moc_synchronizer.cpp"

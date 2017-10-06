@@ -44,10 +44,6 @@ StarMultipleItems::StarMultipleItems(StarMultipleItemsPrivate &dd, QObject *pare
 }
 
 
-
-
-
-
 void StarMultipleItems::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -87,7 +83,6 @@ void StarMultipleItems::execute()
 }
 
 
-
 bool StarMultipleItems::checkInput()
 {
     if (Q_LIKELY(Component::checkInput())) {
@@ -123,9 +118,6 @@ void StarMultipleItems::successCallback()
 }
 
 
-
-
-
 QList<QPair<qint64,QString>> StarMultipleItems::itemsToStar() const { Q_D(const StarMultipleItems); return d->itemsToStar; }
 
 void StarMultipleItems::setItemsToStar(const QList<QPair<qint64, QString> > &items)
@@ -156,7 +148,6 @@ void StarMultipleItems::addItem(qint64 feedId, const QString &guidHash)
 }
 
 
-
 bool StarMultipleItems::starred() const { Q_D(const StarMultipleItems); return d->starred; }
 
 void StarMultipleItems::setStarred(bool nStarred)
@@ -174,6 +165,4 @@ void StarMultipleItems::setStarred(bool nStarred)
     }
 }
 
-
-
-
+#include "moc_starmultipleitems.cpp"

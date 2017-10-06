@@ -639,3 +639,5 @@ void Component::setRequiresAuth(bool reqAuth)
     Q_D(Component);
     d->requiresAuth = reqAuth;
 }
+
+#include "moc_component.cpp"

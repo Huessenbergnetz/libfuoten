@@ -69,8 +69,6 @@ void GetFeeds::successCallback()
 }
 
 
-
-
 bool GetFeeds::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
@@ -91,3 +89,5 @@ bool GetFeeds::checkOutput()
 
     return true;
 }
+
+#include "moc_getfeeds.cpp"

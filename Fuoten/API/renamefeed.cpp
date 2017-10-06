@@ -50,8 +50,6 @@ void RenameFeed::setFeedId(qint64 nFeedId)
 }
 
 
-
-
 QString RenameFeed::newName() const { Q_D(const RenameFeed); return d->newName; }
 
 void RenameFeed::setNewName(const QString &nNewName)
@@ -63,7 +61,6 @@ void RenameFeed::setNewName(const QString &nNewName)
         Q_EMIT newNameChanged(newName());
     }
 }
-
 
 
 void RenameFeed::execute()
@@ -92,8 +89,6 @@ void RenameFeed::execute()
 
     sendRequest();
 }
-
-
 
 
 bool RenameFeed::checkInput()
@@ -125,7 +120,6 @@ bool RenameFeed::checkInput()
 }
 
 
-
 void RenameFeed::successCallback()
 {
     if (storage()) {
@@ -138,9 +132,6 @@ void RenameFeed::successCallback()
 
     Q_EMIT succeeded(feedId(), newName());
 }
-
-
-
 
 
 void RenameFeed::extractError(QNetworkReply *reply)
@@ -159,3 +150,5 @@ void RenameFeed::extractError(QNetworkReply *reply)
     setInOperation(false);
     Q_EMIT failed(error());
 }
+
+#include "moc_renamefeed.cpp"

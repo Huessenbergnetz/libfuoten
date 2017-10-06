@@ -32,12 +32,10 @@ RenameFolder::RenameFolder(QObject *parent) :
 }
 
 
-
 RenameFolder::RenameFolder(RenameFolderPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
 }
-
 
 
 void RenameFolder::execute()
@@ -96,7 +94,6 @@ bool RenameFolder::checkInput()
 }
 
 
-
 void RenameFolder::successCallback()
 {
     if (storage()) {
@@ -109,9 +106,6 @@ void RenameFolder::successCallback()
 
     Q_EMIT succeeded(folderId(), newName());
 }
-
-
-
 
 
 void RenameFolder::extractError(QNetworkReply *reply)
@@ -158,8 +152,6 @@ void RenameFolder::setFolderId(qint64 nFolderId)
 }
 
 
-
-
 QString RenameFolder::newName() const { Q_D(const RenameFolder); return d->newName; }
 
 void RenameFolder::setNewName(const QString &nNewName)
@@ -177,6 +169,4 @@ void RenameFolder::setNewName(const QString &nNewName)
     }
 }
 
-
-
-
+#include "moc_renamefolder.cpp"

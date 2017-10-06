@@ -79,7 +79,6 @@ void FeedListFilterModel::reload(const QString &locale)
 }
 
 
-
 bool FeedListFilterModel::inOperation() const
 {
     Q_D(const FeedListFilterModel);
@@ -87,13 +86,11 @@ bool FeedListFilterModel::inOperation() const
 }
 
 
-
 AbstractStorage *FeedListFilterModel::storage() const
 {
     Q_D(const FeedListFilterModel);
     return d->flm ? d->flm->storage() : nullptr;
 }
-
 
 
 void FeedListFilterModel::setStorage(AbstractStorage *nStorage)
@@ -105,12 +102,12 @@ void FeedListFilterModel::setStorage(AbstractStorage *nStorage)
 }
 
 
-
 qint64 FeedListFilterModel::parentId() const
 {
     Q_D(const FeedListFilterModel);
     return d->flm ? d->flm->parentId() : -1;
 }
+
 
 void FeedListFilterModel::setParentId(qint64 nParentId)
 {
@@ -122,7 +119,6 @@ void FeedListFilterModel::setParentId(qint64 nParentId)
         }
     }
 }
-
 
 
 bool FeedListFilterModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
@@ -209,7 +205,6 @@ bool FeedListFilterModel::lessThan(const QModelIndex &left, const QModelIndex &r
 }
 
 
-
 bool FeedListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     if (search().isEmpty() && !hideRead()) {
@@ -223,7 +218,6 @@ bool FeedListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &so
         return (find(f->title()) && (f->unreadCount() > 0));
     }
 }
-
 
 
 bool FeedListFilterModel::respectPinned() const { Q_D(const FeedListFilterModel); return d->respectPinned; }
@@ -262,3 +256,5 @@ bool FeedListFilterModel::loaded() const
         return false;
     }
 }
+
+#include "moc_feedlistfiltermodel.cpp"

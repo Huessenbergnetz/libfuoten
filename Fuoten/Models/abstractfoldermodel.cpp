@@ -33,13 +33,11 @@ AbstractFolderModel::AbstractFolderModel(QObject *parent) :
 }
 
 
-
 AbstractFolderModel::AbstractFolderModel(AbstractFolderModelPrivate &dd, QObject *parent) :
     BaseModel(dd, parent)
 {
     setStorage(Component::defaultStorage());
 }
-
 
 
 void AbstractFolderModel::handleStorageChanged(Fuoten::AbstractStorage *old)
@@ -110,7 +108,6 @@ QList<Folder*> AbstractFolderModel::folders() const
 }
 
 
-
 QModelIndex AbstractFolderModel::findByID(qint64 id) const
 {
     QModelIndex modIdx;
@@ -138,8 +135,6 @@ QModelIndex AbstractFolderModel::findByID(qint64 id) const
 }
 
 
-
-
 void AbstractFolderModel::folderRenamed(qint64 id, const QString &newName)
 {
     Q_ASSERT_X(id != 0, "rename folder", "invalid ID");
@@ -157,8 +152,6 @@ void AbstractFolderModel::folderRenamed(qint64 id, const QString &newName)
 }
 
 
-
-
 void AbstractFolderModel::folderCreated(qint64 id, const QString &name)
 {
     Q_ASSERT_X(id != 0, "create folder", "invalid ID");
@@ -172,7 +165,6 @@ void AbstractFolderModel::folderCreated(qint64 id, const QString &name)
 
     endInsertRows();
 }
-
 
 
 void AbstractFolderModel::foldersRequested(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const IdList &deletedFolders)
@@ -235,7 +227,6 @@ void AbstractFolderModel::foldersRequested(const QList<QPair<qint64, QString> > 
 }
 
 
-
 void AbstractFolderModel::folderDeleted(qint64 id)
 {
     Q_ASSERT_X(id > 0, "delete folder", "invalid folder ID");
@@ -259,7 +250,6 @@ void AbstractFolderModel::folderDeleted(qint64 id)
 }
 
 
-
 void AbstractFolderModel::folderMarkedRead(qint64 id, qint64 newestItem)
 {
     Q_UNUSED(newestItem)
@@ -273,7 +263,6 @@ void AbstractFolderModel::folderMarkedRead(qint64 id, qint64 newestItem)
         Q_EMIT dataChanged(i, i, QVector<int>(1, Qt::DisplayRole));
     }
 }
-
 
 
 void AbstractFolderModel::feedsRequested(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds)
@@ -303,8 +292,6 @@ void AbstractFolderModel::feedsRequested(const IdList &updatedFeeds, const IdLis
 }
 
 
-
-
 void AbstractFolderModel::feedMarkedRead(qint64 id)
 {
     Q_ASSERT_X(storage(), "update folders", "no storage avaiable");
@@ -327,7 +314,6 @@ void AbstractFolderModel::feedMarkedRead(qint64 id)
         delete f;
     }
 }
-
 
 
 void AbstractFolderModel::feedCreated(qint64 feedId, qint64 folderId)
@@ -354,7 +340,6 @@ void AbstractFolderModel::feedCreated(qint64 feedId, qint64 folderId)
         delete f;
     }
 }
-
 
 
 void AbstractFolderModel::updateCountValues()
@@ -395,7 +380,6 @@ void AbstractFolderModel::clear()
 }
 
 
-
 void AbstractFolderModel::itemMarked(qint64 itemId, bool unread)
 {
     Q_ASSERT_X(storage(), "update folders", "no storage available");
@@ -424,3 +408,5 @@ void AbstractFolderModel::itemMarked(qint64 itemId, bool unread)
         delete a;
     }
 }
+
+#include "moc_abstractfoldermodel.cpp"

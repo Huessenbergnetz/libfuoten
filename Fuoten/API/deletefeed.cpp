@@ -30,7 +30,6 @@ DeleteFeed::DeleteFeed(QObject *parent) :
 }
 
 
-
 DeleteFeed::DeleteFeed(DeleteFeedPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
@@ -55,8 +54,6 @@ void DeleteFeed::setFeedId(qint64 nFeedId)
 }
 
 
-
-
 void DeleteFeed::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -77,7 +74,6 @@ void DeleteFeed::execute()
 
     sendRequest();
 }
-
 
 
 bool DeleteFeed::checkInput()
@@ -101,7 +97,6 @@ bool DeleteFeed::checkInput()
 }
 
 
-
 void DeleteFeed::successCallback()
 {
     if (storage()) {
@@ -114,7 +109,6 @@ void DeleteFeed::successCallback()
 
     Q_EMIT succeeded(feedId());
 }
-
 
 
 void DeleteFeed::extractError(QNetworkReply *reply)
@@ -130,3 +124,5 @@ void DeleteFeed::extractError(QNetworkReply *reply)
     setInOperation(false);
     Q_EMIT failed(error());
 }
+
+#include "moc_deletefeed.cpp"

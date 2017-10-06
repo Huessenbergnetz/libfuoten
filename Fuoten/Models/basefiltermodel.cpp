@@ -43,7 +43,6 @@ BaseFilterModel::~BaseFilterModel()
 }
 
 
-
 FuotenEnums::SortingRole BaseFilterModel::sortingRole() const { Q_D(const BaseFilterModel); return d->sortingRole; }
 
 void BaseFilterModel::setSortingRole(FuotenEnums::SortingRole nSortingRole)
@@ -56,8 +55,6 @@ void BaseFilterModel::setSortingRole(FuotenEnums::SortingRole nSortingRole)
         invalidate();
     }
 }
-
-
 
 
 Qt::SortOrder BaseFilterModel::sortOrder() const { Q_D(const BaseFilterModel); return d->sortOrder; }
@@ -74,8 +71,6 @@ void BaseFilterModel::setSortOrder(Qt::SortOrder nSortOrder)
 }
 
 
-
-
 QString BaseFilterModel::search() const { Q_D(const BaseFilterModel); return d->search.pattern(); }
 
 void BaseFilterModel::setSearch(const QString &nSearch)
@@ -88,6 +83,7 @@ void BaseFilterModel::setSearch(const QString &nSearch)
         invalidateFilter();
     }
 }
+
 
 bool BaseFilterModel::find(const QString &str) const
 {
@@ -116,3 +112,5 @@ void BaseFilterModel::setDoubleParentId(double nDoubleParentId)
 {
     setParentId(static_cast<qint64>(nDoubleParentId));
 }
+
+#include "moc_basefiltermodel.cpp"

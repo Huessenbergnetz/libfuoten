@@ -36,7 +36,6 @@ DeleteFolder::DeleteFolder(DeleteFolderPrivate &dd, QObject *parent) :
 }
 
 
-
 void DeleteFolder::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -57,8 +56,6 @@ void DeleteFolder::execute()
 
     sendRequest();
 }
-
-
 
 
 bool DeleteFolder::checkInput()
@@ -96,8 +93,6 @@ void DeleteFolder::successCallback()
 }
 
 
-
-
 void DeleteFolder::extractError(QNetworkReply *reply)
 {
     Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
@@ -111,7 +106,6 @@ void DeleteFolder::extractError(QNetworkReply *reply)
     setInOperation(false);
     Q_EMIT failed(error());
 }
-
 
 
 qint64 DeleteFolder::folderId() const { Q_D(const DeleteFolder); return d->folderId; }
@@ -131,6 +125,4 @@ void DeleteFolder::setFolderId(qint64 nFolderId)
     }
 }
 
-
-
-
+#include "moc_deletefolder.cpp"

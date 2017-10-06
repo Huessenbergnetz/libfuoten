@@ -29,13 +29,11 @@ FolderListModel::FolderListModel(QObject *parent) :
 }
 
 
-
 FolderListModel::FolderListModel(FolderListModelPrivate &dd, QObject *parent) :
     AbstractFolderModel(dd, parent)
 {
 
 }
-
 
 
 QModelIndex FolderListModel::index(int row, int column, const QModelIndex &parent) const
@@ -44,14 +42,11 @@ QModelIndex FolderListModel::index(int row, int column, const QModelIndex &paren
 }
 
 
-
-
 QModelIndex FolderListModel::parent(const QModelIndex &child) const
 {
     Q_UNUSED(child)
     return QModelIndex();
 }
-
 
 
 QModelIndex FolderListModel::sibling(int row, int column, const QModelIndex &idx) const
@@ -70,7 +65,6 @@ Qt::ItemFlags FolderListModel::flags(const QModelIndex &index) const
 
     return f;
 }
-
 
 
 int FolderListModel::columnCount(const QModelIndex &parent) const
@@ -107,3 +101,5 @@ QVariant FolderListModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 }
+
+#include "moc_folderlistmodel.cpp"

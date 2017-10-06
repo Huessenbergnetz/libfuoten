@@ -41,9 +41,6 @@ MarkItem::MarkItem(MarkItemPrivate &dd, QObject *parent) :
 }
 
 
-
-
-
 void MarkItem::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -71,7 +68,6 @@ void MarkItem::execute()
 
     sendRequest();
 }
-
 
 
 bool MarkItem::checkInput()
@@ -125,9 +121,6 @@ void MarkItem::extractError(QNetworkReply *reply)
 }
 
 
-
-
-
 qint64 MarkItem::itemId() const { Q_D(const MarkItem); return d->itemId; }
 
 void MarkItem::setItemId(qint64 nItemId)
@@ -144,8 +137,6 @@ void MarkItem::setItemId(qint64 nItemId)
         Q_EMIT itemIdChanged(itemId());
     }
 }
-
-
 
 
 bool MarkItem::unread() const { Q_D(const MarkItem); return d->unread; }
@@ -165,6 +156,4 @@ void MarkItem::setUnread(bool nUnread)
     }
 }
 
-
-
-
+#include "moc_markitem.cpp"

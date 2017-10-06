@@ -214,3 +214,5 @@ void Folder::copy(BaseItem *other)
     }
 
 }
+
+#include "moc_folder.cpp"

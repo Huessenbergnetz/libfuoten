@@ -39,7 +39,6 @@ AbstractFeedModel::AbstractFeedModel(AbstractFeedModelPrivate &dd, QObject *pare
 }
 
 
-
 void AbstractFeedModel::handleStorageChanged(Fuoten::AbstractStorage *old)
 {
     if (old) {
@@ -70,7 +69,6 @@ void AbstractFeedModel::handleStorageChanged(Fuoten::AbstractStorage *old)
         connect(s, &AbstractStorage::markedAllItemsReadInQueue, this, &AbstractFeedModel::itemsMarked);
     }
 }
-
 
 
 void AbstractFeedModel::load()
@@ -107,7 +105,6 @@ void AbstractFeedModel::load()
 }
 
 
-
 QModelIndex AbstractFeedModel::findByID(qint64 id) const
 {
     QModelIndex modidx;
@@ -133,7 +130,6 @@ QModelIndex AbstractFeedModel::findByID(qint64 id) const
 }
 
 
-
 QHash<qint64, QModelIndex> AbstractFeedModel::findByIDs(const IdList &ids) const
 {
     QHash<qint64, QModelIndex> idxs;
@@ -154,13 +150,11 @@ QHash<qint64, QModelIndex> AbstractFeedModel::findByIDs(const IdList &ids) const
 }
 
 
-
 QList<Feed*> AbstractFeedModel::feeds() const
 {
     Q_D(const AbstractFeedModel);
     return d->feeds;
 }
-
 
 
 void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds)
@@ -225,9 +219,6 @@ void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList 
     }
 
 
-
-
-
     if (!newFeeds.isEmpty()) {
 
         QueryArgs qa;
@@ -247,10 +238,6 @@ void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList 
     }
 
 
-
-
-
-
     if (!deletedFeeds.isEmpty()) {
 
         for (qint64 id : deletedFeeds) {
@@ -267,7 +254,6 @@ void AbstractFeedModel::feedsRequested(const IdList &updatedFeeds, const IdList 
         }
     }
 }
-
 
 
 void AbstractFeedModel::feedCreated(qint64 id, qint64 folderId)
@@ -309,8 +295,6 @@ void AbstractFeedModel::feedDeleted(qint64 id)
         f->deleteLater();
     }
 }
-
-
 
 
 void AbstractFeedModel::feedRenamed(qint64 id, const QString &newName)
@@ -394,7 +378,6 @@ void AbstractFeedModel::feedMoved(qint64 id, qint64 targetFolderId)
 }
 
 
-
 void AbstractFeedModel::folderMarkedRead(qint64 folderId, qint64 newestItemId)
 {
     Q_UNUSED(newestItemId)
@@ -433,7 +416,6 @@ void AbstractFeedModel::folderMarkedRead(qint64 folderId, qint64 newestItemId)
         }
     }
 }
-
 
 
 void AbstractFeedModel::folderDeleted(qint64 folderId)
@@ -506,7 +488,6 @@ void AbstractFeedModel::clear()
 }
 
 
-
 void AbstractFeedModel::itemsRquested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems)
 {
     Q_UNUSED(updatedItems)
@@ -573,7 +554,6 @@ void AbstractFeedModel::itemMarked(qint64 itemId, bool unread)
 }
 
 
-
 void AbstractFeedModel::itemsMarked()
 {
     if (rowCount() <= 0) {
@@ -602,3 +582,5 @@ void AbstractFeedModel::itemsMarked()
         qDeleteAll(fs);
     }
 }
+
+#include "moc_abstractfeedmodel.cpp"

@@ -64,7 +64,6 @@ void MarkFeedRead::execute()
 }
 
 
-
 bool MarkFeedRead::checkInput()
 {
     if (Q_LIKELY(Component::checkInput())) {
@@ -124,7 +123,6 @@ void MarkFeedRead::extractError(QNetworkReply *reply)
 }
 
 
-
 qint64 MarkFeedRead::feedId() const { Q_D(const MarkFeedRead); return d->feedId; }
 
 void MarkFeedRead::setFeedId(qint64 nFeedId)
@@ -141,8 +139,6 @@ void MarkFeedRead::setFeedId(qint64 nFeedId)
         Q_EMIT feedIdChanged(feedId());
     }
 }
-
-
 
 
 qint64 MarkFeedRead::newestItemId() const { Q_D(const MarkFeedRead); return d->newestItemId; }
@@ -162,6 +158,4 @@ void MarkFeedRead::setNewestItemId(qint64 nNewestItemId)
     }
 }
 
-
-
-
+#include "moc_markfeedread.cpp"

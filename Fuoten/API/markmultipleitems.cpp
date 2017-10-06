@@ -44,8 +44,6 @@ MarkMultipleItems::MarkMultipleItems(MarkMultipleItemsPrivate &dd, QObject *pare
 }
 
 
-
-
 void MarkMultipleItems::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -80,7 +78,6 @@ void MarkMultipleItems::execute()
 
     sendRequest();
 }
-
 
 
 bool MarkMultipleItems::checkInput()
@@ -118,8 +115,6 @@ void MarkMultipleItems::successCallback()
 }
 
 
-
-
 IdList MarkMultipleItems::itemIds() const { Q_D(const MarkMultipleItems); return d->itemIds; }
 
 void MarkMultipleItems::setItemIds(const IdList &nItemIds)
@@ -136,8 +131,6 @@ void MarkMultipleItems::setItemIds(const IdList &nItemIds)
         Q_EMIT itemIdsChanged(itemIds());
     }
 }
-
-
 
 
 bool MarkMultipleItems::unread() const { Q_D(const MarkMultipleItems); return d->unread; }
@@ -157,6 +150,4 @@ void MarkMultipleItems::setUnread(bool nUnread)
     }
 }
 
-
-
-
+#include "moc_markmultipleitems.cpp"

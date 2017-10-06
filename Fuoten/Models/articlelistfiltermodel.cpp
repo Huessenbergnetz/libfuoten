@@ -55,8 +55,6 @@ ArticleListFilterModel::ArticleListFilterModel(ArticleListFilterModelPrivate &&d
 }
 
 
-
-
 bool ArticleListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     if (search().isEmpty() && !hideRead()) {
@@ -95,7 +93,6 @@ bool ArticleListFilterModel::lessThan(const QModelIndex &left, const QModelIndex
 }
 
 
-
 bool ArticleListFilterModel::inOperation() const
 {
     Q_D(const ArticleListFilterModel);
@@ -103,13 +100,11 @@ bool ArticleListFilterModel::inOperation() const
 }
 
 
-
 AbstractStorage *ArticleListFilterModel::storage() const
 {
     Q_D(const ArticleListFilterModel);
     return d->alm ? d->alm->storage() : nullptr;
 }
-
 
 
 void ArticleListFilterModel::setStorage(AbstractStorage *nStorage)
@@ -135,7 +130,6 @@ void ArticleListFilterModel::setParentId(qint64 nParentId)
         d->alm->setParentId(nParentId);
     }
 }
-
 
 
 void ArticleListFilterModel::load(const QString &locale)
@@ -203,6 +197,7 @@ void ArticleListFilterModel::setBodyLimit(int nBodyLimit)
     }
 }
 
+
 bool ArticleListFilterModel::loaded() const
 {
     Q_D(const ArticleListFilterModel);
@@ -212,3 +207,5 @@ bool ArticleListFilterModel::loaded() const
         return false;
     }
 }
+
+#include "moc_articlelistfiltermodel.cpp"

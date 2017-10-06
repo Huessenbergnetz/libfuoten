@@ -86,7 +86,6 @@ bool FolderListFilterModel::inOperation() const
 }
 
 
-
 AbstractStorage *FolderListFilterModel::storage() const
 {
     Q_D(const FolderListFilterModel);
@@ -109,6 +108,7 @@ qint64 FolderListFilterModel::parentId() const
     return d->flm ? d->flm->parentId() : 0;
 }
 
+
 void FolderListFilterModel::setParentId(qint64 nParentId)
 {
     Q_D(FolderListFilterModel);
@@ -119,7 +119,6 @@ void FolderListFilterModel::setParentId(qint64 nParentId)
         }
     }
 }
-
 
 
 bool FolderListFilterModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
@@ -140,7 +139,6 @@ bool FolderListFilterModel::lessThan(const QModelIndex &left, const QModelIndex 
 }
 
 
-
 bool FolderListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     if (search().isEmpty() && !hideRead()) {
@@ -155,6 +153,7 @@ bool FolderListFilterModel::filterAcceptsRow(int source_row, const QModelIndex &
     }
 }
 
+
 bool FolderListFilterModel::loaded() const
 {
     Q_D(const FolderListFilterModel);
@@ -164,3 +163,5 @@ bool FolderListFilterModel::loaded() const
         return false;
     }
 }
+
+#include "moc_folderlistfiltermodel.cpp"

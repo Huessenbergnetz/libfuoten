@@ -70,7 +70,6 @@ void GetStatus::successCallback()
 }
 
 
-
 bool GetStatus::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
@@ -99,3 +98,5 @@ bool GetStatus::checkOutput()
 
     return true;
 }
+
+#include "moc_getstatus.cpp"

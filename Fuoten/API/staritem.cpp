@@ -41,9 +41,6 @@ StarItem::StarItem(StarItemPrivate &dd, QObject *parent) :
 }
 
 
-
-
-
 void StarItem::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -71,7 +68,6 @@ void StarItem::execute()
 
     sendRequest();
 }
-
 
 
 bool StarItem::checkInput()
@@ -133,10 +129,6 @@ void StarItem::extractError(QNetworkReply *reply)
 }
 
 
-
-
-
-
 qint64 StarItem::feedId() const { Q_D(const StarItem); return d->feedId; }
 
 void StarItem::setFeedId(qint64 nFeedId)
@@ -153,8 +145,6 @@ void StarItem::setFeedId(qint64 nFeedId)
         Q_EMIT feedIdChanged(feedId());
     }
 }
-
-
 
 
 QString StarItem::guidHash() const { Q_D(const StarItem); return d->guidHash; }
@@ -175,8 +165,6 @@ void StarItem::setGuidHash(const QString &nGuidHash)
 }
 
 
-
-
 bool StarItem::starred() const { Q_D(const StarItem); return d->starred; }
 
 void StarItem::setStarred(bool nStarred)
@@ -194,6 +182,4 @@ void StarItem::setStarred(bool nStarred)
     }
 }
 
-
-
-
+#include "moc_staritem.cpp"

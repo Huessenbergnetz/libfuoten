@@ -30,7 +30,6 @@ ArticleListModel::ArticleListModel(QObject *parent) :
 }
 
 
-
 ArticleListModel::ArticleListModel(ArticleListModelPrivate &dd, QObject *parent) :
     AbstractArticleModel(dd, parent)
 {
@@ -43,14 +42,11 @@ QModelIndex ArticleListModel::index(int row, int column, const QModelIndex &pare
 }
 
 
-
-
 QModelIndex ArticleListModel::parent(const QModelIndex &child) const
 {
     Q_UNUSED(child)
     return QModelIndex();
 }
-
 
 
 QModelIndex ArticleListModel::sibling(int row, int column, const QModelIndex &idx) const
@@ -69,7 +65,6 @@ Qt::ItemFlags ArticleListModel::flags(const QModelIndex &index) const
 
     return f;
 }
-
 
 
 int ArticleListModel::columnCount(const QModelIndex &parent) const
@@ -106,3 +101,5 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 }
+
+#include "moc_articlelistmodel.cpp"

@@ -189,3 +189,5 @@ void BaseModel::reload()
 
     load();
 }
+
+#include "moc_basemodel.cpp"

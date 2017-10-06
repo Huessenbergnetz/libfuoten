@@ -2835,3 +2835,5 @@ void SQLiteStorage::clearQueue()
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 }
+
+#include "moc_sqlitestorage.cpp"

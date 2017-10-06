@@ -65,7 +65,6 @@ void MoveFeed::execute()
 }
 
 
-
 bool MoveFeed::checkInput()
 {
     if (Q_LIKELY(Component::checkInput())) {
@@ -95,8 +94,6 @@ bool MoveFeed::checkInput()
 }
 
 
-
-
 void MoveFeed::extractError(QNetworkReply *reply)
 {
     Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
@@ -113,7 +110,6 @@ void MoveFeed::extractError(QNetworkReply *reply)
 }
 
 
-
 void MoveFeed::successCallback()
 {
     if (storage()) {
@@ -126,7 +122,6 @@ void MoveFeed::successCallback()
 
     Q_EMIT succeeded(feedId(), folderId());
 }
-
 
 
 qint64 MoveFeed::feedId() const { Q_D(const MoveFeed); return d->feedId; }
@@ -147,8 +142,6 @@ void MoveFeed::setFeedId(qint64 nFeedId)
 }
 
 
-
-
 qint64 MoveFeed::folderId() const { Q_D(const MoveFeed); return d->folderId; }
 
 void MoveFeed::setFolderId(qint64 nFolderId)
@@ -166,6 +159,4 @@ void MoveFeed::setFolderId(qint64 nFolderId)
     }
 }
 
-
-
-
+#include "moc_movefeed.cpp"

@@ -141,3 +141,5 @@ void BaseItem::copy(BaseItem *other)
 {
     Q_UNUSED(other);
 }
+
+#include "moc_baseitem.cpp"

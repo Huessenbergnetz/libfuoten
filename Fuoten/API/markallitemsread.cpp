@@ -64,7 +64,6 @@ void MarkAllItemsRead::execute()
 }
 
 
-
 bool MarkAllItemsRead::checkInput()
 {
     if (Q_LIKELY(Component::checkInput())) {
@@ -116,3 +115,5 @@ void MarkAllItemsRead::setNewestItemId(qint64 nNewestItemId)
         Q_EMIT newestItemIdChanged(newestItemId());
     }
 }
+
+#include "moc_markallitemsread.cpp"

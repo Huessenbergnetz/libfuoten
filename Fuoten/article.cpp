@@ -407,3 +407,6 @@ void Article::star(bool starred, bool enqueue)
 {
     star(starred, Component::defaultConfiguration(), Component::defaultStorage(), enqueue);
 }
+
+
+#include "moc_article.cpp"

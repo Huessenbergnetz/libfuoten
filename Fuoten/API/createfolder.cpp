@@ -40,8 +40,6 @@ CreateFolder::CreateFolder(CreateFolderPrivate &dd, QObject *parent) :
 }
 
 
-
-
 void CreateFolder::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -64,7 +62,6 @@ void CreateFolder::execute()
 }
 
 
-
 bool CreateFolder::checkInput()
 {
     if (Q_LIKELY(Component::checkInput())) {
@@ -84,7 +81,6 @@ bool CreateFolder::checkInput()
 
     return true;
 }
-
 
 
 bool CreateFolder::checkOutput()
@@ -131,7 +127,6 @@ void CreateFolder::extractError(QNetworkReply *reply)
 }
 
 
-
 void CreateFolder::successCallback()
 {
     if (storage()) {
@@ -144,7 +139,6 @@ void CreateFolder::successCallback()
 
     Q_EMIT succeeded(jsonResult());
 }
-
 
 
 QString CreateFolder::name() const { Q_D(const CreateFolder); return d->name; }
@@ -164,6 +158,4 @@ void CreateFolder::setName(const QString &nName)
     }
 }
 
-
-
-
+#include "moc_createfolder.cpp"

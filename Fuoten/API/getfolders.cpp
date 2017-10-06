@@ -42,7 +42,6 @@ GetFolders::GetFolders(GetFoldersPrivate &dd, QObject *parent) :
 }
 
 
-
 void GetFolders::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -72,8 +71,6 @@ void GetFolders::successCallback()
 }
 
 
-
-
 bool GetFolders::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
@@ -94,3 +91,5 @@ bool GetFolders::checkOutput()
 
     return true;
 }
+
+#include "moc_getfolders.cpp"

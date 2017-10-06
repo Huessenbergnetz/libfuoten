@@ -394,3 +394,5 @@ void Feed::markAsRead(bool enqueue)
 {
     markAsRead(Component::defaultConfiguration(), Component::defaultStorage(), enqueue);
 }
+
+#include "moc_feed.cpp"

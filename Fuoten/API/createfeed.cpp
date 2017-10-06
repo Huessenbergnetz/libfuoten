@@ -33,15 +33,11 @@ CreateFeed::CreateFeed(QObject *parent) :
 }
 
 
-
 CreateFeed::CreateFeed(CreateFeedPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
 
 }
-
-
-
 
 
 void CreateFeed::execute()
@@ -96,7 +92,6 @@ bool CreateFeed::checkInput()
 }
 
 
-
 bool CreateFeed::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
@@ -116,7 +111,6 @@ bool CreateFeed::checkOutput()
 
     return true;
 }
-
 
 
 void CreateFeed::extractError(QNetworkReply *reply)
@@ -141,7 +135,6 @@ void CreateFeed::extractError(QNetworkReply *reply)
 }
 
 
-
 void CreateFeed::successCallback()
 {
     if (storage()) {
@@ -154,7 +147,6 @@ void CreateFeed::successCallback()
 
     Q_EMIT succeeded(jsonResult());
 }
-
 
 
 QUrl CreateFeed::url() const { Q_D(const CreateFeed); return d->url; }
@@ -175,8 +167,6 @@ void CreateFeed::setUrl(const QUrl &nUrl)
 }
 
 
-
-
 qint64 CreateFeed::folderId() const { Q_D(const CreateFeed); return d->folderId; }
 
 void CreateFeed::setFolderId(qint64 nFolderId)
@@ -194,6 +184,4 @@ void CreateFeed::setFolderId(qint64 nFolderId)
     }
 }
 
-
-
-
+#include "moc_createfeed.cpp"

@@ -45,10 +45,6 @@ GetUpdatedItems::GetUpdatedItems(GetUpdatedItemsPrivate &dd, QObject *parent) :
 }
 
 
-
-
-
-
 void GetUpdatedItems::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -85,7 +81,6 @@ void GetUpdatedItems::successCallback()
 }
 
 
-
 bool GetUpdatedItems::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
@@ -106,8 +101,6 @@ bool GetUpdatedItems::checkOutput()
 
     return true;
 }
-
-
 
 
 bool GetUpdatedItems::checkInput()
@@ -139,11 +132,6 @@ bool GetUpdatedItems::checkInput()
 }
 
 
-
-
-
-
-
 QDateTime GetUpdatedItems::lastModified() const { Q_D(const GetUpdatedItems); return d->lastModified; }
 
 void GetUpdatedItems::setLastModified(const QDateTime &nLastModified)
@@ -160,8 +148,6 @@ void GetUpdatedItems::setLastModified(const QDateTime &nLastModified)
         Q_EMIT lastModifiedChanged(lastModified());
     }
 }
-
-
 
 
 FuotenEnums::Type GetUpdatedItems::type() const { Q_D(const GetUpdatedItems); return d->type; }
@@ -182,8 +168,6 @@ void GetUpdatedItems::setType(FuotenEnums::Type nType)
 }
 
 
-
-
 qint64 GetUpdatedItems::parentId() const { Q_D(const GetUpdatedItems); return d->parentId; }
 
 void GetUpdatedItems::setParentId(qint64 nParentId)
@@ -201,6 +185,4 @@ void GetUpdatedItems::setParentId(qint64 nParentId)
     }
 }
 
-
-
-
+#include "moc_getupdateditems.cpp"

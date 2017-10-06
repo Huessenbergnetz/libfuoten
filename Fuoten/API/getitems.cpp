@@ -45,9 +45,6 @@ GetItems::GetItems(GetItemsPrivate &dd, QObject *parent) :
 }
 
 
-
-
-
 void GetItems::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -96,7 +93,6 @@ void GetItems::successCallback()
 }
 
 
-
 bool GetItems::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
@@ -117,8 +113,6 @@ bool GetItems::checkOutput()
 
     return true;
 }
-
-
 
 
 bool GetItems::checkInput()
@@ -142,9 +136,6 @@ bool GetItems::checkInput()
 }
 
 
-
-
-
 int GetItems::batchSize() const { Q_D(const GetItems); return d->batchSize; }
 
 void GetItems::setBatchSize(int nBatchSize)
@@ -161,8 +152,6 @@ void GetItems::setBatchSize(int nBatchSize)
         Q_EMIT batchSizeChanged(batchSize());
     }
 }
-
-
 
 
 qint64 GetItems::offset() const { Q_D(const GetItems); return d->offset; }
@@ -183,8 +172,6 @@ void GetItems::setOffset(qint64 nOffset)
 }
 
 
-
-
 FuotenEnums::Type GetItems::type() const { Q_D(const GetItems); return d->type; }
 
 void GetItems::setType(FuotenEnums::Type nType)
@@ -201,8 +188,6 @@ void GetItems::setType(FuotenEnums::Type nType)
         Q_EMIT typeChanged(type());
     }
 }
-
-
 
 
 qint64 GetItems::parentId() const { Q_D(const GetItems); return d->parentId; }
@@ -223,8 +208,6 @@ void GetItems::setParentId(qint64 nParentId)
 }
 
 
-
-
 bool GetItems::getRead() const { Q_D(const GetItems); return d->getRead; }
 
 void GetItems::setGetRead(bool nGetRead)
@@ -241,8 +224,6 @@ void GetItems::setGetRead(bool nGetRead)
         Q_EMIT getReadChanged(getRead());
     }
 }
-
-
 
 
 bool GetItems::oldestFirst() const { Q_D(const GetItems); return d->oldestFirst; }
@@ -262,6 +243,4 @@ void GetItems::setOldestFirst(bool nOldestFirst)
     }
 }
 
-
-
-
+#include "moc_getitems.cpp"

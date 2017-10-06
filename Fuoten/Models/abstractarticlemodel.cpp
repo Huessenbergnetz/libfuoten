@@ -52,7 +52,6 @@ void AbstractArticleModel::setParentIdType(FuotenEnums::Type nParentIdType)
 }
 
 
-
 bool AbstractArticleModel::starredOnly() const { Q_D(const AbstractArticleModel); return d->starredOnly; }
 
 void AbstractArticleModel::setStarredOnly(bool nStarredOnly)
@@ -66,8 +65,6 @@ void AbstractArticleModel::setStarredOnly(bool nStarredOnly)
 }
 
 
-
-
 int AbstractArticleModel::bodyLimit() const { Q_D(const AbstractArticleModel); return d->bodyLimit; }
 
 void AbstractArticleModel::setBodyLimit(int nBodyLimit)
@@ -79,10 +76,6 @@ void AbstractArticleModel::setBodyLimit(int nBodyLimit)
         Q_EMIT bodyLimitChanged(bodyLimit());
     }
 }
-
-
-
-
 
 
 void AbstractArticleModel::handleStorageChanged(AbstractStorage *old)
@@ -113,7 +106,6 @@ void AbstractArticleModel::handleStorageChanged(AbstractStorage *old)
 }
 
 
-
 void AbstractArticleModel::load()
 {
     Q_ASSERT_X(storage(), "load articles", "no storage available");
@@ -137,7 +129,6 @@ void AbstractArticleModel::load()
 
     storage()->getArticlesAsync(qa);
 }
-
 
 
 void AbstractArticleModel::gotArticlesAsync(const ArticleList &articles)
@@ -166,7 +157,6 @@ void AbstractArticleModel::gotArticlesAsync(const ArticleList &articles)
 }
 
 
-
 QModelIndex AbstractArticleModel::findByID(qint64 id) const
 {
     QModelIndex idx;
@@ -192,7 +182,6 @@ QModelIndex AbstractArticleModel::findByID(qint64 id) const
 
     return idx;
 }
-
 
 
 QHash<qint64, QModelIndex> AbstractArticleModel::findByIDs(const IdList &ids) const
@@ -224,8 +213,6 @@ QList<Article*> AbstractArticleModel::articles() const
 }
 
 
-
-
 void AbstractArticleModel::clear()
 {
     Q_D(AbstractArticleModel);
@@ -240,7 +227,6 @@ void AbstractArticleModel::clear()
         endRemoveRows();
     }
 }
-
 
 
 void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems)
@@ -325,7 +311,6 @@ void AbstractArticleModel::itemsRequested(const IdList &updatedItems, const IdLi
 }
 
 
-
 void AbstractArticleModel::folderMarkedRead(qint64 folderId, qint64 newestItemId)
 {
     if (rowCount() <= 0) {
@@ -351,7 +336,6 @@ void AbstractArticleModel::folderMarkedRead(qint64 folderId, qint64 newestItemId
         }
     }
 }
-
 
 
 void AbstractArticleModel::folderMarkedReadInQueue(qint64 folderId, qint64 newestItemId)
@@ -388,7 +372,6 @@ void AbstractArticleModel::folderMarkedReadInQueue(qint64 folderId, qint64 newes
 }
 
 
-
 void AbstractArticleModel::feedMarkedRead(qint64 feedId, qint64 newestItemId)
 {
     if (rowCount() <= 0) {
@@ -419,7 +402,6 @@ void AbstractArticleModel::feedMarkedRead(qint64 feedId, qint64 newestItemId)
 
     }
 }
-
 
 
 void AbstractArticleModel::feedMarkedReadInQueue(qint64 feedId, qint64 newestItemId)
@@ -460,7 +442,6 @@ void AbstractArticleModel::feedMarkedReadInQueue(qint64 feedId, qint64 newestIte
         }
     }
 }
-
 
 
 void AbstractArticleModel::folderDeleted(qint64 folderId)
@@ -535,7 +516,6 @@ void AbstractArticleModel::feedDeleted(qint64 feedId)
 }
 
 
-
 void AbstractArticleModel::itemMarked(qint64 itemId, bool unread)
 {
     if (rowCount() <= 0) {
@@ -552,7 +532,6 @@ void AbstractArticleModel::itemMarked(qint64 itemId, bool unread)
         Q_EMIT dataChanged(idx, idx, QVector<int>(1, Qt::DisplayRole));
     }
 }
-
 
 
 void AbstractArticleModel::itemsMarked(const IdList &itemIds, bool unread)
@@ -576,7 +555,6 @@ void AbstractArticleModel::itemsMarked(const IdList &itemIds, bool unread)
         }
     }
 }
-
 
 
 void AbstractArticleModel::itemStarred(qint64 feedId, const QString &guidHash, bool starred)
@@ -603,7 +581,6 @@ void AbstractArticleModel::itemStarred(qint64 feedId, const QString &guidHash, b
 }
 
 
-
 void AbstractArticleModel::itemsStarred(const QList<QPair<qint64, QString> > &articles, bool starred)
 {
     Q_ASSERT_X(!articles.empty(), "star items", "empty articles list");
@@ -616,7 +593,6 @@ void AbstractArticleModel::itemsStarred(const QList<QPair<qint64, QString> > &ar
         itemStarred(p.first, p.second, starred);
     }
 }
-
 
 
 void AbstractArticleModel::allItemsMarkedRead(qint64 newestItemId)
@@ -661,8 +637,6 @@ void AbstractArticleModel::allItemsMarkedReadInQueue()
 }
 
 
-
-
 void AbstractArticleModel::queueCleared()
 {
     if (rowCount() <= 0) {
@@ -675,3 +649,5 @@ void AbstractArticleModel::queueCleared()
         a->setQueue(FuotenEnums::QueueActions(0));
     }
 }
+
+#include "moc_abstractarticlemodel.cpp"
