@@ -43,10 +43,27 @@ void Synchronizer::sync()
     start();
 }
 
+void Synchronizer::deferredSync(quint32 miliseconds)
+{
+    Q_D(Synchronizer);
+    if (!d->deferTimer) {
+        d->deferTimer = new QTimer(this);
+        d->deferTimer->setSingleShot(true);
+        d->deferTimer->setTimerType(Qt::VeryCoarseTimer);
+        connect(d->deferTimer, &QTimer::timeout, this, &Synchronizer::start);
+    }
+    d->deferTimer->start(miliseconds);
+}
+
 
 void Synchronizer::start()
 {
     Q_D(Synchronizer);
+
+    if (Q_UNLIKELY(d->inOperation)) {
+        qWarning("Still in operation. Returning.");
+        return;
+    }
 
     if (!d->configuration) {
         setConfiguration(Component::defaultConfiguration());
@@ -54,9 +71,8 @@ void Synchronizer::start()
 
     Q_ASSERT_X(d->configuration, "start synchronizing", "invalid configuration object");
 
-    if (Q_UNLIKELY(d->inOperation)) {
-        qWarning("Still in operation. Returning.");
-        return;
+    if (!d->storage) {
+        setStorage(Component::defaultStorage());
     }
 
     qDebug("%s", "Start synchronizing.");

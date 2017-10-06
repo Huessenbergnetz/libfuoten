@@ -177,6 +177,24 @@ public:
      */
     Q_INVOKABLE void clearError();
 
+    /*!
+     * \brief Invokes the synchronizing process after \a miliseconds.
+     *
+     * The base implementation simply calls start() after the timeout in \a miliseconds.
+     */
+    Q_INVOKABLE virtual void deferredSync(quint32 miliseconds);
+
+public Q_SLOTS:
+    /*!
+     * \brief Starts the synchronizing process.
+     *
+     * Prior to starting the synchronizing process, it checks inOperation(). If that returns \c true,
+     * nothing will happen. If inOperation() returns \c false, it will set it to \c true and will
+     * start the update process.
+     *
+     * When you create a derived class, call start() in your implementation of sync().
+     */
+    void start();
 
 Q_SIGNALS:
     /*!
@@ -232,17 +250,6 @@ Q_SIGNALS:
 
 protected:
     const QScopedPointer<SynchronizerPrivate> d_ptr;
-
-    /*!
-     * \brief Starts the synchronizing process.
-     *
-     * Prior to starting the synchronizing process, it checks inOperation(). If that returns \c true,
-     * nothing will happen. If inOperation() returns \c false, it will set it to \c true and will
-     * start the update process.
-     *
-     * When you create a derived class, call start() in your implementation of sync().
-     */
-    void start();
 
     /*!
      * \brief Sets the current progress value.

@@ -31,6 +31,7 @@
 #include "../API/markmultipleitems.h"
 #include "../API/starmultipleitems.h"
 #include "../error.h"
+#include <QTimer>
 
 namespace Fuoten {
 
@@ -149,6 +150,7 @@ public:
     QString currentAction;
     qreal totalActions;
     qreal performedActions;
+    QTimer *deferTimer = nullptr;
 };
 
 }
