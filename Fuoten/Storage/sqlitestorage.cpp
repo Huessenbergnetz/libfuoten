@@ -380,6 +380,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     }
 
     QSqlQuery q(d->db);
+    q.setForwardOnly(true);
 
     // query the currently local available folders in the database
     QHash<qint64, QString> currentFolders;
@@ -657,6 +658,7 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
     }
 
     QSqlQuery q(d->db);
+    q.setForwardOnly(true);
 
     bool qresult = q.exec(qs);
     Q_ASSERT_X(qresult, "get folders", "failed to execute datbase query");
@@ -724,6 +726,7 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
     Q_D(SQLiteStorage);
 
     QSqlQuery q(d->db);
+    q.setForwardOnly(true);
 
     bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId IN (SELECT id FROM feeds WHERE folderId = ?)"));
     Q_ASSERT_X(qresult, "folder marked read", "failed to prepare database query");
@@ -843,6 +846,7 @@ QList<Feed*> SQLiteStorage::getFeeds(const QueryArgs &args)
     }
 
     QSqlQuery q(d->db);
+    q.setForwardOnly(true);
     bool qresult = q.exec(qs);
     Q_ASSERT_X(qresult, "get feeds", "failed to query feeds from database");
 
@@ -1121,6 +1125,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
     qDeleteAll(currentFeeds);
 
+    q.setForwardOnly(true);
     qresult = q.exec(QStringLiteral("SELECT id FROM folders"));
     Q_ASSERT(qresult);
 
@@ -1582,6 +1587,7 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
     qDebug("Start to query articles from the local SQLite database using the following query: %s", qUtf8Printable(qs));
 
     QSqlQuery q(d->db);
+    q.setForwardOnly(true);
 
     bool qresult = q.exec(qs);
     Q_ASSERT_X(qresult, "get article", "failed to execute database query");
@@ -1748,6 +1754,7 @@ void GetArticlesAsyncWorker::run()
 
     qDebug("Start to query articles fromt the local SQLite database using the following query: %s", qUtf8Printable(qs));
 
+    q.setForwardOnly(true);
     qresult = q.exec(qs);
     Q_ASSERT_X(qresult, "get articles async", "failed to execute database query");
 
@@ -1833,6 +1840,7 @@ void ItemsRequestedWorker::run()
 
     bool qresult = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
     Q_ASSERT_X(qresult, "items requested worker", "failed to enable foreign keys support");
+    q.setForwardOnly(true);
 
     const QJsonArray items = m_json.object().value(QStringLiteral("items")).toArray();
 
@@ -2135,6 +2143,7 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
     const QString idListString = d->intListToString(itemIds);
 
     QSqlQuery q(d->db);
+    q.setForwardOnly(true);
     bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = ?, lastModified = ? WHERE id IN (%1)").arg(idListString));
     Q_ASSERT_X(qresult, "items marked", "failed to prepare database query");
 
@@ -2214,6 +2223,7 @@ void SQLiteStorage::itemsStarred(const QList<QPair<qint64, QString> > &articles,
     Q_D(SQLiteStorage);
 
     QSqlQuery q(d->db);
+    q.setForwardOnly(true);
 
     bool qresult = d->db.transaction();
     Q_ASSERT_X(qresult, "items starred", "failed to start database transaction");
@@ -2543,6 +2553,7 @@ EnqueueMarkReadWorker::EnqueueMarkReadWorker(const QString &dbpath, qint64 id, F
 void EnqueueMarkReadWorker::run()
 {
     QSqlQuery q(m_db);
+    q.setForwardOnly(true);
 
     bool qresult = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
     Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to enable foreign keys support");
