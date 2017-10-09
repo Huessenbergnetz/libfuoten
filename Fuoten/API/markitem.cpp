@@ -93,7 +93,7 @@ bool MarkItem::checkInput()
 
 void MarkItem::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->itemMarked(itemId(), unread());
     }
 

@@ -46,7 +46,14 @@ class AbstractNamFactory;
  * \link Component::configuration configuration \endlink property. This can either be
  * done per instance direclty via the property or on a global scope via setDefaultConfiguration().
  * The \link Component::storage storage \endlink property can be set on a global scope
- * via setDefaultStorage().
+ * via setDefaultStorage(). Pointers to configuration and storage that are set directly to
+ * an instance of a Component subclass via the property setter functions setStorage() and
+ * setConfiguration() will take precedence over the default ones.
+ *
+ * To modify the QNetworkAccessManager that will be used to perform the network requests,
+ * create a subclass of AbstractNamFactory and set it via Component::setNetworkAccessManagerFactory().
+ * This will than be used to create new QNetworkAccessManager instances on the fly that will
+ * be children of the Component object.
  *
  * When creating a subclass of Component, you have to reimplement successCallback(),
  * extractError() and checkOutput(). Optionally you should reimplement checkInput()
@@ -201,6 +208,10 @@ class FUOTENSHARED_EXPORT Component : public QObject
      *
      * This property can not be changed while Component::inOperation() returns \c true.
      *
+     * If no configuration object has been set via setConfiguration(), the one set via Component::setDefaultConfiguration() will be the
+     * value of this property (if a default one has been set). Configuration objects that are set per instance via setConfiguration()
+     * will take precedence over the default ones set via Component::setDefaultConfiguration().
+     *
      * \par Access functions:
      * <TABLE><TR><TD>AbstractConfiguration*</TD><TD>configuration() const</TD></TR><TR><TD>void</TD><TD>setConfiguration(AbstractConfiguration *nAbstractConfiguration)</TD></TR></TABLE>
      * \par Notifier signal:
@@ -215,12 +226,33 @@ class FUOTENSHARED_EXPORT Component : public QObject
      *
      * This property can not be changed while Component::inOperation() returns \c true.
      *
+     * If no storage object has been set via setStorage() the one set via Component::setDefaultStorage() will be the value of this property.
+     * So if you do not set a storage object through one the methods, this property will hold a \c nullptr. If a storage object ist set
+     * to an instance of this class via setStorage(), this storage object will take precedence over the default storage object (if any set).
+     *
+     * Together with the \link Component::useStorage useStorage \endlink property, this can be used in the successCallback() function
+     * to determine if the API request result should be processed through the local storage object or not.
+     *
      * \par Access functions:
      * <TABLE><TR><TD>AbstractStorage*</TD><TD>storage() const</TD></TR><TR><TD>void</TD><TD>setStorage(AbstractStorage *nStorageHandler)</TD></TR></TABLE>
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>storageChanged(AbstractStorage *storage)</TD></TR></TABLE>
      */
     Q_PROPERTY(Fuoten::AbstractStorage *storage READ storage WRITE setStorage NOTIFY storageChanged)
+    /*!
+     * \brief If \c true (the default), a local storage should be used in the successCallback() function to further process the request results.
+     *
+     * Setting this property to \c false will omit possible usage of local storage objects in the successCallback() function. Even if a defaultStorage()
+     * has been set through setDefaultStorage(), it will not be used if this propery ist \c false.
+     *
+     * \par Access functions:
+     * \li bool isUseStorageEnabled() const
+     * \li void setUseStorage(bool useStorage)
+     *
+     * \par Notifier signal:
+     * void useStorageChanged(bool useStorage)
+     */
+    Q_PROPERTY(bool useStorage READ isUseStorageEnabled WRITE setUseStorage NOTIFY useStorageChanged)
 public:
     /*!
      * \brief Constructs a component with the given \a parent.
@@ -303,11 +335,16 @@ public:
     AbstractConfiguration *configuration() const;
 
     /*!
-     * \brief Returns a pointer to the local storage that is currently set.
-     *
-     * \sa storage
+     * \brief Getter function for the \link Component::storage storage \endlink property.
+     * \sa setStorage(), setDefaultStorage(), storageChanged()
      */
     AbstractStorage *storage() const;
+
+    /*!
+     * \brief Getter function for the \link Component::useStorage useStorage \endlink property.
+     * \sa setUseStorage(), useStorageChanged()
+     */
+    bool isUseStorageEnabled() const;
 
     /*!
      * \brief Sets the timeout for the API request in seconds.
@@ -324,11 +361,16 @@ public:
     void setConfiguration(AbstractConfiguration *nAbstractConfiguration);
 
     /*!
-     * \brief Sets a pointer to a local storage handler to save the API result.
-     *
-     * \sa storage
+     * \brief Setter function for the \link Component::storage storage \endlink property.
+     * \sa storage(), setDefaultStorage(), storageChanged()
      */
     void setStorage(AbstractStorage *localStorage);
+
+    /*!
+     * \brief Setter function for the \link Component::useStorage useStorage \endlink property.
+     * \sa isUseStorageEnabled(), useStorageChanged()
+     */
+    void setUseStorage(bool useStorage);
 
     /*!
      * \brief Sets the global default configuration.
@@ -396,10 +438,16 @@ Q_SIGNALS:
     void configurationChanged(AbstractConfiguration *configuration);
 
     /*!
-     * \brief This signal is emitted when the pointer to the local storage object changes.
-     * \sa storage
+     * \brief Notifier signal for the \link Component::storage storage \endlink property.
+     * \sa storage(), setDefaultStorage(), setStorage()
      */
     void storageChanged(AbstractStorage *storage);
+
+    /*!
+     * \brief Notifier signal for the \link Component::useStorage useStorage \endlink property.
+     * \sa setUseStorage(), isUseStorageEnabled()
+     */
+    void useStorageChanged(bool useStorage);
 
     /*!
      * \brief This signal is emitted if the SSL/TLS session encountered errors during the set up.
@@ -575,7 +623,7 @@ protected:
      *
      * void RenameFolder::successCallback()
      * {
-     *     if (storage()) {
+     *     if (isUseStorageEnabled() && storage()) {
      *         storage()->folderRenamed(folderId(), newName());
      *     }
      *

@@ -122,7 +122,7 @@ bool RenameFeed::checkInput()
 
 void RenameFeed::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->feedRenamed(feedId(), newName());
     }
 

@@ -112,7 +112,7 @@ void MoveFeed::extractError(QNetworkReply *reply)
 
 void MoveFeed::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->feedMoved(feedId(), folderId());
     }
 

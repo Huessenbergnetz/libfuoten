@@ -57,7 +57,7 @@ void GetFeeds::execute()
 
 void GetFeeds::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->feedsRequested(jsonResult());
     }
 

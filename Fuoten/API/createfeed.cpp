@@ -137,7 +137,7 @@ void CreateFeed::extractError(QNetworkReply *reply)
 
 void CreateFeed::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->feedCreated(jsonResult());
     }
 

@@ -197,6 +197,7 @@ void Synchronizer::notifyAboutUnread()
         d->unreadMultipleItems->setConfiguration(d->configuration);
         d->unreadMultipleItems->setItemIds(d->queuedUnreadArticles);
         d->unreadMultipleItems->setUnread(true);
+        d->unreadMultipleItems->setUseStorage(false);
         QObject::connect(d->unreadMultipleItems, &Component::failed, this, &Synchronizer::setError);
         if (!d->queuedReadArticles.isEmpty()) {
             QObject::connect(d->unreadMultipleItems, &MarkMultipleItems::succeeded, this, &Synchronizer::notifyAboutRead);
@@ -224,6 +225,7 @@ void Synchronizer::notifyAboutRead()
         d->readMultipleItems->setConfiguration(d->configuration);
         d->readMultipleItems->setItemIds(d->queuedReadArticles);
         d->readMultipleItems->setUnread(false);
+        d->readMultipleItems->setUseStorage(false);
         QObject::connect(d->readMultipleItems, &Component::failed, this, &Synchronizer::setError);
         if (!d->queuedStarredArticles.isEmpty()) {
             QObject::connect(d->readMultipleItems, &MarkMultipleItems::succeeded, this, &Synchronizer::notifyAboutStarred);
@@ -249,6 +251,7 @@ void Synchronizer::notifyAboutStarred()
         d->starMultipleItems->setConfiguration(d->configuration);
         d->starMultipleItems->setItemsToStar(d->queuedStarredArticles);
         d->starMultipleItems->setStarred(true);
+        d->starMultipleItems->setUseStorage(false);
         QObject::connect(d->starMultipleItems, &Component::failed, this, &Synchronizer::setError);
         if (!d->queuedUnstarredArticles.isEmpty()) {
             QObject::connect(d->starMultipleItems, &StarMultipleItems::succeeded, this, &Synchronizer::notifyAboutUnstarred);
@@ -272,6 +275,7 @@ void Synchronizer::notifyAboutUnstarred()
         d->unstarMultipleItems->setConfiguration(d->configuration);
         d->unstarMultipleItems->setItemsToStar(d->queuedUnstarredArticles);
         d->unstarMultipleItems->setStarred(false);
+        d->unstarMultipleItems->setUseStorage(false);
         QObject::connect(d->unstarMultipleItems, &Component::failed, this, &Synchronizer::setError);
         QObject::connect(d->unstarMultipleItems, &StarMultipleItems::succeeded, this, &Synchronizer::requestFolders);
         d->unstarMultipleItems->execute();

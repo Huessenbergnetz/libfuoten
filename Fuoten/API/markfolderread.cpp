@@ -96,7 +96,7 @@ bool MarkFolderRead::checkInput()
 
 void MarkFolderRead::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->folderMarkedRead(folderId(), newestItemId());
     }
 

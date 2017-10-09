@@ -96,7 +96,7 @@ bool RenameFolder::checkInput()
 
 void RenameFolder::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->folderRenamed(folderId(), newName());
     }
 

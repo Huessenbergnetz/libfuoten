@@ -87,7 +87,7 @@ bool MarkAllItemsRead::checkInput()
 
 void MarkAllItemsRead::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->allItemsMarkedRead(newestItemId());
     }
 

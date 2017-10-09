@@ -81,7 +81,7 @@ void GetItems::execute()
 
 void GetItems::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->itemsRequested(jsonResult());
     }
 

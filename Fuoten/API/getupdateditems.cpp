@@ -69,7 +69,7 @@ void GetUpdatedItems::execute()
 
 void GetUpdatedItems::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->itemsRequested(jsonResult());
     }
 

@@ -103,7 +103,7 @@ bool MarkMultipleItems::checkInput()
 
 void MarkMultipleItems::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->itemsMarked(itemIds(), unread());
     }
 

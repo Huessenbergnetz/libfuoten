@@ -81,7 +81,7 @@ bool DeleteFolder::checkInput()
 
 void DeleteFolder::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->folderDeleted(folderId());
     }
 

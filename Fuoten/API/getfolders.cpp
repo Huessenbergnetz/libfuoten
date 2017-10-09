@@ -59,7 +59,7 @@ void GetFolders::execute()
 
 void GetFolders::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->foldersRequested(jsonResult());
     }
 

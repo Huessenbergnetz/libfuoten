@@ -252,7 +252,7 @@ void Component::sendRequest()
 #ifdef QT_DEBUG
     qDebug("Start performing network operation.");
     qDebug("API URL: %s", qUtf8Printable(url.toString()));
-    if (!nr.rawHeaderList().isEmpty()) {
+    if (!nr.rawHeaderList().empty()) {
         const QList<QByteArray> hl = nr.rawHeaderList();
         for (const QByteArray &h : hl) {
             if (h != QByteArrayLiteral("Authorization")) {
@@ -268,15 +268,20 @@ void Component::sendRequest()
     if (Q_LIKELY(d->requestTimeout > 0)) {
         if (!d->timeoutTimer) {
             d->timeoutTimer = new QTimer(this);
+            qDebug("Created new timeout timer at %p.", d->timeoutTimer);
             d->timeoutTimer->setSingleShot(true);
             d->timeoutTimer->setTimerType(Qt::VeryCoarseTimer);
             connect(d->timeoutTimer, &QTimer::timeout, this, &Component::_requestTimedOut);
         }
         d->timeoutTimer->start(d->requestTimeout * 1000);
+        qDebug("Started timeout timer with %u seconds.", d->requestTimeout);
     }
 
     d->performNetworkOperation(nr);
-    connect(d->reply, &QNetworkReply::finished, this, &Component::_requestFinished);
+    Q_CHECK_PTR(d->reply);
+    if (!connect(d->reply, &QNetworkReply::finished, this, &Component::_requestFinished)) {
+        qFatal("Failed to connect QNetworkReply to Component::_requestFinished slot.");
+    }
 }
 
 
@@ -285,20 +290,24 @@ void Component::_requestFinished()
     Q_D(Component);
 
     if (Q_LIKELY(d->timeoutTimer && d->timeoutTimer->isActive())) {
+        qDebug("Stopping timeout timer with %i seconds left.", d->timeoutTimer->remainingTime()/1000);
         d->timeoutTimer->stop();
     }
 
+    qDebug("%s", "Reading network reply data.");
     d->result = d->reply->readAll();
 
     if (Q_LIKELY(d->reply->error() == QNetworkReply::NoError)) {
 
         if (checkOutput()) {
+            qDebug("%s", "Calling successCallback().");
             successCallback();
         } else {
             setInOperation(false);
         }
 
     } else {
+        qDebug("%s", "Extracting error data from network reply.");
         extractError(d->reply);
     }
 
@@ -483,7 +492,6 @@ AbstractStorage *Component::storage() const
     return _storage;
 }
 
-
 void Component::setStorage(AbstractStorage *localStorage)
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -496,6 +504,19 @@ void Component::setStorage(AbstractStorage *localStorage)
         d->storage = localStorage;
         qDebug("Changed storage to %p.", d->storage);
         Q_EMIT storageChanged(storage());
+    }
+}
+
+
+bool Component::isUseStorageEnabled() const { Q_D(const Component); return d->useStorage; }
+
+void Component::setUseStorage(bool useStorage)
+{
+    Q_D(Component);
+    if (useStorage != d->useStorage) {
+        d->useStorage = useStorage;
+        qDebug("Changed useStorage to %s.", d->useStorage ? "true" : "false");
+        Q_EMIT useStorageChanged(d->useStorage);
     }
 }
 

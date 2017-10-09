@@ -95,7 +95,7 @@ bool MarkFeedRead::checkInput()
 
 void MarkFeedRead::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->feedMarkedRead(feedId(), newestItemId());
     }
 

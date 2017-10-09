@@ -101,7 +101,7 @@ bool StarItem::checkInput()
 
 void StarItem::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->itemStarred(feedId(), guidHash(), starred());
     }
 

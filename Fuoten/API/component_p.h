@@ -34,19 +34,7 @@ namespace Fuoten {
 class ComponentPrivate
 {
 public:
-    ComponentPrivate() :
-        networkAccessManager(nullptr),
-        inOperation(false),
-        requestTimeout(120),
-        error(nullptr),
-        configuration(nullptr),
-        storage(nullptr),
-        timeoutTimer(nullptr),
-        reply(nullptr),
-        namOperation(QNetworkAccessManager::GetOperation),
-        expectedJSONType(Component::Empty),
-        requiresAuth(true)
-    {}
+    ComponentPrivate() {}
 
     virtual ~ComponentPrivate() {}
 
@@ -55,41 +43,47 @@ public:
         switch(namOperation) {
         case QNetworkAccessManager::HeadOperation:
             reply = networkAccessManager->head(request);
+            qDebug("Performing HEAD network operation with reply at %p.", reply);
             break;
         case QNetworkAccessManager::PostOperation:
             reply = networkAccessManager->post(request, payload);
+            qDebug("Performing POST network operation with reply at %p.", reply);
             break;
         case QNetworkAccessManager::PutOperation:
             reply = networkAccessManager->put(request, payload);
+            qDebug("Performing PUT network operation with reply at %p.", reply);
             break;
         case QNetworkAccessManager::DeleteOperation:
             reply = networkAccessManager->deleteResource(request);
+            qDebug("Performing DELETE network operation with reply at %p.", reply);
             break;
         default:
             reply = networkAccessManager->get(request);
+            qDebug("Performing GET network operation with reply at %p.", reply);
             break;
         }
     }
 
-    QNetworkAccessManager *networkAccessManager;
-    bool inOperation;
-    quint8 requestTimeout;
-    Error *error;
-    AbstractConfiguration *configuration;
-    AbstractStorage *storage;
+    QNetworkAccessManager *networkAccessManager = nullptr;
+    bool inOperation = false;
+    quint8 requestTimeout = 120;
+    Error *error = nullptr;
+    AbstractConfiguration *configuration = nullptr;
+    AbstractStorage *storage = nullptr;
+    bool useStorage = true;
 
     quint8 retryCount;
     QHash<QByteArray, QByteArray> requestHeaders;
     QByteArray payload;
     QUrlQuery urlQuery;
-    QTimer *timeoutTimer;
-    QNetworkReply *reply;
-    QNetworkAccessManager::Operation namOperation;
-    Component::ExpectedJSONType expectedJSONType;
+    QTimer *timeoutTimer = nullptr;
+    QNetworkReply *reply = nullptr;
+    QNetworkAccessManager::Operation namOperation = QNetworkAccessManager::GetOperation;
+    Component::ExpectedJSONType expectedJSONType = Component::Empty;
     QString apiRoute;
     QJsonDocument jsonResult;
     QByteArray result;
-    bool requiresAuth;
+    bool requiresAuth = true;
 
     static AbstractConfiguration *defaultConfiguration();
     static void setDefaultConfiguration(AbstractConfiguration *config);

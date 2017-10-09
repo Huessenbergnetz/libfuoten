@@ -106,7 +106,7 @@ bool StarMultipleItems::checkInput()
 
 void StarMultipleItems::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->itemsStarred(itemsToStar(), starred());
     }
 

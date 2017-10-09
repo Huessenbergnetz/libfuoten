@@ -99,7 +99,7 @@ bool DeleteFeed::checkInput()
 
 void DeleteFeed::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->feedDeleted(feedId());
     }
 

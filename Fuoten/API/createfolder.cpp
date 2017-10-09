@@ -129,7 +129,7 @@ void CreateFolder::extractError(QNetworkReply *reply)
 
 void CreateFolder::successCallback()
 {
-    if (storage()) {
+    if (isUseStorageEnabled() && storage()) {
         storage()->folderCreated(jsonResult());
     }
 
