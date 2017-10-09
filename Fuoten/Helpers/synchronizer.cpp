@@ -64,6 +64,8 @@ void Synchronizer::start()
         return;
     }
 
+    d->setInOperation(true);
+
     if (!d->configuration) {
         setConfiguration(Component::defaultConfiguration());
     }
@@ -77,8 +79,6 @@ void Synchronizer::start()
     qDebug("%s", "Start synchronizing.");
 
     setError(nullptr);
-
-    d->setInOperation(true);
 
     d->totalActions = d->configuration->getLastSync().isValid() ? 4 : 5;
 
