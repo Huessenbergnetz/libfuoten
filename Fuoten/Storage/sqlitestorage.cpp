@@ -2117,6 +2117,8 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
 
 void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
 {
+    qDebug("%s", "Start to mark items as read in the local storage.");
+
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
@@ -2142,12 +2144,15 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "items marked", "failed to execute databae query");
 
+    qDebug("Updated items in the database that have been marked as %s", unread ? "unread" : "read");
+
     qresult = q.exec(QStringLiteral("SELECT DISTINCT feedId FROM items WHERE id IN (%1)").arg(idListString));
     Q_ASSERT(qresult);
     IdList feedIds;
     while (q.next()) {
         feedIds.push_back(q.value(0).value<qint64>());
     }
+    qDebug("Selected affected feeds after items in the database have been marked as %s.", unread ? "unread" : "read");
     if (!feedIds.empty()) {
         qresult = d->db.transaction();
         Q_ASSERT(qresult);
@@ -2156,10 +2161,12 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
             Q_ASSERT(qresult);
             q.bindValue(QStringLiteral(":feedId"), id);
             qresult = q.exec();
+            Q_ASSERT(qresult);
         }
         qresult = d->db.commit();
         Q_ASSERT(qresult);
     }
+    qDebug("Updated affected feeds after items in the database have been marked as %s.", unread ? "unread" : "read");
 
     qresult = q.exec(QStringLiteral("SELECT DISTINCT folderId FROM feeds WHERE id IN (%1)").arg(d->intListToString(feedIds)));
     Q_ASSERT(qresult);
@@ -2167,6 +2174,7 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
     while (q.next()) {
         folderIds.push_back(q.value(0).value<qint64>());
     }
+    qDebug("Selected affected folders after items in the database have been marked as %s.", unread ? "unread" : "read");
     if (!folderIds.empty()) {
         qresult = d->db.transaction();
         Q_ASSERT(qresult);
@@ -2180,10 +2188,12 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
         qresult = d->db.commit();
         Q_ASSERT(qresult);
     }
+    qDebug("Updated affected folders after items in the database have been marked as %s.", unread ? "unread" : "read");
 
     qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
     Q_ASSERT(qresult);
     setTotalUnread(q.value(0).value<quint16>());
+    qDebug("Updated total count of unread items.");
 
     Q_EMIT markedItems(itemIds, unread);
 }
