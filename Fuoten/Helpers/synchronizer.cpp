@@ -86,6 +86,7 @@ void Synchronizer::start()
         QueryArgs qa;
         qa.queuedOnly = true;
 
+        qDebug("%s", "Requesting queued articles from storage.");
         const ArticleList qas = storage()->getArticles(qa);
         if (!qas.isEmpty()) {
             for (Article *a : qas) {
@@ -105,19 +106,23 @@ void Synchronizer::start()
 
             qDeleteAll(qas);
 
-            if (!d->queuedUnreadArticles.isEmpty()) {
+            if (!d->queuedUnreadArticles.empty()) {
+                qDebug("Found %i articles queued as unread.", d->queuedUnreadArticles.size());
                 d->totalActions++;
             }
 
-            if (!d->queuedReadArticles.isEmpty()) {
+            if (!d->queuedReadArticles.empty()) {
+                qDebug("Found %i articles queued as read.", d->queuedReadArticles.size());
                 d->totalActions++;
             }
 
-            if (!d->queuedStarredArticles.isEmpty()) {
+            if (!d->queuedStarredArticles.empty()) {
+                qDebug("Found %i articles queued as starred.", d->queuedStarredArticles.size());
                 d->totalActions++;
             }
 
-            if (!d->queuedUnstarredArticles.isEmpty()) {
+            if (!d->queuedUnstarredArticles.empty()) {
+                qDebug("Found %i articles queue as unstarred.", d->queuedUnstarredArticles.size());
                 d->totalActions++;
             }
 
