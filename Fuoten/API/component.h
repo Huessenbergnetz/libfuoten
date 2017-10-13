@@ -37,6 +37,7 @@ class Error;
 class AbstractConfiguration;
 class AbstractStorage;
 class AbstractNamFactory;
+class AbstractNotificator;
 
 /*!
  * \brief Base class for all API requests.
@@ -253,6 +254,25 @@ class FUOTENSHARED_EXPORT Component : public QObject
      * void useStorageChanged(bool useStorage)
      */
     Q_PROPERTY(bool useStorage READ isUseStorageEnabled WRITE setUseStorage NOTIFY useStorageChanged)
+    /*!
+     * \brief Pointer to an object derived from AbstractNotificator.
+     *
+     * Set a notificator to notify users about errors and events. This is not mandatory. You have to derive your own notificator that uses
+     * the notification system of the target platform.
+     *
+     * If no notificator has been set via setNotificator(), the one set via Componentn:setDefaultConfigurator() will be used - if any has
+     * been set. If you do not set a notificator either per instance or global, this property will hold a \c nullptr. If a notificator is
+     * set to an instance of this class via setNotificator(), this notificator will take precedence over the global default notificator
+     * object (if any set).
+     *
+     * \par Access functions:
+     * \li AbstractNotificator* notificator() const
+     * \li void setNotificator(AbstractNotificator *notificator);
+     *
+     * \par Notifier signal:
+     * \li void notificatorChanged(AbstractNotificator *notificator);
+     */
+    Q_PROPERTY(Fuoten::AbstractNotificator *notificator READ notificator WRITE setNotificator NOTIFY notificatorChanged)
 public:
     /*!
      * \brief Constructs a component with the given \a parent.
@@ -347,6 +367,12 @@ public:
     bool isUseStorageEnabled() const;
 
     /*!
+     * \brief Getter function for the \link Component::notificator notificator \endlink property.
+     * \sa setNotificator(), notificatorChanged()
+     */
+    AbstractNotificator *notificator() const;
+
+    /*!
      * \brief Sets the timeout for the API request in seconds.
      *
      * \sa requestTimeout
@@ -371,6 +397,12 @@ public:
      * \sa isUseStorageEnabled(), useStorageChanged()
      */
     void setUseStorage(bool useStorage);
+
+    /*!
+     * \brief Setter function for the \link Component::notificator notificator \endlink property.
+     * \sa notificator(), notificatorChanged()
+     */
+    void setNotificator(AbstractNotificator *notificator);
 
     /*!
      * \brief Sets the global default configuration.
@@ -411,6 +443,18 @@ public:
      */
     static AbstractNamFactory *networkAccessManagerFactory();
 
+    /*!
+     * \brief Sets the global default notificator.
+     * \sa defaultNotificator()
+     */
+    static void setDefaultNotificator(AbstractNotificator *notificator);
+
+    /*!
+     * \brief Returns the global default notificator.
+     * \sa setDefaultNotificator()
+     */
+    static AbstractNotificator *defaultNotificator();
+
 Q_SIGNALS:
     /*!
      * \brief This signal is emitted when the in operation status changes.
@@ -448,6 +492,12 @@ Q_SIGNALS:
      * \sa setUseStorage(), isUseStorageEnabled()
      */
     void useStorageChanged(bool useStorage);
+
+    /*!
+     * \brief Notifier signal for the \link Component::notificator notificator \endlink property.
+     * \sa setNotificator(), notificator()
+     */
+    void notificatorChanged(AbstractNotificator *notificator);
 
     /*!
      * \brief This signal is emitted if the SSL/TLS session encountered errors during the set up.

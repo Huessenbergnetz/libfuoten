@@ -132,7 +132,9 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/API/MarkAllItemsRead \
         Fuoten/API/markallitemsread.h \
         Fuoten/Helpers/abstractnamfactory.h \
-        Fuoten/Helpers/AbstractNamFactory
+        Fuoten/Helpers/AbstractNamFactory \
+        Fuoten/Helpers/abstractnotificator.h \
+        Fuoten/Helpers/AbstractNotificator
 
     basePath = $${dirname(PWD)}
     for(header, INSTALL_HEADERS) {
@@ -250,7 +252,9 @@ HEADERS += \
     Fuoten/API/starmultipleitems.h \
     Fuoten/API/markallitemsread.h \
     Fuoten/API/markallitemsread_p.h \
-    Fuoten/Helpers/abstractnamfactory.h
+    Fuoten/Helpers/abstractnamfactory.h \
+    Fuoten/Helpers/abstractnotificator.h \
+    Fuoten/Helpers/abstractnotificator_p.h
 
 SOURCES += \
     Fuoten/error.cpp \
@@ -296,7 +300,8 @@ SOURCES += \
     Fuoten/API/staritem.cpp \
     Fuoten/API/starmultipleitems.cpp \
     Fuoten/API/markallitemsread.cpp \
-    Fuoten/Helpers/abstractnamfactory.cpp
+    Fuoten/Helpers/abstractnamfactory.cpp \
+    Fuoten/Helpers/abstractnotificator.cpp
 
 DISTFILES += \
     fuoten.pc.in

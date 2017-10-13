@@ -25,6 +25,7 @@
 #include "../Helpers/abstractconfiguration.h"
 #include "../Storage/abstractstorage.h"
 #include "../Helpers/abstractnamfactory.h"
+#include "../Helpers/abstractnotificator.h"
 #include <QTimer>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -71,6 +72,7 @@ public:
     AbstractConfiguration *configuration = nullptr;
     AbstractStorage *storage = nullptr;
     bool useStorage = true;
+    AbstractNotificator *notificator = nullptr;
 
     quint8 retryCount;
     QHash<QByteArray, QByteArray> requestHeaders;
@@ -91,6 +93,8 @@ public:
     static void setDefaultStorage(AbstractStorage *storage);
     static AbstractNamFactory *networkAccessManagerFactory();
     static void setNetworkAccessManagerFactory(AbstractNamFactory *factory);
+    static AbstractNotificator *defaultNotificator();
+    static void setDefaultNotificator(AbstractNotificator *notificator);
 
 private:
     Q_DISABLE_COPY(ComponentPrivate)

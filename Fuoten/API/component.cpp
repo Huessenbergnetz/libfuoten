@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QReadWriteLock>
 #include <QGlobalStatic>
+#include "../Helpers/abstractnotificator.h"
 
 using namespace Fuoten;
 
@@ -63,10 +64,20 @@ public:
         m_namFactory = factory;
     }
 
+    AbstractNotificator *notificator() const
+    {
+        return m_defaultNotificator;
+    }
+
+    void setNotificator(AbstractNotificator *notificator) {
+        m_defaultNotificator = notificator;
+    }
+
 private:
     AbstractConfiguration *m_defaultConfig = nullptr;
     AbstractStorage *m_defaultStorage = nullptr;
     AbstractNamFactory *m_namFactory = nullptr;
+    AbstractNotificator *m_defaultNotificator = nullptr;
 };
 Q_GLOBAL_STATIC(DefaultValues, defVals)
 
@@ -140,6 +151,30 @@ void ComponentPrivate::setNetworkAccessManagerFactory(AbstractNamFactory *factor
     QWriteLocker locker(&defs->lock);
 
     defs->setNetworkAccessManagerFactory(factory);
+}
+
+
+AbstractNotificator *ComponentPrivate::defaultNotificator()
+{
+    const DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+
+    defs->lock.lockForRead();
+    AbstractNotificator *noti = defs->notificator();
+    defs->lock.unlock();
+
+    return noti;
+}
+
+
+void ComponentPrivate::setDefaultNotificator(AbstractNotificator *notificator)
+{
+    qDebug("Settings default notificator to %p.", notificator);
+    DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+    QWriteLocker locker(&defs->lock);
+
+    defs->setNotificator(notificator);
 }
 
 
@@ -322,6 +357,10 @@ void Component::extractError(QNetworkReply *reply)
 
     setError(new Error(reply, this));
 
+    if (notificator()) {
+        notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, error()->text());
+    }
+
     setInOperation(false);
     Q_EMIT failed(error());
 }
@@ -334,10 +373,16 @@ void Component::_requestTimedOut()
     //% "The connection to the server timed out after %n second(s)."
     setError(new Error(Error::RequestError, Error::Critical, qtTrId("err-conn-timeout", requestTimeout()), d->reply->request().url().toString(), this));
 
+    if (notificator()) {
+        notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, error->text());
+    }
+
+    setInOperation(false);
+
     QNetworkReply *nr = d->reply;
     d->reply = nullptr;
     delete nr;
-
+    Q_EMIT failed(error());
 }
 
 
@@ -357,6 +402,10 @@ bool Component::checkInput()
     if (Q_UNLIKELY(d->requiresAuth && (d->configuration->getUsername().isEmpty() || d->configuration->getPassword().isEmpty()))) {
         //% "You have to specify a username and a password."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("err-username-pass-missing"), QString(), this));
+        if (notificator()) {
+            //% "Missing authentication credentials"
+            notificator()->notify(AbstractNotificator::GeneralError, QtCriticalMsg, qtTrId("fuoten-notify-username-pass-missing-summary"), error()->text());
+        }
         Q_EMIT failed(error());
         return false;
     }
@@ -364,6 +413,10 @@ bool Component::checkInput()
     if ((d->namOperation == QNetworkAccessManager::PostOperation || d->namOperation == QNetworkAccessManager::PutOperation) && d->payload.isEmpty()) {
         //% "Empty payload when trying to perform a PUT or POST network operation."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("err-no-payloud"), QString(), this));
+        if (notificator()) {
+            //% "Missing input data"
+            notificator()->notify(AbstractNotificator::GeneralError, QtCriticalMsg, qtTrId("fuoten-notify-missing-input-data-summary"), error()->text());
+        }
         Q_EMIT failed(error());
         return false;
     }
@@ -381,6 +434,10 @@ bool Component::checkOutput()
         d->jsonResult = QJsonDocument::fromJson(d->result, &jsonError);
         if (jsonError.error != QJsonParseError::NoError) {
             setError(new Error(jsonError, this));
+            if (notificator()) {
+                //% "JSON Parsing Error"
+                notificator()->notify(AbstractNotificator::ParsingError, QtCriticalMsg, qtTrId("fuoten-notify-json-parsing-error"), error->text());
+            }
             Q_EMIT failed(error());
             return false;
         }
@@ -389,6 +446,10 @@ bool Component::checkOutput()
     if (Q_UNLIKELY((d->expectedJSONType != Empty) && (d->jsonResult.isNull() || d->jsonResult.isEmpty()))) {
         //% "The request replied an empty answer, but there was content expected."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-empty-answer"), QString(), this));
+        if (notificator()) {
+            //% "Unexpected reply data"
+            notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, qtTrId("fuoten-notify-unexpected-reply-data"), error()->text());
+        }
         Q_EMIT failed(error());
         return false;
     }
@@ -396,6 +457,9 @@ bool Component::checkOutput()
     if (Q_UNLIKELY((d->expectedJSONType == Array) && !d->jsonResult.isArray())) {
         //% "It was expected that the request returns a JSON array, but it returned something else."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-array"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, qtTrId("fuoten-notify-unexpected-reply-data"), error()->text());
+        }
         Q_EMIT failed(error());
         return false;
     }
@@ -403,6 +467,9 @@ bool Component::checkOutput()
     if (Q_UNLIKELY((d->expectedJSONType == Object && !d->jsonResult.isObject()))) {
         //% "It was expected that the request returns a JSON object, but it returned something else."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-object"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, qtTrId("fuoten-notify-unexpected-reply-data"), error()->text());
+        }
         Q_EMIT failed(error());
         return false;
     }
@@ -521,6 +588,27 @@ void Component::setUseStorage(bool useStorage)
 }
 
 
+AbstractNotificator *Component::notificator() const
+{
+    Q_D(const Component);
+    AbstractNotificator *_notificator = d->notificator;
+    if (!_notificator) {
+        _notificator = ComponentPrivate::defaultNotificator();
+    }
+    return _notificator;
+}
+
+void Component::setNotificator(AbstractNotificator *notificator)
+{
+    Q_D(Component);
+    if (notificator != d->notificator) {
+        d->notificator = notificator;
+        qDebug("Changed notificator to %p.", d->notificator);
+        Q_EMIT notificatorChanged(d->notificator);
+    }
+}
+
+
 void Component::setDefaultConfiguration(AbstractConfiguration *config)
 {
     ComponentPrivate::setDefaultConfiguration(config);
@@ -557,6 +645,18 @@ AbstractNamFactory *Component::networkAccessManagerFactory()
 }
 
 
+void Component::setDefaultNotificator(AbstractNotificator *notificator)
+{
+    ComponentPrivate::setDefaultNotificator(notificator);
+}
+
+
+AbstractNotificator *Component::defaultNotificator()
+{
+    return ComponentPrivate::defaultNotificator();
+}
+
+
 void Component::setExpectedJSONType(ExpectedJSONType type)
 {
     Q_D(Component);
@@ -576,7 +676,6 @@ void Component::setApiRoute(const QStringList &routeParts)
     Q_D(Component);
     d->apiRoute = QStringLiteral("/").append(routeParts.join(QChar('/')));
 }
-
 
 
 QJsonDocument Component::jsonResult() const
