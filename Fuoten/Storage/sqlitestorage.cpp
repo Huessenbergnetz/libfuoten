@@ -1867,7 +1867,7 @@ void ItemsRequestedWorker::run()
     Q_ASSERT_X(qresult, "items requested worker", "failed to start database transaction");
 
     for (const QJsonValue &i : items) {
-        QJsonObject o = i.toObject();
+        const QJsonObject o = i.toObject();
         if (Q_LIKELY(!o.isEmpty())) {
             qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
 
