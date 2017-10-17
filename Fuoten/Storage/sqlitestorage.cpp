@@ -621,7 +621,13 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
     Q_D(SQLiteStorage);
 
     QSqlQuery q(d->db);
-    bool qresult = true;
+    bool qresult = q.prepare(QStringLiteral("SELECT name FROM folders WHERE id = ?"));
+    Q_ASSERT(qresult);
+    q.addBindValue(id);
+    qresult = (q.exec() && q.next());
+    Q_ASSERT(qresult);
+
+    const QString oldName = q.value(0).toString();
 
     qresult = q.prepare(QStringLiteral("UPDATE folders SET name = ? WHERE id = ?"));
     Q_ASSERT_X(qresult, "folder renamed", "failed to prepare updating folder in database");
@@ -633,7 +639,7 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
     Q_ASSERT_X(qresult, "folder renamed", "failed to update folder in database");
 
     if (notificator()) {
-        notificator()->notify(AbstractNotificator::FolderRenamed, QtInfoMsg, newName);
+        notificator()->notify(AbstractNotificator::FolderRenamed, QtInfoMsg, QStringList({oldName, newName}));
     }
 
     Q_EMIT renamedFolder(id, newName);
