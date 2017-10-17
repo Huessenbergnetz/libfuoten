@@ -373,7 +373,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     QHash<qint64, QString> reqFolders({{0, QStringLiteral("")}});
 
     for (const QJsonValue &f : folders) {
-        QJsonObject o = f.toObject();
+        const QJsonObject o = f.toObject();
         if (Q_LIKELY(!o.isEmpty())) {
             reqFolders.insert(o.value(QStringLiteral("id")).toVariant().toLongLong(), o.value(QStringLiteral("name")).toString());
         }
@@ -398,8 +398,11 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     }
 
     IdList deletedIds;
+    QStringList deletedFolderNames;
     QList<QPair<qint64, QString>> newFolders;
+    QStringList newFolderNames;
     QList<QPair<qint64, QString>> updatedFolders;
+    QStringList updatedFolderNames;
 
     if (currentFolders.isEmpty()) {
 
@@ -407,7 +410,8 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
         QHash<qint64, QString>::const_iterator i = reqFolders.constBegin();
         while (i != reqFolders.constEnd()) {
-            newFolders.append(QPair<qint64, QString>(i.key(), i.value()));
+            newFolders.push_back(QPair<qint64, QString>(i.key(), i.value()));
+            newFolderNames.push_back(i.value());
             ++i;
         }
 
@@ -415,7 +419,10 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
         qDebug("%s", "Requested folders list is empty. Adding all local folders to deleted.");
 
-        deletedIds = currentFolders.keys();
+        for (auto i = currentFolders.constBegin(); i != currentFolders.constEnd(); ++i) {
+            deletedIds.push_back(i.key());
+            deletedFolderNames.push_back(i.value());
+        }
 
     } else {
 
@@ -424,30 +431,34 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         for (QHash<qint64, QString>::const_iterator i = currentFolders.constBegin(); i != currentFolders.constEnd(); ++i) {
             if (reqFolders.contains(i.key())) {
                 if (reqFolders.value(i.key()) != i.value()) {
-                    updatedFolders.append(qMakePair(i.key(), reqFolders.value(i.key())));
+                    const QString newFolderName = reqFolders.value(i.key());
+                    updatedFolders.push_back(qMakePair(i.key(), newFolderName));
+                    updatedFolderNames.push_back(newFolderName);
                 }
             } else {
                 deletedIds << i.key();
+                deletedFolderNames << i.value();
             }
         }
 
         qDebug("%s", "Checking for new folders.");
         for (QHash<qint64, QString>::const_iterator i = reqFolders.constBegin(); i != reqFolders.constEnd(); ++i) {
             if (!currentFolders.contains(i.key())) {
-                newFolders.append(qMakePair(i.key(), i.value()));
+                newFolders.push_back(qMakePair(i.key(), i.value()));
+                newFolderNames.push_back(i.value());
             }
         }
     }
 
 
-    if (!deletedIds.isEmpty() || !newFolders.isEmpty() || !updatedFolders.isEmpty()) {
+    if (!deletedIds.empty() || !newFolders.empty() || !updatedFolders.empty()) {
 
         qDebug("%s", "Start updating the folders table.");
 
         qresult = d->db.transaction();
         Q_ASSERT_X(qresult, "folders requested", "failed to start database transaction");
 
-        if (!deletedIds.isEmpty()) {
+        if (!deletedIds.empty()) {
 
 #ifndef QT_NO_DEBUG_OUTPUT
             QString printIdList;
@@ -462,7 +473,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
             Q_ASSERT_X(qresult, "folders requested", "failed to delete folders from database");
         }
 
-        if (!updatedFolders.isEmpty()) {
+        if (!updatedFolders.empty()) {
 
             for (int i = 0; i < updatedFolders.size(); ++i) {
 
@@ -480,7 +491,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         }
 
 
-        if (!newFolders.isEmpty()) {
+        if (!newFolders.empty()) {
 
             for (int i = 0; i < newFolders.size(); ++i) {
 
@@ -509,6 +520,13 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         Q_ASSERT(qresult);
         setStarred(q.value(0).value<quint16>());
 
+        if (notificator()) {
+            QVariantList notifyData;
+            notifyData.push_back(newFolderNames);
+            notifyData.push_back(updatedFolderNames);
+            notifyData.push_back(deletedFolderNames);
+            notificator()->notify(AbstractNotificator::FoldersRequested, QtInfoMsg, notifyData, true);
+        }
     }
 
     Q_EMIT requestedFolders(updatedFolders, newFolders, deletedIds);
@@ -563,6 +581,10 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "folder created", "failed to insert new folder into database");
 
+    if (notificator()) {
+        notificator()->notify(AbstractNotificator::FolderCreated, QtInfoMsg, name);
+    }
+
     Q_EMIT createdFolder(id, name);
 
 }
@@ -574,18 +596,27 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
     if (newName.isEmpty()) {
         //% "The folder name can not be empty."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
+        }
         return;
     }
 
     if (id == 0) {
         //% "The folder ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
+        }
         return;
     }
 
@@ -602,6 +633,10 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
 
     qresult = q.exec();
     Q_ASSERT_X(qresult, "folder renamed", "failed to update folder in database");
+
+    if (notificator()) {
+        notificator()->notify(AbstractNotificator::FolderRenamed, QtInfoMsg, newName);
+    }
 
     Q_EMIT renamedFolder(id, newName);
 }
@@ -685,12 +720,18 @@ void SQLiteStorage::folderDeleted(qint64 id)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
     if (id <= 0) {
         //% "The folder ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
+        }
         return;
     }
 
@@ -698,7 +739,17 @@ void SQLiteStorage::folderDeleted(qint64 id)
 
     QSqlQuery q(d->db);
 
-    bool qresult = q.prepare(QStringLiteral("DELETE FROM folders WHERE id = ?"));
+    bool qresult = q.prepare(QStringLiteral("SELECT name FROM folders WHERE id = ?"));
+    Q_ASSERT_X(qresult, "folder deleted", "failed to prepare query to get name of deleted folder");
+
+    q.addBindValue(id);
+
+    qresult = (q.exec() && q.next());
+    Q_ASSERT_X(qresult, "folder deleted", "failed to query name of deleted folder");
+
+    const QString name = q.value(0).toString();
+
+    qresult = q.prepare(QStringLiteral("DELETE FROM folders WHERE id = ?"));
     Q_ASSERT_X(qresult, "folder deleted", "failed to prepare qurey to delete folder from database");
 
     q.addBindValue(id);
@@ -715,6 +766,10 @@ void SQLiteStorage::folderDeleted(qint64 id)
     Q_ASSERT(qresult);
 
     setStarred(q.value(0).value<quint16>());
+
+    if (notificator()) {
+        notificator()->notify(AbstractNotificator::FolderDeleted, QtInfoMsg, name);
+    }
 
     Q_EMIT deletedFolder(id);
 }
@@ -772,6 +827,19 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
     Q_ASSERT_X(qresult, "folder marked read", "failed to query total unread items count");
 
     setTotalUnread(q.value(0).toInt());
+
+    if (notificator()) {
+        qresult = q.prepare(QStringLiteral("SELECT name FROM folders WHERE id = ?"));
+        Q_ASSERT(qresult);
+        q.addBindValue(id);
+
+        qresult = (q.exec() && q.next());
+        Q_ASSERT(qresult);
+
+        const QString name = q.value(0).toString();
+
+        notificator()->notify(AbstractNotificator::FolderMarkedRead, QtInfoMsg, name);
+    }
 
     Q_EMIT markedReadFolder(id, newestItem);
 }
@@ -928,6 +996,9 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
@@ -946,8 +1017,11 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
     const QList<Feed*> currentFeeds = getFeeds(qa);
 
     IdList updatedFeedIds;
+    QStringList updatedFeedNames;
     IdList newFeedIds;
+    QStringList newFeedNames;
     IdList deletedFeedIds;
+    QStringList deletedFeedNames;
 
     if (feeds.isEmpty() && currentFeeds.isEmpty()) {
 
@@ -961,8 +1035,10 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         qDebug("%s", "All feeds have been deleted on the server. Deleting local ones.");
 
         deletedFeedIds.reserve(currentFeeds.size());
+        deletedFeedNames.reserve(currentFeeds.size());
         for (Feed *f : currentFeeds) {
-            deletedFeedIds.append(f->id());
+            deletedFeedIds.push_back(f->id());
+            deletedFeedNames.push_back(f->title());
         }
 
         qresult = q.exec(QStringLiteral("DELETE FROM feeds"));
@@ -973,6 +1049,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         qDebug("%s", "No local feeds. Adding all requested feeds as new feeds.");
 
         newFeedIds.reserve(feeds.size());
+        newFeedNames.reserve(feeds.size());
 
         qresult = d->db.transaction();
         Q_ASSERT_X(qresult, "feeds requested", "failed to start database transaction");
@@ -980,16 +1057,19 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         for (const QJsonValue &f : feeds) {
             QJsonObject o = f.toObject();
             if (Q_LIKELY(!o.isEmpty())) {
-                newFeedIds.append(o.value(QStringLiteral("id")).toVariant().toLongLong());
+                const qlonglong feedId = o.value(QStringLiteral("id")).toVariant().toLongLong();
+                const QString feedTitle = o.value(QStringLiteral("titel")).toString();
+                newFeedIds.push_back(feedId);
+                newFeedNames.push_back(feedTitle);
 
                 qresult = q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
                                                    "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
                                                    ));
                 Q_ASSERT_X(qresult, "feeds requested", "failed to prepare to insert new feed into database");
 
-                q.addBindValue(o.value(QStringLiteral("id")).toVariant().toLongLong());
+                q.addBindValue(feedId);
                 q.addBindValue(o.value(QStringLiteral("folderId")).toVariant().toLongLong());
-                q.addBindValue(o.value(QStringLiteral("title")).toString());
+                q.addBindValue(feedTitle);
                 q.addBindValue(o.value(QStringLiteral("url")).toString());
                 q.addBindValue(o.value(QStringLiteral("link")).toString());
                 q.addBindValue(o.value(QStringLiteral("added")).toVariant().toUInt());
@@ -1024,13 +1104,15 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         Q_ASSERT_X(qresult, "feeds requested", "failed to start database transaction");
 
         for (const QJsonValue &f : feeds) {
-            QJsonObject o = f.toObject();
+            const QJsonObject o = f.toObject();
             if (Q_UNLIKELY(!o.isEmpty())) {
-                qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
-                requestedFeedIds.append(id);
+                const qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
+                const QString title = o.value(QStringLiteral("title")).toString();
+                requestedFeedIds.push_back(id);
 
                 if (!cfh.contains(id)) {
-                    newFeedIds.append(id);
+                    newFeedIds.push_back(id);
+                    newFeedNames.push_back(title);
 
                     qDebug("Adding new feed \"%s\" with ID %lli to the database.", qUtf8Printable(o.value(QStringLiteral("title")).toString()), id);
 
@@ -1041,7 +1123,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
                     q.addBindValue(id);
                     q.addBindValue(o.value(QStringLiteral("folderId")).toVariant().toLongLong());
-                    q.addBindValue(o.value(QStringLiteral("title")).toString());
+                    q.addBindValue(title);
                     q.addBindValue(o.value(QStringLiteral("url")).toString());
                     q.addBindValue(o.value(QStringLiteral("link")).toString());
                     q.addBindValue(o.value(QStringLiteral("added")).toVariant().toUInt());
@@ -1056,7 +1138,6 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
                 } else {
 
-                    const QString rTitle = o.value(QStringLiteral("title")).toString();
                     const QUrl rFaviconLink = QUrl(o.value(QStringLiteral("faviconLink")).toString());
                     const qint64 rFolderId = o.value(QStringLiteral("folderId")).toVariant().toLongLong();
                     const Feed::FeedOrdering rOrdering = (Feed::FeedOrdering)o.value(QStringLiteral("ordering")).toInt();
@@ -1067,17 +1148,18 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
 
                     Feed *f = cfh.value(id);
 
-                    if ((f->title() != rTitle) || (f->faviconLink() != rFaviconLink) || (f->folderId() != rFolderId) || (f->ordering() != rOrdering) || (f->link() != rLink) || (f->pinned() != rPinned) || (f->updateErrorCount() != rUpdateErrorCount) || (f->lastUpdateError() != rLastUpdateError)) {
+                    if ((f->title() != title) || (f->faviconLink() != rFaviconLink) || (f->folderId() != rFolderId) || (f->ordering() != rOrdering) || (f->link() != rLink) || (f->pinned() != rPinned) || (f->updateErrorCount() != rUpdateErrorCount) || (f->lastUpdateError() != rLastUpdateError)) {
 
                         qDebug("Updating feed \"%s\" with ID %lli in the database.", qUtf8Printable(f->title()), id);
 
-                        updatedFeedIds.append(id);
+                        updatedFeedIds.push_back(id);
+                        updatedFeedNames.push_back(title);
 
                         qresult = q.prepare(QStringLiteral("UPDATE feeds SET folderId = ?, title = ?, link = ?, ordering = ?, pinned = ?, updateErrorCount = ?, lastUpdateError = ?, faviconLink = ? WHERE id = ?"));
                         Q_ASSERT_X(qresult, "feeds requested", "failed to prepare updating feed in database");
 
                         q.addBindValue(rFolderId);
-                        q.addBindValue(rTitle);
+                        q.addBindValue(title);
                         q.addBindValue(rLink.toString());
                         q.addBindValue((int)rOrdering);
                         q.addBindValue(rPinned);
@@ -1098,7 +1180,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         QHash<qint64, Feed*>::const_iterator i = cfh.constBegin();
         while (i != cfh.constEnd()) {
             if (!requestedFeedIds.contains(i.key())) {
-                deletedFeedIds.append(i.key());
+                deletedFeedIds.push_back(i.key());
+                deletedFeedNames.push_back(i.value()->title());
             }
             ++i;
         }
@@ -1153,6 +1236,13 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
     Q_ASSERT(qresult);
     setStarred(q.value(0).value<quint16>());
 
+    if (notificator()) {
+        QVariantList data;
+        data.push_back(newFeedNames);
+        data.push_back(updatedFeedNames);
+        data.push_back(deletedFeedNames);
+    }
+
     Q_EMIT requestedFeeds(updatedFeedIds, newFeedIds, deletedFeedIds);
 }
 
@@ -1163,6 +1253,9 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
@@ -1195,12 +1288,13 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
                                             ));
     Q_ASSERT_X(qresult, "feed created", "failed to prepare database query");
 
-    qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
-    qint64 folderId = o.value(QStringLiteral("folderId")).toVariant().toLongLong();
+    const qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
+    const qint64 folderId = o.value(QStringLiteral("folderId")).toVariant().toLongLong();
+    const QString title = o.value(QStringLiteral("title")).toString();
 
     q.addBindValue(id);
     q.addBindValue(folderId);
-    q.addBindValue(o.value(QStringLiteral("title")).toString());
+    q.addBindValue(title);
     q.addBindValue(o.value(QStringLiteral("url")).toString());
     q.addBindValue(o.value(QStringLiteral("link")).toString());
     q.addBindValue(o.value(QStringLiteral("added")).toVariant().toUInt());
@@ -1218,6 +1312,10 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
     q.bindValue(QStringLiteral(":folderId"), folderId);
     qresult = q.exec();
     Q_ASSERT(qresult);
+
+    if (notificator()) {
+        notificator()->notify(AbstractNotificator::FeedCreated, QtInfoMsg, title);
+    }
 
     Q_EMIT createdFeed(id, folderId);
 }
@@ -1242,12 +1340,13 @@ void SQLiteStorage::feedDeleted(qint64 id)
 
     QSqlQuery q(d->db);
 
-    bool qresult = q.prepare(QStringLiteral("SELECT folderId FROM feeds WHERE id = ?"));
+    bool qresult = q.prepare(QStringLiteral("SELECT folderId, title FROM feeds WHERE id = ?"));
     Q_ASSERT(qresult);
     q.addBindValue(id);
     qresult = (q.exec() && q.next());
     Q_ASSERT(qresult);
     const qint64 folderId = q.value(0).value<qint64>();
+    const QString title = q.value(1).toString();
 
     qresult = q.prepare(QStringLiteral("DELETE FROM feeds WHERE id = ?"));
     Q_ASSERT_X(qresult, "feed deleted", "failed to prepare database query");
@@ -1270,6 +1369,10 @@ void SQLiteStorage::feedDeleted(qint64 id)
     qresult = (q.exec(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
     Q_ASSERT(qresult);
     setStarred(q.value(0).value<quint16>());
+
+    if (notificator()) {
+        notificator()->notify(AbstractNotificator::FeedDeleted, QtInfoMsg, title);
+    }
 
     Q_EMIT deletedFeed(id);
 }
@@ -1316,12 +1419,42 @@ void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
     qresult = q.exec();
     Q_ASSERT_X(qresult, "feed moved", "failed to execute database query");
 
-    for (qint64 fid : {targetFolder, oldFolderId}) {
+    for (const qint64 fid : {targetFolder, oldFolderId}) {
         qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId), feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
         Q_ASSERT(qresult);
         q.bindValue(QStringLiteral(":folderId"), fid);
         qresult = q.exec();
         Q_ASSERT(qresult);
+    }
+
+    if (notificator() && notificator()->isEnabled()) {
+        qresult = q.prepare(QStringLiteral("SELECT name FROM folders WHERE id = ?"));
+        Q_ASSERT(qresult);
+        q.addBindValue(oldFolderId);
+        qresult = (q.exec() && q.next());
+        Q_ASSERT(qresult);
+        const QString oldFolderName = q.value(0).toString();
+
+        qresult = q.prepare(QStringLiteral("SELECT name FROM folders WHERE id = ?"));
+        Q_ASSERT(qresult);
+        q.addBindValue(targetFolder);
+        qresult = (q.exec() && q.next());
+        Q_ASSERT(qresult);
+        const QString targetFolderName = q.value(0).toString();
+
+        qresult = q.prepare(QStringLiteral("SELECT title FROM feeds WHERE id = ?"));
+        Q_ASSERT(qresult);
+        q.addBindValue(id);
+        qresult = (q.exec() && q.next());
+        Q_ASSERT(qresult);
+        const QString feedTitle = q.value(0).toString();
+
+        QVariantList data;
+        data.push_back(feedTitle);
+        data.push_back(oldFolderName);
+        data.push_back(targetFolderName);
+
+        notificator()->notify(AbstractNotificator::FeedMoved, QtInfoMsg, data);
     }
 
     Q_EMIT movedFeed(id, targetFolder);
@@ -1353,7 +1486,14 @@ void SQLiteStorage::feedRenamed(qint64 id, const QString &newTitle)
 
     QSqlQuery q(d->db);
 
-    bool qresult = q.prepare(QStringLiteral("UPDATE feeds SET title = ? WHERE id = ?"));
+    bool qresult = q.prepare(QStringLiteral("SELECT title FROM feeds WHERE id = ?"));
+    Q_ASSERT_X(qresult, "feed renamed", "failed to prepare query for old feed title");
+    q.addBindValue(id);
+    qresult = (q.exec() && q.next());
+    Q_ASSERT_X(qresult, "feed renamed", "failed to query old feed title");
+    const QString oldTitle = q.value(0).toString();
+
+    qresult = q.prepare(QStringLiteral("UPDATE feeds SET title = ? WHERE id = ?"));
     Q_ASSERT_X(qresult, "feed renamed", "failed to prepare database query");
 
     q.addBindValue(newTitle);
@@ -1361,6 +1501,13 @@ void SQLiteStorage::feedRenamed(qint64 id, const QString &newTitle)
 
     qresult = q.exec();
     Q_ASSERT_X(qresult, "feed renamed", "failed to execute database query");
+
+    if (notificator()) {
+        QVariantList data;
+        data.push_back(oldTitle);
+        data.push_back(newTitle);
+        notificator()->notify(AbstractNotificator::FeedRenamed, QtInfoMsg, data);
+    }
 
     Q_EMIT renamedFeed(id, newTitle);
 }
@@ -1372,18 +1519,27 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
     if (id <= 0) {
         //% "The feed ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
+        }
         return;
     }
 
     if (newestItem <= 0) {
         //% "The item ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
+        }
         return;
     }
 
@@ -1424,6 +1580,17 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
     Q_ASSERT_X(qresult, "feed marked read", "failed to query all unread items from database");
 
     setTotalUnread(q.value(0).toInt());
+
+    if (notificator()) {
+        qresult = q.prepare(QStringLiteral("SELECT title FROM feeds WHERE id = ?"));
+        Q_ASSERT_X(qresult, "feed marked read", "failed to prepare query for feed title");
+        q.addBindValue(id);
+        qresult = (q.exec() && q.next());
+        Q_ASSERT_X(qresult, "feed marked read", "failed to query title of the feed");
+        const QString title = q.value(0).toString();
+
+        notificator()->notify(AbstractNotificator::FeedMarkedRead, QtInfoMsg, title);
+    }
 
     Q_EMIT markedReadFeed(id, newestItem);
 }
@@ -1821,8 +1988,8 @@ void SQLiteStorage::getArticlesAsync(const QueryArgs &args)
 
 
 
-ItemsRequestedWorker::ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, AbstractConfiguration *config, QObject *parent) :
-    QThread(parent), m_json(json), m_config(config)
+ItemsRequestedWorker::ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, AbstractConfiguration *config, AbstractNotificator *notificator, QObject *parent) :
+    QThread(parent), m_json(json), m_config(config), m_notificator(notificator)
 {
     if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
         m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
@@ -1865,6 +2032,8 @@ void ItemsRequestedWorker::run()
 
     qresult = m_db.transaction();
     Q_ASSERT_X(qresult, "items requested worker", "failed to start database transaction");
+
+    quint32 newUnreadItems = 0;
 
     for (const QJsonValue &i : items) {
         const QJsonObject o = i.toObject();
@@ -1917,6 +2086,10 @@ void ItemsRequestedWorker::run()
             } else {
 
                 newItemIds.append(id);
+                const bool unread = o.value(QStringLiteral("unread")).toBool();
+                if (unread) {
+                    newUnreadItems++;
+                }
 
                 qDebug("Adding new article \"%s\" with ID %lli to the database.", qUtf8Printable(o.value(QStringLiteral("title")).toString()), id);
 
@@ -1936,7 +2109,7 @@ void ItemsRequestedWorker::run()
                 q.addBindValue(o.value(QStringLiteral("body")).toString());
                 q.addBindValue(o.value(QStringLiteral("enclosureMime")).toString());
                 q.addBindValue(o.value(QStringLiteral("enclosureLink")).toString());
-                q.addBindValue(o.value(QStringLiteral("unread")).toBool());
+                q.addBindValue(unread);
                 q.addBindValue(o.value(QStringLiteral("starred")).toBool());
                 q.addBindValue(o.value(QStringLiteral("lastModified")).toInt());
                 q.addBindValue(o.value(QStringLiteral("fingerprint")).toString());
@@ -2092,6 +2265,10 @@ void ItemsRequestedWorker::run()
     Q_EMIT gotStarred(q.value(0).toUInt());
 
     Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
+
+    if (m_notificator && (newUnreadItems > 0)) {
+        m_notificator->notify(AbstractNotificator::ItemsRequested, QtInfoMsg, newUnreadItems);
+    }
 }
 
 
@@ -2112,7 +2289,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
         return;
     }
 
-    ItemsRequestedWorker *worker = new ItemsRequestedWorker(d->db.databaseName(), json, configuration(), this);
+    ItemsRequestedWorker *worker = new ItemsRequestedWorker(d->db.databaseName(), json, configuration(), notificator(), this);
     connect(worker, &ItemsRequestedWorker::requestedItems, this, &SQLiteStorage::requestedItems);
     connect(worker, &ItemsRequestedWorker::gotStarred, this, &SQLiteStorage::setStarred);
     connect(worker, &ItemsRequestedWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
@@ -2130,6 +2307,9 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
@@ -2213,6 +2393,9 @@ void SQLiteStorage::itemsStarred(const QList<QPair<qint64, QString> > &articles,
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
@@ -2261,6 +2444,9 @@ void SQLiteStorage::itemMarked(qint64 itemId, bool unread)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
@@ -2317,6 +2503,9 @@ void SQLiteStorage::itemStarred(qint64 feedId, const QString &guidHash, bool sta
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
@@ -2350,6 +2539,9 @@ void SQLiteStorage::allItemsMarkedRead(qint64 newestItemId)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 
@@ -2385,6 +2577,9 @@ QString SQLiteStorage::getArticleBody(qint64 id)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return body;
     }
 
@@ -2414,12 +2609,18 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return false;
     }
 
     if (!article) {
         //% "Invalid article object."
         setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-article-object"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
+        }
         return false;
     }
 
@@ -2701,18 +2902,27 @@ bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return false;
     }
 
     if (feedId <= 0) {
         //% "The feed ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
+        }
         return false;
     }
 
     if (newestItemId <= 0) {
         //% "The item ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
+        }
         return false;
     }
 
@@ -2743,18 +2953,27 @@ bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return false;
     }
 
     if (folderId < 0) {
         //% "The folder ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtWarningMsg, error()->text());
+        }
         return false;
     }
 
     if (newestItemId <= 0) {
         //% "The item ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::InputError, QtWarningMsg, error()->text());
+        }
         return false;
     }
 
@@ -2785,6 +3004,9 @@ bool SQLiteStorage::enqueueMarkAllItemsRead()
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return false;
     }
 
@@ -2842,6 +3064,9 @@ void SQLiteStorage::clearQueue()
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        if (notificator()) {
+            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
+        }
         return;
     }
 

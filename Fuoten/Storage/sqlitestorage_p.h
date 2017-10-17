@@ -24,6 +24,7 @@
 #include "sqlitestorage.h"
 #include "abstractstorage_p.h"
 #include "../Helpers/abstractconfiguration.h"
+#include "../Helpers/abstractnotificator.h"
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QStringList>
@@ -113,7 +114,7 @@ class ItemsRequestedWorker : public QThread
 {
     Q_OBJECT
 public:
-    ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, AbstractConfiguration *config = nullptr, QObject *parent = nullptr);
+    ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, AbstractConfiguration *config = nullptr, AbstractNotificator *notificator = nullptr, QObject *parent = nullptr);
 
 Q_SIGNALS:
     void requestedItems(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
@@ -128,6 +129,7 @@ private:
     QSqlDatabase m_db;
     QJsonDocument m_json;
     AbstractConfiguration *m_config;
+    AbstractNotificator *m_notificator;
 };
 
 
