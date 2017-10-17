@@ -23,6 +23,7 @@
 
 #include "synchronizer.h"
 #include "abstractconfiguration.h"
+#include "abstractnotificator.h"
 #include "../Storage/abstractstorage.h"
 #include "../API/getfolders.h"
 #include "../API/getfeeds.h"
@@ -32,6 +33,7 @@
 #include "../API/starmultipleitems.h"
 #include "../error.h"
 #include <QTimer>
+#include <QDateTime>
 
 namespace Fuoten {
 
@@ -151,6 +153,8 @@ public:
     qreal totalActions;
     qreal performedActions;
     QTimer *deferTimer = nullptr;
+    AbstractNotificator *notificator = nullptr;
+    QDateTime startTime;
 };
 
 }

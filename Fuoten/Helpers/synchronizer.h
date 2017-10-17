@@ -30,6 +30,7 @@ class SynchronizerPrivate;
 class Error;
 class AbstractConfiguration;
 class AbstractStorage;
+class AbstractNotificator;
 
 /*!
  * \brief Combines updating of folders, feeds and articles.
@@ -105,6 +106,25 @@ class FUOTENSHARED_EXPORT Synchronizer : public QObject
      * \sa setCurrentAction()
      */
     Q_PROPERTY(QString currentAction READ currentAction NOTIFY currentActionChanged)
+    /*!
+     * \brief Pointer to an object derived from AbstractNotificator.
+     *
+     * Set a notificator to notify users about errors and events. This is not mandatory. You have to derive your own notificator that uses
+     * the notification system of the target platform.
+     *
+     * If no notificator has been set via setNotificator(), the one set via Component::setDefaultConfigurator() will be used - if any has
+     * been set. If you do not set a notificator either per instance or global, this property will hold a \c nullptr. If a notificator is
+     * set to an instance of this class via setNotificator(), this notificator will take precedence over the global default notificator
+     * object (if any set).
+     *
+     * \par Access functions:
+     * \li AbstractNotificator* notificator() const
+     * \li void setNotificator(AbstractNotificator *notificator);
+     *
+     * \par Notifier signal:
+     * \li void notificatorChanged(AbstractNotificator *notificator);
+     */
+    Q_PROPERTY(Fuoten::AbstractNotificator *notificator READ notificator WRITE setNotificator NOTIFY notificatorChanged)
 public:
     /*!
      * \brief Constructs a new Synchronizer object with the given \a parent.
@@ -151,6 +171,12 @@ public:
      */
     QString currentAction() const;
 
+    /*!
+     * \brief Getter function for the \link Synchronizer::notificator notificator \endlink property.
+     * \sa setNotificator(), notificatorChanged()
+     */
+    AbstractNotificator *notificator() const;
+
 
 
     /*!
@@ -164,6 +190,12 @@ public:
      * \sa storage
      */
     void setStorage(AbstractStorage *nStorageHandler);
+
+    /*!
+     * \brief Setter function for the \link Synchronizer::notificator notificator \endlink property.
+     * \sa notificator(), notificatorChanged()
+     */
+    void setNotificator(AbstractNotificator *notificator);
 
     /*!
      * \brief Invokes the synchronizing process.
@@ -247,6 +279,12 @@ Q_SIGNALS:
      * \sa Synchronizer::currentAction(), Synchronizer::setCurrentAction()
      */
     void currentActionChanged(const QString &currentAction);
+
+    /*!
+     * \brief Notifier signal for the \link Synchronizer::notificator notificator \endlink property.
+     * \sa setNotificator(), notificator()
+     */
+    void notificatorChanged(AbstractNotificator *notificator);
 
 protected:
     const QScopedPointer<SynchronizerPrivate> d_ptr;

@@ -66,6 +66,8 @@ void Synchronizer::start()
 
     d->setInOperation(true);
 
+    d->startTime = QDateTime::currentDateTime();
+
     if (!d->configuration) {
         setConfiguration(Component::defaultConfiguration());
     }
@@ -198,6 +200,7 @@ void Synchronizer::notifyAboutUnread()
         d->unreadMultipleItems->setItemIds(d->queuedUnreadArticles);
         d->unreadMultipleItems->setUnread(true);
         d->unreadMultipleItems->setUseStorage(false);
+        d->unreadMultipleItems->setNotificator(notificator());
         QObject::connect(d->unreadMultipleItems, &Component::failed, this, &Synchronizer::setError);
         if (!d->queuedReadArticles.isEmpty()) {
             QObject::connect(d->unreadMultipleItems, &MarkMultipleItems::succeeded, this, &Synchronizer::notifyAboutRead);
@@ -226,6 +229,7 @@ void Synchronizer::notifyAboutRead()
         d->readMultipleItems->setItemIds(d->queuedReadArticles);
         d->readMultipleItems->setUnread(false);
         d->readMultipleItems->setUseStorage(false);
+        d->readMultipleItems->setNotificator(notificator());
         QObject::connect(d->readMultipleItems, &Component::failed, this, &Synchronizer::setError);
         if (!d->queuedStarredArticles.isEmpty()) {
             QObject::connect(d->readMultipleItems, &MarkMultipleItems::succeeded, this, &Synchronizer::notifyAboutStarred);
@@ -252,6 +256,7 @@ void Synchronizer::notifyAboutStarred()
         d->starMultipleItems->setItemsToStar(d->queuedStarredArticles);
         d->starMultipleItems->setStarred(true);
         d->starMultipleItems->setUseStorage(false);
+        d->starMultipleItems->setNotificator(notificator());
         QObject::connect(d->starMultipleItems, &Component::failed, this, &Synchronizer::setError);
         if (!d->queuedUnstarredArticles.isEmpty()) {
             QObject::connect(d->starMultipleItems, &StarMultipleItems::succeeded, this, &Synchronizer::notifyAboutUnstarred);
@@ -276,6 +281,7 @@ void Synchronizer::notifyAboutUnstarred()
         d->unstarMultipleItems->setItemsToStar(d->queuedUnstarredArticles);
         d->unstarMultipleItems->setStarred(false);
         d->unstarMultipleItems->setUseStorage(false);
+        d->unstarMultipleItems->setNotificator(notificator());
         QObject::connect(d->unstarMultipleItems, &Component::failed, this, &Synchronizer::setError);
         QObject::connect(d->unstarMultipleItems, &StarMultipleItems::succeeded, this, &Synchronizer::requestFolders);
         d->unstarMultipleItems->execute();
@@ -294,6 +300,7 @@ void Synchronizer::requestFolders()
         d->getFolders = new GetFolders(this);
         d->getFolders->setConfiguration(d->configuration);
         d->getFolders->setStorage(d->storage);
+        d->getFolders->setNotificator(notificator());
         QObject::connect(d->getFolders, &Component::failed, this, &Synchronizer::setError);
         if (d->storage) {
             QObject::connect(d->storage, &AbstractStorage::requestedFolders, this, &Synchronizer::requestFeeds);
@@ -323,6 +330,7 @@ void Synchronizer::requestFeeds()
         d->getFeeds = new GetFeeds(this);
         d->getFeeds->setConfiguration(d->configuration);
         d->getFeeds->setStorage(d->storage);
+        d->getFeeds->setNotificator(notificator());
         QObject::connect(d->getFeeds, &Component::failed, this, &Synchronizer::setError);
         if (d->storage) {
             if (d->configuration->getLastSync().isValid()) {
@@ -357,6 +365,7 @@ void Synchronizer::requestUnread()
         d->getUnread->setGetRead(false);
         d->getUnread->setBatchSize(-1);
         d->getUnread->setRequestTimeout(150);
+        d->getUnread->setNotificator(notificator());
         QObject::connect(d->getUnread, &Component::failed, this, &Synchronizer::setError);
         if (d->storage) {
             QObject::connect(d->storage, &AbstractStorage::requestedItems, this, &Synchronizer::requestStarred);
@@ -382,6 +391,7 @@ void Synchronizer::requestStarred()
         d->getStarred->setType(FuotenEnums::Starred);
         d->getStarred->setGetRead(true);
         d->getStarred->setBatchSize(-1);
+        d->getStarred->setNotificator(notificator());
         QObject::connect(d->getStarred, &Component::failed, this, &Synchronizer::setError);
         if (d->storage) {
             QObject::connect(d->storage, &AbstractStorage::requestedItems, this, &Synchronizer::finished);
@@ -407,6 +417,7 @@ void Synchronizer::requestUpdated()
         d->getUpdated->setLastModified(d->configuration->getLastSync());
         d->getUpdated->setType(FuotenEnums::All);
         d->getUpdated->setParentId(0);
+        d->getUpdated->setNotificator(notificator());
         QObject::connect(d->getUpdated, &Component::failed, this, &Synchronizer::setError);
         if (d->storage) {
             QObject::connect(d->storage, &AbstractStorage::requestedItems, this, &Synchronizer::finished);
@@ -426,6 +437,10 @@ void Synchronizer::finished()
     }
     setProgress(++d->performedActions/d->totalActions);
     d->configuration->setLastSync(QDateTime::currentDateTimeUtc());
+    if (notificator()) {
+        //% "Successfully performed synchronization with the remote server in %n second(s)."
+        notificator()->notify(AbstractNotificator::SyncComplete, QtInfoMsg, qtTrId("libfuoten-sync-complete", d->startTime.secsTo(QDateTime::currentDateTime())));
+    }
     d->setInOperation(false);
     Q_EMIT succeeded();
     d->cleanup();
@@ -517,6 +532,27 @@ void Synchronizer::setCurrentAction(const QString &nCurrentAction)
         d->currentAction = nCurrentAction;
         qDebug("Changed currentAction to %s.", qUtf8Printable(d->currentAction));
         Q_EMIT currentActionChanged(currentAction());
+    }
+}
+
+
+AbstractNotificator *Synchronizer::notificator() const
+{
+    Q_D(const Synchronizer);
+    AbstractNotificator *_notificator = d->notificator;
+    if (!_notificator) {
+        _notificator = Component::defaultNotificator();
+    }
+    return _notificator;
+}
+
+void Synchronizer::setNotificator(AbstractNotificator *notificator)
+{
+    Q_D(Synchronizer);
+    if (notificator != d->notificator) {
+        d->notificator = notificator;
+        qDebug("Changed notificator to %p.", d->notificator);
+        Q_EMIT notificatorChanged(d->notificator);
     }
 }
 
