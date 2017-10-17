@@ -69,13 +69,11 @@ bool CreateFolder::checkInput()
         if (Q_UNLIKELY(name().isEmpty())) {
             //% "The folder name can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -90,14 +88,12 @@ bool CreateFolder::checkOutput()
         if (Q_UNLIKELY(jsonResult().object().value(QStringLiteral("folders")).toArray().isEmpty())) {
             //% "The data the server replied does not contain a \"folders\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-folders-array-in-reply"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -122,7 +118,6 @@ void CreateFolder::extractError(QNetworkReply *reply)
         setError(new Error(reply, this));
         break;
     }
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 

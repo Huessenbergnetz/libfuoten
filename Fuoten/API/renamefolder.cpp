@@ -72,7 +72,6 @@ bool RenameFolder::checkInput()
         if (Q_UNLIKELY(folderId() == 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -80,13 +79,11 @@ bool RenameFolder::checkInput()
         if (Q_UNLIKELY(newName().isEmpty())) {
             //% "The folder name can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -129,7 +126,7 @@ void RenameFolder::extractError(QNetworkReply *reply)
         setError(new Error(reply, this));
         break;
     }
-    setInOperation(false);
+
     Q_EMIT failed(error());
 }
 

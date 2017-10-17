@@ -65,13 +65,11 @@ bool DeleteFolder::checkInput()
         if (Q_UNLIKELY(folderId() <= 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -102,8 +100,6 @@ void DeleteFolder::extractError(QNetworkReply *reply)
     } else {
         setError(new Error(reply, this));
     }
-
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 

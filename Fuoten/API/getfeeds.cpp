@@ -76,14 +76,12 @@ bool GetFeeds::checkOutput()
         if (Q_UNLIKELY(!jsonResult().object().value(QStringLiteral("feeds")).isArray())) {
             //% "The data the server replied does not contain a \"feeds\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-feeds-array-in-reply"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
 
     } else {
-        setInOperation(false);
         return false;
     }
 

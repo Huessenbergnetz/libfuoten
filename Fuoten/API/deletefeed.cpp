@@ -83,13 +83,11 @@ bool DeleteFeed::checkInput()
         if (Q_UNLIKELY(feedId() <= 0)) {
             //% "The feed ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -120,8 +118,6 @@ void DeleteFeed::extractError(QNetworkReply *reply)
     } else {
         setError(new Error(reply, this));
     }
-
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 

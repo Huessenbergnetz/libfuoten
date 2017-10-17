@@ -70,7 +70,6 @@ bool CreateFeed::checkInput()
         if (Q_UNLIKELY(!url().isValid())) {
             //% "The URL of the feed is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-url"), url().toString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -78,13 +77,11 @@ bool CreateFeed::checkInput()
         if (Q_UNLIKELY(folderId() < 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -99,13 +96,11 @@ bool CreateFeed::checkOutput()
         if (Q_UNLIKELY(jsonResult().object().value(QStringLiteral("feeds")).toArray().isEmpty())) {
             //% "The data the server replied does not contain a \"feeds\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-feeds-array-in-reply"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -115,7 +110,7 @@ bool CreateFeed::checkOutput()
 
 void CreateFeed::extractError(QNetworkReply *reply)
 {
-    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    const int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     switch(statusCode) {
     case 409:
@@ -130,7 +125,6 @@ void CreateFeed::extractError(QNetworkReply *reply)
         setError(new Error(reply, this));
         break;
     }
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 

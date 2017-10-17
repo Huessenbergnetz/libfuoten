@@ -100,7 +100,6 @@ bool GetItems::checkOutput()
         if (Q_UNLIKELY(!jsonResult().object().value(QStringLiteral("items")).isArray())) {
             //% "The data the server replied does not contain an \"items\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-items-array-in-reply"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -122,13 +121,11 @@ bool GetItems::checkInput()
         if (Q_UNLIKELY(parentId() < 0)) {
             //% "Invalid ID"
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-error-invalid-id"), QString::number(parentId()), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 

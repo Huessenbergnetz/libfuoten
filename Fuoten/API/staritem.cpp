@@ -77,7 +77,6 @@ bool StarItem::checkInput()
         if (Q_UNLIKELY(feedId() <= 0)) {
             //% "The feed ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -85,7 +84,6 @@ bool StarItem::checkInput()
         if (Q_UNLIKELY(guidHash().isEmpty())) {
             //% "The GUID hash can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-guidhash"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -124,7 +122,6 @@ void StarItem::extractError(QNetworkReply *reply)
         setError(new Error(reply, this));
     }
 
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 

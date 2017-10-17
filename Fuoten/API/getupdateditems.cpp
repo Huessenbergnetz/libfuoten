@@ -24,6 +24,7 @@
 #include <QJsonValue>
 #include <QUrlQuery>
 #include <QMetaEnum>
+#include <QJsonArray>
 
 using namespace Fuoten;
 
@@ -88,14 +89,12 @@ bool GetUpdatedItems::checkOutput()
         if (Q_UNLIKELY(!jsonResult().object().value(QStringLiteral("items")).isArray())) {
             //% "The data the server replied does not contain an \"items\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-items-array-in-reply"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -110,7 +109,6 @@ bool GetUpdatedItems::checkInput()
         if (Q_UNLIKELY(!lastModified().isValid())) {
             //% "Invalid last modified time."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-error-invalid-time"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -118,13 +116,11 @@ bool GetUpdatedItems::checkInput()
         if (Q_UNLIKELY(parentId() < 0)) {
             //% "Invalid ID"
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-error-invalid-id"), QString::number(parentId()), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 

@@ -72,7 +72,6 @@ bool MarkFolderRead::checkInput()
         if (Q_UNLIKELY(folderId() <= 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -80,7 +79,6 @@ bool MarkFolderRead::checkInput()
         if (Q_UNLIKELY(newestItemId() <= 0)) {
             //% "The item ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -119,7 +117,6 @@ void MarkFolderRead::extractError(QNetworkReply *reply)
         setError(new Error(reply, this));
     }
 
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 

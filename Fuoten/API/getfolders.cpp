@@ -78,14 +78,12 @@ bool GetFolders::checkOutput()
         if (Q_UNLIKELY(!jsonResult().object().value(QStringLiteral("folders")).isArray())) {
             //% "The data the server replied does not contain a \"folders\" array."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("libfuoten-err-no-folders-array-in-reply"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
 
     } else {
-        setInOperation(false);
         return false;
     }
 

@@ -71,13 +71,11 @@ bool MarkAllItemsRead::checkInput()
         if (Q_UNLIKELY(newestItemId() <= 0)) {
             //% "The item ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 

@@ -72,7 +72,6 @@ bool MoveFeed::checkInput()
         if (Q_UNLIKELY(feedId() <= 0)) {
             //% "The feed ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -80,13 +79,11 @@ bool MoveFeed::checkInput()
         if (Q_UNLIKELY(folderId() < 0)) {
             //% "The folder ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -105,7 +102,6 @@ void MoveFeed::extractError(QNetworkReply *reply)
         setError(new Error(reply, this));
     }
 
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 

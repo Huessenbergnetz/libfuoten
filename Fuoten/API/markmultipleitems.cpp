@@ -87,13 +87,11 @@ bool MarkMultipleItems::checkInput()
         if (Q_UNLIKELY(itemIds().isEmpty())) {
             //% "The list of IDs to mark is empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-id-list"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 

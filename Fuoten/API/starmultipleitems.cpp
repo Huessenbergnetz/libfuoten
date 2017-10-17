@@ -90,13 +90,11 @@ bool StarMultipleItems::checkInput()
         if (Q_UNLIKELY(itemsToStar().isEmpty())) {
             //% "The list of articles to star/unstar can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-articles-star-unstar-list"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 

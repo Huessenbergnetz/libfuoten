@@ -98,7 +98,6 @@ bool RenameFeed::checkInput()
         if (Q_UNLIKELY(feedId() == 0)) {
             //% "The feed ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
@@ -106,13 +105,11 @@ bool RenameFeed::checkInput()
         if (Q_UNLIKELY(newName().isEmpty())) {
             //% "The feed name can not be empty."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-feed-name"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -147,7 +144,7 @@ void RenameFeed::extractError(QNetworkReply *reply)
         setError(new Error(reply, this));
         break;
     }
-    setInOperation(false);
+
     Q_EMIT failed(error());
 }
 

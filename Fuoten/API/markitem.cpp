@@ -77,13 +77,11 @@ bool MarkItem::checkInput()
         if (Q_UNLIKELY(itemId() <= 0)) {
             //% "The article ID is not valid."
             setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-article-id"), QString(), this));
-            setInOperation(false);
             Q_EMIT failed(error());
             return false;
         }
 
     } else {
-        setInOperation(false);
         return false;
     }
 
@@ -116,7 +114,6 @@ void MarkItem::extractError(QNetworkReply *reply)
         setError(new Error(reply, this));
     }
 
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 
