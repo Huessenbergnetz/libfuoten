@@ -25,6 +25,8 @@
 #include "../fuoten_global.h"
 
 class QJsonObject;
+class QVariant;
+class QString;
 
 namespace Fuoten {
 
@@ -75,13 +77,13 @@ public:
         ItemsRequested
     };
 
-    virtual void notify(Type type, QtMsgType severity, const QVariant &data, bool force = false) = 0;
+    virtual void notify(Type type, QtMsgType severity, const QVariant &data, bool force = false) const = 0;
 
-    virtual void notify(Error *e, bool force = false);
+    virtual void notify(Error *e, bool force = false) const;
 
-    virtual void publishArticle(const QJsonObject &article, qint64 feedId = -1, const QString &feedName = QString()) = 0;
+    virtual void publishArticle(const QJsonObject &article, qint64 feedId = -1, const QString &feedName = QString()) const = 0;
 
-    virtual void publishArticle(Article *article) = 0;
+    virtual void publishArticle(Article *article) const = 0;
 
 Q_SIGNALS:
     void appIconChanged(const QString &appIcon);

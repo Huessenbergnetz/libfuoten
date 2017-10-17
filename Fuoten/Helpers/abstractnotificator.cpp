@@ -21,6 +21,9 @@
 #include "abstractnotificator_p.h"
 #include "../error.h"
 
+#include <QVariant>
+#include <QString>
+
 using namespace Fuoten;
 
 AbstractNotificator::AbstractNotificator(QObject *parent) : QObject(parent), d_ptr(new AbstractNotificatorPrivate)
@@ -74,7 +77,7 @@ void AbstractNotificator::setEnabled(bool enabled)
 }
 
 
-void AbstractNotificator::notify(Error *e, bool force)
+void AbstractNotificator::notify(Error *e, bool force) const
 {
     if (e && (e->type() != Error::NoError) && (isEnabled() || force)) {
         AbstractNotificator::Type t = AbstractNotificator::GeneralError;
