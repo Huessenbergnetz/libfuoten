@@ -24,7 +24,6 @@
 #include <QUrl>
 #include <QReadWriteLock>
 #include <QGlobalStatic>
-#include "../Helpers/abstractnotificator.h"
 
 using namespace Fuoten;
 
@@ -181,12 +180,14 @@ void ComponentPrivate::setDefaultNotificator(AbstractNotificator *notificator)
 Component::Component(QObject *parent) :
     QObject(parent), d_ptr(new ComponentPrivate)
 {
+    connect(this, &Component::failed, [this](Error *e){notify(e);});
 }
 
 
 Component::Component(ComponentPrivate &dd, QObject *parent) :
     QObject(parent), d_ptr(&dd)
 {
+    connect(this, &Component::failed, [this](Error *e){notify(e);});
 }
 
 
@@ -344,6 +345,7 @@ void Component::_requestFinished()
     } else {
         qDebug("%s", "Extracting error data from network reply.");
         extractError(d->reply);
+        setInOperation(false);
     }
 
     d->reply->deleteLater();
@@ -357,10 +359,6 @@ void Component::extractError(QNetworkReply *reply)
 
     setError(new Error(reply, this));
 
-    if (notificator()) {
-        notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, error()->text());
-    }
-
     setInOperation(false);
     Q_EMIT failed(error());
 }
@@ -372,10 +370,6 @@ void Component::_requestTimedOut()
 
     //% "The connection to the server timed out after %n second(s)."
     setError(new Error(Error::RequestError, Error::Critical, qtTrId("err-conn-timeout", requestTimeout()), d->reply->request().url().toString(), this));
-
-    if (notificator()) {
-        notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, error()->text());
-    }
 
     setInOperation(false);
 
@@ -401,10 +395,7 @@ bool Component::checkInput()
 
     if (Q_UNLIKELY(d->requiresAuth && (d->configuration->getUsername().isEmpty() || d->configuration->getPassword().isEmpty()))) {
         //% "You have to specify a username and a password."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("err-username-pass-missing"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::AuthenticationError, QtCriticalMsg, error()->text());
-        }
+        setError(new Error(Error::AuthorizationError, Error::Critical, qtTrId("err-username-pass-missing"), QString(), this));
         Q_EMIT failed(error());
         return false;
     }
@@ -412,9 +403,6 @@ bool Component::checkInput()
     if ((d->namOperation == QNetworkAccessManager::PostOperation || d->namOperation == QNetworkAccessManager::PutOperation) && d->payload.isEmpty()) {
         //% "Empty payload when trying to perform a PUT or POST network operation."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("err-no-payloud"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
         Q_EMIT failed(error());
         return false;
     }
@@ -432,9 +420,6 @@ bool Component::checkOutput()
         d->jsonResult = QJsonDocument::fromJson(d->result, &jsonError);
         if (jsonError.error != QJsonParseError::NoError) {
             setError(new Error(jsonError, this));
-            if (notificator()) {
-                notificator()->notify(AbstractNotificator::ParsingError, QtCriticalMsg, error()->text());
-            }
             Q_EMIT failed(error());
             return false;
         }
@@ -443,9 +428,6 @@ bool Component::checkOutput()
     if (Q_UNLIKELY((d->expectedJSONType != Empty) && (d->jsonResult.isNull() || d->jsonResult.isEmpty()))) {
         //% "The request replied an empty answer, but there was content expected."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-empty-answer"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::ReplyError, QtCriticalMsg, error()->text());
-        }
         Q_EMIT failed(error());
         return false;
     }
@@ -453,9 +435,6 @@ bool Component::checkOutput()
     if (Q_UNLIKELY((d->expectedJSONType == Array) && !d->jsonResult.isArray())) {
         //% "It was expected that the request returns a JSON array, but it returned something else."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-array"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::ReplyError, QtCriticalMsg, error()->text());
-        }
         Q_EMIT failed(error());
         return false;
     }
@@ -463,9 +442,6 @@ bool Component::checkOutput()
     if (Q_UNLIKELY((d->expectedJSONType == Object && !d->jsonResult.isObject()))) {
         //% "It was expected that the request returns a JSON object, but it returned something else."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-object"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::ReplyError, QtCriticalMsg, error()->text());
-        }
         Q_EMIT failed(error());
         return false;
     }
@@ -754,6 +730,24 @@ void Component::setRequiresAuth(bool reqAuth)
 {
     Q_D(Component);
     d->requiresAuth = reqAuth;
+}
+
+
+void Component::notify(Error *e, bool force) const
+{
+    Q_D(const Component);
+    if (d->notificator) {
+        d->notificator->notify(e, force);
+    }
+}
+
+
+void Component::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data, bool force) const
+{
+    Q_D(const Component);
+    if (d->notificator) {
+        d->notificator->notify(type, severity, data, force);
+    }
 }
 
 #include "moc_component.cpp"

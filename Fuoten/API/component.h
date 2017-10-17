@@ -26,6 +26,7 @@
 #include <QSslError>
 #include <QUrlQuery>
 #include <QJsonDocument>
+#include "../Helpers/abstractnotificator.h"
 #include "../fuoten_global.h"
 
 class QNetworkReply;
@@ -137,7 +138,6 @@ class AbstractNotificator;
  * void MyClass::extractError(QNetworkReply *reply)
  * {
  *     setError(new Fuoten::Error(reply, this));
- *     setInOperation(false);
  *     emit failed(error());
  * }
  *
@@ -260,7 +260,7 @@ class FUOTENSHARED_EXPORT Component : public QObject
      * Set a notificator to notify users about errors and events. This is not mandatory. You have to derive your own notificator that uses
      * the notification system of the target platform.
      *
-     * If no notificator has been set via setNotificator(), the one set via Componentn:setDefaultConfigurator() will be used - if any has
+     * If no notificator has been set via setNotificator(), the one set via Component::setDefaultConfigurator() will be used - if any has
      * been set. If you do not set a notificator either per instance or global, this property will hold a \c nullptr. If a notificator is
      * set to an instance of this class via setNotificator(), this notificator will take precedence over the global default notificator
      * object (if any set).
@@ -271,6 +271,8 @@ class FUOTENSHARED_EXPORT Component : public QObject
      *
      * \par Notifier signal:
      * \li void notificatorChanged(AbstractNotificator *notificator);
+     *
+     * \sa notify()
      */
     Q_PROPERTY(Fuoten::AbstractNotificator *notificator READ notificator WRITE setNotificator NOTIFY notificatorChanged)
 public:
@@ -721,6 +723,15 @@ protected:
      */
     void setRequiresAuth(bool reqAuth);
 
+    /*!
+     * \brief Checks if a \link Component::notificator notificator \endlink has been set and will use it to notify about an occured error.
+     */
+    void notify(Error *e, bool force = false) const;
+
+    /*!
+     * \brief Checks if a \link Component::notificator notificator \endlink has been set and will use it to notify the user.
+     */
+    void notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data, bool force = false) const;
 
 private Q_SLOTS:
     void _requestFinished();
