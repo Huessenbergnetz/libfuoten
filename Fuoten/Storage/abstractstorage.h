@@ -24,6 +24,7 @@
 #include <QObject>
 #include "../fuoten.h"
 #include "../fuoten_global.h"
+#include "../Helpers/abstractnotificator.h"
 
 namespace Fuoten {
 
@@ -141,7 +142,7 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      * Set a notificator to notify users about errors and events. This is not mandatory. You have to derive your own notificator that uses
      * the notification system of the target platform.
      *
-     * If no notificator has been set via setNotificator(), the one set via Componentn:setDefaultConfigurator() will be used - if any has
+     * If no notificator has been set via setNotificator(), the one set via Component::setDefaultConfigurator() will be used - if any has
      * been set. If you do not set a notificator either per instance or global, this property will hold a \c nullptr. If a notificator is
      * set to an instance of this class via setNotificator(), this notificator will take precedence over the global default notificator
      * object (if any set).
@@ -152,6 +153,8 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      *
      * \par Notifier signal:
      * \li void notificatorChanged(AbstractNotificator *notificator);
+     *
+     * \sa notify()
      */
     Q_PROPERTY(Fuoten::AbstractNotificator *notificator READ notificator WRITE setNotificator NOTIFY notificatorChanged)
 public:
@@ -638,6 +641,16 @@ protected:
     void setInOperation(bool nInOperation);
 
     virtual QString limitBody(const QString &body, int limit) const;
+
+    /*!
+     * \brief Checks if a \link AbstractStorage::notificator notificator \endlink has been set and will use it to notify about an occured error.
+     */
+    void notify(Error *e, bool force = false) const;
+
+    /*!
+     * \brief Checks if a \link AbstractStorage::notificator notificator \endlink has been set and will use it to notify the user.
+     */
+    void notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data, bool force = false) const;
 
     const QScopedPointer<AbstractStoragePrivate> d_ptr;
     AbstractStorage(AbstractStoragePrivate &dd, QObject *parent = nullptr);

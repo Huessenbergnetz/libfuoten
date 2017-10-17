@@ -21,7 +21,6 @@
 #include "abstractstorage_p.h"
 #include "../article.h"
 #include "../Helpers/abstractconfiguration.h"
-#include "../Helpers/abstractnotificator.h"
 #include "../API/component.h"
 #include <QRegularExpression>
 
@@ -229,6 +228,24 @@ void AbstractStorage::setNotificator(AbstractNotificator *notificator)
 void AbstractStorage::clearQueue()
 {
 
+}
+
+
+void AbstractStorage::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data, bool force) const
+{
+    Q_D(const AbstractStorage);
+    if (d->notificator) {
+        d->notificator->notify(type, severity, data, force);
+    }
+}
+
+
+void AbstractStorage::notify(Error *e, bool force) const
+{
+    Q_D(const AbstractStorage);
+    if (d->notificator) {
+        d->notificator->notify(e, force);
+    }
 }
 
 #include "moc_abstractstorage.cpp"
