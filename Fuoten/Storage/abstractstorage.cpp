@@ -21,6 +21,7 @@
 #include "abstractstorage_p.h"
 #include "../article.h"
 #include "../Helpers/abstractconfiguration.h"
+#include "../Helpers/abstractnotificator.h"
 #include "../API/component.h"
 #include <QRegularExpression>
 
@@ -200,6 +201,27 @@ void AbstractStorage::setConfiguration(AbstractConfiguration *nConfiguration)
         d->configuration = nConfiguration;
         qDebug("Changed configuration to %p.", d->configuration);
         Q_EMIT configurationChanged(configuration());
+    }
+}
+
+
+AbstractNotificator *AbstractStorage::notificator() const
+{
+    Q_D(const AbstractStorage);
+    AbstractNotificator *_notificator = d->notificator;
+    if (!_notificator) {
+        _notificator = Component::defaultNotificator();
+    }
+    return _notificator;
+}
+
+void AbstractStorage::setNotificator(AbstractNotificator *notificator)
+{
+    Q_D(AbstractStorage);
+    if (notificator != d->notificator) {
+        d->notificator = notificator;
+        qDebug("Changed notificator to %p.", d->notificator);
+        Q_EMIT notificatorChanged(d->notificator);
     }
 }
 

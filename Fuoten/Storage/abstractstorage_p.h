@@ -30,23 +30,17 @@ namespace Fuoten {
 class AbstractStoragePrivate
 {
 public:
-    AbstractStoragePrivate() :
-        ready(false),
-        error(nullptr),
-        totalUnread(0),
-        starred(0),
-        inOperation(false),
-        configuration(nullptr)
-    {}
+    AbstractStoragePrivate() {}
 
     virtual ~AbstractStoragePrivate() {}
 
-    bool ready;
-    Error *error;
-    quint16 totalUnread;
-    quint16 starred;
-    bool inOperation;
-    AbstractConfiguration *configuration;
+    bool ready = false;
+    Error *error = nullptr;
+    quint16 totalUnread = 0;
+    quint16 starred = 0;
+    bool inOperation = false;
+    AbstractConfiguration *configuration = nullptr;
+    AbstractNotificator *notificator = nullptr;
 
 private:
     Q_DISABLE_COPY(AbstractStoragePrivate)

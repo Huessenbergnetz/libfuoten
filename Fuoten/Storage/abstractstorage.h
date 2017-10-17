@@ -53,6 +53,7 @@ class Error;
 class Article;
 class AbstractConfiguration;
 class AbstractStoragePrivate;
+class AbstractNotificator;
 
 /*!
  * \brief Abstract class to handle the storage of requested News App data.
@@ -134,6 +135,25 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      * <TABLE><TR><TD>void</TD><TD>configurationChanged(AbstractConfiguration *configuration)</TD></TR></TABLE>
      */
     Q_PROPERTY(AbstractConfiguration *configuration READ configuration WRITE setConfiguration NOTIFY configurationChanged)
+    /*!
+     * \brief Pointer to an object derived from AbstractNotificator.
+     *
+     * Set a notificator to notify users about errors and events. This is not mandatory. You have to derive your own notificator that uses
+     * the notification system of the target platform.
+     *
+     * If no notificator has been set via setNotificator(), the one set via Componentn:setDefaultConfigurator() will be used - if any has
+     * been set. If you do not set a notificator either per instance or global, this property will hold a \c nullptr. If a notificator is
+     * set to an instance of this class via setNotificator(), this notificator will take precedence over the global default notificator
+     * object (if any set).
+     *
+     * \par Access functions:
+     * \li AbstractNotificator* notificator() const
+     * \li void setNotificator(AbstractNotificator *notificator);
+     *
+     * \par Notifier signal:
+     * \li void notificatorChanged(AbstractNotificator *notificator);
+     */
+    Q_PROPERTY(Fuoten::AbstractNotificator *notificator READ notificator WRITE setNotificator NOTIFY notificatorChanged)
 public:
     /*!
      * \brief Constructs a new abstract local storage with the given \a parent.
@@ -330,6 +350,18 @@ public:
      * \sa AbstractStorage::configuration(), AbstractStorage::configurationChanged()
      */
     void setConfiguration(AbstractConfiguration *nConfiguration);
+
+    /*!
+     * \brief Getter function for the \link AbstractStorage::notificator notificator \endlink property.
+     * \sa setNotificator(), notificatorChanged()
+     */
+    AbstractNotificator *notificator() const;
+
+    /*!
+     * \brief Setter function for the \link AbstractStorage::notificator notificator \endlink property.
+     * \sa notificator(), notificatorChanged()
+     */
+    void setNotificator(AbstractNotificator *notificator);
 
     /*!
      * \brief Clears the local queue. Does not revert the action itself.
@@ -851,6 +883,11 @@ Q_SIGNALS:
      */
     void configurationChanged(AbstractConfiguration *configuration);
 
+    /*!
+     * \brief Notifier signal for the \link AbstractStorage::notificator notificator \endlink property.
+     * \sa setNotificator(), notificator()
+     */
+    void notificatorChanged(AbstractNotificator *notificator);
 
     /*!
      * \brief This is emitted after the local queue has been cleared.
