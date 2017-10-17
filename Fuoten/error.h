@@ -88,7 +88,8 @@ public:
         OutputError         = 4,    /**< An error occurred while processing the returned data from the API. */
         ServerError         = 5,    /**< An error occurred on the server. */
         ApplicationError    = 6,    /**< An error occurred in the local application. */
-        StorageError        = 7     /**< An error occurred on the storage layer. */
+        StorageError        = 7,    /**< An error occurred on the storage layer. */
+        AuthorizationError  = 8     /**< Authentication credentials missing or not valid. */
     };
     Q_ENUM(Type)
 
