@@ -19,6 +19,7 @@
  */
 
 #include "abstractnotificator_p.h"
+#include "../error.h"
 
 using namespace Fuoten;
 
@@ -69,6 +70,59 @@ void AbstractNotificator::setEnabled(bool enabled)
         d->enabled = enabled;
         qDebug("Changed enabled to %s.", d->enabled ? "true" : "false");
         Q_EMIT enabledChanged(d->enabled);
+    }
+}
+
+
+void AbstractNotificator::notify(Error *e, bool force)
+{
+    if (e && (e->type() != Error::NoError) && (isEnabled() || force)) {
+        AbstractNotificator::Type t = AbstractNotificator::GeneralError;
+        switch (e->type()) {
+        case Error::RequestError:
+            t = AbstractNotificator::RequestError;
+            break;
+        case Error::JSONParsingError:
+            t = AbstractNotificator::ParsingError;
+            break;
+        case Error::InputError:
+            t = AbstractNotificator::InputError;
+            break;
+        case Error::OutputError:
+            t = AbstractNotificator::OutputError;
+            break;
+        case Error::ServerError:
+            t = AbstractNotificator::ServerError;
+            break;
+        case Error::ApplicationError:
+            t = AbstractNotificator::ApplicationError;
+            break;
+        case Error::StorageError:
+            t = AbstractNotificator::StorageError;
+            break;
+        case Error::AuthorizationError:
+            t = AbstractNotificator::AuthorizationError;
+            break;
+        default:
+            break;
+        }
+
+        QtMsgType s = QtInfoMsg;
+        switch(e->severity()) {
+        case Error::Warning:
+            s = QtWarningMsg;
+            break;
+        case Error::Critical:
+            s = QtCriticalMsg;
+            break;
+        case Error::Fatal:
+            s = QtFatalMsg;
+            break;
+        default:
+            break;
+        }
+
+        notify(t, s, e->text(), force);
     }
 }
 

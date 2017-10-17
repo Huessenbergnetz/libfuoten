@@ -30,6 +30,7 @@ namespace Fuoten {
 
 class AbstractNotificatorPrivate;
 class Article;
+class Error;
 
 class FUOTENSHARED_EXPORT AbstractNotificator : public QObject
 {
@@ -50,12 +51,15 @@ public:
     void setEnabled(bool enabled);
 
     enum Type {
-        NetworkError = 0,
+        GeneralError = 0,
+        RequestError,
         ParsingError,
-        StorageError,
-        ReplyError,
         InputError,
-        AuthenticationError,
+        OutputError,
+        ServerError,
+        ApplicationError,
+        StorageError,
+        AuthorizationError,
         SyncComplete,
         FoldersRequested,
         FolderCreated,
@@ -72,6 +76,8 @@ public:
     };
 
     virtual void notify(Type type, QtMsgType severity, const QVariant &data, bool force = false) = 0;
+
+    virtual void notify(Error *e, bool force = false);
 
     virtual void publishArticle(const QJsonObject &article, qint64 feedId = -1, const QString &feedName = QString()) = 0;
 
