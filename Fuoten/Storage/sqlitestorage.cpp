@@ -292,18 +292,21 @@ qint64 SQLiteStorage::getNewestItemId(FuotenEnums::Type type, qint64 id)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        notify(error());
         return -1;
     }
 
     if ((type == FuotenEnums::Folder) && (id <= 0)) {
         //% "The folder ID is not valid."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        notify(error());
         return -1;
     }
 
     if ((type == FuotenEnums::Feed) && (id <= 0)) {
         //% "The feed ID is not valid."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        notify(error());
         return -1;
     }
 
@@ -359,6 +362,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        notify(error());
         return;
     }
 
@@ -582,7 +586,7 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
     Q_ASSERT_X(qresult, "folder created", "failed to insert new folder into database");
 
     if (notificator()) {
-        notificator()->notify(AbstractNotificator::FolderCreated, QtInfoMsg, name);
+        notificator()->notify(AbstractNotificator::FolderCreated, QtInfoMsg, name, true);
     }
 
     Q_EMIT createdFolder(id, name);
@@ -596,27 +600,21 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
     if (newName.isEmpty()) {
         //% "The folder name can not be empty."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-empty-folder-name"), QString(), this));
+        notify(error());
         return;
     }
 
     if (id == 0) {
         //% "The folder ID is not valid."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        notify(error());
         return;
     }
 
@@ -720,18 +718,14 @@ void SQLiteStorage::folderDeleted(qint64 id)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
     if (id <= 0) {
         //% "The folder ID is not valid."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        notify(error());
         return;
     }
 
@@ -996,9 +990,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
@@ -1241,6 +1233,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         data.push_back(newFeedNames);
         data.push_back(updatedFeedNames);
         data.push_back(deletedFeedNames);
+        notificator()->notify(AbstractNotificator::FeedsRequested, QtInfoMsg, data, true);
     }
 
     Q_EMIT requestedFeeds(updatedFeedIds, newFeedIds, deletedFeedIds);
@@ -1253,9 +1246,7 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
@@ -1314,7 +1305,7 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
     Q_ASSERT(qresult);
 
     if (notificator()) {
-        notificator()->notify(AbstractNotificator::FeedCreated, QtInfoMsg, title);
+        notificator()->notify(AbstractNotificator::FeedCreated, QtInfoMsg, title, true);
     }
 
     Q_EMIT createdFeed(id, folderId);
@@ -1332,7 +1323,7 @@ void SQLiteStorage::feedDeleted(qint64 id)
 
     if (id <= 0) {
         //% "The feed ID is not valid."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
         return;
     }
 
@@ -1384,18 +1375,21 @@ void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        notify(error());
         return;
     }
 
     if (id <= 0) {
         //% "The feed ID is not valid."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        notify(error());
         return;
     }
 
     if (targetFolder < 0) {
         //% "The folder ID is not valid."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
+        notify(error());
         return;
     }
 
@@ -1454,7 +1448,7 @@ void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
         data.push_back(oldFolderName);
         data.push_back(targetFolderName);
 
-        notificator()->notify(AbstractNotificator::FeedMoved, QtInfoMsg, data);
+        notificator()->notify(AbstractNotificator::FeedMoved, QtInfoMsg, data, true);
     }
 
     Q_EMIT movedFeed(id, targetFolder);
@@ -1466,18 +1460,21 @@ void SQLiteStorage::feedRenamed(qint64 id, const QString &newTitle)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        notify(error());
         return;
     }
 
     if (newTitle.isEmpty()) {
         //% "The feed name can not be empty."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-empty-feed-name"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-empty-feed-name"), QString(), this));
+        notify(error());
         return;
     }
 
     if (id <= 0) {
         //% "The feed ID is not valid."
-        setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
+        notify(error());
         return;
     }
 
@@ -1519,27 +1516,21 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
     if (id <= 0) {
         //% "The feed ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
     if (newestItem <= 0) {
         //% "The item ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
@@ -2267,7 +2258,7 @@ void ItemsRequestedWorker::run()
     Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
 
     if (m_notificator && (newUnreadItems > 0)) {
-        m_notificator->notify(AbstractNotificator::ItemsRequested, QtInfoMsg, newUnreadItems);
+        m_notificator->notify(AbstractNotificator::ItemsRequested, QtInfoMsg, newUnreadItems, true);
     }
 }
 
@@ -2307,9 +2298,7 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
@@ -2393,9 +2382,7 @@ void SQLiteStorage::itemsStarred(const QList<QPair<qint64, QString> > &articles,
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
@@ -2444,9 +2431,7 @@ void SQLiteStorage::itemMarked(qint64 itemId, bool unread)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
@@ -2503,9 +2488,7 @@ void SQLiteStorage::itemStarred(qint64 feedId, const QString &guidHash, bool sta
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
@@ -2539,9 +2522,7 @@ void SQLiteStorage::allItemsMarkedRead(qint64 newestItemId)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
@@ -2577,9 +2558,7 @@ QString SQLiteStorage::getArticleBody(qint64 id)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return body;
     }
 
@@ -2609,18 +2588,14 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
     if (!article) {
         //% "Invalid article object."
         setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-article-object"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
@@ -2902,27 +2877,21 @@ bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
     if (feedId <= 0) {
         //% "The feed ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-feed-id"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
     if (newestItemId <= 0) {
         //% "The item ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
@@ -2953,27 +2922,21 @@ bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
     if (folderId < 0) {
         //% "The folder ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
     if (newestItemId <= 0) {
         //% "The item ID is not valid."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-invalid-item-id"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::InputError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
@@ -3004,9 +2967,7 @@ bool SQLiteStorage::enqueueMarkAllItemsRead()
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return false;
     }
 
@@ -3064,9 +3025,7 @@ void SQLiteStorage::clearQueue()
     if (!ready()) {
         //% "SQLite database not ready. Can not process requested data."
         setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
-        if (notificator()) {
-            notificator()->notify(AbstractNotificator::StorageError, QtWarningMsg, error()->text());
-        }
+        notify(error());
         return;
     }
 
