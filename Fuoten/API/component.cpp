@@ -374,7 +374,7 @@ void Component::_requestTimedOut()
     setError(new Error(Error::RequestError, Error::Critical, qtTrId("err-conn-timeout", requestTimeout()), d->reply->request().url().toString(), this));
 
     if (notificator()) {
-        notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, error->text());
+        notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, error()->text());
     }
 
     setInOperation(false);
@@ -403,8 +403,7 @@ bool Component::checkInput()
         //% "You have to specify a username and a password."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("err-username-pass-missing"), QString(), this));
         if (notificator()) {
-            //% "Missing authentication credentials"
-            notificator()->notify(AbstractNotificator::GeneralError, QtCriticalMsg, qtTrId("fuoten-notify-username-pass-missing-summary"), error()->text());
+            notificator()->notify(AbstractNotificator::AuthenticationError, QtCriticalMsg, error()->text());
         }
         Q_EMIT failed(error());
         return false;
@@ -414,8 +413,7 @@ bool Component::checkInput()
         //% "Empty payload when trying to perform a PUT or POST network operation."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("err-no-payloud"), QString(), this));
         if (notificator()) {
-            //% "Missing input data"
-            notificator()->notify(AbstractNotificator::GeneralError, QtCriticalMsg, qtTrId("fuoten-notify-missing-input-data-summary"), error()->text());
+            notificator()->notify(AbstractNotificator::InputError, QtCriticalMsg, error()->text());
         }
         Q_EMIT failed(error());
         return false;
@@ -435,8 +433,7 @@ bool Component::checkOutput()
         if (jsonError.error != QJsonParseError::NoError) {
             setError(new Error(jsonError, this));
             if (notificator()) {
-                //% "JSON Parsing Error"
-                notificator()->notify(AbstractNotificator::ParsingError, QtCriticalMsg, qtTrId("fuoten-notify-json-parsing-error"), error->text());
+                notificator()->notify(AbstractNotificator::ParsingError, QtCriticalMsg, error()->text());
             }
             Q_EMIT failed(error());
             return false;
@@ -447,8 +444,7 @@ bool Component::checkOutput()
         //% "The request replied an empty answer, but there was content expected."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-empty-answer"), QString(), this));
         if (notificator()) {
-            //% "Unexpected reply data"
-            notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, qtTrId("fuoten-notify-unexpected-reply-data"), error()->text());
+            notificator()->notify(AbstractNotificator::ReplyError, QtCriticalMsg, error()->text());
         }
         Q_EMIT failed(error());
         return false;
@@ -458,7 +454,7 @@ bool Component::checkOutput()
         //% "It was expected that the request returns a JSON array, but it returned something else."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-array"), QString(), this));
         if (notificator()) {
-            notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, qtTrId("fuoten-notify-unexpected-reply-data"), error()->text());
+            notificator()->notify(AbstractNotificator::ReplyError, QtCriticalMsg, error()->text());
         }
         Q_EMIT failed(error());
         return false;
@@ -468,7 +464,7 @@ bool Component::checkOutput()
         //% "It was expected that the request returns a JSON object, but it returned something else."
         setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-no-json-object"), QString(), this));
         if (notificator()) {
-            notificator()->notify(AbstractNotificator::NetworkError, QtCriticalMsg, qtTrId("fuoten-notify-unexpected-reply-data"), error()->text());
+            notificator()->notify(AbstractNotificator::ReplyError, QtCriticalMsg, error()->text());
         }
         Q_EMIT failed(error());
         return false;

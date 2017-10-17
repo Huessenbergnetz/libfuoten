@@ -71,3 +71,5 @@ void AbstractNotificator::setEnabled(bool enabled)
         Q_EMIT enabledChanged(d->enabled);
     }
 }
+
+#include "moc_abstractnotificator.cpp"

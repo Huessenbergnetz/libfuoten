@@ -22,6 +22,7 @@
 #define FUOTENABSTRACTNOTIFICATOR_H
 
 #include <QObject>
+#include "../fuoten_global.h"
 
 class QJsonObject;
 
@@ -30,7 +31,7 @@ namespace Fuoten {
 class AbstractNotificatorPrivate;
 class Article;
 
-class AbstractNotificator : public QObject
+class FUOTENSHARED_EXPORT AbstractNotificator : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(AbstractNotificator)
@@ -52,23 +53,25 @@ public:
         NetworkError = 0,
         ParsingError,
         StorageError,
+        ReplyError,
+        InputError,
+        AuthenticationError,
         SyncComplete,
-        NewFolders,
-        NewFeeds,
-        NewItems,
+        FoldersRequested,
         FolderCreated,
-        FeedCreated,
         FolderDeleted,
+        FolderRenamed,
+        FolderMarkedRead,
+        FeedsRequested,
+        FeedCreated,
         FeedDeleted,
         FeedMoved,
-        GeneralError,
-        GeneralWarning,
-        GeneralInfo
+        FeedRenamed,
+        FeedMarkedRead,
+        ItemsRequested
     };
 
-    virtual void notify(Type type, QtMsgType severity, const QString &body, bool force = false) = 0;
-
-    virtual void notify(Type type, QtMsgType severity, const QString &summary, const QString &body, bool force = false) = 0;
+    virtual void notify(Type type, QtMsgType severity, const QVariant &data, bool force = false) = 0;
 
     virtual void publishArticle(const QJsonObject &article, qint64 feedId = -1, const QString &feedName = QString()) = 0;
 
