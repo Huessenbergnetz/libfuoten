@@ -34,47 +34,101 @@ class AbstractNotificatorPrivate;
 class Article;
 class Error;
 
+/*!
+ * \brief Abstract class to implement platform specific notifications about errors and successful operations.
+ *
+ * Reimplement this class if you want to have notifications specific for your target platform. All API class
+ * can notify about occured errors - but not about success. Sucess notifications should be done by the a storage
+ * class derived from AbstractStorage, or separate from the API classes after processing the API results.
+ *
+ * You can set a notificator via different methods. For all API classes there is the Component::notificator property,
+ * the same is true for storage classes via the AbstractStorage::notificator property and for the synchronizer via
+ * Synchronizer::notificator property. Beside these instance based properties there is also Component::setDefaultNotificator()
+ * to set a global default notificator that is used if no notificator is set for the current object.
+ *
+ * \headerfile "" <Fuoten/Helpers/AbstractNotificator>
+ */
 class FUOTENSHARED_EXPORT AbstractNotificator : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(AbstractNotificator)
     Q_DECLARE_PRIVATE(AbstractNotificator)
 public:
+    /*!
+     * \brief Constructs a new AbstractNotifier object with the given \a parent.
+     */
     explicit AbstractNotificator(QObject *parent = nullptr);
+
+    /*!
+     * \brief Destroys the AbstractNotifier object.
+     */
     ~AbstractNotificator();
 
+    /*!
+     * \brief Returns the path to the currently set application icon.
+     * The default is an empty string.
+     * \sa setAppIcon(), appIconChanged()
+     */
     QString appIcon() const;
+    /*!
+     * \brief Sets the path to an application icon.
+     * The default is an empty string.
+     * \sa appIcon(), appIconChanged()
+     */
     void setAppIcon(const QString &appIcon);
 
+    /*!
+     * \brief Returns the currently set application name.
+     * The default is an empty string.
+     * \sa setAppName(), appNameChanged()
+     */
     QString appName() const;
+    /*!
+     * \brief Sets the application name.
+     * The default is an empty string.
+     * \sa appName(), appNameChanged()
+     */
     void setAppName(const QString &appName);
 
+    /*!
+     * \brief Returns \c true if notifications are enabled.
+     * The default is \c false.
+     * \sa setEnabled(), enabledChanged()
+     */
     bool isEnabled() const;
+    /*!
+     * \brief Set to \c true to enable notifications
+     * The default is \c false.
+     * \sa isEnabled(), enabledChanged()
+     */
     void setEnabled(bool enabled);
 
+    /*!
+     * \brief The type of the notification.
+     */
     enum Type {
-        GeneralError = 0,
-        RequestError,
-        ParsingError,
-        InputError,
-        OutputError,
-        ServerError,
-        ApplicationError,
-        StorageError,
-        AuthorizationError,
-        SyncComplete,
-        FoldersRequested,
-        FolderCreated,
-        FolderDeleted,
-        FolderRenamed,
-        FolderMarkedRead,
-        FeedsRequested,
-        FeedCreated,
-        FeedDeleted,
-        FeedMoved,
-        FeedRenamed,
-        FeedMarkedRead,
-        ItemsRequested
+        GeneralError = 0,   /**< A general error, normally not used, only there as fallback. */
+        RequestError,       /**< The request was not setup correctly or failed. The \a data will contain an error string. */
+        ParsingError,       /**< There was an error when parsing the JSON response. The \a data will contain an error string. */
+        InputError,         /**< An error occurred while providing data to the library methods. The \a data will conatin an error string. */
+        OutputError,        /**< An error occurred while processing the returned data from the API. The \a data will contain an error string. */
+        ServerError,        /**< An error occurred on the server. The \a data will contain an error string. */
+        ApplicationError,   /**< An error occurred in the local application. The \a data will contain an error string. */
+        StorageError,       /**< An error occurred on the storage layer. The \a data will contain an error string. */
+        AuthorizationError, /**< Authentication credentials missing or not valid. The \a data will contain an error string. */
+        SyncComplete,       /**< Synchronization with the server was successful performed. */
+        FoldersRequested,   /**< Folders have been requested from the server. The \a data will contain a QVariantList of QStringList that contains the following data: 0: names of new folders, 1: names of updated folders, 2: names of deleted folders */
+        FolderCreated,      /**< A new folder has succesfully been created on the server. The \a data will contain the name of the folder as a QString. */
+        FolderDeleted,      /**< A Folder has been successfully deleted on the server. The \a data will contain the name of the deleted folder as a QString. */
+        FolderRenamed,      /**< A folder has successfully been renamed on the server. The \a data will contain a QStringList with two entries. 0: older folder name, 1: new folder name */
+        FolderMarkedRead,   /**< A folder has successfully been marked as read. The \a data will contain the name of the folder as a QString. */
+        FeedsRequested,     /**< Feeds have been requested from the server. The \a data will contain a QVariantList of QStringList that conatins the following data: 0: titles of new feeds, 1: titles of updated feeds, 2: titles of deleted feeds */
+        FeedCreated,        /**< A new feed has successfully been created on the server. The \a data will contain the title of the new feed as a QString. */
+        FeedDeleted,        /**< A feed has successfully been deleted on the server. The \a data will contain the title of the deleted feed ad a QString. */
+        FeedMoved,          /**< A feed has successfully been moved on the server. The \a data will contain a QVariantList containing the following information as QString: 0: title of the feed, 1: name of the old folder, 2: name of the new folder */
+        FeedRenamed,        /**< A feed has successfully been renamed on the server. The \a data will contain a QVariantList containing the following information as QString: 0: old title, 1: new title */
+        FeedMarkedRead,     /**< A feed has been marked as read. The \a data will contain the title of the feed as a QString. */
+        ItemsRequested      /**< Items have been requested from the server. The \a data will contain the amount of new unread items as an integer value. */
     };
 
     virtual void notify(Type type, QtMsgType severity, const QVariant &data, bool force = false) const = 0;
@@ -86,8 +140,20 @@ public:
     virtual void publishArticle(Article *article) const = 0;
 
 Q_SIGNALS:
+    /*!
+     * \brief This signal is emitted if the path to the application icon changes.
+     * \sa setAppIcon(), appIcon()
+     */
     void appIconChanged(const QString &appIcon);
+    /*!
+     * \brief This signal is emitted if the application name changes.
+     * \sa setAppName(), appName()
+     */
     void appNameChanged(const QString &appName);
+    /*!
+     * \brief This signal is emitted if the enabled status changes.
+     * \sa setEnabled(), isEnabled()
+     */
     void enabledChanged(bool enabled);
 
 protected:
