@@ -733,20 +733,20 @@ void Component::setRequiresAuth(bool reqAuth)
 }
 
 
-void Component::notify(Error *e, bool force) const
+void Component::notify(const Fuoten::Error *e) const
 {
     Q_D(const Component);
     if (d->notificator) {
-        d->notificator->notify(e, force);
+        d->notificator->notify(e);
     }
 }
 
 
-void Component::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data, bool force) const
+void Component::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data) const
 {
     Q_D(const Component);
     if (d->notificator) {
-        d->notificator->notify(type, severity, data, force);
+        d->notificator->notify(type, severity, data);
     }
 }
 

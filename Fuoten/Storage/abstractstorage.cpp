@@ -231,20 +231,20 @@ void AbstractStorage::clearQueue()
 }
 
 
-void AbstractStorage::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data, bool force) const
+void AbstractStorage::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data) const
 {
     Q_D(const AbstractStorage);
     if (d->notificator) {
-        d->notificator->notify(type, severity, data, force);
+        d->notificator->notify(type, severity, data);
     }
 }
 
 
-void AbstractStorage::notify(Error *e, bool force) const
+void AbstractStorage::notify(const Fuoten::Error *e) const
 {
     Q_D(const AbstractStorage);
     if (d->notificator) {
-        d->notificator->notify(e, force);
+        d->notificator->notify(e);
     }
 }
 

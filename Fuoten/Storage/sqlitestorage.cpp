@@ -529,7 +529,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
             notifyData.push_back(newFolderNames);
             notifyData.push_back(updatedFolderNames);
             notifyData.push_back(deletedFolderNames);
-            notificator()->notify(AbstractNotificator::FoldersRequested, QtInfoMsg, notifyData, true);
+            notificator()->notify(AbstractNotificator::FoldersRequested, QtInfoMsg, notifyData);
         }
     }
 
@@ -586,7 +586,7 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
     Q_ASSERT_X(qresult, "folder created", "failed to insert new folder into database");
 
     if (notificator()) {
-        notificator()->notify(AbstractNotificator::FolderCreated, QtInfoMsg, name, true);
+        notificator()->notify(AbstractNotificator::FolderCreated, QtInfoMsg, name);
     }
 
     Q_EMIT createdFolder(id, name);
@@ -1239,7 +1239,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         data.push_back(newFeedNames);
         data.push_back(updatedFeedNames);
         data.push_back(deletedFeedNames);
-        notificator()->notify(AbstractNotificator::FeedsRequested, QtInfoMsg, data, true);
+        notificator()->notify(AbstractNotificator::FeedsRequested, QtInfoMsg, data);
     }
 
     Q_EMIT requestedFeeds(updatedFeedIds, newFeedIds, deletedFeedIds);
@@ -1311,7 +1311,7 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
     Q_ASSERT(qresult);
 
     if (notificator()) {
-        notificator()->notify(AbstractNotificator::FeedCreated, QtInfoMsg, title, true);
+        notificator()->notify(AbstractNotificator::FeedCreated, QtInfoMsg, title);
     }
 
     Q_EMIT createdFeed(id, folderId);
@@ -1454,7 +1454,7 @@ void SQLiteStorage::feedMoved(qint64 id, qint64 targetFolder)
         data.push_back(oldFolderName);
         data.push_back(targetFolderName);
 
-        notificator()->notify(AbstractNotificator::FeedMoved, QtInfoMsg, data, true);
+        notificator()->notify(AbstractNotificator::FeedMoved, QtInfoMsg, data);
     }
 
     Q_EMIT movedFeed(id, targetFolder);
@@ -2264,7 +2264,7 @@ void ItemsRequestedWorker::run()
     Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
 
     if (m_notificator && (newUnreadItems > 0)) {
-        m_notificator->notify(AbstractNotificator::ItemsRequested, QtInfoMsg, newUnreadItems, true);
+        m_notificator->notify(AbstractNotificator::ItemsRequested, QtInfoMsg, newUnreadItems);
     }
 }
 

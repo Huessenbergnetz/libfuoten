@@ -41,10 +41,35 @@ class Error;
  * can notify about occured errors - but not about success. Sucess notifications should be done by the a storage
  * class derived from AbstractStorage, or separate from the API classes after processing the API results.
  *
+ * \par Setting a notificator
+ *
  * You can set a notificator via different methods. For all API classes there is the Component::notificator property,
  * the same is true for storage classes via the AbstractStorage::notificator property and for the synchronizer via
  * Synchronizer::notificator property. Beside these instance based properties there is also Component::setDefaultNotificator()
- * to set a global default notificator that is used if no notificator is set for the current object.
+ * to set a global default notificator that is used if no notificator is set for the current object. If no notificator
+ * has been set, there will be no notifications but programm will run normal. So notifications are totally optional.
+ *
+ * \par Creating a new notificator
+ *
+ * Notifications are platform dependent, so you should create notificators for your target platform by creating a
+ * new class derived from AbstractNotificator. The main method for notifications you have to reimplement in your class
+ * is notify(Type type, QtMsgType severity, const QVariant &data). This method handles all the default notifications
+ * about occured errors and success notifications.
+ *
+ * When reimplementing the default notification method, you can use appIcon() and appName() to populate default fields,
+ * optionally you can use isEnabled() to enable or disable notifications globally. You could for example disable notifications
+ * if your application is currently active and visible to the user and there are places in the application that show the same
+ * information. But it is on you how you implement it. You can also simply rely on the notification \a type and \a severity
+ * to decide when and how to show notifications.
+ *
+ * Only the error notification \link AbstractNotificator::Type types \endlink will provide ready to display error strings
+ * in the \a data argument. All other \link AbstractNotificator::Type types \endlink will have meta data in the \a data
+ * argument that can be used to create custom notification messages. See the \link AbstractNotificator::Type type \endlink
+ * enum description to learn what data you can expect for the different types.
+ *
+ * The \a severity argument is an additional hint for displaying the notifications. Most error \link AbstractNotificator::Type types \endlink
+ * will have QtCriticalMsg as their \a severity, only a few will have QtFatalMsg, some other might have QtWarningMsg. Informational
+ * notifications - like success notifications - will have a \a severity of QtInfoMsg.
  *
  * \headerfile "" <Fuoten/Helpers/AbstractNotificator>
  */
@@ -107,7 +132,7 @@ public:
      * \brief The type of the notification.
      */
     enum Type {
-        GeneralError = 0,   /**< A general error, normally not used, only there as fallback. */
+        GeneralError = 0,   /**< A general error, normally not used, only there as fallback. The \a data will contain a null QVariant. */
         RequestError,       /**< The request was not setup correctly or failed. The \a data will contain an error string. */
         ParsingError,       /**< There was an error when parsing the JSON response. The \a data will contain an error string. */
         InputError,         /**< An error occurred while providing data to the library methods. The \a data will conatin an error string. */
@@ -116,7 +141,7 @@ public:
         ApplicationError,   /**< An error occurred in the local application. The \a data will contain an error string. */
         StorageError,       /**< An error occurred on the storage layer. The \a data will contain an error string. */
         AuthorizationError, /**< Authentication credentials missing or not valid. The \a data will contain an error string. */
-        SyncComplete,       /**< Synchronization with the server was successful performed. */
+        SyncComplete,       /**< Synchronization with the server was successful performed. The \a data will contain the number of seconds needed to perform the sync as an integer. */
         FoldersRequested,   /**< Folders have been requested from the server. The \a data will contain a QVariantList of QStringList that contains the following data: 0: names of new folders, 1: names of updated folders, 2: names of deleted folders */
         FolderCreated,      /**< A new folder has succesfully been created on the server. The \a data will contain the name of the folder as a QString. */
         FolderDeleted,      /**< A Folder has been successfully deleted on the server. The \a data will contain the name of the deleted folder as a QString. */
@@ -131,13 +156,31 @@ public:
         ItemsRequested      /**< Items have been requested from the server. The \a data will contain the amount of new unread items as an integer value. */
     };
 
-    virtual void notify(Type type, QtMsgType severity, const QVariant &data, bool force = false) const = 0;
+    /*!
+     * \brief Creates a new notifications.
+     *
+     * Reimplement this in your derived class to create platform specific notifications.
+     *
+     * The \a type will define the message type, have a look at the enum description to learn more about it -
+     * it will also provide information about the provided \a data. The \a severity can be used to further
+     * decide when and how to display the notification.
+     */
+    virtual void notify(Type type, QtMsgType severity, const QVariant &data) const = 0;
 
-    virtual void notify(Error *e, bool force = false) const;
+    /*!
+     * \brief Creates a new notification from an \a error object.
+     *
+     * \overload
+     *
+     * The default implementation converts the \a error information like type, severity and error text
+     * into data that will be used by the main notify method. So to use the default implementation, you
+     * have to reimplement the main notify method.
+     */
+    virtual void notify(const Error *error) const;
 
     virtual void publishArticle(const QJsonObject &article, qint64 feedId = -1, const QString &feedName = QString()) const = 0;
 
-    virtual void publishArticle(Article *article) const = 0;
+    virtual void publishArticle(const Article* article) const = 0;
 
 Q_SIGNALS:
     /*!

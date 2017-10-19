@@ -725,13 +725,15 @@ protected:
 
     /*!
      * \brief Checks if a \link Component::notificator notificator \endlink has been set and will use it to notify about an occured error.
+     * \sa AbstractNotificator::notify(const Error *e)
      */
-    void notify(Error *e, bool force = false) const;
+    void notify(const Error *e) const;
 
     /*!
      * \brief Checks if a \link Component::notificator notificator \endlink has been set and will use it to notify the user.
+     * \sa AbstractNotificator::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data)
      */
-    void notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data, bool force = false) const;
+    void notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data) const;
 
 private Q_SLOTS:
     void _requestFinished();

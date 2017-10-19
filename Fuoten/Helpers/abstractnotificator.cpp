@@ -77,9 +77,9 @@ void AbstractNotificator::setEnabled(bool enabled)
 }
 
 
-void AbstractNotificator::notify(Error *e, bool force) const
+void AbstractNotificator::notify(const Fuoten::Error *e) const
 {
-    if (e && (e->type() != Error::NoError) && (isEnabled() || force)) {
+    if (e && (e->type() != Error::NoError) && isEnabled()) {
         AbstractNotificator::Type t = AbstractNotificator::GeneralError;
         switch (e->type()) {
         case Error::RequestError:
@@ -125,7 +125,7 @@ void AbstractNotificator::notify(Error *e, bool force) const
             break;
         }
 
-        notify(t, s, e->text(), force);
+        notify(t, s, e->text());
     }
 }
 

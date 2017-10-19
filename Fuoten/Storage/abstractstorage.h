@@ -644,13 +644,15 @@ protected:
 
     /*!
      * \brief Checks if a \link AbstractStorage::notificator notificator \endlink has been set and will use it to notify about an occured error.
+     * \sa AbstractNotificator::notify(const Error *e)
      */
-    void notify(Error *e, bool force = false) const;
+    void notify(const Error *e) const;
 
     /*!
      * \brief Checks if a \link AbstractStorage::notificator notificator \endlink has been set and will use it to notify the user.
+     * \sa AbstractNotificator::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data)
      */
-    void notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data, bool force = false) const;
+    void notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data) const;
 
     const QScopedPointer<AbstractStoragePrivate> d_ptr;
     AbstractStorage(AbstractStoragePrivate &dd, QObject *parent = nullptr);
