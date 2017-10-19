@@ -438,8 +438,7 @@ void Synchronizer::finished()
     setProgress(++d->performedActions/d->totalActions);
     d->configuration->setLastSync(QDateTime::currentDateTimeUtc());
     if (notificator()) {
-        //% "Successfully performed synchronization with the remote server in %n second(s)."
-        notificator()->notify(AbstractNotificator::SyncComplete, QtInfoMsg, qtTrId("libfuoten-sync-complete", d->startTime.secsTo(QDateTime::currentDateTime())));
+        notificator()->notify(AbstractNotificator::SyncComplete, QtInfoMsg, d->startTime.secsTo(QDateTime::currentDateTime()));
     }
     d->setInOperation(false);
     Q_EMIT succeeded();
