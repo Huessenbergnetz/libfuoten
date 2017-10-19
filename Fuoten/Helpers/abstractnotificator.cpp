@@ -129,4 +129,18 @@ void AbstractNotificator::notify(const Fuoten::Error *e) const
     }
 }
 
+
+void AbstractNotificator::publishArticle(const QJsonObject &article, qint64 feedId, const QString &feedName) const
+{
+    Q_UNUSED(article)
+    Q_UNUSED(feedId)
+    Q_UNUSED(feedName)
+}
+
+
+void AbstractNotificator::publishArticle(const Article *article) const
+{
+    Q_UNUSED(article)
+}
+
 #include "moc_abstractnotificator.cpp"

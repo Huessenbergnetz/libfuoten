@@ -178,9 +178,25 @@ public:
      */
     virtual void notify(const Error *error) const;
 
-    virtual void publishArticle(const QJsonObject &article, qint64 feedId = -1, const QString &feedName = QString()) const = 0;
+    /*!
+     * \brief Publishes information about an \a article to the notification system.
+     *
+     * Some platforms - like Meego 1.2 Harmattan - provide global notification streems for different serverices
+     * and news. You can reimplement this method to publish received articles to this streams.
+     *
+     * The default implementation does nothing.
+     */
+    virtual void publishArticle(const QJsonObject &article, qint64 feedId = -1, const QString &feedName = QString()) const;
 
-    virtual void publishArticle(const Article* article) const = 0;
+    /*!
+     * \brief Publishes information about an \a article to the notification system.
+     *
+     * Some platforms - like Meego 1.2 Harmattan - provide global notification streems for different serverices
+     * and news. You can reimplement this method to publish received articles to this streams.
+     *
+     * The default implementation does nothing.
+     */
+    virtual void publishArticle(const Article* article) const;
 
 Q_SIGNALS:
     /*!
