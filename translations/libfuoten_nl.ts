@@ -1,50 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="nl" sourcelanguage="en" version="2.1">
 <context>
     <name/>
-    <message id="invalid-api-url">
-        <location filename="../Fuoten/API/component.cpp" line="+94"/>
-        <source>Invalid API URL</source>
-        <translation>Ongeldige API-URL</translation>
-    </message>
     <message id="err-conn-timeout" numerus="yes">
-        <location line="+127"/>
+        <location filename="../Fuoten/API/component.cpp" line="+372"/>
         <source>The connection to the server timed out after %n second(s).</source>
         <translation><numerusform>De verbinding met de server is verlopen na %n seconde.</numerusform><numerusform>De verbinding met de server is verlopen na %n seconden.</numerusform></translation>
     </message>
-    <message id="id-err-no-config">
-        <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+68"/>
-        <source>No configuration available.</source>
-        <translation>Geen configuratie beschikbaar.</translation>
-    </message>
-    <message id="libfuoten-err-no-config">
-        <location filename="../Fuoten/API/component.cpp" line="+24"/>
-        <location filename="../Fuoten/article.cpp" line="+401"/>
-        <location line="+48"/>
-        <location filename="../Fuoten/feed.cpp" line="+291"/>
-        <location line="+36"/>
-        <location line="+25"/>
-        <location line="+35"/>
-        <location filename="../Fuoten/folder.cpp" line="+121"/>
-        <location line="+35"/>
-        <location line="+25"/>
-        <location filename="../Fuoten/Helpers/synchronizer.cpp" line="+60"/>
-        <source>No configuration available.</source>
-        <translation>Geen configuratie beschikbaar.</translation>
-    </message>
     <message id="err-username-pass-missing">
-        <location line="+7"/>
+        <location line="+26"/>
         <source>You have to specify a username and a password.</source>
         <translation>Je moet een gebruikersnaam en een wachtwoord opgeven.</translation>
-    </message>
-    <message id="err-no-host">
-        <location line="+7"/>
-        <source>No host specified</source>
-        <translation>Geen host opgegeven</translation>
-    </message>
-    <message id="err-no-route">
-        <location line="+7"/>
-        <source>No API route specified.</source>
-        <translation>Geen API-route opgegeven.</translation>
     </message>
     <message id="err-no-payloud">
         <location line="+7"/>
@@ -52,7 +17,7 @@
         <translation>Lege payload bij poging tot uitvoeren van een PUT- of POST-netwerktaak.</translation>
     </message>
     <message id="err-empty-answer">
-        <location line="+26"/>
+        <location line="+25"/>
         <source>The request replied an empty answer, but there was content expected.</source>
         <translation>Het verzoek gaf een leeg antwoord hoewel inhoud werd verwacht.</translation>
     </message>
@@ -67,7 +32,7 @@
         <translation>Het verzoek werd verwacht een JSON-object te geven, maar gaf iets anders.</translation>
     </message>
     <message id="err-net-reply-1">
-        <location filename="../Fuoten/error.cpp" line="+68"/>
+        <location filename="../Fuoten/error.cpp" line="+211"/>
         <source>The remote server at %1 refused the connection.</source>
         <translation>De externe server op %1 weigerde de verbinding.</translation>
     </message>
@@ -112,7 +77,7 @@
         <translation>Het achtergrondverzoek wordt momenteel niet toegestaan door platformbeleid.</translation>
     </message>
     <message id="err-net-reply-10">
-        <location line="+5"/>
+        <location line="+4"/>
         <source>While following redirects, the maximum limit was reached.</source>
         <translation>Bij het volgen van omleidingen is maximumlimiet bereikt.</translation>
     </message>
@@ -122,7 +87,7 @@
         <translation>Bij het volgen van omleidingen heeft de netwerktoegangs-API een omleiding gedetecteerd van een versleuteld protocol (https) naar een onversleuteld (http).</translation>
     </message>
     <message id="err-net-reply-101">
-        <location line="+5"/>
+        <location line="+4"/>
         <source>The connection to the proxy server was refused (the proxy server is not accepting requests).</source>
         <translation>De verbinding met de proxyserver is geweigerd (de proxyserver aanvaardt geen verzoeken).</translation>
     </message>
@@ -172,7 +137,7 @@
         <translation>Het verzoek moest opnieuw gestuurd worden, maar dit is mislukt, bijvoorbeeld omdat de uploadgegevens geen tweede keer gelezen konden worden.</translation>
     </message>
     <message id="err-net-reply-206">
-        <location line="+5"/>
+        <location line="+4"/>
         <source>The request could not be completed due to a conflict with the current state of the resource.</source>
         <translation>Het verzoek kon niet voltooid worden door een conflict met de huidige staat van de bron.</translation>
     </message>
@@ -187,17 +152,17 @@
         <translation>Er trad een onverwachte fout op die de server verhinderde op het verzoek in te gaan.</translation>
     </message>
     <message id="err-net-reply-402">
-        <location line="+4"/>
+        <location line="+5"/>
         <source>The server does not support the functionality required to fulfill the request.</source>
         <translation>De server ondersteunt de functies nodig om op het verzoek in te gaan niet.</translation>
     </message>
     <message id="err-net-reply-403">
-        <location line="+4"/>
+        <location line="+5"/>
         <source>The server is unable to handle the request at this time.</source>
         <translation>De server kan het verzoek op dit moment niet verwerken.</translation>
     </message>
     <message id="err-net-reply-301">
-        <location line="+5"/>
+        <location line="+4"/>
         <source>The Network Access API cannot honor the request because the protocol is not known.</source>
         <translation>De netwerktoegangs-API kan het verzoek niet eren omdat het protocol onbekend is.</translation>
     </message>
@@ -207,12 +172,173 @@
         <translation>De gevraagde handeling is ongeldig voor dit protocol.</translation>
     </message>
     <message id="err-net-reply-99">
-        <location line="+4"/>
+        <location line="-119"/>
+        <location line="+123"/>
         <source>An unknown network-related error was detected.</source>
         <translation>Er is een onbekende netwerkgerelateerde fout opgetreden.</translation>
     </message>
-    <message id="err-net-reply-199">
+    <message id="libfuoten-err-http-400">
+        <location line="-254"/>
+        <source>Bad request — The server cannot or will not process the request due to an apparent client error.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-401">
         <location line="+4"/>
+        <source>Unauthorized — You need to provide authentication credentials to perform the request.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-403">
+        <location line="+5"/>
+        <source>Fobidden — You might not have the necessary permissions to perform this action.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-404">
+        <location line="+5"/>
+        <source>Not found — The requested resource can not be found on the server.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-405">
+        <location line="+4"/>
+        <source>Method not allowed — The used method is not allowed for the requested resource.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-406">
+        <location line="+4"/>
+        <source>Not Acceptable — The requested resource is capable of generating only content not acceptable according to the Accept headers sent in the request.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-407">
+        <location line="+4"/>
+        <source>Proxy authentication required — The client must first authenticate itself with the proxy server.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-408">
+        <location line="+4"/>
+        <source>Request timeout — The server timed out waiting for the request.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-409">
+        <location line="+4"/>
+        <source>Conflict — The request could not be processed because of conflict in the request, such as an edit conflict between multiple simultaneous updates.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-410">
+        <location line="+4"/>
+        <source>Gone — The resource requested is no longer available.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-411">
+        <location line="+4"/>
+        <source>Length required — The request did not specify the length of its content, which is required by the requested resource.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-412">
+        <location line="+4"/>
+        <source>Precondition failed — The server does not meet one of the preconditions that the requester put on the request.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-413">
+        <location line="+4"/>
+        <source>Payload too large — The request is larger than the server is willing or able to process.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-414">
+        <location line="+4"/>
+        <source>URI too long — The URI provided was too long for the server to process.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-415">
+        <location line="+4"/>
+        <source>Unsupported media type — The request entity has a media type which the server or resource does not support.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-416">
+        <location line="+4"/>
+        <source>Range not satisfiable — The client has asked for a portion of the resource, but the server cannot supply that portion.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-417">
+        <location line="+4"/>
+        <source>Expectation failed — The server cannot meet the requirements of the Expect request-header field.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-421">
+        <location line="+4"/>
+        <source>Misdirected request — The request was directed at a server that is not able to produce a response.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-426">
+        <location line="+4"/>
+        <source>Upgrade required — The client should switch to a different protocol.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-428">
+        <location line="+4"/>
+        <source>Precondition required — The origin server requires the request to be conditional.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-429">
+        <location line="+4"/>
+        <source>Too many requests — The user has sent too many requests in a given amount of time.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-431">
+        <location line="+4"/>
+        <source>Request header fields too large — The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-500">
+        <location line="+4"/>
+        <source>Internal server error — An unexpected condition was ancountered on the server.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-501">
+        <location line="+4"/>
+        <source>Not implemented — The server either does not recognize the request method, or it lacks the ability to fulfill the request.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-502">
+        <location line="+4"/>
+        <source>Bad gateway — The gateway or proxy received an invalid response from the upstream server.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-503">
+        <location line="+4"/>
+        <source>Service unavailable — The server is currently unavailable (because it is overloaded or down for maintenance).</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-504">
+        <location line="+4"/>
+        <source>Gateway timeout — The gateway or proxy and did not receive a timely response from the upstream server.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-505">
+        <location line="+4"/>
+        <source>HTTP version not supported — The server does not support the HTTP protocol version used in the request.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-506">
+        <location line="+4"/>
+        <source>Variant also negotiates — Transparent content negotiation for the request results in a circular reference.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-509">
+        <location line="+4"/>
+        <source>Bandwidth limit exceeded — The request could not be processes cause it would exceed the bandwidth limit of the server.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-510">
+        <location line="+4"/>
+        <source>Not extended — Further extensions to the request are required for the server to fulfil it.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-http-511">
+        <location line="+4"/>
+        <source>Network authentication required — The client needs to authenticate to gain network access.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="err-net-reply-199">
+        <location line="+132"/>
         <source>An unknown proxy-related error was detected.</source>
         <translation>Er is een onbekende proxygerelateerde fout opgetreden.</translation>
     </message>
@@ -227,13 +353,13 @@
         <translation>Er is een protocolafbraak opgetreden (parseerfout, ongeldige of onverwachte antwoorden, enz.).</translation>
     </message>
     <message id="err-net-reply-499">
-        <location line="+5"/>
-        <location line="+5"/>
+        <location line="+4"/>
+        <location line="+4"/>
         <source>An unknown error related to the server response was detected.</source>
         <translation>Er is een onbekende fout gerelateerd aan het antwoord van de server opgetreden.</translation>
     </message>
     <message id="id-err-version-low-status-user">
-        <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+21"/>
+        <location filename="../Fuoten/Helpers/accountvalidator.cpp" line="+78"/>
         <source>The version of your News App is lower than 5.2.4. Status and user information can not be queried.</source>
         <translation>De versie van je nieuwsapp is lager dan 5.2.4. Status en gebruikersinformatie kan niet opgevraagd worden.</translation>
     </message>
@@ -243,8 +369,8 @@
         <translation>De versie van je nieuwsapp is lager dan 6.0.5. Gebruikersinformatie kan niet opgevraagd worden.</translation>
     </message>
     <message id="err-version-not-found">
-        <location filename="../Fuoten/API/getstatus.cpp" line="+94"/>
-        <location filename="../Fuoten/API/getversion.cpp" line="+91"/>
+        <location filename="../Fuoten/API/getstatus.cpp" line="+83"/>
+        <location filename="../Fuoten/API/getversion.cpp" line="+80"/>
         <source>Can not find the version information in the server reply.</source>
         <translation>Kan versie-informatie niet vinden in antwoord van de server.</translation>
     </message>
@@ -254,241 +380,97 @@
         <translation>Kan waarschuwingsinformatie niet vinden in antwoord van de server.</translation>
     </message>
     <message id="err-displayname-not-found">
-        <location filename="../Fuoten/API/getuser.cpp" line="+99"/>
+        <location filename="../Fuoten/API/getuser.cpp" line="+86"/>
         <source>Can not find the user&apos;s display name in the server reply.</source>
         <translation>Kan gebruikersnaam niet vinden in antwoord van de server.</translation>
     </message>
-    <message id="libfuoten-err-failed-open-db">
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+69"/>
-        <location line="+255"/>
-        <source>Failed to open the SQLite database.</source>
-        <translation>Openen van SQLite-database mislukt.</translation>
-    </message>
-    <message id="fuoten-error-failed-execute-query">
-        <location line="-243"/>
-        <location line="+16"/>
-        <location line="+11"/>
-        <location line="+6"/>
-        <location line="+20"/>
-        <location line="+24"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+10"/>
-        <location line="+10"/>
-        <location line="+10"/>
-        <location line="+10"/>
-        <location line="+10"/>
-        <location line="+11"/>
-        <location line="+12"/>
-        <location line="+16"/>
-        <location line="+7"/>
-        <location line="+31"/>
-        <location line="+10"/>
-        <location line="+65"/>
-        <location line="+16"/>
-        <location line="+136"/>
-        <location line="+24"/>
-        <location line="+26"/>
-        <location line="+69"/>
-        <location line="+45"/>
-        <location line="+61"/>
-        <location line="+49"/>
-        <location line="+25"/>
-        <location line="+6"/>
-        <location line="+85"/>
-        <location line="+48"/>
-        <location line="+84"/>
-        <location line="+46"/>
-        <location line="+70"/>
-        <location line="+44"/>
-        <location line="+25"/>
-        <location line="+80"/>
-        <location line="+37"/>
-        <location line="+44"/>
-        <location line="+44"/>
-        <location line="+45"/>
-        <location line="+6"/>
-        <location line="+36"/>
-        <location line="+145"/>
-        <location line="+68"/>
-        <location line="+106"/>
-        <location line="+87"/>
-        <location line="+23"/>
-        <location line="+68"/>
-        <location line="+39"/>
-        <location line="+22"/>
-        <location line="+35"/>
-        <location line="+27"/>
-        <location line="+28"/>
-        <location line="+19"/>
-        <location line="+13"/>
-        <location line="+10"/>
-        <location line="+68"/>
-        <location line="+51"/>
-        <location line="+46"/>
-        <location line="+40"/>
-        <location line="+36"/>
-        <location line="+33"/>
-        <location line="+99"/>
-        <location line="+51"/>
-        <location line="+35"/>
-        <location line="+48"/>
-        <location line="+17"/>
-        <location line="+155"/>
-        <location line="+6"/>
-        <source>Failed to execute database query.</source>
-        <translation>Uitvoeren van databasezoekopdracht mislukt.</translation>
-    </message>
-    <message id="fuoten-error-transaction-begin">
-        <location line="-2817"/>
-        <location line="+431"/>
-        <location line="+548"/>
-        <location line="+62"/>
-        <location line="+842"/>
-        <location line="+349"/>
-        <location line="+389"/>
-        <source>Failed to begin a database transaction.</source>
-        <translation>Databasetransactie starten mislukt.</translation>
-    </message>
-    <message id="fuoten-error-transaction-commit">
-        <location line="-2453"/>
-        <location line="+335"/>
-        <location line="+517"/>
-        <location line="+139"/>
-        <location line="+828"/>
-        <location line="+272"/>
-        <location line="+390"/>
-        <source>Failed to commit a database transaction.</source>
-        <translation>Databasetransactie doorvoeren mislukt.</translation>
-    </message>
     <message id="libfuoten-err-sqlite-db-not-ready">
-        <location line="-2397"/>
-        <location line="+75"/>
-        <location line="+249"/>
-        <location line="+117"/>
-        <location line="+227"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+294"/>
+        <location line="+70"/>
+        <location line="+238"/>
+        <location line="+124"/>
+        <location line="+272"/>
         <location line="+256"/>
-        <location line="+67"/>
-        <location line="+37"/>
-        <location line="+43"/>
+        <location line="+72"/>
+        <location line="+57"/>
+        <location line="+85"/>
+        <location line="+56"/>
+        <location line="+756"/>
+        <location line="+26"/>
+        <location line="+84"/>
+        <location line="+49"/>
+        <location line="+57"/>
+        <location line="+34"/>
+        <location line="+36"/>
+        <location line="+30"/>
+        <location line="+289"/>
         <location line="+45"/>
-        <location line="+784"/>
-        <location line="+24"/>
-        <location line="+42"/>
-        <location line="+59"/>
-        <location line="+39"/>
-        <location line="+39"/>
-        <location line="+33"/>
-        <location line="+35"/>
-        <location line="+265"/>
-        <location line="+42"/>
-        <location line="+42"/>
-        <location line="+63"/>
+        <location line="+45"/>
+        <location line="+58"/>
         <source>SQLite database not ready. Can not process requested data.</source>
         <translation>SQLite-database niet klaar. Kan opgevraagde gegevens niet verwerken.</translation>
     </message>
     <message id="libfuoten-err-invalid-article-object">
-        <location line="-406"/>
+        <location line="-430"/>
         <source>Invalid article object.</source>
         <translation>Ongeldig artikelobject.</translation>
     </message>
     <message id="libfuoten-err-invalid-id-type">
-        <location line="+145"/>
+        <location line="+154"/>
         <source>Invalid ID type.</source>
         <translation>Ongeldig ID-type.</translation>
     </message>
     <message id="libfuoten-err-invalid-feed-id">
-        <location filename="../Fuoten/API/deletefeed.cpp" line="+96"/>
-        <location filename="../Fuoten/API/markfeedread.cpp" line="+79"/>
-        <location filename="../Fuoten/API/movefeed.cpp" line="+80"/>
-        <location filename="../Fuoten/API/renamefeed.cpp" line="+114"/>
-        <location filename="../Fuoten/API/staritem.cpp" line="+88"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2310"/>
-        <location line="+985"/>
-        <location line="+37"/>
+        <location filename="../Fuoten/API/deletefeed.cpp" line="+85"/>
+        <location filename="../Fuoten/API/markfeedread.cpp" line="+73"/>
+        <location filename="../Fuoten/API/movefeed.cpp" line="+74"/>
+        <location filename="../Fuoten/API/renamefeed.cpp" line="+100"/>
+        <location filename="../Fuoten/API/staritem.cpp" line="+79"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2449"/>
+        <location line="+1024"/>
+        <location line="+58"/>
+        <location line="+92"/>
         <location line="+49"/>
-        <location line="+39"/>
-        <location line="+1320"/>
+        <location line="+1361"/>
         <source>The feed ID is not valid.</source>
         <translation>De feed-ID is niet geldig.</translation>
     </message>
     <message id="libfuoten-err-empty-feed-name">
-        <location filename="../Fuoten/API/renamefeed.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1365"/>
+        <location filename="../Fuoten/API/renamefeed.cpp" line="+7"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1417"/>
         <source>The feed name can not be empty.</source>
         <translation>De feednaam kan niet leeg zijn.</translation>
     </message>
     <message id="libfuoten-err-feed-not-exists">
-        <location filename="../Fuoten/API/deletefeed.cpp" line="+38"/>
-        <location filename="../Fuoten/API/markfeedread.cpp" line="+44"/>
-        <location filename="../Fuoten/API/movefeed.cpp" line="+30"/>
-        <location filename="../Fuoten/API/renamefeed.cpp" line="+42"/>
+        <location filename="../Fuoten/API/deletefeed.cpp" line="+32"/>
+        <location filename="../Fuoten/API/markfeedread.cpp" line="+40"/>
+        <location filename="../Fuoten/API/movefeed.cpp" line="+26"/>
+        <location filename="../Fuoten/API/renamefeed.cpp" line="+34"/>
         <source>The feed was not found on the server.</source>
         <translation>De feed werd niet gevonden op de server.</translation>
     </message>
-    <message id="fuoten-failed-query-folders">
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-972"/>
-        <source>Failed to query the folders from the local database.</source>
-        <translation>Opvragen van mappen uit de lokale database mislukt.</translation>
-    </message>
-    <message id="fuoten-error-failed-prepare-query">
-        <location line="-58"/>
-        <location line="+159"/>
-        <location line="+26"/>
-        <location line="+69"/>
-        <location line="+45"/>
-        <location line="+111"/>
-        <location line="+25"/>
-        <location line="+139"/>
-        <location line="+119"/>
-        <location line="+70"/>
-        <location line="+47"/>
-        <location line="+99"/>
-        <location line="+51"/>
-        <location line="+43"/>
-        <location line="+44"/>
-        <location line="+44"/>
-        <location line="+44"/>
-        <location line="+487"/>
-        <location line="+35"/>
-        <location line="+71"/>
-        <location line="+54"/>
-        <location line="+19"/>
-        <location line="+91"/>
-        <location line="+49"/>
-        <location line="+47"/>
-        <location line="+39"/>
-        <location line="+39"/>
-        <location line="+33"/>
-        <location line="+91"/>
-        <location line="+91"/>
-        <location line="+50"/>
-        <source>Failed to prepare database query.</source>
-        <translation>Voorbereiden van databasezoekopdracht mislukt.</translation>
-    </message>
     <message id="libfuoten-err-invalid-feed-url">
-        <location filename="../Fuoten/API/createfeed.cpp" line="+81"/>
+        <location filename="../Fuoten/API/createfeed.cpp" line="+72"/>
         <source>The URL of the feed is not valid.</source>
         <translation>De URL van de feed is niet geldig.</translation>
     </message>
     <message id="libfuoten-err-invalid-folder-id">
-        <location line="+8"/>
-        <location filename="../Fuoten/API/deletefolder.cpp" line="+75"/>
-        <location filename="../Fuoten/API/markfolderread.cpp" line="+81"/>
-        <location filename="../Fuoten/API/movefeed.cpp" line="-22"/>
-        <location filename="../Fuoten/API/renamefolder.cpp" line="+81"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2372"/>
-        <location line="+330"/>
-        <location line="+111"/>
-        <location line="+593"/>
-        <location line="+1444"/>
+        <location line="+7"/>
+        <location filename="../Fuoten/API/deletefolder.cpp" line="+67"/>
+        <location filename="../Fuoten/API/markfolderread.cpp" line="+74"/>
+        <location filename="../Fuoten/API/movefeed.cpp" line="-19"/>
+        <location filename="../Fuoten/API/renamefolder.cpp" line="+74"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-1174"/>
+        <location line="+315"/>
+        <location line="+117"/>
+        <location line="+664"/>
+        <location line="+1540"/>
         <source>The folder ID is not valid.</source>
         <oldsource>Failed to rename the folder. The folder ID is not valid.</oldsource>
         <translation>De map-ID is niet geldig.</translation>
     </message>
     <message id="libfuoten-err-feed-exists">
-        <location line="+45"/>
+        <location line="+39"/>
         <source>The feed does already exist on the server.</source>
         <translation>De feed bestaat al op de server.</translation>
     </message>
@@ -498,29 +480,29 @@
         <translation>De feed kan niet gelezen worden (bevat hoogstwaarschijnlijk fouten).</translation>
     </message>
     <message id="libfuoten-err-empty-folder-name">
-        <location filename="../Fuoten/API/createfolder.cpp" line="+79"/>
-        <location filename="../Fuoten/API/renamefolder.cpp" line="+8"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2154"/>
+        <location filename="../Fuoten/API/createfolder.cpp" line="+71"/>
+        <location filename="../Fuoten/API/renamefolder.cpp" line="+7"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="-2328"/>
         <source>The folder name can not be empty.</source>
         <oldsource>Failed to rename the folder. The new folder name is empty.</oldsource>
         <translation>De mapnaam kan niet leeg zijn.</translation>
     </message>
     <message id="libfuoten-err-no-folders-array-in-reply">
-        <location line="+22"/>
-        <location filename="../Fuoten/API/getfolders.cpp" line="+90"/>
+        <location line="+19"/>
+        <location filename="../Fuoten/API/getfolders.cpp" line="+80"/>
         <source>The data the server replied does not contain a &quot;folders&quot; array.</source>
         <translation>De door de server geantwoorde gegevens bevatten geen &quot;mappen&quot;-array.</translation>
     </message>
     <message id="libfuoten-err-folder-name-exists">
-        <location line="+23"/>
-        <location filename="../Fuoten/API/renamefolder.cpp" line="+42"/>
+        <location line="+21"/>
+        <location filename="../Fuoten/API/renamefolder.cpp" line="+34"/>
         <source>The folder name does already exist on the server.</source>
         <oldsource>Failed to rename the folder. The new folder name does already exist on the server.</oldsource>
         <translation>De mapnaam bestaat al op de server.</translation>
     </message>
     <message id="libfuoten-err-folder-not-exists">
-        <location filename="../Fuoten/API/deletefolder.cpp" line="+38"/>
-        <location filename="../Fuoten/API/markfolderread.cpp" line="+44"/>
+        <location filename="../Fuoten/API/deletefolder.cpp" line="+32"/>
+        <location filename="../Fuoten/API/markfolderread.cpp" line="+41"/>
         <location filename="../Fuoten/API/renamefolder.cpp" line="+4"/>
         <source>The folder was not found on the server.</source>
         <oldsource>Failed to rename the folder. The folder to rename was not found on the server.</oldsource>
@@ -534,35 +516,35 @@
         <translation>De mapnaam is ongeldig (bijvoorbeeld leeg).</translation>
     </message>
     <message id="libfuoten-err-invalid-item-id">
-        <location filename="../Fuoten/API/markallitemsread.cpp" line="+79"/>
-        <location filename="../Fuoten/API/markfeedread.cpp" line="-36"/>
-        <location filename="../Fuoten/API/markfolderread.cpp" line="-36"/>
-        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+798"/>
-        <location line="+1320"/>
-        <location line="+42"/>
+        <location filename="../Fuoten/API/markallitemsread.cpp" line="+73"/>
+        <location filename="../Fuoten/API/markfeedread.cpp" line="-33"/>
+        <location filename="../Fuoten/API/markfolderread.cpp" line="-34"/>
+        <location filename="../Fuoten/Storage/sqlitestorage.cpp" line="+929"/>
+        <location line="+1361"/>
+        <location line="+45"/>
         <source>The item ID is not valid.</source>
         <translation>De item-ID is niet geldig.</translation>
     </message>
     <message id="libfuoten-err-no-feeds-array-in-reply">
-        <location filename="../Fuoten/API/createfeed.cpp" line="-27"/>
-        <location filename="../Fuoten/API/getfeeds.cpp" line="+87"/>
+        <location filename="../Fuoten/API/createfeed.cpp" line="-24"/>
+        <location filename="../Fuoten/API/getfeeds.cpp" line="+78"/>
         <source>The data the server replied does not contain a &quot;feeds&quot; array.</source>
         <translation>De door de server geantwoorde gegevens bevatten geen &quot;feeds&quot;-array.</translation>
     </message>
     <message id="libfuoten-err-no-items-array-in-reply">
-        <location filename="../Fuoten/API/getitems.cpp" line="+112"/>
-        <location filename="../Fuoten/API/getupdateditems.cpp" line="+101"/>
+        <location filename="../Fuoten/API/getitems.cpp" line="+102"/>
+        <location filename="../Fuoten/API/getupdateditems.cpp" line="+91"/>
         <source>The data the server replied does not contain an &quot;items&quot; array.</source>
         <translation>De door de server geantwoorde gegevens bevatten geen &quot;items&quot;-array.</translation>
     </message>
     <message id="libfuoten-error-invalid-id">
-        <location line="+24"/>
-        <location filename="../Fuoten/API/getupdateditems.cpp" line="+32"/>
+        <location line="+21"/>
+        <location filename="../Fuoten/API/getupdateditems.cpp" line="+27"/>
         <source>Invalid ID</source>
         <translation>Ongeldige ID</translation>
     </message>
     <message id="libfuoten-error-invalid-time">
-        <location filename="../Fuoten/API/getupdateditems.cpp" line="-8"/>
+        <location filename="../Fuoten/API/getupdateditems.cpp" line="-7"/>
         <source>Invalid last modified time.</source>
         <translation>Ongeldige tijd &quot;Laatst gewijzigd&quot;.</translation>
     </message>
@@ -592,61 +574,53 @@
         <translation>hh:mm</translation>
     </message>
     <message id="libfuoten-err-invalid-article-id">
-        <location filename="../Fuoten/API/markitem.cpp" line="+88"/>
+        <location filename="../Fuoten/API/markitem.cpp" line="+79"/>
         <source>The article ID is not valid.</source>
         <translation>De artikel-ID is niet geldig.</translation>
     </message>
     <message id="libfuoten-err-article-not-exists">
-        <location line="+36"/>
-        <location filename="../Fuoten/API/staritem.cpp" line="+44"/>
+        <location line="+33"/>
+        <location filename="../Fuoten/API/staritem.cpp" line="+41"/>
         <source>The article was not found on the server.</source>
         <translation>Het artikel werd niet gevonden op de server.</translation>
     </message>
     <message id="libfuoten-err-empty-id-list">
-        <location filename="../Fuoten/API/markmultipleitems.cpp" line="+97"/>
+        <location filename="../Fuoten/API/markmultipleitems.cpp" line="+89"/>
         <source>The list of IDs to mark is empty.</source>
         <translation>De lijst van ID&apos;s om te markeren is leeg.</translation>
     </message>
     <message id="libfuoten-err-empty-guidhash">
-        <location filename="../Fuoten/API/staritem.cpp" line="-36"/>
+        <location filename="../Fuoten/API/staritem.cpp" line="-34"/>
         <source>The GUID hash can not be empty.</source>
         <translation>De GUID-hash kan niet leeg zijn.</translation>
     </message>
     <message id="libfuoten-err-articles-star-unstar-list">
-        <location filename="../Fuoten/API/starmultipleitems.cpp" line="+102"/>
+        <location filename="../Fuoten/API/starmultipleitems.cpp" line="+92"/>
         <source>The list of articles to star/unstar can not be empty.</source>
         <translation>De lijst van artikels om toe te voegen aan/te verwijderen uit favorieten kan niet leeg zijn.</translation>
     </message>
-    <message id="libfuoten-err-no-storage">
-        <location filename="../Fuoten/article.cpp" line="-40"/>
-        <location line="+48"/>
-        <location filename="../Fuoten/feed.cpp" line="+6"/>
-        <location filename="../Fuoten/folder.cpp" line="+6"/>
-        <source>No storage available.</source>
-        <translation>Geen opslag beschikbaar.</translation>
-    </message>
     <message id="libfuoten-sync-unread-articles">
-        <location filename="../Fuoten/Helpers/synchronizer.cpp" line="+130"/>
+        <location filename="../Fuoten/Helpers/synchronizer.cpp" line="+196"/>
         <source>Synchronizing unread articles</source>
         <translation>Ongelezen artikels worden gesynchroniseerd</translation>
     </message>
     <message id="libfuoten-sync-read-articles">
-        <location line="+27"/>
+        <location line="+29"/>
         <source>Synchronizing read articles</source>
         <translation>Gelezen artikels worden gesynchroniseerd</translation>
     </message>
     <message id="libfuoten-sync-starred-articles">
-        <location line="+25"/>
+        <location line="+27"/>
         <source>Synchronizing starred articles</source>
         <translation>Favoriete artikels worden gesynchroniseerd</translation>
     </message>
     <message id="libfuoten-sync-unstarred-articles">
-        <location line="+23"/>
+        <location line="+25"/>
         <source>Synchronizing unstarred articles</source>
         <translation>Niet-favoriete artikels worden gesynchroniseerd</translation>
     </message>
     <message id="libfuoten-sync-folders">
-        <location line="+19"/>
+        <location line="+21"/>
         <source>Requesting folders</source>
         <translation>Mappen worden opgevraagd</translation>
     </message>
@@ -661,7 +635,7 @@
         <translation>Ongelezen artikels worden opgevraagd</translation>
     </message>
     <message id="libfuoten-sync-req-starred-articles">
-        <location line="+26"/>
+        <location line="+27"/>
         <source>Requesting starred articles</source>
         <translation>Favoriete artikels worden opgevraagd</translation>
     </message>
