@@ -94,7 +94,7 @@ public:
      * The default is an empty string.
      * \sa setAppIcon(), appIconChanged()
      */
-    QString appIcon() const;
+    virtual QString appIcon() const;
     /*!
      * \brief Sets the path to an application icon.
      * The default is an empty string.
@@ -107,7 +107,7 @@ public:
      * The default is an empty string.
      * \sa setAppName(), appNameChanged()
      */
-    QString appName() const;
+    virtual QString appName() const;
     /*!
      * \brief Sets the application name.
      * The default is an empty string.
@@ -120,7 +120,7 @@ public:
      * The default is \c false.
      * \sa setEnabled(), enabledChanged()
      */
-    bool isEnabled() const;
+    virtual bool isEnabled() const;
     /*!
      * \brief Set to \c true to enable notifications
      * The default is \c false.
