@@ -2027,10 +2027,22 @@ void ItemsRequestedWorker::run()
         currentItems.insert(q.value(0).toLongLong(), q.value(1).toUInt());
     }
 
+    QHash<qint64,QString> feedsIdTitleMap;
+    qresult = q.exec(QStringLiteral("SELECT id, title FROM feeds"));
+    Q_ASSERT(qresult);
+
+    while(q.next()) {
+        feedsIdTitleMap.insert(q.value(0).value<qint64>(), q.value(1).toString());
+    }
+
+
     qresult = m_db.transaction();
     Q_ASSERT_X(qresult, "items requested worker", "failed to start database transaction");
 
     quint32 newUnreadItems = 0;
+
+    QVector<QJsonObject> articlesToPublish;
+    const bool publishArticles = (m_notificator && m_notificator->isArticlePublishingEnabled());
 
     for (const QJsonValue &i : items) {
         const QJsonObject o = i.toObject();
@@ -2113,6 +2125,12 @@ void ItemsRequestedWorker::run()
 
                 qresult = q.exec();
                 Q_ASSERT_X(qresult, "items requested worker", "failed to execute insertion of new item into database");
+
+                if (publishArticles && unread) {
+                    if (m_notificator->checkForPublishing(o)) {
+                        articlesToPublish.push_back(o);
+                    }
+                }
             }
         }
     }
@@ -2120,25 +2138,17 @@ void ItemsRequestedWorker::run()
     qresult = m_db.commit();
     Q_ASSERT_X(qresult, "items requested worker", "failed to commit database transaction");
 
+    const IdList feedIds = feedsIdTitleMap.keys();
 
     // cleaning feeds by deleting items over threshold
     // but check for valid configuration object first
 
     if (Q_LIKELY(m_config)) {
 
-        IdList fIds;
-        qresult = q.exec(QStringLiteral("SELECT id FROM feeds"));
-        Q_ASSERT_X(qresult, "items requested worker", "failed to query feed IDs from database");
+        if (Q_LIKELY(!feedIds.isEmpty())) {
 
-        while(q.next()) {
-            fIds.append(q.value(0).toLongLong());
-        }
-
-        if (Q_LIKELY(!fIds.isEmpty())) {
-
-            const IdList cfIds = fIds; // current feed IDs
             IdList iIds; // item IDs
-            for (qint64 fId : cfIds) {
+            for (qint64 fId : feedIds) {
 
                 const FuotenEnums::ItemDeletionStrategy delStrat = m_config->getPerFeedDeletionStrategy(fId);
                 const quint16 delVal = m_config->getPerFeedDeletionValue(fId);
@@ -2180,7 +2190,7 @@ void ItemsRequestedWorker::run()
 
                     } else {
 
-                        QDateTime tt = QDateTime::currentDateTimeUtc().addDays(delVal * -1);
+                        const QDateTime tt = QDateTime::currentDateTimeUtc().addDays(delVal * -1);
 
                         qDebug("Removing all items older thant %s from the feed with ID %lli.", qUtf8Printable(tt.toString(Qt::ISODate)), fId);
 
@@ -2209,13 +2219,6 @@ void ItemsRequestedWorker::run()
                 }
             }
         }
-    }
-
-    IdList feedIds;
-    qresult = q.exec(QStringLiteral("SELECT id FROM feeds"));
-    Q_ASSERT(qresult);
-    while (q.next()) {
-        feedIds.push_back(q.value(0).value<qint64>());
     }
 
     if (!feedIds.empty()) {
@@ -2262,6 +2265,15 @@ void ItemsRequestedWorker::run()
     Q_EMIT gotStarred(q.value(0).toUInt());
 
     Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
+
+    if (publishArticles && !articlesToPublish.empty()) {
+        for (auto i = articlesToPublish.constBegin(); i != articlesToPublish.constEnd(); ++i) {
+            const QJsonObject o = *i;
+            if (!removedItemIds.contains(o.value(QStringLiteral("id")).toVariant().value<qint64>())) {
+                m_notificator->publishArticle(o, feedsIdTitleMap.value(o.value(QStringLiteral("feedId")).toVariant().value<qint64>()));
+            }
+        }
+    }
 
     if (m_notificator && (newUnreadItems > 0)) {
         m_notificator->notify(AbstractNotificator::ItemsRequested, QtInfoMsg, newUnreadItems);

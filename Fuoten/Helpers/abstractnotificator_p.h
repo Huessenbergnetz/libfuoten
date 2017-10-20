@@ -35,6 +35,7 @@ public:
     QString appIcon;
     QString appName;
     bool enabled = false;
+    bool articlePublishing = false;
 };
 
 }

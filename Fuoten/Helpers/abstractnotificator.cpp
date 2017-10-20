@@ -77,6 +77,19 @@ void AbstractNotificator::setEnabled(bool enabled)
 }
 
 
+bool AbstractNotificator::isArticlePublishingEnabled() const { Q_D(const AbstractNotificator); return d->articlePublishing; }
+
+void AbstractNotificator::setArticlePublishingEnabled(bool enabled)
+{
+    Q_D(AbstractNotificator);
+    if (d->articlePublishing != enabled) {
+        d->articlePublishing = enabled;
+        qDebug("Cahnged article publishing to %s.", d->articlePublishing ? "true" : "false");
+        Q_EMIT articlePublishingChanged(d->articlePublishing);
+    }
+}
+
+
 void AbstractNotificator::notify(const Fuoten::Error *e) const
 {
     if (e && (e->type() != Error::NoError) && isEnabled()) {
@@ -130,10 +143,9 @@ void AbstractNotificator::notify(const Fuoten::Error *e) const
 }
 
 
-void AbstractNotificator::publishArticle(const QJsonObject &article, qint64 feedId, const QString &feedName) const
+void AbstractNotificator::publishArticle(const QJsonObject &article, const QString &feedName) const
 {
     Q_UNUSED(article)
-    Q_UNUSED(feedId)
     Q_UNUSED(feedName)
 }
 
@@ -141,6 +153,20 @@ void AbstractNotificator::publishArticle(const QJsonObject &article, qint64 feed
 void AbstractNotificator::publishArticle(const Article *article) const
 {
     Q_UNUSED(article)
+}
+
+
+bool AbstractNotificator::checkForPublishing(const Article *article) const
+{
+    Q_UNUSED(article)
+    return false;
+}
+
+
+bool AbstractNotificator::checkForPublishing(const QJsonObject &article) const
+{
+    Q_UNUSED(article)
+    return false;
 }
 
 #include "moc_abstractnotificator.cpp"

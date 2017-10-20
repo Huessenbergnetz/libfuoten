@@ -129,6 +129,19 @@ public:
     void setEnabled(bool enabled);
 
     /*!
+     * \brief Returns \c true if article publishing is enabled.
+     * The default is \c false.
+     * \sa setArticlePublishingEnabled(), articlePublishingChanged()
+     */
+    virtual bool isArticlePublishingEnabled() const;
+    /*!
+     * \brief Set to \c true to enable article publishing.
+     * The default is \c false.
+     * \sa isArticlePublishingEnabled(), articlePublishingChanged()
+     */
+    void setArticlePublishingEnabled(bool enabled);
+
+    /*!
      * \brief The type of the notification.
      */
     enum Type {
@@ -181,22 +194,40 @@ public:
     /*!
      * \brief Publishes information about an \a article to the notification system.
      *
-     * Some platforms - like Meego 1.2 Harmattan - provide global notification streems for different serverices
+     * Some platforms - like Meego 1.2 Harmattan - provide global notification streams for different services
      * and news. You can reimplement this method to publish received articles to this streams.
      *
      * The default implementation does nothing.
      */
-    virtual void publishArticle(const QJsonObject &article, qint64 feedId = -1, const QString &feedName = QString()) const;
+    virtual void publishArticle(const QJsonObject &article, const QString &feedName = QString()) const;
 
     /*!
      * \brief Publishes information about an \a article to the notification system.
      *
-     * Some platforms - like Meego 1.2 Harmattan - provide global notification streems for different serverices
+     * Some platforms - like Meego 1.2 Harmattan - provide global notification streams for different services
      * and news. You can reimplement this method to publish received articles to this streams.
      *
      * The default implementation does nothing.
      */
     virtual void publishArticle(const Article* article) const;
+
+    /*!
+     * \brief Returns \c true if the \a article should be published to notifications.
+     *
+     * You can reimplement this to decide if an article should be published to the notifications system
+     * via publishArticle(). The default implementation returns always \c false. You have to reimplement
+     * your own checks, for example based on the \a feedId the article belongs to or on some keywords
+     * in the article title. Best place to use is in a class derived from AbstractStorage, when you iterate
+     * over new articles. In the SQLiteStorage class it is for example used in the worker that processes
+     * requested items from the API.
+     */
+    virtual bool checkForPublishing(const QJsonObject &article) const;
+
+    /*!
+     * \brief Returns \c true if the \a article should be published to notifications.
+     * \overload
+     */
+    virtual bool checkForPublishing(const Article* article) const;
 
 Q_SIGNALS:
     /*!
@@ -214,6 +245,11 @@ Q_SIGNALS:
      * \sa setEnabled(), isEnabled()
      */
     void enabledChanged(bool enabled);
+    /*!
+     * \brief This signal is emitted if the article publishing changes.
+     * \param setArticlePublishingEnabeled(), isArticlePublishingEnabled()
+     */
+    void articlePublishingChanged(bool enabled);
 
 protected:
     const QScopedPointer<AbstractNotificatorPrivate> d_ptr;
