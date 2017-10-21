@@ -1234,12 +1234,14 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
     Q_ASSERT(qresult);
     setStarred(q.value(0).value<quint16>());
 
-    if (notificator()) {
-        QVariantList data;
-        data.push_back(newFeedNames);
-        data.push_back(updatedFeedNames);
-        data.push_back(deletedFeedNames);
-        notificator()->notify(AbstractNotificator::FeedsRequested, QtInfoMsg, data);
+    if (!newFeedNames.empty() || !updatedFeedNames.empty() || !deletedFeedNames.empty()) {
+        if (notificator()) {
+            QVariantList data;
+            data.push_back(newFeedNames);
+            data.push_back(updatedFeedNames);
+            data.push_back(deletedFeedNames);
+            notificator()->notify(AbstractNotificator::FeedsRequested, QtInfoMsg, data);
+        }
     }
 
     Q_EMIT requestedFeeds(updatedFeedIds, newFeedIds, deletedFeedIds);
