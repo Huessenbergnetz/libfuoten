@@ -102,6 +102,7 @@ void BaseModel::setLoaded(bool loaded)
     Q_D(BaseModel);
     if (d->loaded != loaded) {
         d->loaded = loaded;
+        qDebug("Changed loaded to %s.", d->loaded ? "true" : "false");
         Q_EMIT loadedChanged(d->loaded);
     }
 }

@@ -135,6 +135,8 @@ void AbstractArticleModel::gotArticlesAsync(const ArticleList &articles)
 {
     if (Q_LIKELY(!articles.isEmpty())) {
 
+        qDebug("Start inserting %u articles into the model.", articles.size());
+
         Q_D(AbstractArticleModel);
 
         beginInsertRows(QModelIndex(), rowCount(), rowCount() + articles.count() -1);
@@ -149,6 +151,8 @@ void AbstractArticleModel::gotArticlesAsync(const ArticleList &articles)
         }
 
         endInsertRows();
+
+        qDebug("Finished inserting %u articles into the model.", articles.size());
     }
 
     setLoaded(true);

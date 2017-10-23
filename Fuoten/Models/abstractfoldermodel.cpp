@@ -83,16 +83,20 @@ void AbstractFolderModel::load()
 
     setInOperation(true);
 
-    Q_D(AbstractFolderModel);
-
     const QList<Folder*> fs = storage()->getFolders(FuotenEnums::Name, Qt::AscendingOrder);
     if (!fs.isEmpty()) {
+
+        qDebug("Start inserting %u folders into the model.", fs.size());
+
+        Q_D(AbstractFolderModel);
 
         beginInsertRows(QModelIndex(), 0, fs.count() - 1);
 
         d->folders = fs;
 
         endInsertRows();
+
+        qDebug("Finished inserting %u folders into the model.", fs.size());
     }
 
     setLoaded(true);

@@ -90,13 +90,17 @@ void AbstractFeedModel::load()
 
     if (!fs.isEmpty()) {
 
+        qDebug("Start inserting %u feeds into the model.", fs.size());
+
         Q_D(AbstractFeedModel);
 
-        beginInsertRows(QModelIndex(), 0, fs.count() - 1);
+        beginInsertRows(QModelIndex(), 0, fs.size() - 1);
 
         d->feeds = fs;
 
         endInsertRows();
+
+        qDebug("Finished inserting %u feeds into the model.", fs.size());
     }
 
     setLoaded(true);

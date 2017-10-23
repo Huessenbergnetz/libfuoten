@@ -32,6 +32,7 @@ using namespace Fuoten;
 Folder::Folder(QObject *parent) :
     BaseItem(* new FolderPrivate, parent)
 {
+    qDebug("Creating new empty Folder object at %p.", this);
 }
 
 
@@ -39,7 +40,7 @@ Folder::Folder(QObject *parent) :
 Folder::Folder(qint64 id, const QString &name, uint feedCount, uint unreadCount, QObject *parent) :
     BaseItem(* new FolderPrivate(id, name, feedCount, unreadCount), parent)
 {
-
+    qDebug("Creating new Folder object (ID: %lli, Name: %s) at %p.", id, qUtf8Printable(name), this);
 }
 
 
