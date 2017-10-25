@@ -28,8 +28,8 @@
 using namespace Fuoten;
 
 /*!
- * \brief Stores global default values
  * \internal
+ * \brief Stores global default values
  */
 class DefaultValues
 {

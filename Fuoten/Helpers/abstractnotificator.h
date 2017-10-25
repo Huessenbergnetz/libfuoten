@@ -247,7 +247,7 @@ Q_SIGNALS:
     void enabledChanged(bool enabled);
     /*!
      * \brief This signal is emitted if the article publishing changes.
-     * \param setArticlePublishingEnabeled(), isArticlePublishingEnabled()
+     * \sa setArticlePublishingEnabeled(), isArticlePublishingEnabled()
      */
     void articlePublishingChanged(bool enabled);
 

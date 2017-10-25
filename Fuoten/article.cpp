@@ -34,7 +34,7 @@ Article::Article(QObject *parent) :
 }
 
 
-Article::Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, Fuoten::FuotenEnums::QueueActions queue, QObject *parent) :
+Article::Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, FuotenEnums::QueueActions queue, QObject *parent) :
     BaseItem(* new ArticlePrivate(id, feedId, feedTitle, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint, folderId, folderName, queue), parent)
 {
     qDebug("Creating new Article object (ID: %lli, Title: %s) at %p.", id, qUtf8Printable(title), this);
