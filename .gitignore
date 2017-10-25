@@ -1,6 +1,14 @@
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
+Doxyfile
+Doxyfile.html
+Doxyfile.qhp
+Doxyfile.web
+*docs/
+scripts/doxyWebFooter.html
+scripts/makeWebDocs.sh
+
 docs
 *~
 *.autosave

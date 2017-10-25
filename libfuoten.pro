@@ -156,6 +156,53 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
 
 }
 
+isEmpty(QHG_BIN_PATH): QHG_BIN_PATH = $$[QT_INSTALL_BINS]/qhelpgenerator
+isEmpty(QT_TAG_FILES_PATH): QT_TAG_FILES_PATH = $$[QT_INSTALL_DOCS]
+DOXYGEN_INPUT_DIR = $$PWD
+DOXYGEN_OUTPUT_DIR = $$PWD
+QT_TAG_FILES += \
+        qtcore \
+        qtnetwork \
+        qtsql
+
+for (qt_tag, QT_TAG_FILES) {
+    exists( $${QT_TAG_FILES_PATH}/$${qt_tag}/$${qt_tag}.tags ) {
+        message($${qt_tag}.tags exists)
+        DOXYGEN_QHP_TAGS += $${QT_TAG_FILES_PATH}/$${qt_tag}/$${qt_tag}.tags=qthelp://org.qt-project.$${qt_tag}.$${QT_MAJOR_VERSION}$${QT_MINOR_VERSION}$${QT_PATCH_VERSION}/$${qt_tag}/
+        DOXYGEN_HTML_TAGS += $${QT_TAG_FILES_PATH}/$${qt_tag}/$${qt_tag}.tags=$${QT_TAG_FILES_PATH}/$${qt_tag}/
+        DOXYGEN_WEB_TAGS += $${QT_TAG_FILES_PATH}/$${qt_tag}/$${qt_tag}.tags=http://doc.qt.io/qt-5/
+    }
+}
+
+QHP_NAMESPACE_VERSION = $${VER_MAJ}$${VER_MIN}$${VER_PAT}
+QHP_VIRT_FOLDER_VERSION = $${VER_MAJ}$${VER_MIN}
+doxyfile.input = scripts/Doxyfile.in
+doxyfile.output = $$PWD/Doxyfile
+QMAKE_SUBSTITUTES += doxyfile
+
+qhpdocs.commands = sed \'s|@TAGFILES@|$$DOXYGEN_QHP_TAGS|\' $$PWD/Doxyfile | sed \'s|@OUTPUT_DIR@|$$DOXYGEN_OUTPUT_DIR/qtdocs|\' | sed \'s|^GENERATE_QHP .*|GENERATE_QHP = YES|\' > $$PWD/Doxyfile.qhp; doxygen $$PWD/Doxyfile.qhp
+
+htmldocs.commands = sed \'s|@TAGFILES@|$$DOXYGEN_HTML_TAGS|\' $$PWD/Doxyfile | sed \'s|@OUTPUT_DIR@|$$DOXYGEN_OUTPUT_DIR/htmldocs|\' > $$PWD/Doxyfile.html; doxygen $$PWD/Doxyfile.html
+
+webdocs.commands = sed \'s|@TAGFILES@|$$DOXYGEN_WEB_TAGS|\' $$PWD/Doxyfile | sed \'s|@OUTPUT_DIR@|$$DOXYGEN_OUTPUT_DIR/webdocs|\' | sed \'s|^HTML_TIMESTAMP .*|HTML_TIMESTAMP = YES|\' > $$PWD/Doxyfile.web
+
+docs.commands = @echo Documentation built
+docs.depends = qhpdocs htmldocs
+
+QMAKE_EXTRA_TARGETS += docs qhpdocs htmldocs webdocs
+
+contains(CONFIG, install_doc_files) {
+    isEmpty(INSTALL_DOCS_DIR): INSTALL_DOCS_DIR = $$[QT_INSTALL_DOCS]
+
+    docdirfiles.path = $${INSTALL_DOCS_DIR}/libfuoten
+    docdirfiles.files = $${DOXYGEN_OUTPUT_DIR}/qtdocs/html/*
+    INSTALLS += docdirfiles
+
+    qchfile.path = $$INSTALL_DOCS_DIR
+    qchfile.files = $${DOXYGEN_OUTPUT_DIR}/qtdocs/libfuoten.qch
+    INSTALLS += qchfile
+}
+
 target = $$TARGET
 target.path = $$INSTALL_LIB_DIR
 INSTALLS += target
@@ -304,4 +351,5 @@ SOURCES += \
     Fuoten/Helpers/abstractnotificator.cpp
 
 DISTFILES += \
-    fuoten.pc.in
+    fuoten.pc.in \
+    scripts/Doxyfile.in
