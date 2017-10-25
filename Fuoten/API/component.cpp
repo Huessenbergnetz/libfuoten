@@ -27,7 +27,10 @@
 
 using namespace Fuoten;
 
-
+/*!
+ * \brief Stores global default values
+ * \internal
+ */
 class DefaultValues
 {
 public:
