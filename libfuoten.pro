@@ -167,7 +167,6 @@ QT_TAG_FILES += \
 
 for (qt_tag, QT_TAG_FILES) {
     exists( $${QT_TAG_FILES_PATH}/$${qt_tag}/$${qt_tag}.tags ) {
-        message($${qt_tag}.tags exists)
         DOXYGEN_QHP_TAGS += $${QT_TAG_FILES_PATH}/$${qt_tag}/$${qt_tag}.tags=qthelp://org.qt-project.$${qt_tag}.$${QT_MAJOR_VERSION}$${QT_MINOR_VERSION}$${QT_PATCH_VERSION}/$${qt_tag}/
         DOXYGEN_HTML_TAGS += $${QT_TAG_FILES_PATH}/$${qt_tag}/$${qt_tag}.tags=$${QT_TAG_FILES_PATH}/$${qt_tag}/
         DOXYGEN_WEB_TAGS += $${QT_TAG_FILES_PATH}/$${qt_tag}/$${qt_tag}.tags=http://doc.qt.io/qt-5/
@@ -190,18 +189,6 @@ docs.commands = @echo Documentation built
 docs.depends = qhpdocs htmldocs
 
 QMAKE_EXTRA_TARGETS += docs qhpdocs htmldocs webdocs
-
-contains(CONFIG, install_doc_files) {
-    isEmpty(INSTALL_DOCS_DIR): INSTALL_DOCS_DIR = $$[QT_INSTALL_DOCS]
-
-    docdirfiles.path = $${INSTALL_DOCS_DIR}/libfuoten
-    docdirfiles.files = $${DOXYGEN_OUTPUT_DIR}/qtdocs/html/*
-    INSTALLS += docdirfiles
-
-    qchfile.path = $$INSTALL_DOCS_DIR
-    qchfile.files = $${DOXYGEN_OUTPUT_DIR}/qtdocs/libfuoten.qch
-    INSTALLS += qchfile
-}
 
 target = $$TARGET
 target.path = $$INSTALL_LIB_DIR
