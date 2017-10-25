@@ -2,8 +2,8 @@
 A [Qt](https://www.qt.io/) based library to provide access to the ownCloud / Nextcloud [News App](https://github.com/nextcloud/news) API.
 
 libfuoten is currently in development and not all features of the News App API are implemented, also interfaces of libfuoten may be changed.
-Have a look at the [roadmap](https://github.com/Buschtrommel/Fuoten/milestones) for further information about the development plans. Find out
-more in the [API documentation](https://www.buschmann23.de/docs/libfuoten) of libfuoten.
+Have a look at the [roadmap](https://github.com/Huessenbergnetz/Fuoten/milestones) for further information about the development plans. Find out
+more in the [API documentation](https://doc.huessenbergnetz.de/libfuoten) of libfuoten.
 
 ## Features
 * account validation (request version, status and user)
@@ -11,24 +11,20 @@ more in the [API documentation](https://www.buschmann23.de/docs/libfuoten) of li
 * folder list model and filtering
 * feeds management (synchronization, adding, deleting, renaming, marking as read, moving)
 * feeds list model and filtering
+* articles management (synchronization, marking as read/unread/starred/unstarred)
+* articles list model and filtering
+* synchronization class
 * SQLite storage class
 
-## Goals
-* implement complete News App API
-* provide convenience functions for synchronization
-* provide data models representing feeds, folders and items
-* provide local storage classes
-* be extensible
-
 ## Contributing
-The source code is available on [Github](https://github.com/Buschtrommel/libfuoten), feel free to clone or branch according to the LGPLv3.
+The source code is available on [Github](https://github.com/Huessenbergnetz/libfuoten), feel free to clone or branch according to the LGPLv3.
 Translation is done on [Transifex](https://www.transifex.com/buschtrommel/libfuoten).
 
 ## Getting libfuoten
 * [openSUSE](https://software.opensuse.org/package/libfuoten)
 
 ## Building libfuoten
-Either clone the git repository or download one of the [release](https://github.com/Buschtrommel/libfuoten/releases) tarballs. Qt 5.6 or newer
+Either clone the git repository or download one of the [release](https://github.com/Huessenbergnetz/libfuoten/releases) tarballs. Qt 5.6 or newer
 is required to build libfuoten as well as the following Qt modules: Qt5Core, Qt5Network and Qt5Sql.
 
 ### Install dependencies
@@ -51,7 +47,7 @@ You can show the default values with `qmake -query`.
 On openSUSE qmake for qt5 is named qmake-qt5.
 
 ```
-git clone https://github.com/Buschtrommel/libfuoten.git
+git clone https://github.com/Huessenbergnetz/libfuoten.git
 cd libfuoten
 mkdir build && cd build
 qmake -r ..
@@ -61,8 +57,7 @@ sudo make install
     
 ## License
 libfuoten - Qt based library to access the ownCloud/Nextcloud News App API<br>
-Copyright (C) 2016 Buschtrommel / Matthias Fehring<br>
-https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/<br>
+Copyright (C) 2016-2017 Matthias Fehring<br>
 https://github.com/Buschtrommel/libfuoten
 
 This library is free software: you can redistribute it and/or<br>
