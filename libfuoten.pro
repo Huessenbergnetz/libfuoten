@@ -25,7 +25,8 @@ CONFIG(release, debug|release) {
 
 contains(CONFIG, clazy) {
     DEFINES+=CLAZY
-    QMAKE_CXXFLAGS += "-Xclang -load -Xclang ClangLazy.so -Xclang -add-plugin -Xclang clang-lazy"
+    QMAKE_CXX = clang++
+    QMAKE_CXXFLAGS += "-Xclang -load -Xclang ClangLazy.so -Xclang -add-plugin -Xclang clang-lazy -Xclang -plugin-arg-clang-lazy -Xclang level0,level1,level2"
 }
 
 contains(CONFIG, asan) {
@@ -33,7 +34,7 @@ contains(CONFIG, asan) {
     QMAKE_LFLAGS += "-fsanitize=address"
 }
 
-isEmpty(PREFIX): PREFIX = $$[QT_INSTALL_PREFIX]
+isEmpty(INSTALL_PREFIX_DIR): INSTALL_PREFIX_DIR = $$[QT_INSTALL_PREFIX]
 isEmpty(INSTALL_LIB_DIR): INSTALL_LIB_DIR = $$[QT_INSTALL_LIBS]
 isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRANSLATIONS]
 

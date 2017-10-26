@@ -1,4 +1,4 @@
-prefix=$$PREFIX
+prefix=$$INSTALL_PREFIX_DIR
 exec_prefix=${prefix}
 libdir=$$INSTALL_LIB_DIR
 includedir=$$INSTALL_HEADERS_DIR
