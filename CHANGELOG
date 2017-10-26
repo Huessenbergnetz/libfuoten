@@ -1,6 +1,13 @@
+libfuoten 0.6.0 - 2017-10-26
+* new: AbstractNotificator class to implement notifications (#35)
 * new: global default values for configuration and storage
-* changed: use network access manager factory instead of setting netwoak
+* changed: use network access manager factory instead of setting network
   access manager via property
+* changed: SQLiteStorage: do not use triggers to update unread counts as triggers
+  in SQLite are activated on each row change, it is more efficient ot calculate
+  the number of unread and starred items after each operation
+* changed: remove support for Qt older than 5.6.0
+* improved: small fixes all over the code
 
 libfuoten 0.5.2 - 2017-03-19
 * new: Dutch translation by Nathan Follens
