@@ -1,7 +1,6 @@
 /* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
- * Copyright (C) 2016 Buschtrommel / Matthias Fehring
- * https://www.buschmann23.de/entwicklung/bibliotheken/libfuoten/
- * https://github.com/Buschtrommel/libfuoten
+ * Copyright (C) 2016-2017 Matthias Fehring
+ * https://github.com/Huessenbergnetz/libfuoten
  *
  * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
