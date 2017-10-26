@@ -3,7 +3,7 @@ A [Qt](https://www.qt.io/) based library to provide access to the ownCloud / Nex
 
 libfuoten implements the complete [New App REST API v1.2](https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md) and provides interfaces to create Qt applications talking to an ownCloud/Nextcloud server with News App enabled. Beside the API implementation classes there are classes to support local storage and models to represent the stored data. Helper classes make it easier to synchronize local storage with the remote server.
 
-Have a look at the [roadmap](https://github.com/Huessenbergnetz/Fuoten/milestones) for further information about the development plans. Find out more in the [API documentation](https://doc.huessenbergnetz.de/libfuoten) of libfuoten.
+Have a look at the [roadmap](https://github.com/Huessenbergnetz/Fuoten/milestones) for further information about the development plans. Find out more in the [API documentation](https://doc.huessenbergnetz.de/libfuoten/?pk_campaign=Github-Project-Libfuoten&pk_kwd=ReadmeFile) of libfuoten.
 
 ## Features
 * account validation (request version, status and user)
