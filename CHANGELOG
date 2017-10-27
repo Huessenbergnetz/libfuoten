@@ -1,3 +1,6 @@
+libfuoten 0.6.1 - 2017-10-27
+* fixed: initial sync does not save feeds and articles (#48)
+
 libfuoten 0.6.0 - 2017-10-26
 * new: AbstractNotificator class to implement notifications (#35)
 * new: global default values for configuration and storage
