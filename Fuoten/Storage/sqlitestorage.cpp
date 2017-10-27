@@ -1052,10 +1052,10 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         Q_ASSERT_X(qresult, "feeds requested", "failed to start database transaction");
 
         for (const QJsonValue &f : feeds) {
-            QJsonObject o = f.toObject();
+            const QJsonObject o = f.toObject();
             if (Q_LIKELY(!o.isEmpty())) {
                 const qlonglong feedId = o.value(QStringLiteral("id")).toVariant().toLongLong();
-                const QString feedTitle = o.value(QStringLiteral("titel")).toString();
+                const QString feedTitle = o.value(QStringLiteral("title")).toString();
                 newFeedIds.push_back(feedId);
                 newFeedNames.push_back(feedTitle);
 
