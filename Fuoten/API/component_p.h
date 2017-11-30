@@ -76,9 +76,9 @@ public:
     AbstractNotificator *notificator = nullptr;
     QTimer *timeoutTimer = nullptr;
     QNetworkReply *reply = nullptr;
+    QNetworkAccessManager::Operation namOperation = QNetworkAccessManager::GetOperation;
     quint8 requestTimeout = 120;
     quint8 retryCount;
-    QNetworkAccessManager::Operation namOperation = QNetworkAccessManager::GetOperation;
     Component::ExpectedJSONType expectedJSONType = Component::Empty;
     bool requiresAuth = true;
     bool inOperation = false;

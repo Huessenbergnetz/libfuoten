@@ -150,7 +150,7 @@ public:
     /*!
      * \brief Type of the article ordering in this feed on the server.
      */
-    enum FeedOrdering {
+    enum FeedOrdering : quint8 {
         NoSpecial   = 0,    /**< No special ordering */
         OldestFirst = 1,    /**< Oldest first */
         NewestFirst = 2,    /**< Newest first */

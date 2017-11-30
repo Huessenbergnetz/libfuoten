@@ -37,7 +37,7 @@ public:
     /*!
      * \brief Object types.
      */
-    enum Type {
+    enum Type : quint8 {
         Feed    = 0,    /**< Feed */
         Folder  = 1,    /**< Folder */
         Starred = 2,    /**< Starred items/articles */
@@ -49,7 +49,7 @@ public:
     /*!
      * \brief Sorting role.
      */
-    enum SortingRole {
+    enum SortingRole : quint8 {
         ID          = 0,    /**< Sort by database ID */
         Name        = 1,    /**< Sort by name/title */
         Time        = 2,    /**< Sort by time */
@@ -62,7 +62,7 @@ public:
     /*!
      * \brief Actions for the local queue.
      */
-    enum QueueAction {
+    enum QueueAction : quint8 {
         NoQueueAction   = 0x0,    /**< No action set. */
         MarkAsRead      = 0x1,    /**< The item has been marked as read. */
         MarkAsUnread    = 0x2,    /**< The item has been marked as unread. */
@@ -75,7 +75,7 @@ public:
     /*!
      * \brief Item per feed deletion strategy.
      */
-    enum ItemDeletionStrategy {
+    enum ItemDeletionStrategy : quint8 {
         NoItemDeletion      = 0,    /**< Items will never be deleted. */
         DeleteItemsByTime   = 1,    /**< Items will be deleted if they are older than a specific time. */
         DeleteItemsByCount  = 2     /**< Items will deleted if the feed contains more than a specific count. */

@@ -288,7 +288,7 @@ public:
     /*!
      * \brief Defines the expected JSON type.
      */
-    enum ExpectedJSONType {
+    enum ExpectedJSONType : quint8 {
         Empty   = 0,    /**< Expects an empty body in the reply. */
         Array   = 1,    /**< Expects a JSON array in the reply body. */
         Object  = 2     /**< Expects a JSON object in the reply body. */

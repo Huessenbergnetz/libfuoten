@@ -36,8 +36,8 @@ public:
     virtual ~BaseFilterModelPrivate() {}
 
     QStringMatcher search;
-    FuotenEnums::SortingRole sortingRole = FuotenEnums::ID;
     Qt::SortOrder sortOrder = Qt::AscendingOrder;
+    FuotenEnums::SortingRole sortingRole = FuotenEnums::ID;
     bool hideRead = false;
 
 private:
