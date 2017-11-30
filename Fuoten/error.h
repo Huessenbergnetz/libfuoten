@@ -79,7 +79,7 @@ public:
     /*!
      * \brief Defines the error type.
      */
-    enum Type {
+    enum Type : quint8 {
         NoError             = 0,    /**< No error has occurred. */
         RequestError        = 1,    /**< The request was not setup correctly. */
         JSONParsingError    = 2,    /**< Failed to parse JSON data. */
@@ -96,7 +96,7 @@ public:
     /*!
      * \brief Defines the severity of the error.
      */
-    enum Severity {
+    enum Severity : quint8 {
         Nothing     = 0,    /**< No error has occurred */
         Warning     = 1,    /**< Only a warning, but operation was perfmormed */
         Critical    = 2,    /**< A critical error has occurred, the operation has been canceled */
