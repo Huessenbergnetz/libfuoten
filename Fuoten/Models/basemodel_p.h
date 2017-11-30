@@ -34,8 +34,8 @@ public:
     qint64 parentId = -1;
     AbstractStorage *storage = nullptr;
     int limit = 0;
-    FuotenEnums::SortingRole sortingRole = FuotenEnums::ID;
     Qt::SortOrder sortOrder = Qt::AscendingOrder;
+    FuotenEnums::SortingRole sortingRole = FuotenEnums::ID;
     bool unreadOnly = false;
     bool inOperation = false;
     bool loaded = false;
