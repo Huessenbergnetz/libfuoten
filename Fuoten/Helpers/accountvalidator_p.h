@@ -31,13 +31,7 @@ class AccountValidatorPrivate
 {
 public:
     explicit AccountValidatorPrivate(AccountValidator *parent) :
-        q_ptr(parent),
-        configuration(nullptr),
-        inOperation(false),
-        error(nullptr),
-        version(nullptr),
-        status(nullptr),
-        user(nullptr)
+        q_ptr(parent)
     {}
 
     ~AccountValidatorPrivate() {}
@@ -54,13 +48,13 @@ public:
     AccountValidator * const q_ptr;
     Q_DECLARE_PUBLIC(AccountValidator)
 
-    AbstractConfiguration *configuration;
-    bool inOperation;
-    Error *error;
+    AbstractConfiguration *configuration = nullptr;
+    Error *error = nullptr;
+    GetVersion *version = nullptr;
+    GetStatus *status = nullptr;
+    GetUser *user = nullptr;
 
-    GetVersion *version;
-    GetStatus *status;
-    GetUser *user;
+    bool inOperation = false;
 };
 
 }

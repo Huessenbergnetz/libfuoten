@@ -29,12 +29,7 @@ class ArticlePrivate : public BaseItemPrivate
 {
 public:
     ArticlePrivate() :
-        BaseItemPrivate(),
-        feedId(0),
-        unread(false),
-        starred(false),
-        folderId(0),
-        queue(0)
+        BaseItemPrivate()
     {}
 
     ArticlePrivate(qint64 nId,
@@ -58,23 +53,23 @@ public:
                    FuotenEnums::QueueActions nQueue) :
         BaseItemPrivate(nId),
         feedId(nFeedId),
+        folderId(nFolderId),
         feedTitle(nFeedTitle),
         guid(nGuid),
         guidHash(nGuidHash),
-        url(nUrl),
         title(nTitle),
         author(nAuthor),
-        pubDate(nPubDate),
         body(nBody),
         enclosureMime(nEnclosureMime),
-        enclosureLink(nEnclosureLink),
-        unread(nUnread),
-        starred(nStarred),
-        lastModified(nLastModified),
         fingerprint(nFingerprint),
-        folderId(nFolderId),
         folderName(nFolderName),
-        queue(nQueue)
+        url(nUrl),
+        enclosureLink(nEnclosureLink),
+        pubDate(nPubDate),
+        lastModified(nLastModified),
+        queue(nQueue),
+        unread(nUnread),
+        starred(nStarred)
     {
         createHumanPubDateTime();
     }
@@ -133,26 +128,26 @@ public:
         humanPubTime = lt.toString(qtTrId("libfuoten-time-format"));
     }
 
-    qint64 feedId;
+    qint64 feedId = 0;
+    qint64 folderId = 0;
     QString feedTitle;
     QString guid;
     QString guidHash;
-    QUrl url;
     QString title;
     QString author;
-    QDateTime pubDate;
     QString body;
     QString enclosureMime;
-    QUrl enclosureLink;
-    bool unread;
-    bool starred;
-    QDateTime lastModified;
     QString fingerprint;
-    qint64 folderId;
     QString folderName;
     QString humanPubDate;
     QString humanPubTime;
-    FuotenEnums::QueueActions queue;
+    QUrl url;
+    QUrl enclosureLink;
+    QDateTime pubDate;
+    QDateTime lastModified;
+    FuotenEnums::QueueActions queue = 0;
+    bool unread = false;
+    bool starred = false;
 
 private:
     Q_DISABLE_COPY(ArticlePrivate)

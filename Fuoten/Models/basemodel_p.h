@@ -31,14 +31,14 @@ public:
 
     virtual ~BaseModelPrivate() {}
 
-    bool inOperation = false;
-    AbstractStorage *storage = nullptr;
-    bool loaded = false;
     qint64 parentId = -1;
+    AbstractStorage *storage = nullptr;
+    int limit = 0;
     FuotenEnums::SortingRole sortingRole = FuotenEnums::ID;
     Qt::SortOrder sortOrder = Qt::AscendingOrder;
     bool unreadOnly = false;
-    int limit = 0;
+    bool inOperation = false;
+    bool loaded = false;
 
 private:
     Q_DISABLE_COPY(BaseModelPrivate)

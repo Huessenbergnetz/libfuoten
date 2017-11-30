@@ -30,24 +30,15 @@ namespace Fuoten {
 class BaseItemPrivate
 {
 public:
-    BaseItemPrivate() :
-        id(0),
-        error(nullptr),
-        comp(nullptr)
-    {}
+    BaseItemPrivate() {}
 
-    explicit BaseItemPrivate(qint64 _id) :
-        id(_id),
-        error(nullptr),
-        comp(nullptr)
-    {}
+    explicit BaseItemPrivate(qint64 _id) : id(_id) {}
 
     virtual ~BaseItemPrivate() {}
 
-    qint64 id;
-    Error *error;
-
-    Component *comp;
+    qint64 id = 0;
+    Error *error = nullptr;
+    Component *comp = nullptr;
 
 private:
     Q_DISABLE_COPY(BaseItemPrivate)

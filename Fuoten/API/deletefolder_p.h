@@ -29,15 +29,14 @@ class DeleteFolderPrivate : public ComponentPrivate
 {
 public:
     DeleteFolderPrivate() :
-        ComponentPrivate(),
-        folderId(0)
+        ComponentPrivate()
     {
         expectedJSONType = Component::Empty;
         namOperation = QNetworkAccessManager::DeleteOperation;
     }
 
 
-    qint64 folderId;
+    qint64 folderId = 0;
 };
 
 }

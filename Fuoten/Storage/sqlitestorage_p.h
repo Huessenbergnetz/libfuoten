@@ -170,11 +170,10 @@ protected:
     void run() override;
 
 private:
-    QSqlDatabase m_db;
     qint64 m_id;
-    FuotenEnums::Type m_idType;
     qint64 m_newestItemId;
-
+    QSqlDatabase m_db;
+    FuotenEnums::Type m_idType;
 };
 
 

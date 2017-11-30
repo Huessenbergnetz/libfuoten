@@ -33,13 +33,13 @@ public:
 
     virtual ~AbstractStoragePrivate() {}
 
-    bool ready = false;
+    AbstractConfiguration *configuration = nullptr;
+    AbstractNotificator *notificator = nullptr;
     Error *error = nullptr;
     quint16 totalUnread = 0;
     quint16 starred = 0;
+    bool ready = false;
     bool inOperation = false;
-    AbstractConfiguration *configuration = nullptr;
-    AbstractNotificator *notificator = nullptr;
 
 private:
     Q_DISABLE_COPY(AbstractStoragePrivate)

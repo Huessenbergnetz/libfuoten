@@ -30,8 +30,8 @@ class ErrorPrivate
 {
 public:
     QString text;
-    Error::Type type = Error::NoError;
     QString data;
+    Error::Type type = Error::NoError;
     Error::Severity severity = Error::Nothing;
 
     void printOut()

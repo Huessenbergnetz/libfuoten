@@ -2734,7 +2734,7 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
 
 
 EnqueueMarkReadWorker::EnqueueMarkReadWorker(const QString &dbpath, qint64 id, FuotenEnums::Type idType, qint64 newestItemId, QObject *parent) :
-    QThread(parent), m_id(id), m_idType(idType), m_newestItemId(newestItemId)
+    QThread(parent), m_id(id), m_newestItemId(newestItemId), m_idType(idType)
 {
     if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
         m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));

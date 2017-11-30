@@ -29,14 +29,13 @@ class DeleteFeedPrivate : public ComponentPrivate
 {
 public:
     DeleteFeedPrivate() :
-        ComponentPrivate(),
-        feedId(0)
+        ComponentPrivate()
     {
         expectedJSONType = Component::Empty;
         namOperation = QNetworkAccessManager::DeleteOperation;
     }
 
-    qint64 feedId;
+    qint64 feedId = 0;
 };
 
 }

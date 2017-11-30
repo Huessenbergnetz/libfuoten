@@ -41,23 +41,7 @@ class SynchronizerPrivate
     Q_DECLARE_PUBLIC(Synchronizer)
 public:
     explicit SynchronizerPrivate(Synchronizer *parent) :
-        q_ptr(parent),
-        error(nullptr),
-        configuration(nullptr),
-        storage(nullptr),
-        inOperation(false),
-        getFolders(nullptr),
-        getFeeds(nullptr),
-        getUnread(nullptr),
-        getStarred(nullptr),
-        getUpdated(nullptr),
-        starMultipleItems(nullptr),
-        unstarMultipleItems(nullptr),
-        readMultipleItems(nullptr),
-        unreadMultipleItems(nullptr),
-        progress(0.0),
-        totalActions(0.0),
-        performedActions(0.0)
+        q_ptr(parent)
     {}
 
     ~SynchronizerPrivate() {}
@@ -128,32 +112,31 @@ public:
     }
 
 
-    Synchronizer * const q_ptr;
-    Error *error;
-    AbstractConfiguration *configuration;
-    AbstractStorage *storage;
-    bool inOperation;
-
-    GetFolders *getFolders;
-    GetFeeds *getFeeds;
-    GetItems *getUnread;
-    GetItems *getStarred;
-    GetUpdatedItems *getUpdated;
-    StarMultipleItems *starMultipleItems;
-    StarMultipleItems *unstarMultipleItems;
-    MarkMultipleItems *readMultipleItems;
-    MarkMultipleItems *unreadMultipleItems;
-    IdList queuedUnreadArticles;
-    IdList queuedReadArticles;
     QList<QPair<qint64, QString> > queuedStarredArticles;
     QList<QPair<qint64, QString> > queuedUnstarredArticles;
-    qreal progress;
-    QString currentAction;
-    qreal totalActions;
-    qreal performedActions;
+    IdList queuedUnreadArticles;
+    IdList queuedReadArticles;
+    Synchronizer * const q_ptr;
+    Error *error = nullptr;
+    AbstractConfiguration *configuration = nullptr;
+    AbstractStorage *storage = nullptr;
+    GetFolders *getFolders = nullptr;
+    GetFeeds *getFeeds = nullptr;
+    GetItems *getUnread = nullptr;
+    GetItems *getStarred = nullptr;
+    GetUpdatedItems *getUpdated = nullptr;
+    StarMultipleItems *starMultipleItems = nullptr;
+    StarMultipleItems *unstarMultipleItems = nullptr;
+    MarkMultipleItems *readMultipleItems = nullptr;
+    MarkMultipleItems *unreadMultipleItems = nullptr;
     QTimer *deferTimer = nullptr;
     AbstractNotificator *notificator = nullptr;
+    QString currentAction;
     QDateTime startTime;
+    qreal progress = 0.0;
+    qreal totalActions = 0.0;
+    qreal performedActions = 0.0;
+    bool inOperation = false;
 };
 
 }

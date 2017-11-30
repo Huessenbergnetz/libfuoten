@@ -29,11 +29,7 @@ namespace Fuoten {
 class AbstractArticleModelPrivate : public BaseModelPrivate
 {
 public:
-    AbstractArticleModelPrivate() :
-        BaseModelPrivate(),
-        parentIdType(FuotenEnums::All),
-        starredOnly(false),
-        bodyLimit(-1)
+    AbstractArticleModelPrivate() : BaseModelPrivate()
     {
         sortingRole = FuotenEnums::Time;
         sortOrder = Qt::DescendingOrder;
@@ -83,10 +79,10 @@ public:
         return idx;
     }
 
-    FuotenEnums::Type parentIdType;
-    bool starredOnly;
-    int bodyLimit;
     QList<Article*> articles;
+    int bodyLimit = -1;
+    FuotenEnums::Type parentIdType = FuotenEnums::All;
+    bool starredOnly = false;
 
 private:
     Q_DISABLE_COPY(AbstractArticleModelPrivate)

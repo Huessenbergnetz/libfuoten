@@ -28,20 +28,17 @@ namespace Fuoten {
 class BaseFilterModelPrivate
 {
 public:
-    BaseFilterModelPrivate() :
-        sortingRole(FuotenEnums::ID),
-        sortOrder(Qt::AscendingOrder),
-        hideRead(false)
+    BaseFilterModelPrivate()
     {
         search.setCaseSensitivity(Qt::CaseInsensitive);
     }
 
     virtual ~BaseFilterModelPrivate() {}
 
-    FuotenEnums::SortingRole sortingRole;
-    Qt::SortOrder sortOrder;
     QStringMatcher search;
-    bool hideRead;
+    FuotenEnums::SortingRole sortingRole = FuotenEnums::ID;
+    Qt::SortOrder sortOrder = Qt::AscendingOrder;
+    bool hideRead = false;
 
 private:
     Q_DISABLE_COPY(BaseFilterModelPrivate)

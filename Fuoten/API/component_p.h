@@ -63,27 +63,26 @@ public:
         }
     }
 
+    QHash<QByteArray, QByteArray> requestHeaders;
+    QString apiRoute;
+    QByteArray result;
+    QByteArray payload;
+    QJsonDocument jsonResult;
+    QUrlQuery urlQuery;
     QNetworkAccessManager *networkAccessManager = nullptr;
-    bool inOperation = false;
-    quint8 requestTimeout = 120;
     Error *error = nullptr;
     AbstractConfiguration *configuration = nullptr;
     AbstractStorage *storage = nullptr;
-    bool useStorage = true;
     AbstractNotificator *notificator = nullptr;
-
-    quint8 retryCount;
-    QHash<QByteArray, QByteArray> requestHeaders;
-    QByteArray payload;
-    QUrlQuery urlQuery;
     QTimer *timeoutTimer = nullptr;
     QNetworkReply *reply = nullptr;
+    quint8 requestTimeout = 120;
+    quint8 retryCount;
     QNetworkAccessManager::Operation namOperation = QNetworkAccessManager::GetOperation;
     Component::ExpectedJSONType expectedJSONType = Component::Empty;
-    QString apiRoute;
-    QJsonDocument jsonResult;
-    QByteArray result;
     bool requiresAuth = true;
+    bool inOperation = false;
+    bool useStorage = true;
 
     static AbstractConfiguration *defaultConfiguration();
     static void setDefaultConfiguration(AbstractConfiguration *config);

@@ -29,16 +29,15 @@ class CreateFeedPrivate : public ComponentPrivate
 {
 public:
     CreateFeedPrivate() :
-        ComponentPrivate(),
-        folderId(0)
+        ComponentPrivate()
     {
         expectedJSONType = Component::Object;
         namOperation = QNetworkAccessManager::PostOperation;
         apiRoute = QStringLiteral("/feeds");
     }
 
+    qint64 folderId = 0;
     QUrl url;
-    qint64 folderId;
 };
 
 }
