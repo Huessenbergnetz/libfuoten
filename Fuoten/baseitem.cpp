@@ -116,8 +116,8 @@ void BaseItem::setComponent(Component *nComp)
     d->comp = nComp;
 
     if (d->comp) {
-        connect(d->comp, &Component::failed, [=] (Error *nError) {setError(nError);});
-        connect(d->comp, &Component::failed, [=] () {setComponent(nullptr);});
+        connect(d->comp, &Component::failed, this, [=] (Error *nError) {setError(nError);});
+        connect(d->comp, &Component::failed, this, [=] () {setComponent(nullptr);});
         connect(d->comp, &Component::failed, d->comp, &QObject::deleteLater);
     }
 

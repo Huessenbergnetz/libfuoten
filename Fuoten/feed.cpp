@@ -269,13 +269,13 @@ void Feed::rename(const QString &newName, AbstractConfiguration *config, Abstrac
     rf->setFeedId(id());
     rf->setNewName(newName);
     if (!storage) {
-        connect(rf, &RenameFeed::succeeded, [=] (qint64 id, const QString &newName) {
+        connect(rf, &RenameFeed::succeeded, this, [=] (qint64 id, const QString &newName) {
             Q_UNUSED(id)
             setTitle(newName);
             setComponent(nullptr);
         });
     } else {
-        connect(rf, &RenameFeed::succeeded, [=] () {setComponent(nullptr);});
+        connect(rf, &RenameFeed::succeeded, this, [=] () {setComponent(nullptr);});
     }
     connect(rf, &RenameFeed::succeeded, rf, &QObject::deleteLater);
     setComponent(rf);
@@ -331,13 +331,13 @@ void Feed::move(qint64 targetFolderId, AbstractConfiguration *config, AbstractSt
     mf->setFeedId(id());
     mf->setFolderId(targetFolderId);
     if (!storage) {
-        connect(mf, &MoveFeed::succeeded, [=] (qint64 id, qint64 targetFolder) {
+        connect(mf, &MoveFeed::succeeded, this, [=] (qint64 id, qint64 targetFolder) {
             Q_UNUSED(id)
             setFolderId(targetFolder);
             setComponent(nullptr);
         });
     } else {
-        connect(mf, &MoveFeed::succeeded, [=] () {setComponent(nullptr);});
+        connect(mf, &MoveFeed::succeeded, this, [=] () {setComponent(nullptr);});
     }
     connect(mf, &MoveFeed::succeeded, mf, &QObject::deleteLater);
     setComponent(mf);
@@ -377,7 +377,7 @@ void Feed::markAsRead(AbstractConfiguration *config, AbstractStorage *storage, b
         mfr->setStorage(storage);
         mfr->setFeedId(id());
         mfr->setNewestItemId(newestItemId);
-        connect(mfr, &MarkFeedRead::succeeded, [=] () {
+        connect(mfr, &MarkFeedRead::succeeded, this, [=] () {
             setUnreadCount(0);
             setComponent(nullptr);
         });

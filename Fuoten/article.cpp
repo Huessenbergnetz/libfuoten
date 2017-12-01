@@ -348,7 +348,7 @@ void Article::mark(bool unread, AbstractConfiguration *config, AbstractStorage *
         MarkItem *mi = new MarkItem(id(), unread, this);
         mi->setConfiguration(config);
         mi->setStorage(storage);
-        connect(mi, &MarkItem::succeeded, [=] () {
+        connect(mi, &MarkItem::succeeded, this, [=] () {
             setUnread(unread);
             setComponent(nullptr);
         });
@@ -393,7 +393,7 @@ void Article::star(bool starred, AbstractConfiguration *config, AbstractStorage 
         StarItem *si = new StarItem(feedId(), guidHash(), starred, this);
         si->setConfiguration(config);
         si->setStorage(storage);
-        connect(si, &StarItem::succeeded, [=] () {
+        connect(si, &StarItem::succeeded, this, [=] () {
             setStarred(starred);
             setComponent(nullptr);
         });

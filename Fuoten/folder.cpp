@@ -111,9 +111,9 @@ void Folder::rename(const QString &newName, AbstractConfiguration *config, Abstr
     rf->setFolderId(id());
     rf->setNewName(newName);
     if (storage) {
-        connect(rf, &RenameFolder::succeeded, [=] () {setComponent(nullptr);});
+        connect(rf, &RenameFolder::succeeded, this, [=] () {setComponent(nullptr);});
     } else {
-        connect(rf, &RenameFolder::succeeded, [=] (qint64 id, const QString &newName) {
+        connect(rf, &RenameFolder::succeeded, this, [=] (qint64 id, const QString &newName) {
             Q_UNUSED(id)
             setName(newName);
             setComponent(nullptr);
@@ -183,7 +183,7 @@ void Folder::markAsRead(AbstractConfiguration *config, AbstractStorage *storage,
         mfr->setStorage(storage);
         mfr->setFolderId(id());
         mfr->setNewestItemId(newestItemId);
-        connect(mfr, &MarkFolderRead::succeeded, [=] () {
+        connect(mfr, &MarkFolderRead::succeeded, this, [=] () {
             setUnreadCount(0);
             setComponent(nullptr);
         });

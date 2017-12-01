@@ -182,14 +182,14 @@ void ComponentPrivate::setDefaultNotificator(AbstractNotificator *notificator)
 Component::Component(QObject *parent) :
     QObject(parent), d_ptr(new ComponentPrivate)
 {
-    connect(this, &Component::failed, [this](Error *e){notify(e);});
+    connect(this, &Component::failed, this, [this](Error *e){notify(e);});
 }
 
 
 Component::Component(ComponentPrivate &dd, QObject *parent) :
     QObject(parent), d_ptr(&dd)
 {
-    connect(this, &Component::failed, [this](Error *e){notify(e);});
+    connect(this, &Component::failed, this, [this](Error *e){notify(e);});
 }
 
 

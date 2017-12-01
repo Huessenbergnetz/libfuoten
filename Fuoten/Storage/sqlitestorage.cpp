@@ -257,7 +257,7 @@ void SQLiteStorage::init()
     Q_D(SQLiteStorage);
 
     SQLiteStorageManager *sm = new SQLiteStorageManager(d->db.databaseName(), this);
-    connect(sm, &SQLiteStorageManager::succeeded, [=] () {
+    connect(sm, &SQLiteStorageManager::succeeded, this, [=] () {
         bool result = d->db.open();
         Q_ASSERT_X(result, "init database", "failed to open database");
 
@@ -1978,7 +1978,7 @@ void SQLiteStorage::getArticlesAsync(const QueryArgs &args)
 
     GetArticlesAsyncWorker *worker = new GetArticlesAsyncWorker(d->db.databaseName(), args, this);
     connect(worker, &GetArticlesAsyncWorker::gotArticles, this, &AbstractStorage::gotArticlesAsync);
-    connect(worker, &GetArticlesAsyncWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &GetArticlesAsyncWorker::failed, this, [=] (Error *e) {setError(e);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
@@ -2303,7 +2303,7 @@ void SQLiteStorage::itemsRequested(const QJsonDocument &json)
     connect(worker, &ItemsRequestedWorker::requestedItems, this, &SQLiteStorage::requestedItems);
     connect(worker, &ItemsRequestedWorker::gotStarred, this, &SQLiteStorage::setStarred);
     connect(worker, &ItemsRequestedWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
-    connect(worker, &ItemsRequestedWorker::failed, [=] (Error *e) {setError(e);});
+    connect(worker, &ItemsRequestedWorker::failed, this, [=] (Error *e) {setError(e);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 }
@@ -2921,8 +2921,8 @@ bool SQLiteStorage::enqueueMarkFeedRead(qint64 feedId, qint64 newestItemId)
     EnqueueMarkReadWorker *worker = new EnqueueMarkReadWorker(d->db.databaseName(), feedId, FuotenEnums::Feed, newestItemId, this);
     connect(worker, &EnqueueMarkReadWorker::markedReadFeedInQueue, this, &SQLiteStorage::markedReadFeedInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
-    connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
-    connect(worker, &QThread::finished, [=] () {setInOperation(false);});
+    connect(worker, &EnqueueMarkReadWorker::failed, this, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, this, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
@@ -2966,8 +2966,8 @@ bool SQLiteStorage::enqueueMarkFolderRead(qint64 folderId, qint64 newestItemId)
     EnqueueMarkReadWorker *worker = new EnqueueMarkReadWorker(d->db.databaseName(), folderId, FuotenEnums::Folder, newestItemId, this);
     connect(worker, &EnqueueMarkReadWorker::markedReadFolderInQueue, this, &SQLiteStorage::markedReadFolderInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
-    connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
-    connect(worker, &QThread::finished, [=] () {setInOperation(false);});
+    connect(worker, &EnqueueMarkReadWorker::failed, this, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, this, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
@@ -2997,8 +2997,8 @@ bool SQLiteStorage::enqueueMarkAllItemsRead()
     EnqueueMarkReadWorker *worker = new EnqueueMarkReadWorker(d->db.databaseName(), 0, FuotenEnums::All, -1, this);
     connect(worker, &EnqueueMarkReadWorker::markedAllItemsReadInQueue, this, &SQLiteStorage::markedAllItemsReadInQueue);
     connect(worker, &EnqueueMarkReadWorker::gotTotalUnread, this, &SQLiteStorage::setTotalUnread);
-    connect(worker, &EnqueueMarkReadWorker::failed, [=] (Error *e) {setError(e);});
-    connect(worker, &QThread::finished, [=] () {setInOperation(false);});
+    connect(worker, &EnqueueMarkReadWorker::failed, this, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, this, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 
@@ -3054,8 +3054,8 @@ void SQLiteStorage::clearQueue()
 
     ClearQueueWorker *worker = new ClearQueueWorker(d->db.databaseName(), this);
     connect(worker, &ClearQueueWorker::queueCleared, this, &AbstractStorage::queueCleared);
-    connect(worker, &ClearQueueWorker::failed, [=] (Error *e) {setError(e);});
-    connect(worker, &QThread::finished, [=] () {setInOperation(false);});
+    connect(worker, &ClearQueueWorker::failed, this, [=] (Error *e) {setError(e);});
+    connect(worker, &QThread::finished, this, [=] () {setInOperation(false);});
     connect(worker, &QThread::finished, worker, &QObject::deleteLater);
     worker->start();
 }
