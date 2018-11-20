@@ -316,7 +316,7 @@ Q_SIGNALS:
      * \brief This signal is emitted if the poiner to the local storage changes.
      * \sa storage
      */
-    void storageChanged(AbstractStorage *storage);
+    void storageChanged(Fuoten::AbstractStorage *storage);
     /*!
      * \brief This signal is emitted if the parent ID changes.
      * \sa parentId

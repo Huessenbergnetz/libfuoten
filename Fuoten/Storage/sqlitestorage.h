@@ -181,7 +181,7 @@ public Q_SLOTS:
     void feedMarkedRead(qint64 id, qint64 newestItem) override;
 
     void itemsRequested(const QJsonDocument &json) override;
-    void itemsMarked(const IdList &itemIds, bool unread) override;
+    void itemsMarked(const Fuoten::IdList &itemIds, bool unread) override;
     void itemsStarred(const QList<QPair<qint64, QString>> &articles, bool star) override;
     void itemMarked(qint64 itemId, bool unread) override;
     void itemStarred(qint64 feedId, const QString &guidHash, bool star) override;

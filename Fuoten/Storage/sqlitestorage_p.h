@@ -49,7 +49,7 @@ protected:
 
 Q_SIGNALS:
     void succeeded();
-    void failed(Error *error);
+    void failed(Fuoten::Error *error);
 };
 
 
@@ -116,10 +116,10 @@ public:
     ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, AbstractConfiguration *config = nullptr, AbstractNotificator *notificator = nullptr, QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void requestedItems(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
+    void requestedItems(const Fuoten::IdList &updatedItems, const Fuoten::IdList &newItems, const Fuoten::IdList &deletedItems);
     void gotTotalUnread(quint16 tu);
     void gotStarred(quint16 st);
-    void failed(Error *e);
+    void failed(Fuoten::Error *e);
 
 protected:
     void run() override;
@@ -141,8 +141,8 @@ public:
     GetArticlesAsyncWorker(const QString &dbpath, const QueryArgs &args, QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void gotArticles(const ArticleList &articles);
-    void failed(Error *e);
+    void gotArticles(const Fuoten::ArticleList &articles);
+    void failed(Fuoten::Error *e);
 
 protected:
     void run() override;
@@ -160,7 +160,7 @@ public:
     EnqueueMarkReadWorker(const QString &dbpath, qint64 id, FuotenEnums::Type idType, qint64 newestItemId = -1, QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void failed(Error *e);
+    void failed(Fuoten::Error *e);
     void markedReadFeedInQueue(qint64 feedId, qint64 newestItemId);
     void markedReadFolderInQueue(qint64 folderId, qint64 newestItemId);
     void markedAllItemsReadInQueue();
@@ -185,7 +185,7 @@ public:
     ClearQueueWorker(const QString &dbpath, QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void failed(Error *e);
+    void failed(Fuoten::Error *e);
     void queueCleared();
 
 protected:

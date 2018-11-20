@@ -578,7 +578,7 @@ public Q_SLOTS:
      * \param itemIds   IDs of articles that have been marked as read or unread
      * \param unread    \c true if the articles have been marked as unread, \c false if marked as read
      */
-    virtual void itemsMarked(const IdList &itemIds, bool unread) = 0;
+    virtual void itemsMarked(const Fuoten::IdList &itemIds, bool unread) = 0;
 
     /*!
      * \brief Receives the reply data for the StarItems request.
@@ -679,7 +679,7 @@ Q_SIGNALS:
      * contain a list of databaes IDs and names of new folders, and \c deletedFolders should contain a list of database IDs
      * of deleted folders.
      */
-    void requestedFolders(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const IdList &deletedFolders);
+    void requestedFolders(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const Fuoten::IdList &deletedFolders);
 
     /*!
      * \brief Emit this after a new folder has been created.
@@ -732,7 +732,7 @@ Q_SIGNALS:
     /*!
      * \brief Emitted whenever the error property changes.
      */
-    void errorChanged(Error *error);
+    void errorChanged(Fuoten::Error *error);
 
     /*!
      * \brief This signal is emitted if the amount of total unread articles changes.
@@ -753,7 +753,7 @@ Q_SIGNALS:
      *
      * Every argument of the signal should contain a list of feed IDs that are either updated, new or deleted.
      */
-    void requestedFeeds(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds);
+    void requestedFeeds(const Fuoten::IdList &updatedFeeds, const Fuoten::IdList &newFeeds, const Fuoten::IdList &deletedFeeds);
 
     /*!
      * \brief Emit this after a new feed has been created.
@@ -814,7 +814,7 @@ Q_SIGNALS:
      * \param newItems      list of IDs from items that are new in the local storage
      * \param deletedItems  list of IDs from items that have been remove from the local storage
      */
-    void requestedItems(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
+    void requestedItems(const Fuoten::IdList &updatedItems, const Fuoten::IdList &newItems, const Fuoten::IdList &deletedItems);
 
     /*!
      * \brief Emit this after items/articles have been marked as read or unread.
@@ -826,7 +826,7 @@ Q_SIGNALS:
      * \param itemIds   IDs of articles that have been marked as read or unread
      * \param unread    \c true if the articles have been marked as unread, \c false if marked as read
      */
-    void markedItems(const IdList &itemIds, bool unread);
+    void markedItems(const Fuoten::IdList &itemIds, bool unread);
 
     /*!
      * \brief Emit this after items/articles have been starred or unstarred.
@@ -883,7 +883,7 @@ Q_SIGNALS:
      *
      * \param articles list of Article objects
      */
-    void gotArticlesAsync(const ArticleList &articles);
+    void gotArticlesAsync(const Fuoten::ArticleList &articles);
 
     /*!
      * \brief This is emitted if the value of the \link AbstractStorage::inOperation inOperation \endlink property changes.
@@ -895,13 +895,13 @@ Q_SIGNALS:
      * \brief This is emitted if the value of the \link AbstractStorage::configuration configuration \endlink property changes.
      * \sa AbstractStorage::configuration(), AbstractStorage::setConfiguration()
      */
-    void configurationChanged(AbstractConfiguration *configuration);
+    void configurationChanged(Fuoten::AbstractConfiguration *configuration);
 
     /*!
      * \brief Notifier signal for the \link AbstractStorage::notificator notificator \endlink property.
      * \sa setNotificator(), notificator()
      */
-    void notificatorChanged(AbstractNotificator *notificator);
+    void notificatorChanged(Fuoten::AbstractNotificator *notificator);
 
     /*!
      * \brief This is emitted after the local queue has been cleared.

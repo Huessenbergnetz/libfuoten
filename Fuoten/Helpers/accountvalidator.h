@@ -121,7 +121,7 @@ Q_SIGNALS:
      * \brief This signal is emitted when the pointer to a AbstractConfiguration object changes.
      * \sa configuration
      */
-    void configurationChanged(AbstractConfiguration *configuration);
+    void configurationChanged(Fuoten::AbstractConfiguration *configuration);
     /*!
      * \brief This signal is emitted when the operational status changes.
      * \sa inOperation
@@ -131,7 +131,7 @@ Q_SIGNALS:
      * \brief This signal is emitted when the pointer to an Error object changes.
      * \sa error
      */
-    void errorChanged(Error *error);
+    void errorChanged(Fuoten::Error *error);
 
     /*!
      * \brief This signal is emitted if the account validation has been succeeded.
@@ -145,13 +145,13 @@ Q_SIGNALS:
      *
      * \sa \link AccountValidator::error error \endlink
      */
-    void failed(Error *error);
+    void failed(Fuoten::Error *error);
 
 protected:
     const QScopedPointer<AccountValidatorPrivate> d_ptr;
 
 private Q_SLOTS:
-    void setError(Error *nError);
+    void setError(Fuoten::Error *nError);
     void gotVersion();
     void gotStatus();
     void gotUser();

@@ -235,19 +235,19 @@ Q_SIGNALS:
      *
      * \sa error
      */
-    void errorChanged(Error *error);
+    void errorChanged(Fuoten::Error *error);
 
     /*!
      * \brief This signal is emitted if the pointer to the AbstractConfiguration object changes.
      * \sa configuration
      */
-    void configurationChanged(AbstractConfiguration *configuration);
+    void configurationChanged(Fuoten::AbstractConfiguration *configuration);
 
     /*!
      * \brief This signall is emitted if the pointer to the AbstractStorage object changes.
      * \sa storage
      */
-    void storageChanged(AbstractStorage *storage);
+    void storageChanged(Fuoten::AbstractStorage *storage);
 
     /*!
      * \brief This signal is emitted if the oprational state changes.
@@ -265,7 +265,7 @@ Q_SIGNALS:
      * \brief This signal is emitted if the synchonization process failed for some reason.
      * \sa succeeded(), error
      */
-    void failed(Error *error);
+    void failed(Fuoten::Error *error);
 
     /*!
      * \brief This is emitted if the value of the \link Synchronizer::progress progress \endlink property changes.
@@ -283,7 +283,7 @@ Q_SIGNALS:
      * \brief Notifier signal for the \link Synchronizer::notificator notificator \endlink property.
      * \sa setNotificator(), notificator()
      */
-    void notificatorChanged(AbstractNotificator *notificator);
+    void notificatorChanged(Fuoten::AbstractNotificator *notificator);
 
 protected:
     const QScopedPointer<SynchronizerPrivate> d_ptr;
@@ -307,7 +307,7 @@ protected Q_SLOTS:
      * \brief Sets a new Error object to the error property.
      * \sa error
      */
-    void setError(Error *nError);
+    void setError(Fuoten::Error *nError);
 
     /*!
      * \brief Notifies the News App about unread articles from the local queue.

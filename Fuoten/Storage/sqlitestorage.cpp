@@ -373,7 +373,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
     qDebug("Processing %i folders requested from the remote server.", folders.size());
 
-    QHash<qint64, QString> reqFolders({{0, QStringLiteral("")}});
+    QHash<qint64, QString> reqFolders({{0, QString("")}});
 
     for (const QJsonValue &f : folders) {
         const QJsonObject o = f.toObject();

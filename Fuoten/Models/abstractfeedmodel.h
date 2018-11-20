@@ -79,7 +79,7 @@ protected Q_SLOTS:
      * \param newFeeds      list of IDs of feeds that are new to the local storage
      * \param deletedFeeds  list of IDs of feeds that have been deleted in the local storage (and remotely before)
      */
-    void feedsRequested(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds);
+    void feedsRequested(const Fuoten::IdList &updatedFeeds, const Fuoten::IdList &newFeeds, const Fuoten::IdList &deletedFeeds);
 
     /*!
      * \brief Takes and processes data after a feed has been created.
@@ -156,7 +156,7 @@ protected Q_SLOTS:
      * The model will reload all feeds in it and will update the unreadCount properties, it will not
      * use the arguments of the slot
      */
-    void itemsRquested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
+    void itemsRquested(const Fuoten::IdList &updatedItems, const Fuoten::IdList &newItems, const Fuoten::IdList &deletedItems);
 
     /*!
      * \brief Takes and processes data after an item/article has been marked as read/unread.

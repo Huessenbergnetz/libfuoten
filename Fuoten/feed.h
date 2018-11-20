@@ -413,7 +413,7 @@ Q_SIGNALS:
      * \brief This signal is emitted if the server side ordering of this feed changes.
      * \sa ordering
      */
-    void orderingChanged(FeedOrdering ordering);
+    void orderingChanged(Fuoten::Feed::FeedOrdering ordering);
     /*!
      * \brief This signal is emitted if the URL of the homepage of this feed changes.
      * \sa link

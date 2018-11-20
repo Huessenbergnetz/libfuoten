@@ -80,7 +80,7 @@ protected Q_SLOTS:
      *
      * handleStorageChanged() will connect AbstractStorage::requestedFolders() signal to this slot.
      */
-    void foldersRequested(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const IdList &deletedFolders);
+    void foldersRequested(const QList<QPair<qint64, QString> > &updatedFolders, const QList<QPair<qint64, QString> > &newFolders, const Fuoten::IdList &deletedFolders);
 
     /*!
      * \brief Takes and processes data after a folder has been renamed.
@@ -116,7 +116,7 @@ protected Q_SLOTS:
      *
      * handleStorageChanged() will connect the AbstractStorage::requestedFeeds() signal to this slot.
      */
-    void feedsRequested(const IdList &updatedFeeds, const IdList &newFeeds, const IdList &deletedFeeds);
+    void feedsRequested(const Fuoten::IdList &updatedFeeds, const Fuoten::IdList &newFeeds, const Fuoten::IdList &deletedFeeds);
 
     /*!
      * \brief Takes and processes data after a new feed has been created.

@@ -263,7 +263,7 @@ Q_SIGNALS:
      * \brief This signal is emitted when the pointer to the local storage handler changes in the underlying model.
      * \sa storage
      */
-    void storageChanged(AbstractStorage *storage);
+    void storageChanged(Fuoten::AbstractStorage *storage);
 
     /*!
      * \brief This signal is emitted when the parent ID property changed in the underlying model.

@@ -163,7 +163,7 @@ Q_SIGNALS:
     void bodyLimitChanged(int bodyLimit);
 
 protected Q_SLOTS:
-    void gotArticlesAsync(const ArticleList &articles);
+    void gotArticlesAsync(const Fuoten::ArticleList &articles);
 
     /*!
      * \brief Takes and processes data after items/articles have been requested.
@@ -174,7 +174,7 @@ protected Q_SLOTS:
      * \param newItems      list of IDs of items that are new to the local storage
      * \param deletedItems  list of IDs of items that have benn updated in the local storage
      */
-    void itemsRequested(const IdList &updatedItems, const IdList &newItems, const IdList &deletedItems);
+    void itemsRequested(const Fuoten::IdList &updatedItems, const Fuoten::IdList &newItems, const Fuoten::IdList &deletedItems);
 
     /*!
      * \brief Takes and processses data after a folder has been marked as read.
@@ -254,7 +254,7 @@ protected Q_SLOTS:
      * \param itemIds   list of IDs of items/articles that have been marked as read/unread
      * \param unread    \c true if the items/articles in the list have been marked as unread, \c false if they have been marked as read
      */
-    void itemsMarked(const IdList &itemIds, bool unread);
+    void itemsMarked(const Fuoten::IdList &itemIds, bool unread);
 
     /*!
      * \brief Takes and processes data after an item/article has been starred/unstarred.

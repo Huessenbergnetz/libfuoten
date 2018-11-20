@@ -474,19 +474,19 @@ Q_SIGNALS:
      * \a error will be a nullptr if no error occurred or the current error has been reset.
      * \sa error
      */
-    void errorChanged(Error *error);
+    void errorChanged(Fuoten::Error *error);
 
     /*!
      * \brief This signal is emitted when the pointer to the AbstractConfiguration object changes.
      * \sa configuration
      */
-    void configurationChanged(AbstractConfiguration *configuration);
+    void configurationChanged(Fuoten::AbstractConfiguration *configuration);
 
     /*!
      * \brief Notifier signal for the \link Component::storage storage \endlink property.
      * \sa storage(), setDefaultStorage(), setStorage()
      */
-    void storageChanged(AbstractStorage *storage);
+    void storageChanged(Fuoten::AbstractStorage *storage);
 
     /*!
      * \brief Notifier signal for the \link Component::useStorage useStorage \endlink property.
@@ -498,7 +498,7 @@ Q_SIGNALS:
      * \brief Notifier signal for the \link Component::notificator notificator \endlink property.
      * \sa setNotificator(), notificator()
      */
-    void notificatorChanged(AbstractNotificator *notificator);
+    void notificatorChanged(Fuoten::AbstractNotificator *notificator);
 
     /*!
      * \brief This signal is emitted if the SSL/TLS session encountered errors during the set up.
@@ -521,7 +521,7 @@ Q_SIGNALS:
      * \sa error
      * \param error pointer to an Error object
      */
-    void failed(Error *error);
+    void failed(Fuoten::Error *error);
 
 protected:
     const QScopedPointer<ComponentPrivate> d_ptr;

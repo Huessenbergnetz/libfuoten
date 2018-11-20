@@ -193,7 +193,7 @@ Q_SIGNALS:
      * \brief This signal is emitted if the error type changes.
      * \sa type
      */
-    void typeChanged(Type type);
+    void typeChanged(Fuoten::Error::Type type);
     /*!
      * \brief This signal is emitted if the additional data changes.
      * \sa data
@@ -203,7 +203,7 @@ Q_SIGNALS:
      * \brief This signal is emitted if the severity changes.
      * \sa severity
      */
-    void severityChanged(Severity severity);
+    void severityChanged(Fuoten::Error::Severity severity);
 
 protected:
     const QScopedPointer<ErrorPrivate> d_ptr;

@@ -127,7 +127,7 @@ Q_SIGNALS:
      * \brief This is emitted if the value of the \link MarkMultipleItems::itemIds itemIds \endlink property changes.
      * \sa MarkMultipleItems::itemIds(), MarkMultipleItems::setItemIds()
      */
-    void itemIdsChanged(const IdList &itemIds);
+    void itemIdsChanged(const Fuoten::IdList &itemIds);
     /*!
      * \brief This is emitted if the value of the \link MarkMultipleItems::unread unread \endlink property changes.
      * \sa MarkMultipleItems::unread(), MarkMultipleItems::setUnread()
@@ -139,7 +139,7 @@ Q_SIGNALS:
      * \param itemIds   list of IDs of articles that have been marked as read or unread
      * \param unread    \c true if the articles in the list have been marked as unread, \c false if marked as read
      */
-    void succeeded(const IdList &itemIds, bool unread);
+    void succeeded(const Fuoten::IdList &itemIds, bool unread);
 
 protected:
     MarkMultipleItems(MarkMultipleItemsPrivate &dd, QObject *parent = nullptr);

@@ -169,7 +169,7 @@ Q_SIGNALS:
      * \brief This signal will be emitted whenever the error property changes. May return a nullptr.
      * \sa BaseItem::error
      */
-    void errorChanged(Error *error);
+    void errorChanged(Fuoten::Error *error);
 
 protected:
     const QScopedPointer<BaseItemPrivate> d_ptr;
