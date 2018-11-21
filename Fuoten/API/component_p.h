@@ -77,7 +77,7 @@ public:
     QTimer *timeoutTimer = nullptr;
     QNetworkReply *reply = nullptr;
     QNetworkAccessManager::Operation namOperation = QNetworkAccessManager::GetOperation;
-    quint8 requestTimeout = 120;
+    quint8 requestTimeout = 180;
     quint8 retryCount;
     Component::ExpectedJSONType expectedJSONType = Component::Empty;
     bool requiresAuth = true;
