@@ -18,6 +18,7 @@
  */
 
 #include "sqlitestorage_p.h"
+#include <cmath>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -69,9 +70,6 @@ void SQLiteStorageManager::run()
     QSqlQuery q(m_db);
     result = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
     Q_ASSERT_X(result, "init database", "failed to activate foreign keys");
-
-    result = m_db.transaction();
-    Q_ASSERT_X(result, "init dtabase", "failed to start transaction");
 
     result = q.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS system "
                                    "(id INTEGER PRIMARY KEY NOT NULL, "
@@ -139,80 +137,6 @@ void SQLiteStorageManager::run()
     result = q.exec(QStringLiteral("CREATE INDEX IF NOT EXISTS items_feed_id_index ON items (feedId)"));
     Q_ASSERT_X(result, "init database", "failed to create items_feed_id_index");
 
-
-//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_update_item AFTER UPDATE OF unread ON items "
-//                               "BEGIN "
-//                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = old.feedId) WHERE id = old.feedId; "
-//                               "END"
-//                               ))) {
-//        //% "Failed to execute database query."
-//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-//        return;
-//    }
-
-//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_delete_item AFTER DELETE ON items "
-//                               "BEGIN "
-//                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = old.feedId) WHERE id = old.feedId; "
-//                               "END"
-//                               ))) {
-//        //% "Failed to execute database query."
-//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-//        return;
-//    }
-
-//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS feeds_unreadCount_insert_item AFTER INSERT ON items "
-//                               "BEGIN "
-//                               "UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = new.feedId) WHERE id = new.feedId; "
-//                               "END"
-//                               ))) {
-//        //% "Failed to execute database query."
-//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-//        return;
-//    }
-
-//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_unreadCount_update_feed AFTER UPDATE OF unreadCount ON feeds "
-//                               "BEGIN "
-//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-//                               "END"
-//                               ))) {
-//        //% "Failed to execute database query."
-//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-//        return;
-//    }
-
-//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_delete_feed AFTER DELETE ON feeds "
-//                               "BEGIN "
-//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-//                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-//                               "END"))) {
-//        //% "Failed to execute database query."
-//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-//        return;
-//    }
-
-//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_insert_feed AFTER INSERT ON feeds "
-//                               "BEGIN "
-//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
-//                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
-//                               "END"
-//                               ))) {
-//        //% "Failed to execute database query."
-//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-//        return;
-//    }
-
-//    if (!q.exec(QStringLiteral("CREATE TRIGGER IF NOT EXISTS folders_counts_move_feed AFTER UPDATE OF folderId ON feeds "
-//                               "BEGIN "
-//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
-//                               "UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-//                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = new.folderId) WHERE id = new.folderId; "
-//                               "UPDATE folders SET feedCount = (SELECT COUNT(id) FROM feeds WHERE folderId = old.folderId) WHERE id = old.folderId; "
-//                               "END"))) {
-//        //% "Failed to execute database query."
-//        setFailed(q.lastError(), qtTrId("fuoten-error-failed-execute-query"));
-//        return;
-//    }
-
     for (const QString &trigger : {QStringLiteral("feeds_unreadCount_update_item"), QStringLiteral("feeds_unreadCount_delete_item"), QStringLiteral("feeds_unreadCount_insert_item"), QStringLiteral("folders_unreadCount_update_feed"), QStringLiteral("folders_counts_delete_feed"), QStringLiteral("folders_counts_insert_feed"), QStringLiteral("folders_counts_move_feed")}) {
         result = q.exec(QStringLiteral("DROP TRIGGER IF EXISTS %1").arg(trigger));
         Q_ASSERT_X(result, "init database", "failed to drop obsolete trigger");
@@ -223,9 +147,6 @@ void SQLiteStorageManager::run()
 
     result = q.exec(QStringLiteral("CREATE VIEW IF NOT EXISTS total_starred AS SELECT COUNT(id) FROM items WHERE starred = 1"));
     Q_ASSERT_X(result, "init database", "failed to create total_starred view");
-
-    result = m_db.commit();
-    Q_ASSERT_X(result, "init database", "failed to commit database queries");
 
     result = q.exec(QStringLiteral("SELECT value FROM system WHERE key = 'schema_version'"));
     Q_ASSERT_X(result, "init database", "failed to query installed schema version");
@@ -241,7 +162,7 @@ void SQLiteStorageManager::run()
 
     Q_EMIT succeeded();
 
-    qDebug("%s", "Finished checking databsae scheme.");
+    qDebug("%s", "Finished checking database scheme.");
 }
 
 
@@ -318,7 +239,7 @@ qint64 SQLiteStorage::getNewestItemId(FuotenEnums::Type type, qint64 id)
     case FuotenEnums::All:
         qs = QStringLiteral("SELECT id FROM items ORDER BY id DESC LIMIT 1");
     case FuotenEnums::Folder:
-        qs = QStringLiteral("SELECT id FROM items WHERE feedId IN (SELECT id FROM feeds WHERE folderId = ?) ORDER BY id DESC LIMIT 1");
+        qs = QStringLiteral("SELECT it.id FROM items it INNER JOIN feeds fe ON it.feedId = fe.id WHERE fe.folderId = ? ORDER BY it.id DESC LIMIT 1");
         break;
     default:
         return -1;
@@ -378,7 +299,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     for (const QJsonValue &f : folders) {
         const QJsonObject o = f.toObject();
         if (Q_LIKELY(!o.isEmpty())) {
-            reqFolders.insert(o.value(QStringLiteral("id")).toVariant().toLongLong(), o.value(QStringLiteral("name")).toString());
+            reqFolders.insert(std::llround(o.value(QStringLiteral("id")).toDouble()), o.value(QStringLiteral("name")).toString());
         }
     }
 
@@ -411,7 +332,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
         qDebug("%s", "No local folders. Adding all requested folders as new.");
 
-        QHash<qint64, QString>::const_iterator i = reqFolders.constBegin();
+        auto i = reqFolders.constBegin();
         while (i != reqFolders.constEnd()) {
             newFolders.push_back(QPair<qint64, QString>(i.key(), i.value()));
             newFolderNames.push_back(i.value());
@@ -431,7 +352,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
         qDebug("%s", "Checking for updated and deleted folders.");
 
-        for (QHash<qint64, QString>::const_iterator i = currentFolders.constBegin(); i != currentFolders.constEnd(); ++i) {
+        for (auto i = currentFolders.constBegin(); i != currentFolders.constEnd(); ++i) {
             if (reqFolders.contains(i.key())) {
                 if (reqFolders.value(i.key()) != i.value()) {
                     const QString newFolderName = reqFolders.value(i.key());
@@ -445,7 +366,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
         }
 
         qDebug("%s", "Checking for new folders.");
-        for (QHash<qint64, QString>::const_iterator i = reqFolders.constBegin(); i != reqFolders.constEnd(); ++i) {
+        for (auto i = reqFolders.constBegin(); i != reqFolders.constEnd(); ++i) {
             if (!currentFolders.contains(i.key())) {
                 newFolders.push_back(qMakePair(i.key(), i.value()));
                 newFolderNames.push_back(i.value());
@@ -478,15 +399,15 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
         if (!updatedFolders.empty()) {
 
+            qresult = q.prepare(QStringLiteral("UPDATE folders SET name = :name WHERE id = :id"));
+            Q_ASSERT_X(qresult, "folders requested", "failed to prepare updating folders in database");
+
             for (int i = 0; i < updatedFolders.size(); ++i) {
 
                 qDebug("Updating name of folder with ID %lli in local database to %s.", updatedFolders.at(i).first, qUtf8Printable(updatedFolders.at(i).second));
 
-                qresult = q.prepare(QStringLiteral("UPDATE folders SET name = ? WHERE id = ?"));
-                Q_ASSERT_X(qresult, "folders requested", "failed to prepare updating folders in database");
-
-                q.addBindValue(updatedFolders.at(i).second);
-                q.addBindValue(updatedFolders.at(i).first);
+                q.bindValue(QStringLiteral(":name"), updatedFolders.at(i).second);
+                q.bindValue(QStringLiteral(":id"), updatedFolders.at(i).first);
 
                 qresult = q.exec();
                 Q_ASSERT_X(qresult, "folders requested", "failed to update folders in datbase");
@@ -496,15 +417,15 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
         if (!newFolders.empty()) {
 
+            qresult = q.prepare(QStringLiteral("INSERT INTO folders (id, name) VALUES (:id, :name)"));
+            Q_ASSERT_X(qresult, "folders requested", "failed to prepare insertion of new folders in database");
+
             for (int i = 0; i < newFolders.size(); ++i) {
 
                 qDebug("Adding folder \"%s\" with ID %lli to the local database.", qUtf8Printable(newFolders.at(i).second), newFolders.at(i).first);
 
-                qresult = q.prepare(QStringLiteral("INSERT INTO folders (id, name) VALUES (?, ?)"));
-                Q_ASSERT_X(qresult, "folders requested", "failed to prepare insertion of new folders in database");
-
-                q.addBindValue(newFolders.at(i).first);
-                q.addBindValue(newFolders.at(i).second);
+                q.bindValue(QStringLiteral(":id"), newFolders.at(i).first);
+                q.bindValue(QStringLiteral(":name"), newFolders.at(i).second);
 
                 qresult = q.exec();
                 Q_ASSERT_X(qresult, "folders requested", "failed to insert new folders into database");
@@ -544,7 +465,7 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
         return;
     }
 
-    QJsonArray a = json.object().value(QStringLiteral("folders")).toArray();
+    const QJsonArray a = json.object().value(QStringLiteral("folders")).toArray();
 
     if (a.isEmpty()) {
         qWarning("Can not add folder to SQLite database. JSON array is empty.");
@@ -552,14 +473,14 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
     }
 
 
-    QJsonObject o = a.first().toObject();
+    const QJsonObject o = a.first().toObject();
 
     if (o.isEmpty()) {
         qWarning("Can not add folder to SQLite databse. JSON object is empty.");
         return;
     }
 
-    const qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
+    const qint64 id = std::llround(o.value(QStringLiteral("id")).toDouble());
     if (id == 0) {
         qWarning("Can not add folder to SQLite database. Invalid ID.");
         return;
@@ -610,7 +531,7 @@ void SQLiteStorage::folderRenamed(qint64 id, const QString &newName)
         return;
     }
 
-    if (id == 0) {
+    if (id <= 0) {
         //% "The folder ID is not valid."
         setError(new Error(Error::ApplicationError, Error::Critical, qtTrId("libfuoten-err-invalid-folder-id"), QString(), this));
         notify(error());
@@ -702,10 +623,10 @@ QList<Folder*> SQLiteStorage::getFolders(FuotenEnums::SortingRole sortingRole, Q
     Q_ASSERT_X(qresult, "get folders", "failed to execute datbase query");
 
     while (q.next()) {
-        qint64 id = q.value(0).toLongLong();
+        const qint64 id = q.value(0).toLongLong();
         if (Q_LIKELY(id > 0)) {
             folders.append(new Folder(
-                               q.value(0).toLongLong(),
+                               id,
                                q.value(1).toString(),
                                q.value(2).toUInt(),
                                q.value(3).toUInt()
@@ -805,12 +726,10 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
     }
 
     if (!feedIds.empty()) {
+        qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
+        Q_ASSERT(qresult);
         for (int i = 0; i < feedIds.size(); ++i) {
-            const qint64 feedId = feedIds.at(i);
-
-            qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
-            Q_ASSERT(qresult);
-            q.bindValue(QStringLiteral(":feedId"), feedId);
+            q.bindValue(QStringLiteral(":feedId"), feedIds.at(i));
             qresult = q.exec();
             Q_ASSERT(qresult);
         }
@@ -1051,30 +970,31 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         qresult = d->db.transaction();
         Q_ASSERT_X(qresult, "feeds requested", "failed to start database transaction");
 
+
+        qresult = q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
+                                           "VALUES (:id, :folderId, :title, :url, :link, :added, :ordering, :pinned, :updateErrorCount, :lastUpdateError, :faviconLink)"
+                                           ));
+        Q_ASSERT_X(qresult, "feeds requested", "failed to prepare to insert new feed into database");
+
         for (const QJsonValue &f : feeds) {
             const QJsonObject o = f.toObject();
             if (Q_LIKELY(!o.isEmpty())) {
-                const qlonglong feedId = o.value(QStringLiteral("id")).toVariant().toLongLong();
+                const qlonglong feedId = std::llround(o.value(QStringLiteral("id")).toDouble());
                 const QString feedTitle = o.value(QStringLiteral("title")).toString();
                 newFeedIds.push_back(feedId);
                 newFeedNames.push_back(feedTitle);
 
-                qresult = q.prepare(QStringLiteral("INSERT INTO feeds (id, folderId, title, url, link, added, ordering, pinned, updateErrorCount, lastUpdateError, faviconLink) "
-                                                   "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-                                                   ));
-                Q_ASSERT_X(qresult, "feeds requested", "failed to prepare to insert new feed into database");
-
-                q.addBindValue(feedId);
-                q.addBindValue(o.value(QStringLiteral("folderId")).toVariant().toLongLong());
-                q.addBindValue(feedTitle);
-                q.addBindValue(o.value(QStringLiteral("url")).toString());
-                q.addBindValue(o.value(QStringLiteral("link")).toString());
-                q.addBindValue(o.value(QStringLiteral("added")).toVariant().toUInt());
-                q.addBindValue(o.value(QStringLiteral("ordering")).toInt());
-                q.addBindValue(o.value(QStringLiteral("pinned")).toBool());
-                q.addBindValue(o.value(QStringLiteral("updateErrorCount")).toInt());
-                q.addBindValue(o.value(QStringLiteral("lastUpdateError")).toString());
-                q.addBindValue(o.value(QStringLiteral("faviconLink")).toString());
+                q.bindValue(QStringLiteral(":id"), feedId);
+                q.bindValue(QStringLiteral(":folderId"), std::llround(o.value(QStringLiteral("folderId")).toDouble()));
+                q.bindValue(QStringLiteral(":title"), feedTitle);
+                q.bindValue(QStringLiteral(":url"), o.value(QStringLiteral("url")).toString());
+                q.bindValue(QStringLiteral(":link"), o.value(QStringLiteral("link")).toString());
+                q.bindValue(QStringLiteral(":added"), o.value(QStringLiteral("added")).toVariant().toUInt());
+                q.bindValue(QStringLiteral(":ordering"), o.value(QStringLiteral("ordering")).toInt());
+                q.bindValue(QStringLiteral(":pinned"), o.value(QStringLiteral("pinned")).toBool());
+                q.bindValue(QStringLiteral(":updateErrorCount"), o.value(QStringLiteral("updateErrorCount")).toInt());
+                q.bindValue(QStringLiteral(":lastUpdateError"), o.value(QStringLiteral("lastUpdateError")).toString());
+                q.bindValue(QStringLiteral(":faviconLink"), o.value(QStringLiteral("faviconLink")).toString());
 
                 qresult = q.exec();
                 Q_ASSERT_X(qresult, "feeds requested", "failed to insert new feed into database");
@@ -1103,7 +1023,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         for (const QJsonValue &f : feeds) {
             const QJsonObject o = f.toObject();
             if (Q_UNLIKELY(!o.isEmpty())) {
-                const qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
+                const qint64 id = std::llround(o.value(QStringLiteral("id")).toDouble());
                 const QString title = o.value(QStringLiteral("title")).toString();
                 requestedFeedIds.push_back(id);
 
@@ -1119,7 +1039,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                     Q_ASSERT_X(qresult, "feeds requested", "failed to prepare inserting new feed into database");
 
                     q.addBindValue(id);
-                    q.addBindValue(o.value(QStringLiteral("folderId")).toVariant().toLongLong());
+                    q.addBindValue(std::llround(o.value(QStringLiteral("folderId")).toDouble()));
                     q.addBindValue(title);
                     q.addBindValue(o.value(QStringLiteral("url")).toString());
                     q.addBindValue(o.value(QStringLiteral("link")).toString());
@@ -1136,8 +1056,8 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                 } else {
 
                     const QUrl rFaviconLink = QUrl(o.value(QStringLiteral("faviconLink")).toString());
-                    const qint64 rFolderId = o.value(QStringLiteral("folderId")).toVariant().toLongLong();
-                    const Feed::FeedOrdering rOrdering = (Feed::FeedOrdering)o.value(QStringLiteral("ordering")).toInt();
+                    const qint64 rFolderId = std::llround(o.value(QStringLiteral("folderId")).toDouble());
+                    const Feed::FeedOrdering rOrdering = static_cast<Feed::FeedOrdering>(o.value(QStringLiteral("ordering")).toInt());
                     const QUrl rLink = QUrl(o.value(QStringLiteral("link")).toString());
                     const bool rPinned = o.value(QStringLiteral("pinned")).toBool();
                     const uint rUpdateErrorCount = o.value(QStringLiteral("updateErrorCount")).toInt();
@@ -1150,7 +1070,11 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                         qDebug("Updating feed \"%s\" with ID %lli in the database.", qUtf8Printable(f->title()), id);
 
                         updatedFeedIds.push_back(id);
-                        updatedFeedNames.push_back(title);
+
+                        // only notify about feeds with relevant changes
+                        if (f->title() != title || f->folderId() != rFolderId || f->ordering() != rOrdering || f->pinned() != rPinned) {
+                            updatedFeedNames.push_back(title);
+                        }
 
                         qresult = q.prepare(QStringLiteral("UPDATE feeds SET folderId = ?, title = ?, link = ?, ordering = ?, pinned = ?, updateErrorCount = ?, lastUpdateError = ?, faviconLink = ? WHERE id = ?"));
                         Q_ASSERT_X(qresult, "feeds requested", "failed to prepare updating feed in database");
@@ -1262,7 +1186,7 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
         return;
     }
 
-    QJsonArray a = json.object().value(QStringLiteral("feeds")).toArray();
+    const QJsonArray a = json.object().value(QStringLiteral("feeds")).toArray();
 
     if (a.isEmpty()) {
         qWarning("Can not add feed to SQLite database. JSON array is empty.");
@@ -1270,7 +1194,7 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
     }
 
 
-    QJsonObject o = a.first().toObject();
+    const QJsonObject o = a.first().toObject();
 
     if (o.isEmpty()) {
         qWarning("Can not add feed to SQLite databse. JSON object is empty.");
@@ -1286,8 +1210,8 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
                                             ));
     Q_ASSERT_X(qresult, "feed created", "failed to prepare database query");
 
-    const qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
-    const qint64 folderId = o.value(QStringLiteral("folderId")).toVariant().toLongLong();
+    const qint64 id = std::llround(o.value(QStringLiteral("id")).toDouble());
+    const qint64 folderId = std::llround(o.value(QStringLiteral("folderId")).toDouble());
     const QString title = o.value(QStringLiteral("title")).toString();
 
     q.addBindValue(id);
@@ -2048,7 +1972,7 @@ void ItemsRequestedWorker::run()
     for (const QJsonValue &i : items) {
         const QJsonObject o = i.toObject();
         if (Q_LIKELY(!o.isEmpty())) {
-            qint64 id = o.value(QStringLiteral("id")).toVariant().toLongLong();
+            const qint64 id = std::llround(o.value(QStringLiteral("id")).toDouble());
 
             if (!currentItems.isEmpty() && currentItems.contains(id)) {
 
@@ -2109,7 +2033,7 @@ void ItemsRequestedWorker::run()
                 Q_ASSERT_X(qresult, "items requested worker", "failed to prepare insertion of new item into database");
 
                 q.addBindValue(id);
-                q.addBindValue(o.value(QStringLiteral("feedId")).toVariant().toLongLong());
+                q.addBindValue(std::llround(o.value(QStringLiteral("feedId")).toDouble()));
                 q.addBindValue(o.value(QStringLiteral("guid")).toString());
                 q.addBindValue(o.value(QStringLiteral("guidHash")).toString());
                 q.addBindValue(o.value(QStringLiteral("url")).toString());
@@ -2225,9 +2149,9 @@ void ItemsRequestedWorker::run()
     if (!feedIds.empty()) {
         qresult = m_db.transaction();
         Q_ASSERT(qresult);
+        qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
+        Q_ASSERT(qresult);
         for (const qint64 id : feedIds) {
-            qresult = q.prepare(QStringLiteral("UPDATE feeds SET unreadCount = (SELECT COUNT(id) FROM items WHERE unread = 1 AND feedId = :feedId) WHERE id = :feedId"));
-            Q_ASSERT(qresult);
             q.bindValue(QStringLiteral(":feedId"), id);
             qresult = q.exec();
             Q_ASSERT(qresult);
@@ -2246,9 +2170,9 @@ void ItemsRequestedWorker::run()
     if (!folderIds.empty()) {
         qresult = m_db.transaction();
         Q_ASSERT(qresult);
+        qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
+        Q_ASSERT(qresult);
         for (const qint64 id : folderIds) {
-            qresult = q.prepare(QStringLiteral("UPDATE folders SET unreadCount = (SELECT SUM(unreadCount) FROM feeds WHERE folderId = :folderId) WHERE id = :folderId"));
-            Q_ASSERT(qresult);
             q.bindValue(QStringLiteral(":folderId"), id);
             qresult = q.exec();
             Q_ASSERT(qresult);

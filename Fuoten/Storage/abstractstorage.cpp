@@ -28,15 +28,11 @@ using namespace Fuoten;
 AbstractStorage::AbstractStorage(QObject *parent) :
     QObject(parent), d_ptr(new AbstractStoragePrivate)
 {
-    qRegisterMetaType<Fuoten::IdList>("IdList");
-    qRegisterMetaType<Fuoten::ArticleList>("ArticleList");
 }
 
 AbstractStorage::AbstractStorage(AbstractStoragePrivate &dd, QObject *parent) :
     QObject(parent), d_ptr(&dd)
 {
-    qRegisterMetaType<Fuoten::IdList>("IdList");
-    qRegisterMetaType<Fuoten::ArticleList>("ArticleList");
 }
 
 AbstractStorage::~AbstractStorage()
@@ -133,7 +129,7 @@ QString AbstractStorage::limitBody(const QString &body, int limit) const
 
 void AbstractStorage::getArticlesAsync(const QueryArgs &args)
 {
-    const ArticleList articles = getArticles(args);
+    const auto articles = getArticles(args);
 
     Q_EMIT gotArticlesAsync(articles);
 }
