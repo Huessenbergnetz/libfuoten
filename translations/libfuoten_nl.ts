@@ -466,5 +466,9 @@
         <source>Requesting updated and new articles</source>
         <translation>Bijgewerkte en nieuwe artikels worden opgevraagd</translation>
     </message>
+    <message id="err-decompression-failed">
+        <source>Decompressing the requested data failed.</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 </TS>

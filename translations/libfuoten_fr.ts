@@ -1,69 +1,69 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="el" sourcelanguage="en" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="fr" sourcelanguage="en" version="2.1">
 <context>
     <name/>
     <message id="err-conn-timeout" numerus="yes">
         <source>The connection to the server timed out after %n second(s).</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>La connexion au serveur a expirée après %n seconde.</numerusform><numerusform>La connexion au serveur a expirée après %n secondes.</numerusform></translation>
     </message>
     <message id="err-username-pass-missing">
         <source>You have to specify a username and a password.</source>
-        <translation type="unfinished"/>
+        <translation>Vous devez specifier un nom d&apos;utilisateur et un mot de passe.</translation>
     </message>
     <message id="err-no-payloud">
         <source>Empty payload when trying to perform a PUT or POST network operation.</source>
-        <translation type="unfinished"/>
+        <translation>Contenu vide lors d&apos;une tentative de requête réseau PUT ou POST.</translation>
     </message>
     <message id="err-empty-answer">
         <source>The request replied an empty answer, but there was content expected.</source>
-        <translation type="unfinished"/>
+        <translation>La reponse à la requête est vide alors que du contenu était attendu.</translation>
     </message>
     <message id="err-no-json-array">
         <source>It was expected that the request returns a JSON array, but it returned something else.</source>
-        <translation type="unfinished"/>
+        <translation>La réponse attendue était du JSON, mais elle contient autre chose.</translation>
     </message>
     <message id="err-no-json-object">
         <source>It was expected that the request returns a JSON object, but it returned something else.</source>
-        <translation type="unfinished"/>
+        <translation>La réponse attendue était un objet JSON, mais elle contient autre chose.</translation>
     </message>
     <message id="err-net-reply-1">
         <source>The remote server at %1 refused the connection.</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur distant %1 a refusé la connexion.</translation>
     </message>
     <message id="err-net-reply-2">
         <source>The remote server at %1 closed the connection prematurely, before the entire reply was received and processed.</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur distant %1 a fermé la connexion prématurément, avant que la réponse complète ne soit reçue et traitée.</translation>
     </message>
     <message id="err-net-reply-3">
         <source>The remote host name %1 was not found.</source>
-        <translation type="unfinished"/>
+        <translation>Le nom d&apos;hôte distant %1 n&apos;a pas été trouvé.</translation>
     </message>
     <message id="err-net-reply-4">
         <source>The connection to the server at %1 timed out.</source>
-        <translation type="unfinished"/>
+        <translation>La connexion au serveur %1 a expirée.</translation>
     </message>
     <message id="err-net-reply-5">
         <source>The operation was canceled before it was finished.</source>
-        <translation type="unfinished"/>
+        <translation>L&apos;opération a été annulée avant d&apos;être terminée.</translation>
     </message>
     <message id="err-net-reply-6">
         <source>The SSL/TLS handshake failed and the encrypted channel could not be established.</source>
-        <translation type="unfinished"/>
+        <translation>La poignée de main SSL/TLS a échouée. Le tunnel chiffré n&apos;a pas pu être établie.</translation>
     </message>
     <message id="err-net-reply-7">
         <source>The connection was broken due to disconnection from the network.</source>
-        <translation type="unfinished"/>
+        <translation>La connexion a été coupée à cause d&apos;une déconnexion réseau.</translation>
     </message>
     <message id="err-net-reply-8">
         <source>The connection was broken due to disconnection from the network or failure to start the network.</source>
-        <translation type="unfinished"/>
+        <translation>La connexion a été coupée à cause d&apos;une déconnexion réseau ou d&apos;un échec de démarrage du réseau.</translation>
     </message>
     <message id="err-net-reply-9">
         <source>The background request is not currently allowed due to platform policy.</source>
-        <translation type="unfinished"/>
+        <translation>La requête en tâche de fond n&apos;est actuellement pas autorisée par la plateforme.</translation>
     </message>
     <message id="err-net-reply-10">
         <source>While following redirects, the maximum limit was reached.</source>
-        <translation type="unfinished"/>
+        <translation>La limite du nombre de redirections a été atteinte.</translation>
     </message>
     <message id="err-net-reply-11">
         <source>While following redirects, the network access API detected a redirect from an encrypted protocol (https) to an unencrypted one (http).</source>

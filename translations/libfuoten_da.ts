@@ -155,7 +155,7 @@
     </message>
     <message id="libfuoten-err-http-404">
         <source>Not found — The requested resource can not be found on the server.</source>
-        <translation type="unfinished"/>
+        <translation>Ikke fundet - Den ønskede ressource kan ikke findes på serveren.</translation>
     </message>
     <message id="libfuoten-err-http-405">
         <source>Method not allowed — The used method is not allowed for the requested resource.</source>
@@ -179,7 +179,7 @@
     </message>
     <message id="libfuoten-err-http-410">
         <source>Gone — The resource requested is no longer available.</source>
-        <translation type="unfinished"/>
+        <translation>Forsvundet - Den ønskede ressource er ikke længere tilgængelig.</translation>
     </message>
     <message id="libfuoten-err-http-411">
         <source>Length required — The request did not specify the length of its content, which is required by the requested resource.</source>
@@ -195,7 +195,7 @@
     </message>
     <message id="libfuoten-err-http-414">
         <source>URI too long — The URI provided was too long for the server to process.</source>
-        <translation type="unfinished"/>
+        <translation>URI for lang - Den givne URI var for lang til at serveren kunne håndtere den.</translation>
     </message>
     <message id="libfuoten-err-http-415">
         <source>Unsupported media type — The request entity has a media type which the server or resource does not support.</source>
@@ -465,6 +465,10 @@
     <message id="libfuoten-sync-req-updated-articles">
         <source>Requesting updated and new articles</source>
         <translation>Henter ajourførte og nye artikler</translation>
+    </message>
+    <message id="err-decompression-failed">
+        <source>Decompressing the requested data failed.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>
