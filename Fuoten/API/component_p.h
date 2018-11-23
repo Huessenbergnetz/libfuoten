@@ -63,6 +63,8 @@ public:
         }
     }
 
+    bool uncompressReply();
+
     QHash<QByteArray, QByteArray> requestHeaders;
     QString apiRoute;
     QByteArray result;

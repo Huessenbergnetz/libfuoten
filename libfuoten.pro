@@ -19,6 +19,8 @@ DEFINES += FUOTEN_LIBRARY
 
 DEFINES += VERSION_STRING=\"\\\"$${VERSION}\\\"\"
 
+PKGCONFIG += zlib
+
 CONFIG(release, debug|release) {
     DEFINES += QT_NO_DEBUG_OUTPUT
 }

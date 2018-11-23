@@ -471,5 +471,9 @@
         <source>Requesting updated and new articles</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="err-decompression-failed">
+        <source>Decompressing the requested data failed.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
