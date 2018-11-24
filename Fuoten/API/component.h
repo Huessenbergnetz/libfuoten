@@ -189,7 +189,7 @@ class FUOTENSHARED_EXPORT Component : public QObject
      * \par Notifier signal:
      * <TABLE><TR><TD>void</TD><TD>requestTimeoutChanged(quint8 requestTimeout)</TD></TR></TABLE>
      */
-    Q_PROPERTY(quint8 requestTimeout READ requestTimeout WRITE setRequestTimeout NOTIFY requestTimeoutChanged)
+    Q_PROPERTY(quint16 requestTimeout READ requestTimeout WRITE setRequestTimeout NOTIFY requestTimeoutChanged)
     /*!
      * \brief Pointer to an error object, if any error occurred.
      *
@@ -337,7 +337,7 @@ public:
      * \brief Returns the currently set request timeout.
      * \sa requestTimeout
      */
-    quint8 requestTimeout() const;
+    quint16 requestTimeout() const;
 
     /*!
      * \brief Returns a pointer to an Error object, if any error occurred.
@@ -378,7 +378,7 @@ public:
      *
      * \sa requestTimeout
      */
-    void setRequestTimeout(quint8 seconds);
+    void setRequestTimeout(quint16 seconds);
 
     /*!
      * \brief Sets a pointer to a AbstractConfiguration to use for the API request.

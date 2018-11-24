@@ -369,8 +369,8 @@ void Component::sendRequest()
             d->timeoutTimer->setTimerType(Qt::VeryCoarseTimer);
             connect(d->timeoutTimer, &QTimer::timeout, this, &Component::_requestTimedOut);
         }
-        d->timeoutTimer->start(d->requestTimeout * 1000);
-        qDebug("Started timeout timer with %u seconds.", d->requestTimeout);
+        d->timeoutTimer->start(static_cast<int>(d->requestTimeout) * 1000);
+        qDebug("Started timeout timer with %hu seconds.", d->requestTimeout);
     }
 
     d->performNetworkOperation(nr);
@@ -545,9 +545,9 @@ void Component::setInOperation(bool nInOperation)
 }
 
 
-quint8 Component::requestTimeout() const { Q_D(const Component); return d->requestTimeout; }
+quint16 Component::requestTimeout() const { Q_D(const Component); return d->requestTimeout; }
 
-void Component::setRequestTimeout(quint8 seconds)
+void Component::setRequestTimeout(quint16 seconds)
 {
     Q_D(Component); 
     if (seconds != d->requestTimeout) {
