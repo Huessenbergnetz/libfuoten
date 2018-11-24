@@ -332,7 +332,7 @@ public:
      *
      * \return \c true on success, otherwise \c false
      */
-    virtual bool enqueueMarkAllItemsRead();
+    Q_INVOKABLE virtual bool enqueueMarkAllItemsRead();
 
     /*!
      * \brief Getter function for the \link AbstractStorage::inOperation inOperation \endlink property.

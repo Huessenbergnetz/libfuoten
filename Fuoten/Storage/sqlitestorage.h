@@ -159,7 +159,7 @@ public:
      *
      * \return \c true on success, otherwise \c false
      */
-    bool enqueueMarkAllItemsRead() override;
+    Q_INVOKABLE bool enqueueMarkAllItemsRead() override;
 
     /*!
      * \brief Resets the queue column after the queue has been worked.
