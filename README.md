@@ -17,7 +17,7 @@ Have a look at the [roadmap](https://github.com/Huessenbergnetz/Fuoten/milestone
 * SQLite storage class
 
 ## Contributing
-The source code is available on [Github](https://github.com/Huessenbergnetz/libfuoten), feel free to clone or branch according to the [LGPLv3](https://github.com/Huessenbergnetz/libfuoten/blob/master/LICENSE). Translation is done on [Transifex](https://www.transifex.com/buschtrommel/libfuoten).
+The source code is available on [Github](https://github.com/Huessenbergnetz/libfuoten), feel free to clone or branch according to the [LGPLv3](https://github.com/Huessenbergnetz/libfuoten/blob/master/LICENSE). Translation is done on [Transifex](https://www.transifex.com/huessenbergnetz/libfuoten).
 
 ## Getting libfuoten
 * [openSUSE](https://software.opensuse.org/package/libfuoten)
@@ -79,7 +79,7 @@ sudo make install
 ## License
 ```
 libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
-Copyright (C) 2016-2017 Matthias Fehring
+Copyright (C) 2016-2018 Hüssenbergnetz/Matthias Fehring
 https://github.com/Huessenbergnetz/libfuoten
 
 This library is free software: you can redistribute it and/or
