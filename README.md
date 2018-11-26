@@ -23,7 +23,7 @@ The source code is available on [Github](https://github.com/Huessenbergnetz/libf
 * [openSUSE](https://software.opensuse.org/package/libfuoten)
 
 ## Building libfuoten
-Either clone the git repository or download one of the [release](https://github.com/Huessenbergnetz/libfuoten/releases) tarballs. zlib and Qt 5.6 or newer are required to build libfuoten as well as the following Qt modules: Qt5Core, Qt5Network and Qt5Sql.
+Either clone the git repository or download one of the [release](https://github.com/Huessenbergnetz/libfuoten/releases) tarballs. zlib, pkg-config and Qt 5.6 or newer are required to build libfuoten as well as the following Qt modules: Qt5Core, Qt5Network and Qt5Sql.
 
 ### Install dependencies
 Install gcc, g++, qmake, make, zlib, Qt5Core, Qt5Network and Qt5Sql.
@@ -31,7 +31,7 @@ Install gcc, g++, qmake, make, zlib, Qt5Core, Qt5Network and Qt5Sql.
 #### openSUSE
 
 ```
-sudo zypper in gcc-++ make zlib-devel libqt5-qtbase-common-devel libqt5-qtbase-devel libQt5Core-devel libQt5Network-devel libQt5Sql-devel
+sudo zypper in gcc-++ make pkg-config zlib-devel libqt5-qtbase-common-devel libqt5-qtbase-devel libQt5Core-devel libQt5Network-devel libQt5Sql-devel
 ```
 For creating documentation:
 ```
