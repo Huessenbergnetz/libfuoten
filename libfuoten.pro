@@ -19,6 +19,7 @@ DEFINES += FUOTEN_LIBRARY
 
 DEFINES += VERSION_STRING=\"\\\"$${VERSION}\\\"\"
 
+CONFIG += link_pkgconfig
 PKGCONFIG += zlib
 
 CONFIG(release, debug|release) {
