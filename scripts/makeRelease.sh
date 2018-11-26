@@ -3,7 +3,7 @@
 CURRENTDIR=$PWD
 TMPDIR=/tmp
 PRJNAME=libfuoten
-SIGNKEY=3A70A936614C3258
+SIGNKEY=6607CA3F41B25F45
 
 if [ "$1" == "" ]; then
 	echo "You have to specify a version number"
