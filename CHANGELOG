@@ -1,3 +1,9 @@
+libfuoten 0.7.3 - 2018-12-04
+* fixed: forgot to bump the version
+
+libfuoten 0.7.2 - 2018-12-04
+* fixed: missing translations for en_US and en_GB
+
 libfuoten 0.7.1 - 2018-11-26
 * fixed: missing link_pkgconfig in qmake CONFIG var
 
