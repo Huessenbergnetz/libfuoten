@@ -1,9 +1,9 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="en_GB" sourcelanguage="en" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="it" sourcelanguage="en" version="2.1">
 <context>
     <name/>
     <message id="err-conn-timeout" numerus="yes">
         <source>The connection to the server timed out after %n second(s).</source>
-        <translation><numerusform>The connection to the server timed out after %n second.</numerusform><numerusform>The connection to the server timed out after %n seconds.</numerusform></translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message id="err-username-pass-missing">
         <source>You have to specify a username and a password.</source>

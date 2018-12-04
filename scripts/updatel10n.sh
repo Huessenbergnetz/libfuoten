@@ -23,6 +23,4 @@ if [ ! -d translations ]; then
     fi
 fi
 
-$LUPDATE -no-obsolete -pluralonly -source-language en -target-language en_GB -locations none Fuoten -ts translations/libfuoten_en_GB.ts
-$LUPDATE -no-obsolete -pluralonly -source-language en -target-language en_US -locations none Fuoten -ts translations/libfuoten_en_US.ts
 $LUPDATE -no-obsolete -source-language en -target-language en -locations none Fuoten -ts translations/libfuoten.ts
