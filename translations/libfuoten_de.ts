@@ -230,7 +230,7 @@
         <translation>Header‐Felder der Anfrage zu groß – Der Server ist nicht gewillt, die Anfrage zu verarbeiten, weil entweder ein einzelnes Header-Feld oder alle Header-Felder gemeinsam zu groß sind.</translation>
     </message>
     <message id="libfuoten-err-http-500">
-        <source>Internal server error — An unexpected condition was ancountered on the server.</source>
+        <source>Internal server error — An unexpected condition was encountered on the server.</source>
         <translation>Interner Server‐Fehler – Auf dem Server wurde ein unerwarteter Zustand festgestellt.</translation>
     </message>
     <message id="libfuoten-err-http-501">
