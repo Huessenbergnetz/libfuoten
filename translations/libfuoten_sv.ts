@@ -230,7 +230,7 @@
         <translation>Begärans rubrikfält för stora — Servern är ovillig att behandla begäran eftersom antingen ett enskilt rubrikfält eller alla rubrikfält kollektivt är för stora.</translation>
     </message>
     <message id="libfuoten-err-http-500">
-        <source>Internal server error — An unexpected condition was ancountered on the server.</source>
+        <source>Internal server error — An unexpected condition was encountered on the server.</source>
         <translation>Internt serverfel — Ett oväntat villkor påträffades på servern.</translation>
     </message>
     <message id="libfuoten-err-http-501">

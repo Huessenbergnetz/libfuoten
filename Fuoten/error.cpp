@@ -156,7 +156,7 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
                 d->text = qtTrId("libfuoten-err-http-431");
                 break;
             case 500:
-                //% "Internal server error — An unexpected condition was ancountered on the server."
+                //% "Internal server error — An unexpected condition was encountered on the server."
                 d->text = qtTrId("libfuoten-err-http-500");
                 break;
             case 501:

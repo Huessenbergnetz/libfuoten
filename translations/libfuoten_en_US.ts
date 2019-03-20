@@ -230,7 +230,7 @@
         <translation type="unfinished"/>
     </message>
     <message id="libfuoten-err-http-500">
-        <source>Internal server error — An unexpected condition was ancountered on the server.</source>
+        <source>Internal server error — An unexpected condition was encountered on the server.</source>
         <translation type="unfinished"/>
     </message>
     <message id="libfuoten-err-http-501">
