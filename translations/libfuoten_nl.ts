@@ -163,111 +163,111 @@
     </message>
     <message id="libfuoten-err-http-406">
         <source>Not Acceptable — The requested resource is capable of generating only content not acceptable according to the Accept headers sent in the request.</source>
-        <translation type="unfinished"/>
+        <translation>Niet acceptabel — De gevraagde bron kan enkel inhoud genereren die niet acceptabel is volgens de Accept-hoofdingen verzonden in het verzoek.</translation>
     </message>
     <message id="libfuoten-err-http-407">
         <source>Proxy authentication required — The client must first authenticate itself with the proxy server.</source>
-        <translation type="unfinished"/>
+        <translation>Proxy-authenticatie vereist — De cliënt dient zich eerst te authenticeren bij de proxyserver.</translation>
     </message>
     <message id="libfuoten-err-http-408">
         <source>Request timeout — The server timed out waiting for the request.</source>
-        <translation type="unfinished"/>
+        <translation>Time-out bij verzoek — De server moest te lang wachten op het verzoek.</translation>
     </message>
     <message id="libfuoten-err-http-409">
         <source>Conflict — The request could not be processed because of conflict in the request, such as an edit conflict between multiple simultaneous updates.</source>
-        <translation type="unfinished"/>
+        <translation>Conflict — Het verzoek kon niet worden verwerkt wegens een conflict in het verzoekn, zoals een bewerkingsconflict tussen meerdere gelijktijdige updates.</translation>
     </message>
     <message id="libfuoten-err-http-410">
         <source>Gone — The resource requested is no longer available.</source>
-        <translation type="unfinished"/>
+        <translation>Weg — De gevraagde bron is niet langer beschikbaar.</translation>
     </message>
     <message id="libfuoten-err-http-411">
         <source>Length required — The request did not specify the length of its content, which is required by the requested resource.</source>
-        <translation type="unfinished"/>
+        <translation>Lengte vereist — Het verzoek gaf de lengte van de inhoud niet op, maar dit wordt vereist door de gevraagde bron.</translation>
     </message>
     <message id="libfuoten-err-http-412">
         <source>Precondition failed — The server does not meet one of the preconditions that the requester put on the request.</source>
-        <translation type="unfinished"/>
+        <translation>Voorwaarde mislukt — De server voldoet niet aan een van de voorwaarden die de opvrager in het verzoek heeft geplaatst.</translation>
     </message>
     <message id="libfuoten-err-http-413">
         <source>Payload too large — The request is larger than the server is willing or able to process.</source>
-        <translation type="unfinished"/>
+        <translation>Payload te groot — Het verzoek is groter dan de server wil of kan verwerken.</translation>
     </message>
     <message id="libfuoten-err-http-414">
         <source>URI too long — The URI provided was too long for the server to process.</source>
-        <translation type="unfinished"/>
+        <translation>URI te lang — De opgegeven URI is te lang voor de server om te verwerken.</translation>
     </message>
     <message id="libfuoten-err-http-415">
         <source>Unsupported media type — The request entity has a media type which the server or resource does not support.</source>
-        <translation type="unfinished"/>
+        <translation>Niet-ondersteund mediatype — De verzoeksentiteit heeft een mediatype dat door de server of bron niet wordt ondersteund.</translation>
     </message>
     <message id="libfuoten-err-http-416">
         <source>Range not satisfiable — The client has asked for a portion of the resource, but the server cannot supply that portion.</source>
-        <translation type="unfinished"/>
+        <translation>Bereik niet bevredigend — De cliënt vroeg een deel van de bron, maar de server kan dat deel niet aanbieden.</translation>
     </message>
     <message id="libfuoten-err-http-417">
         <source>Expectation failed — The server cannot meet the requirements of the Expect request-header field.</source>
-        <translation type="unfinished"/>
+        <translation>Verwachting mislukt — De server kan niet aan de vereisten van het Expect-request-hoofdingsveld voldoen.</translation>
     </message>
     <message id="libfuoten-err-http-421">
         <source>Misdirected request — The request was directed at a server that is not able to produce a response.</source>
-        <translation type="unfinished"/>
+        <translation>Verkeerd gericht verzoek — Het verzoek werd gericht aan een server die geen antwoord kon bieden.</translation>
     </message>
     <message id="libfuoten-err-http-426">
         <source>Upgrade required — The client should switch to a different protocol.</source>
-        <translation type="unfinished"/>
+        <translation>Opwaardering vereist — De cliënt dient naar een ander protocol over te schakelen.</translation>
     </message>
     <message id="libfuoten-err-http-428">
         <source>Precondition required — The origin server requires the request to be conditional.</source>
-        <translation type="unfinished"/>
+        <translation>Voorwaarde vereist — De oorspronkelijke server vereist dat het verzoek voorwaardelijk is.</translation>
     </message>
     <message id="libfuoten-err-http-429">
         <source>Too many requests — The user has sent too many requests in a given amount of time.</source>
-        <translation type="unfinished"/>
+        <translation>Te veel verzoeken — De gebruiker heeft te veel verzoeken in een bepaald tijdsinterval gestuurd.</translation>
     </message>
     <message id="libfuoten-err-http-431">
         <source>Request header fields too large — The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large.</source>
-        <translation type="unfinished"/>
+        <translation>Request-hoofdingsvelden te groot — De server wil het verzoek niet verwerken omdat één of alle hoofdingsvelden samen te groot zijn.</translation>
     </message>
     <message id="libfuoten-err-http-500">
         <source>Internal server error — An unexpected condition was encountered on the server.</source>
-        <translation type="unfinished"/>
+        <translation>Interne serverfout — Er is een onverwacht probleem opgetreden op de server.</translation>
     </message>
     <message id="libfuoten-err-http-501">
         <source>Not implemented — The server either does not recognize the request method, or it lacks the ability to fulfill the request.</source>
-        <translation type="unfinished"/>
+        <translation>Niet geïmplementeerd — De server herkent de verzoeksmethode niet, of beschikt niet over de mogelijkheid om aan het verzoek te voldoen.</translation>
     </message>
     <message id="libfuoten-err-http-502">
         <source>Bad gateway — The gateway or proxy received an invalid response from the upstream server.</source>
-        <translation type="unfinished"/>
+        <translation>Slechte gateway — De gateway of proxy ontving een ongeldig antwoord van de stroomopwaartse server.</translation>
     </message>
     <message id="libfuoten-err-http-503">
         <source>Service unavailable — The server is currently unavailable (because it is overloaded or down for maintenance).</source>
-        <translation type="unfinished"/>
+        <translation>Dienst niet beschikbaar — De server is momenteel niet beschikbaar (omdat deze overbelast is, of tijdelijk in onderhoud is).</translation>
     </message>
     <message id="libfuoten-err-http-504">
         <source>Gateway timeout — The gateway or proxy and did not receive a timely response from the upstream server.</source>
-        <translation type="unfinished"/>
+        <translation>Gateway-time-out — De gateway of proxy ontving geen tijdig antwoord van de stroomopwaartse server.</translation>
     </message>
     <message id="libfuoten-err-http-505">
         <source>HTTP version not supported — The server does not support the HTTP protocol version used in the request.</source>
-        <translation type="unfinished"/>
+        <translation>HTTP-versie niet ondersteund — De server biedt geen ondersteuning voor de HTTP-protocolversie gebruikt in het verzoek.</translation>
     </message>
     <message id="libfuoten-err-http-506">
         <source>Variant also negotiates — Transparent content negotiation for the request results in a circular reference.</source>
-        <translation type="unfinished"/>
+        <translation>Variant onderhandelt ook — Doorzichtige inhoudsonderhandeling voor het verzoek resulteert in een circulaire verwijzing.</translation>
     </message>
     <message id="libfuoten-err-http-509">
         <source>Bandwidth limit exceeded — The request could not be processes cause it would exceed the bandwidth limit of the server.</source>
-        <translation type="unfinished"/>
+        <translation>Bandbreedtelimiet overschreden — Het verzoek kon niet worden verwerkt omdat het de bandbreedtelimiet van de server zou overschrijden.</translation>
     </message>
     <message id="libfuoten-err-http-510">
         <source>Not extended — Further extensions to the request are required for the server to fulfil it.</source>
-        <translation type="unfinished"/>
+        <translation>Niet uitgebreid — Verdere uitbreidingen aan het verzoek zijn vereist opdat de server eraan kan voldoen.</translation>
     </message>
     <message id="libfuoten-err-http-511">
         <source>Network authentication required — The client needs to authenticate to gain network access.</source>
-        <translation type="unfinished"/>
+        <translation>Netwerkauthenticatie vereist — De cliënt dient zich te authenticeren om toegang te krijgen tot het netwerk.</translation>
     </message>
     <message id="err-net-reply-199">
         <source>An unknown proxy-related error was detected.</source>
@@ -468,7 +468,7 @@
     </message>
     <message id="err-decompression-failed">
         <source>Decompressing the requested data failed.</source>
-        <translation type="unfinished"/>
+        <translation>Uitpakken van de opgevraagde gegevens is mislukt.</translation>
     </message>
 </context>
 </TS>

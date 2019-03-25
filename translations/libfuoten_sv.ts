@@ -468,7 +468,7 @@
     </message>
     <message id="err-decompression-failed">
         <source>Decompressing the requested data failed.</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte avkomprimera den begärda datan </translation>
     </message>
 </context>
 </TS>
