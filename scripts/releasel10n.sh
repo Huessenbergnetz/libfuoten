@@ -23,7 +23,7 @@ fi
 
 $LRELEASE -idbased translations/libfuoten.ts
 
-for LANG in da de en_US en_GB fr nl sv
+for LANG in da de en_US en_GB fr nl sv zh_CN
 do
 $LRELEASE -idbased translations/libfuoten_$LANG.ts
 done
