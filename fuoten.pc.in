@@ -8,4 +8,4 @@ Description: Qt based library to provide access to the ownCloud / Nextcloud News
 Version: $$VERSION
 Libs: -L${libdir} -lfuoten
 Cflags: -I${includedir}
-Requires: Qt5Core Qt5Network Qt5Sql zlib
+Requires: Qt5Core Qt5Network Qt5Sql
