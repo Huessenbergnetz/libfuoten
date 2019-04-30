@@ -1595,54 +1595,41 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
 
     QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
-    if (!args.inIds.isEmpty() || args.unreadOnly || args.starredOnly || (args.parentId > -1) || args.queuedOnly) {
-        qs.append(QLatin1String(" WHERE"));
-    }
+    qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t())));
 
     if (args.parentId > -1) {
+        qs.append(QLatin1String(" AND"));
         if (args.parentIdType == FuotenEnums::Feed) {
-            qs.append(QStringLiteral(" it.feedId = %1").arg(QString::number(args.parentId)));
+            qs.append(QStringLiteral(" AND it.feedId = %1").arg(QString::number(args.parentId)));
         } else {
-            qs.append(QStringLiteral(" it.feedId IN (SELECT id FROM feeds WHERE folderId = %1)").arg(args.parentId));
+            qs.append(QStringLiteral(" AND it.feedId IN (SELECT id FROM feeds WHERE folderId = %1)").arg(args.parentId));
         }
     }
 
     if (!args.inIds.isEmpty()) {
-        if (args.parentId > -1) {
-            qs.append(QLatin1String(" AND"));
-        }
         switch(args.inIdsType) {
         case FuotenEnums::Folder:
-            qs.append(QStringLiteral(" it.feedId IN (SELECT id FROM feeds WHERE folderId IN (%1))").arg(d->intListToString(args.inIds)));
+            qs.append(QStringLiteral(" AND it.feedId IN (SELECT id FROM feeds WHERE folderId IN (%1))").arg(d->intListToString(args.inIds)));
             break;
         case FuotenEnums::Feed:
-            qs.append(QStringLiteral(" it.feedId IN (%1)").arg(d->intListToString(args.inIds)));
+            qs.append(QStringLiteral(" AND it.feedId IN (%1)").arg(d->intListToString(args.inIds)));
             break;
         default:
-            qs.append(QStringLiteral(" it.id IN (%1)").arg(d->intListToString(args.inIds)));
+            qs.append(QStringLiteral(" AND it.id IN (%1)").arg(d->intListToString(args.inIds)));
             break;
         }
     }
 
     if (args.unreadOnly) {
-        if ((args.parentId > -1) || !args.inIds.isEmpty()) {
-            qs.append(QLatin1String(" AND"));
-        }
-        qs.append(QLatin1String(" it.unread = 1"));
+        qs.append(QLatin1String(" AND it.unread = 1"));
     }
 
     if (args.starredOnly) {
-        if ((args.parentId > -1) || !args.inIds.isEmpty() || args.unreadOnly) {
-            qs.append(QLatin1String(" AND"));
-        }
-        qs.append(QLatin1String(" it.starred = 1"));
+        qs.append(QLatin1String(" AND it.starred = 1"));
     }
 
     if (args.queuedOnly) {
-        if ((args.parentId > -1) || !args.inIds.isEmpty() || args.unreadOnly || args.starredOnly) {
-            qs.append(QLatin1String(" AND"));
-        }
-        qs.append(QLatin1String(" it.queue > 0"));
+        qs.append(QLatin1String(" AND it.queue > 0"));
     }
 
     switch(args.sortingRole) {
@@ -1748,23 +1735,17 @@ void GetArticlesAsyncWorker::run()
 
     QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
-    if (!m_args.inIds.isEmpty() || m_args.unreadOnly || m_args.starredOnly || (m_args.parentId > -1) || m_args.queuedOnly) {
-        qs.append(QLatin1String(" WHERE"));
-    }
+    qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t())));
 
     if (m_args.parentId > -1) {
         if (m_args.parentIdType == FuotenEnums::Feed) {
-            qs.append(QStringLiteral(" it.feedId = %1").arg(QString::number(m_args.parentId)));
+            qs.append(QStringLiteral(" AND it.feedId = %1").arg(QString::number(m_args.parentId)));
         } else {
-            qs.append(QStringLiteral(" it.feedId IN (SELECT id FROM feeds WHERE folderId = %1)").arg(m_args.parentId));
+            qs.append(QStringLiteral(" AND it.feedId IN (SELECT id FROM feeds WHERE folderId = %1)").arg(m_args.parentId));
         }
     }
 
     if (!m_args.inIds.isEmpty()) {
-        if (m_args.parentId > -1) {
-            qs.append(QLatin1String(" AND"));
-        }
-
         QString idListString;
         if (m_args.inIds.count() == 1) {
             idListString = QString::number(m_args.inIds.first());
@@ -1781,36 +1762,27 @@ void GetArticlesAsyncWorker::run()
 
         switch(m_args.inIdsType) {
         case FuotenEnums::Folder:
-            qs.append(QStringLiteral(" it.feedId IN (SELECT id FROM feeds WHERE folderId IN (%1))").arg(idListString));
+            qs.append(QStringLiteral(" AND it.feedId IN (SELECT id FROM feeds WHERE folderId IN (%1))").arg(idListString));
             break;
         case FuotenEnums::Feed:
-            qs.append(QStringLiteral(" it.feedId IN (%1)").arg(idListString));
+            qs.append(QStringLiteral(" AND it.feedId IN (%1)").arg(idListString));
             break;
         default:
-            qs.append(QStringLiteral(" it.id IN (%1)").arg(idListString));
+            qs.append(QStringLiteral(" AND it.id IN (%1)").arg(idListString));
             break;
         }
     }
 
     if (m_args.unreadOnly) {
-        if ((m_args.parentId > -1) || !m_args.inIds.isEmpty()) {
-            qs.append(QLatin1String(" AND"));
-        }
-        qs.append(QLatin1String(" it.unread = 1"));
+        qs.append(QLatin1String(" AND it.unread = 1"));
     }
 
     if (m_args.starredOnly) {
-        if ((m_args.parentId > -1) || !m_args.inIds.isEmpty() || m_args.unreadOnly) {
-            qs.append(QLatin1String(" AND"));
-        }
-        qs.append(QLatin1String(" it.starred = 1"));
+        qs.append(QLatin1String(" AND it.starred = 1"));
     }
 
     if (m_args.queuedOnly) {
-        if ((m_args.parentId > -1) || !m_args.inIds.isEmpty() || m_args.unreadOnly || m_args.starredOnly) {
-            qs.append(QLatin1String(" AND"));
-        }
-        qs.append(QStringLiteral(" it.queue > 0"));
+        qs.append(QStringLiteral(" AND it.queue > 0"));
     }
 
     switch(m_args.sortingRole) {
