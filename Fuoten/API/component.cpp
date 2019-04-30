@@ -19,7 +19,6 @@
 
 #include "component_p.h"
 #include "../error.h"
-#include <zlib.h>
 #include <QJsonParseError>
 #include <QUrl>
 #include <QReadWriteLock>
@@ -180,62 +179,6 @@ void ComponentPrivate::setDefaultNotificator(AbstractNotificator *notificator)
 }
 
 
-bool ComponentPrivate::uncompressReply()
-{
-    const QByteArray data = reply->readAll();
-
-    if (Q_UNLIKELY(data.size() <= 4)) {
-        qCritical("%s", "Compressed input data is truncated. Can not decompress ist.");
-        return false;
-    }
-
-    QByteArray _result;
-
-    int ret;
-    z_stream strm;
-    static const int CHUNK_SIZE = 1024;
-    char out[CHUNK_SIZE];
-
-    /* allocate inflate state */
-    strm.zalloc = Z_NULL;
-    strm.zfree = Z_NULL;
-    strm.opaque = Z_NULL;
-    strm.avail_in = data.size();
-    strm.next_in = (Bytef*)(data.data());
-
-    ret = inflateInit2(&strm, 15 + 32); // auto detect gzip od zlip format
-    if (Q_UNLIKELY(ret != Z_OK)) {
-        qCritical("%s", "Failed to initialize zlib decompression.");
-        return false;
-    }
-
-    do {
-        strm.avail_out = CHUNK_SIZE;
-        strm.next_out = (Bytef*)(out);
-
-        ret = inflate(&strm, Z_NO_FLUSH);
-        Q_ASSERT(ret != Z_STREAM_ERROR);
-
-        switch (ret) {
-        case Z_NEED_DICT:
-            ret = Z_DATA_ERROR;
-        case Z_DATA_ERROR:
-        case Z_MEM_ERROR:
-            (void)inflateEnd(&strm);
-            return false;
-        }
-
-        _result.append(out, CHUNK_SIZE - strm.avail_out);
-
-    } while (strm.avail_out == 0) ;
-
-    // clean up
-    inflateEnd(&strm);
-    result = _result;
-    return true;
-}
-
-
 Component::Component(QObject *parent) :
     QObject(parent), d_ptr(new ComponentPrivate)
 {
@@ -326,7 +269,6 @@ void Component::sendRequest()
     }
 
     nr.setRawHeader(QByteArrayLiteral("User-Agent"), d->configuration->getUserAgent().toUtf8());
-    nr.setRawHeader(QByteArrayLiteral("Accept-Encoding"), QByteArrayLiteral("gzip,deflate"));
 
     if (!d->payload.isEmpty()) {
         nr.setRawHeader(QByteArrayLiteral("Content-Length"), QByteArray::number(d->payload.length()));
@@ -394,33 +336,13 @@ void Component::_requestFinished()
 
 
         qDebug("%s", "Reading network reply data.");
-        bool isCompressed = false;
-        if (d->reply->hasRawHeader(QByteArrayLiteral("Content-Encoding"))) {
-            const QByteArray contentEncoding = d->reply->rawHeader(QByteArrayLiteral("Content-Encoding")).toLower();
-            if (contentEncoding.contains(QByteArrayLiteral("gzip")) || contentEncoding.contains(QByteArrayLiteral("deflate"))) {
-                qDebug("Response has been compressed with %s.", contentEncoding.constData());
-                isCompressed = true;
-            }
-        }
 
-        bool decompSucceeded = true;
+        d->result = d->reply->readAll();
 
-        if (isCompressed) {
-            decompSucceeded = d->uncompressReply();
+        if (checkOutput()) {
+            qDebug("%s", "Calling successCallback().");
+            successCallback();
         } else {
-            d->result = d->reply->readAll();
-        }
-
-        if (Q_LIKELY(decompSucceeded)) {
-            if (checkOutput()) {
-                qDebug("%s", "Calling successCallback().");
-                successCallback();
-            } else {
-                setInOperation(false);
-            }
-        } else {
-            //% "Decompressing the requested data failed."
-            setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-decompression-failed"), QString(), this));
             setInOperation(false);
         }
 
