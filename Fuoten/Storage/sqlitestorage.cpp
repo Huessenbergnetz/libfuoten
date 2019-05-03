@@ -1598,7 +1598,6 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
     qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t())));
 
     if (args.parentId > -1) {
-        qs.append(QLatin1String(" AND"));
         if (args.parentIdType == FuotenEnums::Feed) {
             qs.append(QStringLiteral(" AND it.feedId = %1").arg(QString::number(args.parentId)));
         } else {
