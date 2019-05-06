@@ -1,3 +1,6 @@
+libfuoten 0.7.5 - 2019-05-06
+* fixed: article list model not updated (#53)
+
 libfuoten 0.7.4 - 2019-04-30
 * changed: hide future articles (#52)
 * changed: remove unneeded decompression implementation (#51)
