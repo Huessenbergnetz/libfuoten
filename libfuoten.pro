@@ -336,7 +336,8 @@ SOURCES += \
     Fuoten/API/starmultipleitems.cpp \
     Fuoten/API/markallitemsread.cpp \
     Fuoten/Helpers/abstractnamfactory.cpp \
-    Fuoten/Helpers/abstractnotificator.cpp
+    Fuoten/Helpers/abstractnotificator.cpp \
+    Fuoten/fuoten.cpp
 
 DISTFILES += \
     fuoten.pc.in \

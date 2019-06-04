@@ -22,8 +22,11 @@
 
 #include "fuoten_global.h"
 #include <QMetaType>
+#include <QVersionNumber>
 
 namespace Fuoten {
+
+FUOTENSHARED_EXPORT QVersionNumber version();
 
 /*!
  * \brief Provides global enumerations.
