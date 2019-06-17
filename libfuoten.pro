@@ -24,9 +24,9 @@ CONFIG(release, debug|release) {
 }
 
 contains(CONFIG, clazy) {
-    DEFINES+=CLAZY
-    QMAKE_CXX = clazy
-    QMAKE_CXXFLAGS += "-Xclang -plugin-arg-clazy -Xclang level0,level1,level2"
+    DEFINES += CLAZY
+    isEmpty(CLAZY_PLUGIN_FILE): CLAZY_PLUGIN_FILE = ClazyPlugin.so
+    QMAKE_CXXFLAGS += "-Xclang -load -Xclang $${CLAZY_PLUGIN_FILE} -Xclang -add-plugin -Xclang clazy -Xclang -plugin-arg-clazy -Xclang level0,level1,level2,reserve-candidates,qrequiredresult-candidates,qvariant-template-instantiation"
 }
 
 contains(CONFIG, asan) {
