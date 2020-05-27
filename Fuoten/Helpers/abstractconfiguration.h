@@ -26,6 +26,10 @@
 #include "../fuoten_global.h"
 #include "../fuoten.h"
 
+class QUrl;
+class QJsonDocument;
+class QJsonObject;
+
 namespace Fuoten {
 
 /*!
@@ -56,11 +60,29 @@ public:
     virtual QString getUsername() const = 0;
 
     /*!
+     * \brief Sets the \a username used for authentication.
+     *
+     * Reimplement this in a subclass. The default implementation does nothing.
+     *
+     * \param username used for authentication
+     */
+    virtual void setUsername(const QString &username);
+
+    /*!
      * \brief Returns the password used for authentiction.
      *
      * Reimplement this function in a subclass.
      */
     virtual QString getPassword() const = 0;
+
+    /*!
+     * \brief Sets the \a password used for authentication.
+     *
+     * Reimplement this in a subclass. The default implementation does nothing.
+     *
+     * \param password used for authentication
+     */
+    virtual void setPassword(const QString &password);
 
     /*!
      * \brief Returns true if the connection should use SSL/TLS.
@@ -70,6 +92,13 @@ public:
     virtual bool getUseSSL() const;
 
     /*!
+     * \brief Set \a useSSL to \c true to let the connection use SSL/TLS.
+     *
+     * Reimplement this in a subclass. The default implementation does nothing.
+     */
+    virtual void setUseSSL(bool useSSL);
+
+    /*!
      * \brief Returns the host the ownCloud/Nextcloud is installed on.
      *
      * Reimplement this function in a subclass.
@@ -77,11 +106,25 @@ public:
     virtual QString getHost() const = 0;
 
     /*!
+     * \brief Sets the \a host the remote Nextcloud instance runs on.
+     *
+     * Reimplement this in a subclass. The default implementation does nothing.
+     */
+    virtual void setHost(const QString &host);
+
+    /*!
      * \brief Returns the optional installation path of the ownCloud/Nextcloud on the server.
      *
      * Reimplement this function in a subclass.
      */
     virtual QString getInstallPath() const = 0;
+
+    /*!
+     * \brief Sets the \a path under which the remote Nextcloud instance is installed.
+     *
+     * Reimplement this in a subclass. The default implementation does nothing.
+     */
+    virtual void setInstallPath(const QString &path);
 
     /*!
      * \brief Returns true if the account data is valid.
@@ -96,8 +139,6 @@ public:
     /*!
      * \brief Returns the News App version number used on the server.
      *
-     * When building on Qt 5.6 or newer, this returns a QVersionNumber, otherwise it returns a VersionNumber.
-     *
      * \sa setServerVersion()
      */
     virtual QVersionNumber getServerVersion() const = 0;
@@ -109,6 +150,13 @@ public:
      * for HTTP or HTTPS.
      */
     virtual int getServerPort() const;
+
+    /*!
+     * \brief Sets the server \a port used for the connection.
+     *
+     * Reimplement this in a subclass. The default implementation does nothing.
+     */
+    virtual void setServerPort(int port);
 
     /*!
      * \brief Returns true if SSL/TLS errors should be ignored.
@@ -211,6 +259,67 @@ public:
      * \param feedId    ID of the feed to get the deletion value for
      */
     virtual quint16 getPerFeedDeletionValue(qint64 feedId) const;
+
+    /*!
+     * \brief Returns a user agent string usable for the login flow.
+     *
+     * In the login flow API, the user agent is used to show the user the application that requests a new
+     * application password and will also be used for the identifier of the generated application password.
+     *
+     * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
+     *
+     * Reimplement this in a subclass. The default implementation simply returns the same as getUserAgent(),
+     * the string "Libfuoten $VERSION" and that is not really meaningful to a user.
+     *
+     * \return user agent string
+     */
+    virtual QString getLoginFlowUserAgent() const;
+
+public Q_SLOTS:
+    /*!
+     * \brief Sets login credentials requested from the login flow API.
+     *
+     * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
+     *
+     * Reimplement this in a subclass. The default implementation does nothing.
+     *
+     * \param credentialUrl the URL returned by the login flow API with the nc:// scheme
+     * \return \c true on success
+     */
+    virtual bool setLoginFlowCredentials(const QUrl &credentialUrl);
+
+    /*!
+     * \brief Sets the login credentials requested from the login flow v2 API.
+     *
+     * This has to be a valid JSON object requested from the polling endpoint.
+     * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
+     *
+     * \param credentials JSON object
+     * \return \c true on success
+     */
+    virtual bool setLoginFlowCredentials(const QByteArray &credentials);
+
+    /*!
+     * \brief Sets the login credentials requested from the login flow v2 API.
+     *
+     * This has to be a valid JSON object requested from the polling endpoint.
+     * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
+     *
+     * \param credentials JSON object
+     * \return \c true on success
+     */
+    virtual bool setLoginFlowCredentials(const QJsonDocument &credentials);
+
+    /*!
+     * \brief Sets the login credentials requested from the login flow v2 API.
+     *
+     * This has to be a valid JSON object requested from the polling endpoint.
+     * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
+     *
+     * \param credentials JSON object
+     * \return \c true on success
+     */
+    virtual bool setLoginFlowCredentials(const QJsonObject &credentials);
 
 protected:
     /*!
