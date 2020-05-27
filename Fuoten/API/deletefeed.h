@@ -70,6 +70,11 @@ public:
     explicit DeleteFeed(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %DeleteFeed object.
+     */
+    ~DeleteFeed() override;
+
+    /*!
      * \brief Returns the ID of the feed to delete.
      * \sa feedId
      */

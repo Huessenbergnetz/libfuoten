@@ -25,6 +25,20 @@
 using namespace Fuoten;
 
 
+RenameFolderPrivate::RenameFolderPrivate() :
+    ComponentPrivate(),
+    folderId(0)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+RenameFolderPrivate::~RenameFolderPrivate()
+{
+}
+
+
 RenameFolder::RenameFolder(QObject *parent) :
     Component(* new RenameFolderPrivate, parent)
 {
@@ -33,6 +47,11 @@ RenameFolder::RenameFolder(QObject *parent) :
 
 RenameFolder::RenameFolder(RenameFolderPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+}
+
+
+RenameFolder::~RenameFolder()
 {
 }
 

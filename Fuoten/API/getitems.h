@@ -141,6 +141,10 @@ public:
      */
     GetItems(int batchSize, qint64 offset, FuotenEnums::Type type, qint64 parentId, bool getRead, bool oldestFirst, QObject *parent = nullptr);
 
+    /*!
+     * \brief Destroys the %GetItems object.
+     */
+    ~GetItems() override;
 
     /*!
      * \brief Getter function for the \link GetItems::batchSize batchSize \endlink property.

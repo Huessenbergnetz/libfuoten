@@ -28,24 +28,9 @@ namespace Fuoten {
 class GetItemsPrivate : public ComponentPrivate
 {
 public:
-    GetItemsPrivate() : ComponentPrivate()
-    {
-        apiRoute = QStringLiteral("/items");
-        expectedJSONType = Component::Object;
-    }
-
-    GetItemsPrivate(int nBatchSize, qint64 nOffset, FuotenEnums::Type nType, qint64 nParentId, bool nGetRead, bool nOldestFirst) :
-        ComponentPrivate(),
-        offset(nOffset),
-        parentId(nParentId),
-        batchSize(nBatchSize),
-        type(nType),
-        getRead(nGetRead),
-        oldestFirst(nOldestFirst)
-    {
-        apiRoute = QStringLiteral("/items");
-        expectedJSONType = Component::Object;
-    }
+    GetItemsPrivate();
+    GetItemsPrivate(int nBatchSize, qint64 nOffset, FuotenEnums::Type nType, qint64 nParentId, bool nGetRead, bool nOldestFirst);
+    ~GetItemsPrivate() override;
 
     qint64 offset = 0;
     qint64 parentId = 0;

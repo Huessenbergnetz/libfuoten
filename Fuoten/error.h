@@ -135,7 +135,7 @@ public:
     /*!
      * \brief Deconstructs the Error object.
      */
-    ~Error();
+    ~Error() override;
 
     /*!
      * \brief Returns the error text.

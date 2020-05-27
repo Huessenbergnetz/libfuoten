@@ -66,14 +66,19 @@ class FUOTENSHARED_EXPORT MarkAllItemsRead : public Component
     Q_PROPERTY(qint64 newestItemId READ newestItemId WRITE setNewestItemId NOTIFY newestItemIdChanged)
 public:
     /*!
-     * \brief Constructs a new MarkAllItemsRead object with default values and the given \a parent.
+     * \brief Constructs a new %MarkAllItemsRead object with default values and the given \a parent.
      */
     explicit MarkAllItemsRead(QObject *parent = nullptr);
 
     /*!
-     * \brief Constructs a new MarkAllItemsRead object with the given arguments and \a parent.
+     * \brief Constructs a new %MarkAllItemsRead object with the given arguments and \a parent.
      */
     explicit MarkAllItemsRead(qint64 newestItemId, QObject *parent = nullptr);
+
+    /*!
+     * \brief Destroys the %MarkAllItemsRead object.
+     */
+    ~MarkAllItemsRead() override;
 
     /*!
      * \brief Getter function for the \link MarkAllItemsRead::newestItemId newestItemId \endlink property.

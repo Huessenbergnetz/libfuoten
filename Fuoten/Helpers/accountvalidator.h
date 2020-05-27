@@ -83,7 +83,7 @@ public:
     /*!
      * \brief Deconstructs the AccountValidator object.
      */
-    ~AccountValidator();
+    ~AccountValidator() override;
 
     /*!
      * \brief Starts the account validation.

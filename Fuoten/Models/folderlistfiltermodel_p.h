@@ -28,12 +28,8 @@ namespace Fuoten {
 class FolderListFilterModelPrivate : public BaseFilterModelPrivate
 {
 public:
-    FolderListFilterModelPrivate() :
-        BaseFilterModelPrivate(),
-        flm(new FolderListModel)
-    {
-        sortingRole = FuotenEnums::Name;
-    }
+    FolderListFilterModelPrivate();
+    ~FolderListFilterModelPrivate() override;
 
     const QScopedPointer<FolderListModel> flm;
 //    FolderListModel *flm;

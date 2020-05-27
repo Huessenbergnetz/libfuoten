@@ -25,6 +25,29 @@
 
 using namespace Fuoten;
 
+MarkMultipleItemsPrivate::MarkMultipleItemsPrivate() :
+    ComponentPrivate(),
+    unread(false)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+MarkMultipleItemsPrivate::MarkMultipleItemsPrivate(const IdList &nItemIds, bool nUnread) :
+    ComponentPrivate(),
+    itemIds(nItemIds),
+    unread(nUnread)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+MarkMultipleItemsPrivate::~MarkMultipleItemsPrivate()
+{
+}
+
+
 MarkMultipleItems::MarkMultipleItems(QObject *parent) :
     Component(* new MarkMultipleItemsPrivate, parent)
 {
@@ -39,6 +62,11 @@ MarkMultipleItems::MarkMultipleItems(const IdList &itemIds, bool unread, QObject
 
 MarkMultipleItems::MarkMultipleItems(MarkMultipleItemsPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+}
+
+
+MarkMultipleItems::~MarkMultipleItems()
 {
 }
 

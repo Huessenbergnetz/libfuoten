@@ -86,7 +86,7 @@ public:
     /*!
      * \brief Destroys the AbstractNotifier object.
      */
-    ~AbstractNotificator();
+    ~AbstractNotificator() override;
 
     /*!
      * \brief Returns the path to the currently set application icon.

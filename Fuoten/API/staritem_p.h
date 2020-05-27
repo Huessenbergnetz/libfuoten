@@ -28,24 +28,9 @@ namespace Fuoten {
 class StarItemPrivate : public ComponentPrivate
 {
 public:
-    StarItemPrivate() :
-        ComponentPrivate(),
-        feedId(0),
-        starred(false)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
-
-    StarItemPrivate(qint64 nFeedId, const QString &nGuidHash, bool nStarred) :
-        ComponentPrivate(),
-        feedId(nFeedId),
-        guidHash(nGuidHash),
-        starred(nStarred)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
+    StarItemPrivate();
+    StarItemPrivate(qint64 nFeedId, const QString &nGuidHash, bool nStarred);
+    ~StarItemPrivate() override;
 
     qint64 feedId;
     QString guidHash;

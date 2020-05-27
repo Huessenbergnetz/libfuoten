@@ -281,9 +281,9 @@ public:
     explicit Component(QObject *parent = nullptr);
 
     /*!
-     * \brief Destroys the component.
+     * \brief Destroys the %Component object.
      */
-    ~Component();
+    ~Component() override;
 
     /*!
      * \brief Defines the expected JSON type.

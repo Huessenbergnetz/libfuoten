@@ -29,14 +29,8 @@ namespace Fuoten {
 class MarkFeedReadPrivate : public ComponentPrivate
 {
 public:
-    MarkFeedReadPrivate() :
-        ComponentPrivate(),
-        feedId(0),
-        newestItemId(0)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
+    MarkFeedReadPrivate();
+    ~MarkFeedReadPrivate() override;
 
     qint64 feedId;
     qint64 newestItemId;

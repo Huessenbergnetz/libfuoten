@@ -25,6 +25,16 @@
 
 using namespace Fuoten;
 
+AbstractStoragePrivate::AbstractStoragePrivate()
+{
+
+}
+
+AbstractStoragePrivate::~AbstractStoragePrivate()
+{
+
+}
+
 AbstractStorage::AbstractStorage(QObject *parent) :
     QObject(parent), d_ptr(new AbstractStoragePrivate)
 {

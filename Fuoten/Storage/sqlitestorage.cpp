@@ -50,6 +50,12 @@ SQLiteStorageManager::SQLiteStorageManager(const QString &dbpath, QObject *paren
 }
 
 
+SQLiteStorageManager::~SQLiteStorageManager()
+{
+
+}
+
+
 void SQLiteStorageManager::setFailed(const QSqlError &sqlError, const QString &text)
 {
     Error *e = new Error(sqlError, text);
@@ -152,7 +158,7 @@ void SQLiteStorageManager::run()
     Q_ASSERT_X(result, "init database", "failed to query installed schema version");
 
     if (Q_LIKELY(q.next())) {
-        m_currentDbVersion = q.value(0).toUInt();
+        m_currentDbVersion = static_cast<quint16>(q.value(0).toUInt());
     }
 
     if (Q_UNLIKELY(m_currentDbVersion == 0)) {
@@ -166,10 +172,67 @@ void SQLiteStorageManager::run()
 }
 
 
+SQLiteStoragePrivate::SQLiteStoragePrivate(const QString &_dbpath) : AbstractStoragePrivate()
+{
+    if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
+        db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
+        db.setDatabaseName(_dbpath);
+    } else {
+        db = QSqlDatabase::database(QStringLiteral("fuotendb"));
+    }
+}
+
+
+SQLiteStoragePrivate::~SQLiteStoragePrivate()
+{
+
+}
+
+
+QStringList SQLiteStoragePrivate::intListToStringList(const IdList &ints) const
+{
+    QStringList sl;
+
+    if (!ints.isEmpty()) {
+        sl.reserve(ints.size());
+
+        for (qint64 i : ints) {
+            sl.append(QString::number(i));
+        }
+
+    }
+
+    return sl;
+}
+
+
+QString SQLiteStoragePrivate::intListToString(const IdList &ints) const
+{
+    if (ints.isEmpty()) {
+        return QString();
+    } else if (ints.count() == 1) {
+        return QString::number(ints.first());
+    } else {
+        return intListToStringList(ints).join(QChar(','));
+    }
+}
+
+
+QSqlQuery SQLiteStoragePrivate::getQuery() const
+{
+    return QSqlQuery(db);
+}
+
 
 SQLiteStorage::SQLiteStorage(const QString &dbpath, QObject *parent) :
     AbstractStorage(* new SQLiteStoragePrivate(dbpath), parent)
 {
+}
+
+
+SQLiteStorage::~SQLiteStorage()
+{
+
 }
 
 
@@ -1722,6 +1785,11 @@ GetArticlesAsyncWorker::GetArticlesAsyncWorker(const QString &dbpath, const Quer
 }
 
 
+GetArticlesAsyncWorker::~GetArticlesAsyncWorker()
+{
+
+}
+
 
 void GetArticlesAsyncWorker::run()
 {
@@ -1892,6 +1960,11 @@ ItemsRequestedWorker::ItemsRequestedWorker(const QString &dbpath, const QJsonDoc
     }
 }
 
+
+ItemsRequestedWorker::~ItemsRequestedWorker()
+{
+
+}
 
 
 void ItemsRequestedWorker::run()
@@ -2640,6 +2713,12 @@ EnqueueMarkReadWorker::EnqueueMarkReadWorker(const QString &dbpath, qint64 id, F
 }
 
 
+EnqueueMarkReadWorker::~EnqueueMarkReadWorker()
+{
+
+}
+
+
 void EnqueueMarkReadWorker::run()
 {
     QSqlQuery q(m_db);
@@ -2911,6 +2990,12 @@ ClearQueueWorker::ClearQueueWorker(const QString &dbpath, QObject *parent) :
     } else {
         m_db = QSqlDatabase::database(QStringLiteral("fuotendb"));
     }
+}
+
+
+ClearQueueWorker::~ClearQueueWorker()
+{
+
 }
 
 

@@ -129,9 +129,9 @@ public:
     explicit BaseFilterModel(QObject *parent = nullptr);
 
     /*!
-     * \brief Deconstructs the BaseFilterModel object.
+     * \brief Deconstructs the %BaseFilterModel object.
      */
-    ~BaseFilterModel();
+    ~BaseFilterModel() override;
 
     /*!
      * \brief Returns true while the underlying model is in operational mode.

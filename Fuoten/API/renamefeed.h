@@ -78,6 +78,11 @@ public:
     explicit RenameFeed(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %RenameFeed object.
+     */
+    ~RenameFeed() override;
+
+    /*!
      * \brief Returns the ID of the feed that should be renamed.
      * \sa feedId
      */

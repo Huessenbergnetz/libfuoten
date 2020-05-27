@@ -28,7 +28,8 @@ namespace Fuoten {
 class FeedListModelPrivate : public AbstractFeedModelPrivate
 {
 public:
-    FeedListModelPrivate() : AbstractFeedModelPrivate() {}
+    FeedListModelPrivate();
+    ~FeedListModelPrivate() override;
 
 private:
     Q_DISABLE_COPY(FeedListModelPrivate)

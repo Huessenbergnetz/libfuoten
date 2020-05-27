@@ -24,6 +24,21 @@
 
 using namespace Fuoten;
 
+MarkFolderReadPrivate::MarkFolderReadPrivate() :
+    ComponentPrivate(),
+    folderId(0),
+    newestItemId(0)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+MarkFolderReadPrivate::~MarkFolderReadPrivate()
+{
+
+}
+
 
 MarkFolderRead::MarkFolderRead(QObject *parent) :
     Component(* new MarkFolderReadPrivate, parent)
@@ -34,6 +49,12 @@ MarkFolderRead::MarkFolderRead(QObject *parent) :
 MarkFolderRead::MarkFolderRead(MarkFolderReadPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
+}
+
+
+MarkFolderRead::~MarkFolderRead()
+{
+
 }
 
 

@@ -44,6 +44,11 @@ public:
     explicit AbstractFolderModel(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %AbstractFolderModel object.
+     */
+    ~AbstractFolderModel() override;
+
+    /*!
      * \brief Returns the model index of the folder identified by \a id.
      */
     QModelIndex findByID(qint64 id) const override;

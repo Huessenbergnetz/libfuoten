@@ -33,35 +33,8 @@ namespace Fuoten {
 class ComponentPrivate
 {
 public:
-    ComponentPrivate() {}
-
-    virtual ~ComponentPrivate() {}
-
-    void performNetworkOperation(const QNetworkRequest &request)
-    {
-        switch(namOperation) {
-        case QNetworkAccessManager::HeadOperation:
-            reply = networkAccessManager->head(request);
-            qDebug("Performing HEAD network operation with reply at %p.", reply);
-            break;
-        case QNetworkAccessManager::PostOperation:
-            reply = networkAccessManager->post(request, payload);
-            qDebug("Performing POST network operation with reply at %p.", reply);
-            break;
-        case QNetworkAccessManager::PutOperation:
-            reply = networkAccessManager->put(request, payload);
-            qDebug("Performing PUT network operation with reply at %p.", reply);
-            break;
-        case QNetworkAccessManager::DeleteOperation:
-            reply = networkAccessManager->deleteResource(request);
-            qDebug("Performing DELETE network operation with reply at %p.", reply);
-            break;
-        default:
-            reply = networkAccessManager->get(request);
-            qDebug("Performing GET network operation with reply at %p.", reply);
-            break;
-        }
-    }
+    ComponentPrivate();
+    virtual ~ComponentPrivate();
 
     QHash<QByteArray, QByteArray> requestHeaders;
     QString apiRoute;
@@ -84,6 +57,7 @@ public:
     bool inOperation = false;
     bool useStorage = true;
 
+    void performNetworkOperation(const QNetworkRequest &request);
     static AbstractConfiguration *defaultConfiguration();
     static void setDefaultConfiguration(AbstractConfiguration *config);
     static AbstractStorage *defaultStorage();

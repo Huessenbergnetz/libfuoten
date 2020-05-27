@@ -77,6 +77,10 @@ public:
      */
     explicit AbstractArticleModel(QObject *parent = nullptr);
 
+    /*!
+     * \brief Destroys the %AbstractArticleModel object.
+     */
+    ~AbstractArticleModel() override;
 
     /*!
      * \brief Getter function for the \link AbstractArticleModel::parentIdType parentIdType \endlink property.

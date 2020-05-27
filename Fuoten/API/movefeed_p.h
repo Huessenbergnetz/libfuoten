@@ -28,14 +28,8 @@ namespace Fuoten {
 class MoveFeedPrivate : public ComponentPrivate
 {
 public:
-    MoveFeedPrivate() :
-        ComponentPrivate(),
-        feedId(0),
-        folderId(0)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
+    MoveFeedPrivate();
+    ~MoveFeedPrivate() override;
 
     qint64 feedId;
     qint64 folderId;

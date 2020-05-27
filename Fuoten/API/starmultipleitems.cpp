@@ -25,6 +25,28 @@
 
 using namespace Fuoten;
 
+StarMultipleItemsPrivate::StarMultipleItemsPrivate() : ComponentPrivate()
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+StarMultipleItemsPrivate::StarMultipleItemsPrivate(bool nStarred) :
+    ComponentPrivate(),
+    starred(nStarred)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+StarMultipleItemsPrivate::~StarMultipleItemsPrivate()
+{
+
+}
+
+
 StarMultipleItems::StarMultipleItems(QObject *parent) :
     Component(* new StarMultipleItemsPrivate, parent)
 {
@@ -39,6 +61,11 @@ StarMultipleItems::StarMultipleItems(bool starred, QObject *parent) :
 
 StarMultipleItems::StarMultipleItems(StarMultipleItemsPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+}
+
+
+StarMultipleItems::~StarMultipleItems()
 {
 }
 

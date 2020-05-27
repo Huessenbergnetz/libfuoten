@@ -32,9 +32,8 @@ class BaseItemPrivate
 public:
     BaseItemPrivate() {}
 
-    explicit BaseItemPrivate(qint64 _id) : id(_id) {}
-
-    virtual ~BaseItemPrivate() {}
+    explicit BaseItemPrivate(qint64 _id);
+    virtual ~BaseItemPrivate();
 
     qint64 id = 0;
     Error *error = nullptr;

@@ -23,6 +23,21 @@
 
 using namespace Fuoten;
 
+MarkFeedReadPrivate::MarkFeedReadPrivate() :
+    ComponentPrivate(),
+    feedId(0),
+    newestItemId(0)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+MarkFeedReadPrivate::~MarkFeedReadPrivate()
+{
+
+}
+
 
 MarkFeedRead::MarkFeedRead(QObject *parent) :
     Component(* new MarkFeedReadPrivate, parent)
@@ -33,6 +48,12 @@ MarkFeedRead::MarkFeedRead(QObject *parent) :
 MarkFeedRead::MarkFeedRead(MarkFeedReadPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
+}
+
+
+MarkFeedRead::~MarkFeedRead()
+{
+
 }
 
 

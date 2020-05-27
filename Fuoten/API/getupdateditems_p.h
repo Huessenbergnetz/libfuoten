@@ -28,21 +28,9 @@ namespace Fuoten {
 class GetUpdatedItemsPrivate : public ComponentPrivate
 {
 public:
-    GetUpdatedItemsPrivate() : ComponentPrivate()
-    {
-        apiRoute = QStringLiteral("/items/updated");
-        expectedJSONType = Component::Object;
-    }
-
-    GetUpdatedItemsPrivate(const QDateTime &nLastModified, FuotenEnums::Type nType, qint64 nParentId) :
-        ComponentPrivate(),
-        parentId(nParentId),
-        lastModified(nLastModified),
-        type(nType)
-    {
-        apiRoute = QStringLiteral("/item/updated");
-        expectedJSONType = Component::Object;
-    }
+    GetUpdatedItemsPrivate();
+    GetUpdatedItemsPrivate(const QDateTime &nLastModified, FuotenEnums::Type nType, qint64 nParentId);
+    ~GetUpdatedItemsPrivate() override;
 
     qint64 parentId = 0;
     QDateTime lastModified;

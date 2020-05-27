@@ -142,9 +142,9 @@ public:
     explicit BaseModel(QObject *parent = nullptr);
 
     /*!
-     * \brief Deconstructs the BaseModel object.
+     * \brief Deconstructs the %BaseModel object.
      */
-    ~BaseModel();
+    ~BaseModel() override;
 
     /*!
      * \brief Returns the model index of the item identified by database ID.

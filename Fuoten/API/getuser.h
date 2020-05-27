@@ -59,6 +59,11 @@ public:
     explicit GetUser(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %GetUser object.
+     */
+    ~GetUser() override;
+
+    /*!
      * \brief Executes the API request.
      *
      * To perform a successful API request, Component::configuration has to be set to a valid AbstractConfiguration object.

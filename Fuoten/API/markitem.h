@@ -86,6 +86,11 @@ public:
     MarkItem(qint64 itemId, bool unread, QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %MarkItem object.
+     */
+    ~MarkItem() override;
+
+    /*!
      * \brief Getter function for the \link MarkItem::itemId itemId \endlink property.
      * \sa MarkItem::setItemId(), MarkItem::itemIdChanged()
      */

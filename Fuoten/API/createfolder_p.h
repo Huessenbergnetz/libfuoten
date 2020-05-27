@@ -28,13 +28,8 @@ namespace Fuoten {
 class CreateFolderPrivate : public ComponentPrivate
 {
 public:
-    CreateFolderPrivate() :
-        ComponentPrivate()
-    {
-        expectedJSONType = Component::Object;
-        namOperation = QNetworkAccessManager::PostOperation;
-        apiRoute = QStringLiteral("/folders");
-    }
+    CreateFolderPrivate();
+    ~CreateFolderPrivate() override;
 
     QString name;
 };

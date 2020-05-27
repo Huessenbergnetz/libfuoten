@@ -28,12 +28,8 @@ namespace Fuoten {
 class DeleteFeedPrivate : public ComponentPrivate
 {
 public:
-    DeleteFeedPrivate() :
-        ComponentPrivate()
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::DeleteOperation;
-    }
+    DeleteFeedPrivate();
+    ~DeleteFeedPrivate() override;
 
     qint64 feedId = 0;
 };

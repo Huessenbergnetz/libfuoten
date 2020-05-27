@@ -83,6 +83,45 @@ private:
 Q_GLOBAL_STATIC(DefaultValues, defVals)
 
 
+ComponentPrivate::ComponentPrivate()
+{
+
+}
+
+
+ComponentPrivate::~ComponentPrivate()
+{
+
+}
+
+
+void ComponentPrivate::performNetworkOperation(const QNetworkRequest &request)
+{
+    switch(namOperation) {
+    case QNetworkAccessManager::HeadOperation:
+        reply = networkAccessManager->head(request);
+        qDebug("Performing HEAD network operation with reply at %p.", reply);
+        break;
+    case QNetworkAccessManager::PostOperation:
+        reply = networkAccessManager->post(request, payload);
+        qDebug("Performing POST network operation with reply at %p.", reply);
+        break;
+    case QNetworkAccessManager::PutOperation:
+        reply = networkAccessManager->put(request, payload);
+        qDebug("Performing PUT network operation with reply at %p.", reply);
+        break;
+    case QNetworkAccessManager::DeleteOperation:
+        reply = networkAccessManager->deleteResource(request);
+        qDebug("Performing DELETE network operation with reply at %p.", reply);
+        break;
+    default:
+        reply = networkAccessManager->get(request);
+        qDebug("Performing GET network operation with reply at %p.", reply);
+        break;
+    }
+}
+
+
 AbstractConfiguration *ComponentPrivate::defaultConfiguration()
 {
     const DefaultValues *defs = defVals();

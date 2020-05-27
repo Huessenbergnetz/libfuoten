@@ -162,11 +162,15 @@ public:
      */
     explicit Feed(QObject *parent = nullptr);
 
-
     /*!
-     * \brief Constructs a new Feed object with the given arguments.
+     * \brief Constructs a new %Feed object with the given arguments.
      */
     Feed(qint64 id, qint64 folderId, const QString &title, const QUrl &url, const QUrl &link, const QDateTime &added, uint unreadCount, Feed::FeedOrdering ordering, bool pinned, uint updateErrorCount, const QString &lastUpdateError, const QUrl &faviconLink, const QString &folderName, QObject *parent = nullptr);
+
+    /*!
+     * \brief Deconstructs the %Feed object.
+     */
+    ~Feed() override;
 
     /*!
      * \brief Returns the URL of the feed.

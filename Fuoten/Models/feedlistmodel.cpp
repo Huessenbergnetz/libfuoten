@@ -22,6 +22,19 @@
 
 using namespace Fuoten;
 
+FeedListModelPrivate::FeedListModelPrivate() :
+    AbstractFeedModelPrivate()
+{
+
+}
+
+
+FeedListModelPrivate::~FeedListModelPrivate()
+{
+
+}
+
+
 FeedListModel::FeedListModel(QObject *parent) :
     AbstractFeedModel(* new FeedListModelPrivate, parent)
 {
@@ -31,6 +44,12 @@ FeedListModel::FeedListModel(QObject *parent) :
 
 FeedListModel::FeedListModel(FeedListModelPrivate &dd, QObject *parent) :
     AbstractFeedModel(dd, parent)
+{
+
+}
+
+
+FeedListModel::~FeedListModel()
 {
 
 }

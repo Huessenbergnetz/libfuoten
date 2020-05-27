@@ -82,6 +82,11 @@ public:
     explicit MarkFolderRead(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %MarkFolderRead object.
+     */
+    ~MarkFolderRead() override;
+
+    /*!
      * \brief Returns the ID of the folder to be marked as read.
      * \sa folderId
      */

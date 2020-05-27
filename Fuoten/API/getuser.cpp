@@ -23,6 +23,19 @@
 
 using namespace Fuoten;
 
+GetUserPrivate::GetUserPrivate() :
+    ComponentPrivate()
+{
+
+}
+
+
+GetUserPrivate::~GetUserPrivate()
+{
+
+}
+
+
 GetUser::GetUser(QObject *parent) :
     Component(*new GetUserPrivate, parent)
 {
@@ -36,6 +49,12 @@ GetUser::GetUser(GetUserPrivate &dd, QObject *parent) :
 {
     setApiRoute(QStringLiteral("/user"));
     setExpectedJSONType(Component::Object);
+}
+
+
+GetUser::~GetUser()
+{
+
 }
 
 

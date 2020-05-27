@@ -26,6 +26,21 @@
 using namespace Fuoten;
 
 
+CreateFeedPrivate::CreateFeedPrivate() :
+    ComponentPrivate()
+{
+    expectedJSONType = Component::Object;
+    namOperation = QNetworkAccessManager::PostOperation;
+    apiRoute = QStringLiteral("/feeds");
+}
+
+
+CreateFeedPrivate::~CreateFeedPrivate()
+{
+
+}
+
+
 CreateFeed::CreateFeed(QObject *parent) :
     Component(* new CreateFeedPrivate, parent)
 {
@@ -34,6 +49,12 @@ CreateFeed::CreateFeed(QObject *parent) :
 
 CreateFeed::CreateFeed(CreateFeedPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+
+}
+
+
+CreateFeed::~CreateFeed()
 {
 
 }

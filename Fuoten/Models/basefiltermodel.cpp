@@ -23,6 +23,17 @@
 using namespace Fuoten;
 
 
+BaseFilterModelPrivate::BaseFilterModelPrivate()
+{
+    search.setCaseSensitivity(Qt::CaseInsensitive);
+}
+
+BaseFilterModelPrivate::~BaseFilterModelPrivate()
+{
+
+}
+
+
 BaseFilterModel::BaseFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent), d_ptr(new BaseFilterModelPrivate)
 {

@@ -28,18 +28,9 @@ namespace Fuoten {
 class FolderPrivate : public BaseItemPrivate
 {
 public:
-    FolderPrivate() :
-        BaseItemPrivate(),
-        feedCount(0),
-        unreadCount(0)
-    {}
-
-    FolderPrivate(qint64 _id, const QString &_name, uint _feedCount, uint _unreadCount) :
-        BaseItemPrivate(_id),
-        name(_name),
-        feedCount(_feedCount),
-        unreadCount(_unreadCount)
-    {}
+    FolderPrivate();
+    FolderPrivate(qint64 _id, const QString &_name, uint _feedCount, uint _unreadCount);
+    ~FolderPrivate() override;
 
     QString name;
     uint feedCount;

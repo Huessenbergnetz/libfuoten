@@ -110,7 +110,7 @@ public:
     /*!
      * \brief Deconstructs the base item.
      */
-    ~BaseItem();
+    ~BaseItem() override;
 
     /*!
      * \brief Returns true while there is some operation ongoing directly on the item.

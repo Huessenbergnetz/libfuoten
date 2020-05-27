@@ -53,6 +53,11 @@ public:
     explicit AbstractConfiguration(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %AbstractConfiguration object.
+     */
+    ~AbstractConfiguration() override;
+
+    /*!
      * \brief Returns the user name used for authentication.
      *
      * Reimplement this function in a subclass.

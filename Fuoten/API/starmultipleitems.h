@@ -79,6 +79,11 @@ public:
     explicit StarMultipleItems(bool starred, QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %StarMultipleItems object.
+     */
+    ~StarMultipleItems() override;
+
+    /*!
      * \brief Getter function for the \link StarMultipleItems::starred starred \endlink property.
      * \sa StarMultipleItems::setStarred(), StarMultipleItems::starredChanged()
      */

@@ -28,6 +28,31 @@
 using namespace Fuoten;
 
 
+FolderPrivate::FolderPrivate() :
+    BaseItemPrivate(),
+    feedCount(0),
+    unreadCount(0)
+{
+
+}
+
+
+FolderPrivate::FolderPrivate(qint64 _id, const QString &_name, uint _feedCount, uint _unreadCount) :
+    BaseItemPrivate(_id),
+    name(_name),
+    feedCount(_feedCount),
+    unreadCount(_unreadCount)
+{
+
+}
+
+
+FolderPrivate::~FolderPrivate()
+{
+
+}
+
+
 Folder::Folder(QObject *parent) :
     BaseItem(* new FolderPrivate, parent)
 {
@@ -45,6 +70,12 @@ Folder::Folder(qint64 id, const QString &name, uint feedCount, uint unreadCount,
 
 Folder::Folder(FolderPrivate &dd, QObject *parent) :
     BaseItem(dd, parent)
+{
+
+}
+
+
+Folder::~Folder()
 {
 
 }

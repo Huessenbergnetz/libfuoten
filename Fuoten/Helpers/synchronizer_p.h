@@ -86,7 +86,7 @@ public:
             unreadMultipleItems = nullptr;
         }
         if (storage) {
-            QObject::disconnect(storage, 0, q_ptr, 0);
+            QObject::disconnect(storage, nullptr, q_ptr, nullptr);
         }
         queuedUnreadArticles.clear();
         queuedReadArticles.clear();

@@ -68,6 +68,10 @@ public:
      */
     explicit ArticleListFilterModel(QObject *parent = nullptr);
 
+    /*!
+     * \brief Destroys the %ArticleListFilterModel object.
+     */
+    ~ArticleListFilterModel() override;
 
     /*!
      * \brief Returns true while the underlying ArticleListModel is loading.

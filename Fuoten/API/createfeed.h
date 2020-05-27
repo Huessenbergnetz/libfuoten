@@ -82,6 +82,11 @@ public:
     explicit CreateFeed(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %CreateFeed object.
+     */
+    ~CreateFeed() override;
+
+    /*!
      * \brief Returns the URL of the feed to add.
      * \sa url
      */

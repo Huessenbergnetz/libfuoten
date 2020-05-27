@@ -28,19 +28,9 @@ namespace Fuoten {
 class StarMultipleItemsPrivate : public ComponentPrivate
 {
 public:
-    StarMultipleItemsPrivate() : ComponentPrivate()
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
-
-    explicit StarMultipleItemsPrivate(bool nStarred) :
-        ComponentPrivate(),
-        starred(nStarred)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
+    StarMultipleItemsPrivate();
+    explicit StarMultipleItemsPrivate(bool nStarred);
+    ~StarMultipleItemsPrivate() override;
 
     QList<QPair<qint64,QString>> itemsToStar;
     bool starred = false;

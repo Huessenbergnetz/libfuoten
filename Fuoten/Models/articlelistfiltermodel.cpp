@@ -24,6 +24,20 @@
 
 using namespace Fuoten;
 
+ArticleListFilterModelPrivate::ArticleListFilterModelPrivate() :
+    BaseFilterModelPrivate(),
+    alm(new ArticleListModel)
+{
+    sortOrder = Qt::DescendingOrder;
+}
+
+
+ArticleListFilterModelPrivate::~ArticleListFilterModelPrivate()
+{
+
+}
+
+
 ArticleListFilterModel::ArticleListFilterModel(QObject *parent) :
     BaseFilterModel(* new ArticleListFilterModelPrivate, parent)
 {
@@ -51,6 +65,12 @@ ArticleListFilterModel::ArticleListFilterModel(ArticleListFilterModelPrivate &&d
     connect(d->alm.data(), &ArticleListModel::bodyLimitChanged, this, &ArticleListFilterModel::bodyLimitChanged);
     connect(d->alm.data(), &ArticleListModel::loadedChanged, this, &BaseFilterModel::loadedChanged);
     setSourceModel(d->alm.data());
+}
+
+
+ArticleListFilterModel::~ArticleListFilterModel()
+{
+
 }
 
 

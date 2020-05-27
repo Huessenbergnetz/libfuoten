@@ -98,6 +98,11 @@ public:
     StarItem(qint64 feedId, const QString &guidHash, bool starred, QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %StarItem object.
+     */
+    ~StarItem() override;
+
+    /*!
      * \brief Getter function for the \link StarItem::feedId feedId \endlink property.
      * \sa StarItem::setFeedId(), StarItem::feedIdChanged()
      * \return the ID of the feed the item/article that should be starred/unstarred belongs to

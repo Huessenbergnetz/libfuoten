@@ -28,13 +28,8 @@ namespace Fuoten {
 class CreateFeedPrivate : public ComponentPrivate
 {
 public:
-    CreateFeedPrivate() :
-        ComponentPrivate()
-    {
-        expectedJSONType = Component::Object;
-        namOperation = QNetworkAccessManager::PostOperation;
-        apiRoute = QStringLiteral("/feeds");
-    }
+    CreateFeedPrivate();
+    ~CreateFeedPrivate() override;
 
     qint64 folderId = 0;
     QUrl url;

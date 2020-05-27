@@ -45,6 +45,11 @@ public:
      */
     explicit FolderListModel(QObject *parent = nullptr);
 
+    /*!
+     * \brief Deconstructs the %FeedListModel object.
+     */
+    ~FolderListModel() override;
+
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
     QModelIndex sibling(int row, int column, const QModelIndex &idx) const override;

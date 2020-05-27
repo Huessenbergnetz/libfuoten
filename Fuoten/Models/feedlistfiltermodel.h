@@ -63,6 +63,11 @@ public:
     explicit FeedListFilterModel(QObject *parent = nullptr);
 
     /*!
+     * \brief Deconstructs the %FeedListFilterModel object.
+     */
+    ~FeedListFilterModel() override;
+
+    /*!
      * \brief Returns true while the underlying FeedListModel is loading.
      */
     bool inOperation() const override;

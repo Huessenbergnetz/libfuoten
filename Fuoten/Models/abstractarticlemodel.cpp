@@ -24,6 +24,59 @@
 
 using namespace Fuoten;
 
+AbstractArticleModelPrivate::AbstractArticleModelPrivate() : BaseModelPrivate()
+{
+    sortingRole = FuotenEnums::Time;
+    sortOrder = Qt::DescendingOrder;
+}
+
+
+AbstractArticleModelPrivate::~AbstractArticleModelPrivate() {
+    while (!articles.isEmpty()) {
+        Article *a = articles.takeFirst();
+        if (!a->inOperation()) {
+            delete a;
+        }
+    }
+}
+
+
+int AbstractArticleModelPrivate::rowByID(qint64 id) {
+    if (articles.isEmpty()) {
+        return -1;
+    }
+
+    int idx = -1;
+
+    for (int i = 0; i < articles.count(); ++i) {
+        if (articles.at(i)->id() == id) {
+            idx = i;
+            break;
+        }
+    }
+
+    return idx;
+}
+
+
+int AbstractArticleModelPrivate::rowByGuidHash(const QString &guidHash) {
+    if (articles.isEmpty()) {
+        return -1;
+    }
+
+    int idx = -1;
+
+    for (int i = 0; i < articles.count(); ++i) {
+        if (articles.at(i)->guidHash() == guidHash) {
+            idx = i;
+            break;
+        }
+    }
+
+    return idx;
+}
+
+
 AbstractArticleModel::AbstractArticleModel(QObject *parent) :
     BaseModel(* new AbstractArticleModelPrivate, parent)
 {
@@ -35,6 +88,12 @@ AbstractArticleModel::AbstractArticleModel(AbstractArticleModelPrivate &dd, QObj
     BaseModel(dd, parent)
 {
     setStorage(Component::defaultStorage());
+}
+
+
+AbstractArticleModel::~AbstractArticleModel()
+{
+
 }
 
 

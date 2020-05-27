@@ -29,14 +29,8 @@ namespace Fuoten {
 class FeedListFilterModelPrivate : public BaseFilterModelPrivate
 {
 public:
-    FeedListFilterModelPrivate() :
-        BaseFilterModelPrivate(),
-        flm(new FeedListModel),
-        respectPinned(true),
-        sortByFolder(false)
-    {
-        sortingRole = FuotenEnums::Name;
-    }
+    FeedListFilterModelPrivate();
+    ~FeedListFilterModelPrivate() override;
 
     const QScopedPointer<FeedListModel> flm;
     bool respectPinned;

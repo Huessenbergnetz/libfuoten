@@ -33,11 +33,11 @@
 
 namespace Fuoten {
 
-
 class SQLiteStorageManager : public QThread {
     Q_OBJECT
 public:
     explicit SQLiteStorageManager(const QString &dbpath, QObject *parent = nullptr);
+    ~SQLiteStorageManager() override;
 
 private:
     QSqlDatabase m_db;
@@ -53,60 +53,18 @@ Q_SIGNALS:
 };
 
 
-
-
-
-
 class SQLiteStoragePrivate : public AbstractStoragePrivate {
 public:
-    SQLiteStoragePrivate(const QString &_dbpath) : AbstractStoragePrivate()
-    {
-        if (!QSqlDatabase::connectionNames().contains(QStringLiteral("fuotendb"))) {
-            db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("fuotendb"));
-            db.setDatabaseName(_dbpath);
-        } else {
-            db = QSqlDatabase::database(QStringLiteral("fuotendb"));
-        }
-    }
+    SQLiteStoragePrivate(const QString &_dbpath);
+    ~SQLiteStoragePrivate() override;
 
-    QStringList intListToStringList(const IdList &ints) const
-    {
-        QStringList sl;
-
-        if (!ints.isEmpty()) {
-            sl.reserve(ints.size());
-
-            for (qint64 i : ints) {
-                sl.append(QString::number(i));
-            }
-
-        }
-
-        return sl;
-    }
-
-    QString intListToString(const IdList &ints) const
-    {
-        if (ints.isEmpty()) {
-            return QString();
-        } else if (ints.count() == 1) {
-            return QString::number(ints.first());
-        } else {
-            return intListToStringList(ints).join(QChar(','));
-        }
-    }
-
-    QSqlQuery getQuery() const
-    {
-        return QSqlQuery(db);
-    }
+    QStringList intListToStringList(const IdList &ints) const;
+    QString intListToString(const IdList &ints) const;
+    QSqlQuery getQuery() const;
 
     QSqlDatabase db;
     QThread worker;
 };
-
-
-
 
 
 class ItemsRequestedWorker : public QThread
@@ -114,6 +72,7 @@ class ItemsRequestedWorker : public QThread
     Q_OBJECT
 public:
     ItemsRequestedWorker(const QString &dbpath, const QJsonDocument &json, AbstractConfiguration *config = nullptr, AbstractNotificator *notificator = nullptr, QObject *parent = nullptr);
+    ~ItemsRequestedWorker() override;
 
 Q_SIGNALS:
     void requestedItems(const Fuoten::IdList &updatedItems, const Fuoten::IdList &newItems, const Fuoten::IdList &deletedItems);
@@ -132,13 +91,12 @@ private:
 };
 
 
-
-
 class GetArticlesAsyncWorker : public QThread
 {
     Q_OBJECT
 public:
     GetArticlesAsyncWorker(const QString &dbpath, const QueryArgs &args, QObject *parent = nullptr);
+    ~GetArticlesAsyncWorker() override;
 
 Q_SIGNALS:
     void gotArticles(const Fuoten::ArticleList &articles);
@@ -158,6 +116,7 @@ class EnqueueMarkReadWorker : public QThread
     Q_OBJECT
 public:
     EnqueueMarkReadWorker(const QString &dbpath, qint64 id, FuotenEnums::Type idType, qint64 newestItemId = -1, QObject *parent = nullptr);
+    ~EnqueueMarkReadWorker() override;
 
 Q_SIGNALS:
     void failed(Fuoten::Error *e);
@@ -183,6 +142,7 @@ class ClearQueueWorker : public QThread
     Q_OBJECT
 public:
     ClearQueueWorker(const QString &dbpath, QObject *parent = nullptr);
+    ~ClearQueueWorker() override;
 
 Q_SIGNALS:
     void failed(Fuoten::Error *e);

@@ -103,6 +103,11 @@ public:
     GetUpdatedItems(const QDateTime &lastModified, FuotenEnums::Type type, qint64 parentId, QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %GetUpdatedItems object.
+     */
+    ~GetUpdatedItems() override;
+
+    /*!
      * \brief Getter function for the \link GetUpdatedItems::lastModified lastModified \endlink property.
      * \sa GetUpdatedItems::setLastModified(), GetUpdatedItems::lastModifiedChanged()
      */

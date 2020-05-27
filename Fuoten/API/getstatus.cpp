@@ -23,6 +23,19 @@
 
 using namespace Fuoten;
 
+GetStatusPrivate::GetStatusPrivate() :
+    ComponentPrivate()
+{
+
+}
+
+
+GetStatusPrivate::~GetStatusPrivate()
+{
+
+}
+
+
 GetStatus::GetStatus(QObject *parent) :
     Component(* new GetStatusPrivate, parent)
 {
@@ -35,6 +48,12 @@ GetStatus::GetStatus(GetStatusPrivate &dd, QObject *parent) :
 {
     setApiRoute(QStringLiteral("/status"));
     setExpectedJSONType(Component::Object);
+}
+
+
+GetStatus::~GetStatus()
+{
+
 }
 
 

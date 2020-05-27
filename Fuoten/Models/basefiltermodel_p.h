@@ -28,12 +28,8 @@ namespace Fuoten {
 class BaseFilterModelPrivate
 {
 public:
-    BaseFilterModelPrivate()
-    {
-        search.setCaseSensitivity(Qt::CaseInsensitive);
-    }
-
-    virtual ~BaseFilterModelPrivate() {}
+    BaseFilterModelPrivate();
+    virtual ~BaseFilterModelPrivate();
 
     QStringMatcher search;
     Qt::SortOrder sortOrder = Qt::AscendingOrder;

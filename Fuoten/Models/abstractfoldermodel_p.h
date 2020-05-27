@@ -28,40 +28,10 @@ namespace Fuoten {
 class AbstractFolderModelPrivate : public BaseModelPrivate
 {
 public:
-    AbstractFolderModelPrivate() :
-        BaseModelPrivate()
-    {
-        sortingRole = FuotenEnums::Name;
-        sortOrder = Qt::AscendingOrder;
-    }
+    AbstractFolderModelPrivate();
+    ~AbstractFolderModelPrivate() override;
 
-    ~AbstractFolderModelPrivate() {
-        while (!folders.isEmpty()) {
-            Folder *f = folders.takeFirst();
-            if (f->inOperation()) {
-                f->deleteLater();
-            } else {
-                delete f;
-            }
-        }
-    }
-
-    int rowByID(qint64 id) {
-        if (folders.isEmpty()) {
-            return -1;
-        }
-
-        int idx = -1;
-
-        for (int i = 0; i < folders.count(); ++i) {
-            if (folders.at(i)->id() == id) {
-                idx = i;
-                break;
-            }
-        }
-
-        return idx;
-    }
+    int rowByID(qint64 id);
 
     QList<Folder*> folders;
 

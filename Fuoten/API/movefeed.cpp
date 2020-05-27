@@ -25,6 +25,22 @@
 using namespace Fuoten;
 
 
+MoveFeedPrivate::MoveFeedPrivate() :
+    ComponentPrivate(),
+    feedId(0),
+    folderId(0)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+MoveFeedPrivate::~MoveFeedPrivate()
+{
+
+}
+
+
 MoveFeed::MoveFeed(QObject *parent) :
     Component(* new MoveFeedPrivate, parent)
 {
@@ -33,6 +49,11 @@ MoveFeed::MoveFeed(QObject *parent) :
 
 MoveFeed::MoveFeed(MoveFeedPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+}
+
+
+MoveFeed::~MoveFeed()
 {
 }
 

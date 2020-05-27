@@ -23,6 +23,16 @@
 using namespace Fuoten;
 
 
+BaseModelPrivate::BaseModelPrivate()
+{
+}
+
+
+BaseModelPrivate::~BaseModelPrivate()
+{
+}
+
+
 BaseModel::BaseModel(QObject *parent) :
     QAbstractItemModel(parent), d_ptr(new BaseModelPrivate)
 {

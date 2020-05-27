@@ -26,6 +26,32 @@
 
 using namespace Fuoten;
 
+GetItemsPrivate::GetItemsPrivate() :
+    ComponentPrivate()
+{
+    apiRoute = QStringLiteral("/items");
+    expectedJSONType = Component::Object;
+}
+
+GetItemsPrivate::GetItemsPrivate(int nBatchSize, qint64 nOffset, FuotenEnums::Type nType, qint64 nParentId, bool nGetRead, bool nOldestFirst) :
+    ComponentPrivate(),
+    offset(nOffset),
+    parentId(nParentId),
+    batchSize(nBatchSize),
+    type(nType),
+    getRead(nGetRead),
+    oldestFirst(nOldestFirst)
+{
+    apiRoute = QStringLiteral("/items");
+    expectedJSONType = Component::Object;
+}
+
+GetItemsPrivate::~GetItemsPrivate()
+{
+
+}
+
+
 GetItems::GetItems(QObject *parent) :
     Component(* new GetItemsPrivate, parent)
 {
@@ -41,6 +67,12 @@ GetItems::GetItems(int batchSize, qint64 offset, FuotenEnums::Type type, qint64 
 GetItems::GetItems(GetItemsPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
+}
+
+
+GetItems::~GetItems()
+{
+
 }
 
 

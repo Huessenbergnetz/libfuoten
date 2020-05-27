@@ -229,6 +229,10 @@ public:
      */
     explicit Article(Article *other, QObject *parent = nullptr);
 
+    /*!
+     * \brief Deconstructs the %Article object.
+     */
+    ~Article() override;
 
     /*!
      * \brief Getter function for the \link Article::feedId feedId \endlink property.

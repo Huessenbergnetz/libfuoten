@@ -29,7 +29,8 @@ namespace Fuoten {
 class ArticleListModelPrivate : public AbstractArticleModelPrivate
 {
 public:
-    ArticleListModelPrivate() : AbstractArticleModelPrivate() {}
+    ArticleListModelPrivate();
+    ~ArticleListModelPrivate() override;
 
 private:
     Q_DISABLE_COPY(ArticleListModelPrivate)

@@ -29,6 +29,38 @@
 using namespace Fuoten;
 
 
+FeedPrivate::FeedPrivate() :
+    BaseItemPrivate()
+{
+
+}
+
+
+FeedPrivate::FeedPrivate(qint64 _id, qint64 _folderId, const QString &_title, const QUrl &_url, const QUrl &_link, const QDateTime &_added, uint _unreadCount, Feed::FeedOrdering _ordering, bool _pinned, uint _updateErrorCount, const QString &_lastUpdateError, const QUrl &_faviconLink, const QString &_folderName) :
+    BaseItemPrivate(_id),
+    folderId(_folderId),
+    title(_title),
+    folderName(_folderName),
+    lastUpdateError(_lastUpdateError),
+    url(_url),
+    link(_link),
+    faviconLink(_faviconLink),
+    added(_added),
+    unreadCount(_unreadCount),
+    updateErrorCount(_updateErrorCount),
+    ordering(_ordering),
+    pinned(_pinned)
+{
+
+}
+
+
+FeedPrivate::~FeedPrivate()
+{
+
+}
+
+
 Feed::Feed(QObject *parent) :
     BaseItem(* new FeedPrivate, parent)
 {
@@ -48,6 +80,11 @@ Feed::Feed(FeedPrivate &dd, QObject *parent) :
 {
 }
 
+
+Feed::~Feed()
+{
+
+}
 
 
 QUrl Feed::url() const { Q_D(const Feed); return d->url; }

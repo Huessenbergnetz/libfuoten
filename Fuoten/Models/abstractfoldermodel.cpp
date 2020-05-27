@@ -25,6 +25,44 @@
 
 using namespace Fuoten;
 
+AbstractFolderModelPrivate::AbstractFolderModelPrivate() :
+    BaseModelPrivate()
+{
+    sortingRole = FuotenEnums::Name;
+    sortOrder = Qt::AscendingOrder;
+}
+
+
+AbstractFolderModelPrivate::~AbstractFolderModelPrivate() {
+    while (!folders.isEmpty()) {
+        Folder *f = folders.takeFirst();
+        if (f->inOperation()) {
+            f->deleteLater();
+        } else {
+            delete f;
+        }
+    }
+}
+
+
+int AbstractFolderModelPrivate::rowByID(qint64 id) {
+    if (folders.isEmpty()) {
+        return -1;
+    }
+
+    int idx = -1;
+
+    for (int i = 0; i < folders.count(); ++i) {
+        if (folders.at(i)->id() == id) {
+            idx = i;
+            break;
+        }
+    }
+
+    return idx;
+}
+
+
 AbstractFolderModel::AbstractFolderModel(QObject *parent) :
     BaseModel(* new AbstractFolderModelPrivate, parent)
 {
@@ -36,6 +74,12 @@ AbstractFolderModel::AbstractFolderModel(AbstractFolderModelPrivate &dd, QObject
     BaseModel(dd, parent)
 {
     setStorage(Component::defaultStorage());
+}
+
+
+AbstractFolderModel::~AbstractFolderModel()
+{
+
 }
 
 

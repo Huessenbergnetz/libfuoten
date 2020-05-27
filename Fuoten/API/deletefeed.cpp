@@ -23,6 +23,20 @@
 using namespace Fuoten;
 
 
+DeleteFeedPrivate::DeleteFeedPrivate() :
+    ComponentPrivate()
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::DeleteOperation;
+}
+
+
+DeleteFeedPrivate::~DeleteFeedPrivate()
+{
+
+}
+
+
 DeleteFeed::DeleteFeed(QObject *parent) :
     Component(* new DeleteFeedPrivate, parent)
 {
@@ -32,6 +46,12 @@ DeleteFeed::DeleteFeed(QObject *parent) :
 DeleteFeed::DeleteFeed(DeleteFeedPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
+}
+
+
+DeleteFeed::~DeleteFeed()
+{
+
 }
 
 

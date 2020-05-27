@@ -28,13 +28,8 @@ namespace Fuoten {
 class DeleteFolderPrivate : public ComponentPrivate
 {
 public:
-    DeleteFolderPrivate() :
-        ComponentPrivate()
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::DeleteOperation;
-    }
-
+    DeleteFolderPrivate();
+    ~DeleteFolderPrivate() override;
 
     qint64 folderId = 0;
 };

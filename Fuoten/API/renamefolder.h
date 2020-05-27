@@ -84,6 +84,11 @@ public:
     explicit RenameFolder(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %RenameFolder object.
+     */
+    ~RenameFolder() override;
+
+    /*!
      * \brief Returns the currently set ID of the folder that should be renamed.
      * \sa folderId
      */

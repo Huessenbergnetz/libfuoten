@@ -29,22 +29,9 @@ namespace Fuoten {
 class MarkItemPrivate : public ComponentPrivate
 {
 public:
-    MarkItemPrivate() :
-        ComponentPrivate(),
-        itemId(-1),
-        unread(false)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
-
-    MarkItemPrivate(qint64 nItemId, bool nUnread) :
-        itemId(nItemId),
-        unread(nUnread)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
+    MarkItemPrivate();
+    MarkItemPrivate(qint64 nItemId, bool nUnread);
+    ~MarkItemPrivate() override;
 
 
     qint64 itemId;

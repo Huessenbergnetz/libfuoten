@@ -44,6 +44,11 @@ public:
     explicit AbstractFeedModel(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %AbstractFeedModel object.
+     */
+    ~AbstractFeedModel() override;
+
+    /*!
      * \brief Returns the model index of the Feed identified by \a id.
      * \param id ID of the feed to find in the model
      */

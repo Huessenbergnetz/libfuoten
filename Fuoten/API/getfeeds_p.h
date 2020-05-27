@@ -27,11 +27,8 @@ namespace Fuoten {
 
 class GetFeedsPrivate : public ComponentPrivate {
 public:
-    GetFeedsPrivate() : ComponentPrivate()
-    {
-        apiRoute = QStringLiteral("/feeds");
-        expectedJSONType = Component::Object;
-    }
+    GetFeedsPrivate();
+    ~GetFeedsPrivate() override;
 };
 
 }

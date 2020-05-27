@@ -23,6 +23,20 @@
 using namespace Fuoten;
 
 
+DeleteFolderPrivate::DeleteFolderPrivate() :
+    ComponentPrivate()
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::DeleteOperation;
+}
+
+
+DeleteFolderPrivate::~DeleteFolderPrivate()
+{
+
+}
+
+
 DeleteFolder::DeleteFolder(QObject *parent) :
     Component(* new DeleteFolderPrivate, parent)
 {
@@ -32,6 +46,12 @@ DeleteFolder::DeleteFolder(QObject *parent) :
 DeleteFolder::DeleteFolder(DeleteFolderPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
+}
+
+
+DeleteFolder::~DeleteFolder()
+{
+
 }
 
 

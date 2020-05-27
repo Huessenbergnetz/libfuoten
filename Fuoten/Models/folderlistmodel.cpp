@@ -21,6 +21,19 @@
 
 using namespace Fuoten;
 
+FolderListModelPrivate::FolderListModelPrivate() :
+    AbstractFolderModelPrivate()
+{
+
+}
+
+
+FolderListModelPrivate::~FolderListModelPrivate()
+{
+
+}
+
+
 FolderListModel::FolderListModel(QObject *parent) :
     AbstractFolderModel(* new FolderListModelPrivate, parent)
 {
@@ -30,6 +43,12 @@ FolderListModel::FolderListModel(QObject *parent) :
 
 FolderListModel::FolderListModel(FolderListModelPrivate &dd, QObject *parent) :
     AbstractFolderModel(dd, parent)
+{
+
+}
+
+
+FolderListModel::~FolderListModel()
 {
 
 }

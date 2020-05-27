@@ -25,6 +25,19 @@
 
 using namespace Fuoten;
 
+GetFoldersPrivate::GetFoldersPrivate() :
+    ComponentPrivate()
+{
+
+}
+
+
+GetFoldersPrivate::~GetFoldersPrivate()
+{
+
+}
+
+
 GetFolders::GetFolders(QObject *parent) :
     Component(* new GetFoldersPrivate, parent)
 {
@@ -38,6 +51,12 @@ GetFolders::GetFolders(GetFoldersPrivate &dd, QObject *parent) :
 {
     setApiRoute(QStringLiteral("/folders"));
     setExpectedJSONType(Component::Object);
+}
+
+
+GetFolders::~GetFolders()
+{
+
 }
 
 

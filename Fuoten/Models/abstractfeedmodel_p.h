@@ -29,38 +29,10 @@ namespace Fuoten {
 class AbstractFeedModelPrivate : public BaseModelPrivate
 {
 public:
-    AbstractFeedModelPrivate() :
-        BaseModelPrivate()
-    {
-        sortingRole = FuotenEnums::Name;
-        sortOrder = Qt::AscendingOrder;
-    }
+    AbstractFeedModelPrivate();
+    ~AbstractFeedModelPrivate() override;
 
-    ~AbstractFeedModelPrivate() {
-        while (!feeds.isEmpty()) {
-            Feed *f = feeds.takeFirst();
-            if (!f->inOperation()) {
-                delete f;
-            }
-        }
-    }
-
-    int rowByID(qint64 id) {
-        if (feeds.isEmpty()) {
-            return -1;
-        }
-
-        int idx = -1;
-
-        for (int i = 0; i < feeds.count(); ++i) {
-            if (feeds.at(i)->id() == id) {
-                idx = i;
-                break;
-            }
-        }
-
-        return idx;
-    }
+    int rowByID(qint64 id);
 
     QList<Feed*> feeds;
 

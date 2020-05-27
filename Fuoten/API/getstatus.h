@@ -31,7 +31,7 @@ class GetStatusPrivate;
 /*!
  * \brief Requests the status from the News App.
  *
- * The status reply will contain the News App version number an possible warnings about improperly configurations.
+ * The status reply will contain the News App version number and possible warnings about improperly configurations.
  * To request the status, set the \link Component::configuration configuration \endlink property and call execute().
  *
  * The requested data will be written to AbstractConfiguration::setServerVersion() and AbstractConfiguration::setImproperlyConfiguredCron(). You can get the raw JSON response from the Component::succeeded() signal.
@@ -57,6 +57,11 @@ public:
      * \brief Constructs an API request object with the given \a parent to query the status from the remote server.
      */
     explicit GetStatus(QObject *parent = nullptr);
+
+    /*!
+     * \brief Destroys the %GetStatus object.
+     */
+    ~GetStatus() override;
 
     /*!
      * \brief Executes the API request.

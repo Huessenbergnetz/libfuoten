@@ -22,10 +22,23 @@
 
 using namespace Fuoten;
 
+BaseItemPrivate::BaseItemPrivate(qint64 _id) :
+    id(_id)
+{
+
+}
+
+
+BaseItemPrivate::~BaseItemPrivate()
+{
+
+}
+
 
 BaseItem::BaseItem(QObject *parent) :
     QObject(parent), d_ptr(new BaseItemPrivate)
 {
+
 }
 
 
@@ -36,9 +49,9 @@ BaseItem::BaseItem(BaseItemPrivate &dd, QObject *parent) :
 }
 
 
-
 BaseItem::~BaseItem()
 {
+
 }
 
 
@@ -53,9 +66,6 @@ bool BaseItem::inOperation() const
 }
 
 
-
-
-
 qint64 BaseItem::id() const { Q_D(const BaseItem); return d->id; }
 
 void BaseItem::setId(qint64 nId)
@@ -67,8 +77,6 @@ void BaseItem::setId(qint64 nId)
         Q_EMIT idChanged(id());
     }
 }
-
-
 
 
 Error *BaseItem::error() const
@@ -104,8 +112,6 @@ void BaseItem::setError(Error *nError)
 }
 
 
-
-
 Component *BaseItem::component() const { Q_D(const BaseItem); return d->comp; }
 
 void BaseItem::setComponent(Component *nComp)
@@ -127,7 +133,6 @@ void BaseItem::setComponent(Component *nComp)
 
     Q_EMIT inOperationChanged(inOperation());
 }
-
 
 
 void BaseItem::clearError()

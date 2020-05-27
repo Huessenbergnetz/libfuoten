@@ -163,9 +163,9 @@ public:
     explicit AbstractStorage(QObject *parent = nullptr);
 
     /*!
-     * \brief Deconstructs the AbstractStorage object.
+     * \brief Deconstructs the %AbstractStorage object.
      */
-    ~AbstractStorage();
+    ~AbstractStorage() override;
 
     /*!
      * \brief Returns true when the storage is ready to handle data, otherwise false.

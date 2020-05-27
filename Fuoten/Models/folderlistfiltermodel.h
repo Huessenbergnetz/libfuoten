@@ -46,6 +46,11 @@ public:
     explicit FolderListFilterModel(QObject *parent = nullptr);
 
     /*!
+     * \brief Deconstructs the %FeedListModel object.
+     */
+    ~FolderListFilterModel() override;
+
+    /*!
      * \brief Returns true while the underlying FolderListModel is loading.
      */
     bool inOperation() const override;

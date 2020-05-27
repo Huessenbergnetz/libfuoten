@@ -23,6 +23,19 @@
 
 using namespace Fuoten;
 
+RenameFeedPrivate::RenameFeedPrivate() :
+    ComponentPrivate(),
+    feedId(0)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+RenameFeedPrivate::~RenameFeedPrivate()
+{
+}
+
 
 RenameFeed::RenameFeed(QObject *parent) :
     Component(* new RenameFeedPrivate, parent)
@@ -32,6 +45,11 @@ RenameFeed::RenameFeed(QObject *parent) :
 
 RenameFeed::RenameFeed(RenameFeedPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+}
+
+
+RenameFeed::~RenameFeed()
 {
 }
 

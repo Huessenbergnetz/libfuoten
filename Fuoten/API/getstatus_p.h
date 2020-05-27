@@ -28,7 +28,8 @@ namespace Fuoten {
 
 class GetStatusPrivate : public ComponentPrivate {
 public:
-    GetStatusPrivate() : ComponentPrivate() {}
+    GetStatusPrivate();
+    ~GetStatusPrivate() override;
 
     QJsonObject resultObject;
 };

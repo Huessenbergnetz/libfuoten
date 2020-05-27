@@ -52,6 +52,11 @@ public:
     SQLiteStorage(const QString &dbpath, QObject *parent = nullptr);
 
     /*!
+     * \brief Deconstructs the %SQLiteStorage object.
+     */
+    ~SQLiteStorage() override;
+
+    /*!
      * \brief Initializes the SQLite database.
      *
      * This will create/check the table layout.

@@ -22,6 +22,30 @@
 
 using namespace Fuoten;
 
+MarkItemPrivate::MarkItemPrivate() :
+    ComponentPrivate(),
+    itemId(-1),
+    unread(false)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+MarkItemPrivate::MarkItemPrivate(qint64 nItemId, bool nUnread) :
+    itemId(nItemId),
+    unread(nUnread)
+{
+    expectedJSONType = Component::Empty;
+    namOperation = QNetworkAccessManager::PutOperation;
+}
+
+
+MarkItemPrivate::~MarkItemPrivate()
+{
+}
+
+
 MarkItem::MarkItem(QObject *parent) :
     Component(* new MarkItemPrivate, parent)
 {
@@ -36,6 +60,11 @@ MarkItem::MarkItem(qint64 itemId, bool unread, QObject *parent) :
 
 MarkItem::MarkItem(MarkItemPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+}
+
+
+MarkItem::~MarkItem()
 {
 }
 

@@ -45,6 +45,11 @@ public:
      */
     explicit ArticleListModel(QObject *parent = nullptr);
 
+    /*!
+     * \brief Destroys the %ArticleListModel object.
+     */
+    ~ArticleListModel() override;
+
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
     QModelIndex sibling(int row, int column, const QModelIndex &idx) const override;

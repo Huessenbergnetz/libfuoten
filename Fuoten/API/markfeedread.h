@@ -81,6 +81,11 @@ public:
     explicit MarkFeedRead(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %MarkFeedRead object.
+     */
+    ~MarkFeedRead() override;
+
+    /*!
      * \brief Returns the ID of the feed to be marked as read.
      * \sa feedId
      */

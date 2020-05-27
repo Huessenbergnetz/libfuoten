@@ -29,12 +29,8 @@ namespace Fuoten {
 class ArticleListFilterModelPrivate : public BaseFilterModelPrivate
 {
 public:
-    ArticleListFilterModelPrivate() :
-        BaseFilterModelPrivate(),
-        alm(new ArticleListModel)
-    {
-        sortOrder = Qt::DescendingOrder;
-    }
+    ArticleListFilterModelPrivate();
+    ~ArticleListFilterModelPrivate() override;
 
     const QScopedPointer<ArticleListModel> alm;
 };

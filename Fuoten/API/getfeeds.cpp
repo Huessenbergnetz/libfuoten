@@ -25,6 +25,20 @@
 
 using namespace Fuoten;
 
+GetFeedsPrivate::GetFeedsPrivate() :
+    ComponentPrivate()
+{
+    apiRoute = QStringLiteral("/feeds");
+    expectedJSONType = Component::Object;
+}
+
+
+GetFeedsPrivate::~GetFeedsPrivate()
+{
+
+}
+
+
 GetFeeds::GetFeeds(QObject *parent) :
     Component(* new GetFeedsPrivate, parent)
 {
@@ -34,6 +48,12 @@ GetFeeds::GetFeeds(QObject *parent) :
 
 GetFeeds::GetFeeds(GetFeedsPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+
+}
+
+
+GetFeeds::~GetFeeds()
 {
 
 }

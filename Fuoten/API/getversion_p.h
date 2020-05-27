@@ -28,7 +28,8 @@ namespace Fuoten {
 
 class GetVersionPrivate : public ComponentPrivate {
 public:
-    GetVersionPrivate() : ComponentPrivate() {}
+    GetVersionPrivate();
+    ~GetVersionPrivate();
 
     QJsonObject resultObject;
 };

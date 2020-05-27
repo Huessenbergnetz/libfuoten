@@ -24,6 +24,22 @@
 
 using namespace Fuoten;
 
+FeedListFilterModelPrivate::FeedListFilterModelPrivate() :
+    BaseFilterModelPrivate(),
+    flm(new FeedListModel),
+    respectPinned(true),
+    sortByFolder(false)
+{
+    sortingRole = FuotenEnums::Name;
+}
+
+
+FeedListFilterModelPrivate::~FeedListFilterModelPrivate()
+{
+
+}
+
+
 FeedListFilterModel::FeedListFilterModel(QObject *parent) :
     BaseFilterModel(* new FeedListFilterModelPrivate, parent)
 {
@@ -47,6 +63,12 @@ FeedListFilterModel::FeedListFilterModel(FeedListFilterModelPrivate &dd, QObject
     connect(d->flm.data(), &FeedListModel::doubleParentIdChanged, this, &FeedListFilterModel::doubleParentIdChanged);
     connect(d->flm.data(), &FeedListModel::loadedChanged, this, &FeedListFilterModel::loadedChanged);
     setSourceModel(d->flm.data());
+}
+
+
+FeedListFilterModel::~FeedListFilterModel()
+{
+
 }
 
 

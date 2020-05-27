@@ -24,6 +24,42 @@
 
 using namespace Fuoten;
 
+AbstractFeedModelPrivate::AbstractFeedModelPrivate() :
+    BaseModelPrivate()
+{
+    sortingRole = FuotenEnums::Name;
+    sortOrder = Qt::AscendingOrder;
+}
+
+
+AbstractFeedModelPrivate::~AbstractFeedModelPrivate() {
+    while (!feeds.isEmpty()) {
+        Feed *f = feeds.takeFirst();
+        if (!f->inOperation()) {
+            delete f;
+        }
+    }
+}
+
+
+int AbstractFeedModelPrivate::rowByID(qint64 id) {
+    if (feeds.isEmpty()) {
+        return -1;
+    }
+
+    int idx = -1;
+
+    for (int i = 0; i < feeds.count(); ++i) {
+        if (feeds.at(i)->id() == id) {
+            idx = i;
+            break;
+        }
+    }
+
+    return idx;
+}
+
+
 AbstractFeedModel::AbstractFeedModel(QObject *parent) :
     BaseModel(* new AbstractFeedModelPrivate, parent)
 {
@@ -35,6 +71,12 @@ AbstractFeedModel::AbstractFeedModel(AbstractFeedModelPrivate &dd, QObject *pare
     BaseModel(dd, parent)
 {
     setStorage(Component::defaultStorage());
+}
+
+
+AbstractFeedModel::~AbstractFeedModel()
+{
+
 }
 
 

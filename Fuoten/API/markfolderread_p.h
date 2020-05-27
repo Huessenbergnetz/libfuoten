@@ -28,14 +28,8 @@ namespace Fuoten {
 class MarkFolderReadPrivate : public ComponentPrivate
 {
 public:
-    MarkFolderReadPrivate() :
-        ComponentPrivate(),
-        folderId(0),
-        newestItemId(0)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
+    MarkFolderReadPrivate();
+    ~MarkFolderReadPrivate() override;
 
     qint64 folderId;
     qint64 newestItemId;

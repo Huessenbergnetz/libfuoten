@@ -27,9 +27,8 @@ namespace Fuoten {
 class BaseModelPrivate
 {
 public:
-    BaseModelPrivate() {}
-
-    virtual ~BaseModelPrivate() {}
+    BaseModelPrivate();
+    virtual ~BaseModelPrivate();
 
     qint64 parentId = -1;
     AbstractStorage *storage = nullptr;

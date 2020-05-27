@@ -133,7 +133,7 @@ public:
     /*!
      * \brief Deconstructs the Synchronizer object.
      */
-    ~Synchronizer();
+    ~Synchronizer() override;
 
     /*!
      * \brief Returns a pointer to an Error object if any error occurred, otherwise a \c nullptr.

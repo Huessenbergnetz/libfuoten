@@ -28,15 +28,9 @@ namespace Fuoten {
 class MarkAllItemsReadPrivate : public ComponentPrivate
 {
 public:
-    MarkAllItemsReadPrivate() :
-        ComponentPrivate(),
-        newestItemId(0)
-    {}
-
-    explicit MarkAllItemsReadPrivate(qint64 nNewestItemId) :
-        ComponentPrivate(),
-        newestItemId(nNewestItemId)
-    {}
+    MarkAllItemsReadPrivate();
+    explicit MarkAllItemsReadPrivate(qint64 nNewestItemId);
+    ~MarkAllItemsReadPrivate() override;
 
     qint64 newestItemId;
 };

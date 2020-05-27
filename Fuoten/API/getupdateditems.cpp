@@ -27,6 +27,30 @@
 
 using namespace Fuoten;
 
+GetUpdatedItemsPrivate::GetUpdatedItemsPrivate() :
+    ComponentPrivate()
+{
+    apiRoute = QStringLiteral("/items/updated");
+    expectedJSONType = Component::Object;
+}
+
+GetUpdatedItemsPrivate::GetUpdatedItemsPrivate(const QDateTime &nLastModified, FuotenEnums::Type nType, qint64 nParentId) :
+    ComponentPrivate(),
+    parentId(nParentId),
+    lastModified(nLastModified),
+    type(nType)
+{
+    apiRoute = QStringLiteral("/item/updated");
+    expectedJSONType = Component::Object;
+}
+
+
+GetUpdatedItemsPrivate::~GetUpdatedItemsPrivate()
+{
+
+}
+
+
 GetUpdatedItems::GetUpdatedItems(QObject *parent) :
     Component(* new GetUpdatedItemsPrivate, parent)
 {
@@ -45,6 +69,12 @@ GetUpdatedItems::GetUpdatedItems(GetUpdatedItemsPrivate &dd, QObject *parent) :
 }
 
 
+GetUpdatedItems::~GetUpdatedItems()
+{
+
+}
+
+
 void GetUpdatedItems::execute()
 {
     if (Q_UNLIKELY(inOperation())) {
@@ -58,7 +88,7 @@ void GetUpdatedItems::execute()
 
     QUrlQuery uq;
     uq.addQueryItem(QStringLiteral("lastModified"), QString::number(lastModified().toTime_t()));
-    uq.addQueryItem(QStringLiteral("type"), QString::number((int)type()));
+    uq.addQueryItem(QStringLiteral("type"), QString::number(static_cast<int>(type())));
     uq.addQueryItem(QStringLiteral("id"), QString::number(parentId()));
 
     setUrlQuery(uq);

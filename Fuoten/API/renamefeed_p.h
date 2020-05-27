@@ -28,15 +28,8 @@ namespace Fuoten {
 class RenameFeedPrivate : public ComponentPrivate
 {
 public:
-    RenameFeedPrivate() :
-        ComponentPrivate(),
-        feedId(0)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
-
-    ~RenameFeedPrivate() {}
+    RenameFeedPrivate();
+    ~RenameFeedPrivate() override;
 
     qint64 feedId;
     QString newName;

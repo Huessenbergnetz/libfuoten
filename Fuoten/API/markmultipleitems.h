@@ -85,6 +85,10 @@ public:
      */
     MarkMultipleItems(const IdList &itemIds, bool unread, QObject *parent = nullptr);
 
+    /*!
+     * \brief Destroys the %MarkMultipleItems object.
+     */
+    ~MarkMultipleItems() override;
 
     /*!
      * \brief Getter function for the \link MarkMultipleItems::itemIds itemIds \endlink property.

@@ -23,6 +23,19 @@
 
 using namespace Fuoten;
 
+GetVersionPrivate::GetVersionPrivate() :
+    ComponentPrivate()
+{
+
+}
+
+
+GetVersionPrivate::~GetVersionPrivate()
+{
+
+}
+
+
 GetVersion::GetVersion(QObject *parent) :
     Component(*new GetVersionPrivate, parent)
 {
@@ -36,6 +49,12 @@ GetVersion::GetVersion(GetVersionPrivate &dd, QObject *parent) :
 {
     setApiRoute(QStringLiteral("/version"));
     setExpectedJSONType(Component::Object);
+}
+
+
+GetVersion::~GetVersion()
+{
+
 }
 
 

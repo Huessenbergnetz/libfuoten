@@ -28,7 +28,8 @@ namespace Fuoten {
 
 class GetFoldersPrivate : public ComponentPrivate {
 public:
-    GetFoldersPrivate() : ComponentPrivate() {}
+    GetFoldersPrivate();
+    ~GetFoldersPrivate() override;
 };
 
 }

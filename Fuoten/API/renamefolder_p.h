@@ -28,13 +28,8 @@ namespace Fuoten {
 class RenameFolderPrivate : public ComponentPrivate
 {
 public:
-    RenameFolderPrivate() :
-        ComponentPrivate(),
-        folderId(0)
-    {
-        expectedJSONType = Component::Empty;
-        namOperation = QNetworkAccessManager::PutOperation;
-    }
+    RenameFolderPrivate();
+    ~RenameFolderPrivate() override;
 
     qint64 folderId;
     QString newName;

@@ -84,6 +84,11 @@ public:
     explicit MoveFeed(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %MoveFeed object.
+     */
+    ~MoveFeed() override;
+
+    /*!
      * \brief Returns the ID of the feed that should be moved.
      * \sa feedId
      */

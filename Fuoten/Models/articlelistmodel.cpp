@@ -23,6 +23,16 @@
 using namespace Fuoten;
 
 
+ArticleListModelPrivate::ArticleListModelPrivate() :
+    AbstractArticleModelPrivate()
+{
+}
+
+ArticleListModelPrivate::~ArticleListModelPrivate()
+{
+}
+
+
 ArticleListModel::ArticleListModel(QObject *parent) :
     AbstractArticleModel(* new ArticleListModelPrivate, parent)
 {
@@ -31,6 +41,11 @@ ArticleListModel::ArticleListModel(QObject *parent) :
 
 ArticleListModel::ArticleListModel(ArticleListModelPrivate &dd, QObject *parent) :
     AbstractArticleModel(dd, parent)
+{
+}
+
+
+ArticleListModel::~ArticleListModel()
 {
 }
 

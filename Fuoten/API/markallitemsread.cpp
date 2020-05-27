@@ -23,6 +23,28 @@
 
 using namespace Fuoten;
 
+MarkAllItemsReadPrivate::MarkAllItemsReadPrivate() :
+    ComponentPrivate(),
+    newestItemId(0)
+{
+
+}
+
+
+MarkAllItemsReadPrivate::MarkAllItemsReadPrivate(qint64 nNewestItemId) :
+    ComponentPrivate(),
+    newestItemId(nNewestItemId)
+{
+
+}
+
+
+MarkAllItemsReadPrivate::~MarkAllItemsReadPrivate()
+{
+
+}
+
+
 MarkAllItemsRead::MarkAllItemsRead(QObject *parent) :
     Component(* new MarkAllItemsReadPrivate, parent)
 {
@@ -38,6 +60,12 @@ MarkAllItemsRead::MarkAllItemsRead(qint64 newestItemId, QObject *parent) :
 MarkAllItemsRead::MarkAllItemsRead(MarkAllItemsReadPrivate &dd, QObject *parent) :
     Component(dd, parent)
 {
+}
+
+
+MarkAllItemsRead::~MarkAllItemsRead()
+{
+
 }
 
 

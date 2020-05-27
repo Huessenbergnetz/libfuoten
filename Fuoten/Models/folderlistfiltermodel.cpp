@@ -24,6 +24,20 @@
 
 using namespace Fuoten;
 
+FolderListFilterModelPrivate::FolderListFilterModelPrivate() :
+    BaseFilterModelPrivate(),
+    flm(new FolderListModel)
+{
+    sortingRole = FuotenEnums::Name;
+}
+
+
+FolderListFilterModelPrivate::~FolderListFilterModelPrivate()
+{
+
+}
+
+
 FolderListFilterModel::FolderListFilterModel(QObject *parent) :
     BaseFilterModel(* new FolderListFilterModelPrivate, parent)
 {
@@ -47,6 +61,12 @@ FolderListFilterModel::FolderListFilterModel(FolderListFilterModelPrivate &dd, Q
     connect(d->flm.data(), &FolderListModel::doubleParentIdChanged, this, &FolderListFilterModel::doubleParentIdChanged);
     connect(d->flm.data(), &FolderListModel::loadedChanged, this, &FolderListFilterModel::loadedChanged);
     setSourceModel(d->flm.data());
+}
+
+
+FolderListFilterModel::~FolderListFilterModel()
+{
+
 }
 
 

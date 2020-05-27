@@ -26,6 +26,21 @@
 using namespace Fuoten;
 
 
+CreateFolderPrivate::CreateFolderPrivate() :
+    ComponentPrivate()
+{
+    expectedJSONType = Component::Object;
+    namOperation = QNetworkAccessManager::PostOperation;
+    apiRoute = QStringLiteral("/folders");
+}
+
+
+CreateFolderPrivate::~CreateFolderPrivate()
+{
+
+}
+
+
 CreateFolder::CreateFolder(QObject *parent) :
     Component(* new CreateFolderPrivate, parent)
 {
@@ -34,6 +49,12 @@ CreateFolder::CreateFolder(QObject *parent) :
 
 CreateFolder::CreateFolder(CreateFolderPrivate &dd, QObject *parent) :
     Component(dd, parent)
+{
+
+}
+
+
+CreateFolder::~CreateFolder()
 {
 
 }

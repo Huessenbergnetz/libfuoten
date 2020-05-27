@@ -69,6 +69,11 @@ public:
     explicit DeleteFolder(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %DeleteFolder object.
+     */
+    ~DeleteFolder() override;
+
+    /*!
      * \brief Returns the ID of the folder to delete.
      * \sa folderId
      */

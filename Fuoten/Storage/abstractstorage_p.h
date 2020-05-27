@@ -29,9 +29,9 @@ namespace Fuoten {
 class AbstractStoragePrivate
 {
 public:
-    AbstractStoragePrivate() {}
+    AbstractStoragePrivate();
 
-    virtual ~AbstractStoragePrivate() {}
+    virtual ~AbstractStoragePrivate();
 
     AbstractConfiguration *configuration = nullptr;
     AbstractNotificator *notificator = nullptr;

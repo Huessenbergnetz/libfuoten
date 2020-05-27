@@ -28,7 +28,8 @@ namespace Fuoten {
 class FolderListModelPrivate : public AbstractFolderModelPrivate
 {
 public:
-    FolderListModelPrivate() : AbstractFolderModelPrivate() {}
+    FolderListModelPrivate();
+    ~FolderListModelPrivate() override;
 
 private:
     Q_DISABLE_COPY(FolderListModelPrivate)

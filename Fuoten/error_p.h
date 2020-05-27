@@ -45,8 +45,6 @@ public:
             break;
         case Error::Fatal:
             qFatal("%s: %s", Error::staticMetaObject.enumerator(Error::staticMetaObject.indexOfEnumerator("Type")).valueToKey(type), qUtf8Printable(text));
-            break;
-        case Error::Nothing:
         default:
             break;
         }

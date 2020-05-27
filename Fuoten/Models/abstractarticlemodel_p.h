@@ -29,55 +29,11 @@ namespace Fuoten {
 class AbstractArticleModelPrivate : public BaseModelPrivate
 {
 public:
-    AbstractArticleModelPrivate() : BaseModelPrivate()
-    {
-        sortingRole = FuotenEnums::Time;
-        sortOrder = Qt::DescendingOrder;
-    }
+    AbstractArticleModelPrivate();
+    ~AbstractArticleModelPrivate() override;
 
-    ~AbstractArticleModelPrivate() {
-        while (!articles.isEmpty()) {
-            Article *a = articles.takeFirst();
-            if (!a->inOperation()) {
-                delete a;
-            }
-        }
-    }
-
-
-    int rowByID(qint64 id) {
-        if (articles.isEmpty()) {
-            return -1;
-        }
-
-        int idx = -1;
-
-        for (int i = 0; i < articles.count(); ++i) {
-            if (articles.at(i)->id() == id) {
-                idx = i;
-                break;
-            }
-        }
-
-        return idx;
-    }
-
-    int rowByGuidHash(const QString &guidHash) {
-        if (articles.isEmpty()) {
-            return -1;
-        }
-
-        int idx = -1;
-
-        for (int i = 0; i < articles.count(); ++i) {
-            if (articles.at(i)->guidHash() == guidHash) {
-                idx = i;
-                break;
-            }
-        }
-
-        return idx;
-    }
+    int rowByID(qint64 id);
+    int rowByGuidHash(const QString &guidHash);
 
     QList<Article*> articles;
     int bodyLimit = -1;

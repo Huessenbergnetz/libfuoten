@@ -73,6 +73,11 @@ public:
     explicit CreateFolder(QObject *parent = nullptr);
 
     /*!
+     * \brief Destroys the %CreateFolder object.
+     */
+    ~CreateFolder() override;
+
+    /*!
      * \brief Returns the name of the folder to create.
      *
      * \sa name
