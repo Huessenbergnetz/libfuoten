@@ -37,6 +37,7 @@ public:
     virtual ~ComponentPrivate();
 
     QHash<QByteArray, QByteArray> requestHeaders;
+    QString baseRoute = QStringLiteral("/index.php/apps/news/api/v1-2");
     QString apiRoute;
     QByteArray result;
     QByteArray payload;

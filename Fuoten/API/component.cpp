@@ -274,7 +274,7 @@ void Component::sendRequest()
     url.setHost(d->configuration->getHost());
 
     QString urlPath = d->configuration->getInstallPath();
-    urlPath.append(QLatin1String("/index.php/apps/news/api/v1-2"));
+    urlPath.append(d->baseRoute);
     urlPath.append(d->apiRoute);
 
     url.setPath(urlPath);
