@@ -467,7 +467,7 @@ Q_SIGNALS:
      * \brief This signal is emitte when the timeout for the request changes.
      * \sa requestTimeout
      */
-    void requestTimeoutChanged(quint8 requestTimeout);
+    void requestTimeoutChanged(quint16 requestTimeout);
 
     /*!
      * \brief This signal is emitted when the pointer to the Error object changes.

@@ -474,7 +474,7 @@ void Component::setRequestTimeout(quint16 seconds)
     Q_D(Component); 
     if (seconds != d->requestTimeout) {
         d->requestTimeout = seconds;
-        qDebug("Changed requestTimeout to %u seconds.", d->requestTimeout);
+        qDebug("Changed requestTimeout to %hu seconds.", d->requestTimeout);
         Q_EMIT requestTimeoutChanged(requestTimeout());
     }
 }
