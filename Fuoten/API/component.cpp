@@ -242,7 +242,10 @@ void Component::sendRequest()
     Q_D(Component);
 
     if (!d->configuration) {
-        setConfiguration(ComponentPrivate::defaultConfiguration());
+        d->configuration = ComponentPrivate::defaultConfiguration();
+        if (d->configuration) {
+            Q_EMIT configurationChanged(d->configuration);
+        }
     }
 
     Q_ASSERT_X(d->configuration, "send request", "no configuration available");
