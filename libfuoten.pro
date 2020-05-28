@@ -132,6 +132,8 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/API/starmultipleitems.h \
         Fuoten/API/MarkAllItemsRead \
         Fuoten/API/markallitemsread.h \
+        Fuoten/API/GetServerStatus \
+        Fuoten/API/getserverstatus.h \
         Fuoten/Helpers/abstractnamfactory.h \
         Fuoten/Helpers/AbstractNamFactory \
         Fuoten/Helpers/abstractnotificator.h \
@@ -200,6 +202,8 @@ langfiles.files = translations/*.qm
 INSTALLS += langfiles
 
 HEADERS += \
+    Fuoten/API/getserverstatus.h \
+    Fuoten/API/getserverstatus_p.h \
     Fuoten/fuoten_global.h \
     Fuoten/error.h \
     Fuoten/error_p.h \
@@ -292,6 +296,7 @@ HEADERS += \
     Fuoten/Helpers/abstractnotificator_p.h
 
 SOURCES += \
+    Fuoten/API/getserverstatus.cpp \
     Fuoten/error.cpp \
     Fuoten/API/component.cpp \
     Fuoten/API/getversion.cpp \
