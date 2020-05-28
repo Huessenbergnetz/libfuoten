@@ -208,32 +208,9 @@ bool AbstractConfiguration::setLoginFlowCredentials(const QJsonObject &credentia
     qDebug() << "Login Flow return value:" << credentials;
 
     const QUrl serverUrl = QUrl(credentials.value(QStringLiteral("server")).toString(), QUrl::StrictMode);
-    if (Q_UNLIKELY(!serverUrl.isValid())) {
+    if (Q_UNLIKELY(!setServerUrl(serverUrl))) {
         qCritical("Failed to set login flow credentials with invalid server URL: %s", qUtf8Printable(credentials.value(QStringLiteral("server")).toString()));
         return false;
-    }
-
-    bool ssl = true;
-    if (serverUrl.scheme().isEmpty() || serverUrl.scheme() == QLatin1String("https")) {
-        ssl = true;
-    } else if (serverUrl.scheme() == QLatin1String("http")) {
-        ssl = false;
-    } else {
-        qCritical("Failed to set login flow credentials with invalid URL scheme: %s", qUtf8Printable(serverUrl.scheme()));
-        return false;
-    }
-
-    const QString host = serverUrl.host();
-    if (Q_UNLIKELY(host.isEmpty())) {
-        qCritical("%s", "Failed to set login flow credentials with empty host.");
-        return false;
-    }
-
-    int port = serverUrl.port(0);
-
-    QString path = serverUrl.path();
-    while (path.endsWith(QLatin1Char('/'))) {
-        path.chop(1);
     }
 
     const QString loginName = credentials.value(QStringLiteral("loginName")).toString();
@@ -248,10 +225,6 @@ bool AbstractConfiguration::setLoginFlowCredentials(const QJsonObject &credentia
         return false;
     }
 
-    setUseSSL(ssl);
-    setHost(host);
-    setServerPort(port);
-    setInstallPath(path);
     setUsername(loginName);
     setPassword(appPassword);
 
@@ -260,5 +233,47 @@ bool AbstractConfiguration::setLoginFlowCredentials(const QJsonObject &credentia
     return true;
 }
 
+bool AbstractConfiguration::setServerUrl(const QUrl &url)
+{
+    if (Q_UNLIKELY(!url.isValid())) {
+        qCritical("%s", "Invalid server URL.");
+        return false;
+    }
+
+    bool ssl = true;
+    if (url.scheme().isEmpty() || url.scheme() == QLatin1String("https")) {
+        ssl = true;
+    } else if (url.scheme() == QLatin1String("http")) {
+        ssl = false;
+    } else {
+        qCritical("Invalid server URL scheme: %s", qUtf8Printable(url.scheme()));
+        return false;
+    }
+
+    const QString host = url.host();
+    if (Q_UNLIKELY(host.isEmpty())) {
+        qCritical("%s", "Empty server host name.");
+        return false;
+    }
+
+    int port = url.port(0);
+
+    QString path = url.path();
+    while (path.endsWith(QLatin1Char('/'))) {
+        path.chop(1);
+    }
+
+    setUseSSL(ssl);
+    setHost(host);
+    setServerPort(port);
+    setInstallPath(path);
+
+    return true;
+}
+
+bool AbstractConfiguration::setServerUrl(const QString &url)
+{
+    return setServerUrl(QUrl(url, QUrl::StrictMode));
+}
 
 #include "moc_abstractconfiguration.cpp"

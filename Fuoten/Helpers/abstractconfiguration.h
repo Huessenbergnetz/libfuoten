@@ -207,7 +207,7 @@ public:
     /*!
      * \brief Sets the user's avatar.
      *
-     * Reimplement this in a subclass if you want to handle the user's avatar image returned by Fuoten::Generic::Status.
+     * Reimplement this in a subclass if you want to handle the user's avatar image returned by the GetUser request.
      * \a data will be a base64 encoded data string representing the image data. \a mime will contain the image's mime type.
      *
      * The default implementation does nothing.
@@ -278,7 +278,7 @@ public:
      *
      * \return user agent string
      */
-    virtual QString getLoginFlowUserAgent() const;
+    Q_INVOKABLE virtual QString getLoginFlowUserAgent() const;
 
 public Q_SLOTS:
     /*!
@@ -302,7 +302,7 @@ public Q_SLOTS:
      * \param credentials JSON object
      * \return \c true on success
      */
-    virtual bool setLoginFlowCredentials(const QByteArray &credentials);
+    bool setLoginFlowCredentials(const QByteArray &credentials);
 
     /*!
      * \brief Sets the login credentials requested from the login flow v2 API.
@@ -313,7 +313,7 @@ public Q_SLOTS:
      * \param credentials JSON object
      * \return \c true on success
      */
-    virtual bool setLoginFlowCredentials(const QJsonDocument &credentials);
+    bool setLoginFlowCredentials(const QJsonDocument &credentials);
 
     /*!
      * \brief Sets the login credentials requested from the login flow v2 API.
@@ -324,7 +324,23 @@ public Q_SLOTS:
      * \param credentials JSON object
      * \return \c true on success
      */
-    virtual bool setLoginFlowCredentials(const QJsonObject &credentials);
+    bool setLoginFlowCredentials(const QJsonObject &credentials);
+
+    /*!
+     * \brief Sets the server data via \a url and returns \c true on success, otherwise \c false.
+     *
+     * This takes the scheme and the host and if available the port and the path from the \a url to
+     * set them to setUseSSL(), setHost(), setServerPort() and setInstallPath().
+     */
+    bool setServerUrl(const QUrl &url);
+
+    /*!
+     * \brief Sets the server data via \a url and returns \c true on success, otherwise \c false.
+     *
+     * This takes the scheme and the host and if available the port and the path from the \a url to
+     * set them to setUseSSL(), setHost(), setServerPort() and setInstallPath().
+     */
+    bool setServerUrl(const QString &url);
 
 protected:
     /*!
