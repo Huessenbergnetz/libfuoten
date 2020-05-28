@@ -736,7 +736,9 @@ protected:
 
 private Q_SLOTS:
     void _requestFinished();
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     void _requestTimedOut();
+#endif
     void _ignoreSSLErrors(QNetworkReply *reply, const QList<QSslError> &errors);
 
 private:

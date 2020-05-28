@@ -48,7 +48,9 @@ public:
     AbstractConfiguration *configuration = nullptr;
     AbstractStorage *storage = nullptr;
     AbstractNotificator *notificator = nullptr;
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     QTimer *timeoutTimer = nullptr;
+#endif
     QNetworkReply *reply = nullptr;
     QNetworkAccessManager::Operation namOperation = QNetworkAccessManager::GetOperation;
     quint16 requestTimeout = 300;

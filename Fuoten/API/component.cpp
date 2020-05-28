@@ -100,23 +100,23 @@ void ComponentPrivate::performNetworkOperation(const QNetworkRequest &request)
     switch(namOperation) {
     case QNetworkAccessManager::HeadOperation:
         reply = networkAccessManager->head(request);
-        qDebug("Performing HEAD network operation with reply at %p.", reply);
+        qDebug("%s", "Performing HEAD network operation.");
         break;
     case QNetworkAccessManager::PostOperation:
         reply = networkAccessManager->post(request, payload);
-        qDebug("Performing POST network operation with reply at %p.", reply);
+        qDebug("%s", "Performing POST network operation.");
         break;
     case QNetworkAccessManager::PutOperation:
         reply = networkAccessManager->put(request, payload);
-        qDebug("Performing PUT network operation with reply at %p.", reply);
+        qDebug("%s", "Performing PUT network operation.");
         break;
     case QNetworkAccessManager::DeleteOperation:
         reply = networkAccessManager->deleteResource(request);
-        qDebug("Performing DELETE network operation with reply at %p.", reply);
+        qDebug("%s", "Performing DELETE network operation");
         break;
     default:
         reply = networkAccessManager->get(request);
-        qDebug("Performing GET network operation with reply at %p.", reply);
+        qDebug("%s", "Performing GET network operation.");
         break;
     }
 }
@@ -137,11 +137,10 @@ AbstractConfiguration *ComponentPrivate::defaultConfiguration()
 
 void ComponentPrivate::setDefaultConfiguration(AbstractConfiguration *config)
 {
-    qDebug("Setting default configuration to %p.", config);
     DefaultValues *defs = defVals();
     Q_ASSERT(defs);
     QWriteLocker locker(&defs->lock);
-
+    qDebug("%s", "Setting default configuration.");
     defs->setConfiguration(config);
 }
 
@@ -161,11 +160,10 @@ AbstractStorage *ComponentPrivate::defaultStorage()
 
 void ComponentPrivate::setDefaultStorage(AbstractStorage *storage)
 {
-    qDebug("Setting default storage to %p.", storage);
     DefaultValues *defs = defVals();
     Q_ASSERT(defs);
     QWriteLocker locker(&defs->lock);
-
+    qDebug("%s", "Setting default storage.");
     defs->setStorage(storage);
 }
 
@@ -185,11 +183,10 @@ AbstractNamFactory *ComponentPrivate::networkAccessManagerFactory()
 
 void ComponentPrivate::setNetworkAccessManagerFactory(AbstractNamFactory *factory)
 {
-    qDebug("Setting network access manager factory to %p.", factory);
     DefaultValues *defs = defVals();
     Q_ASSERT(defs);
     QWriteLocker locker(&defs->lock);
-
+    qDebug("%s", "Setting network access manager factory.");
     defs->setNetworkAccessManagerFactory(factory);
 }
 
@@ -209,11 +206,10 @@ AbstractNotificator *ComponentPrivate::defaultNotificator()
 
 void ComponentPrivate::setDefaultNotificator(AbstractNotificator *notificator)
 {
-    qDebug("Settings default notificator to %p.", notificator);
     DefaultValues *defs = defVals();
     Q_ASSERT(defs);
     QWriteLocker locker(&defs->lock);
-
+    qDebug("%s", "Setting default notificator.");
     defs->setNotificator(notificator);
 }
 
@@ -301,6 +297,11 @@ void Component::sendRequest()
     }
 
     QNetworkRequest nr(url);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    if (Q_LIKELY(d->requestTimeout > 0)) {
+        nr.setTransferTimeout(static_cast<int>(d->requestTimeout) * 1000);
+    }
+#endif
 
     if (!d->requestHeaders.isEmpty()) {
         QHash<QByteArray, QByteArray>::const_iterator i = d->requestHeaders.constBegin();
@@ -345,10 +346,11 @@ void Component::sendRequest()
     }
 #endif
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     if (Q_LIKELY(d->requestTimeout > 0)) {
         if (!d->timeoutTimer) {
             d->timeoutTimer = new QTimer(this);
-            qDebug("Created new timeout timer at %p.", d->timeoutTimer);
+            qDebug("%s", "Created new timeout timer.");
             d->timeoutTimer->setSingleShot(true);
             d->timeoutTimer->setTimerType(Qt::VeryCoarseTimer);
             connect(d->timeoutTimer, &QTimer::timeout, this, &Component::_requestTimedOut);
@@ -356,6 +358,7 @@ void Component::sendRequest()
         d->timeoutTimer->start(static_cast<int>(d->requestTimeout) * 1000);
         qDebug("Started timeout timer with %hu seconds.", d->requestTimeout);
     }
+#endif
 
     d->performNetworkOperation(nr);
     Q_CHECK_PTR(d->reply);
@@ -410,6 +413,7 @@ void Component::extractError(QNetworkReply *reply)
 }
 
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
 void Component::_requestTimedOut()
 {
     Q_D(Component);
@@ -424,6 +428,7 @@ void Component::_requestTimedOut()
     delete nr;
     Q_EMIT failed(error());
 }
+#endif
 
 
 void Component::_ignoreSSLErrors(QNetworkReply *reply, const QList<QSslError> &errors)
