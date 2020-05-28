@@ -276,53 +276,50 @@ public:
      * Reimplement this in a subclass. The default implementation simply returns the same as getUserAgent(),
      * the string "Libfuoten $VERSION" and that is not really meaningful to a user.
      *
+     * \since 0.8.0
      * \return user agent string
      */
     Q_INVOKABLE virtual QString getLoginFlowUserAgent() const;
 
 public Q_SLOTS:
     /*!
-     * \brief Sets login credentials requested from the login flow API.
+     * \brief Sets login credentials requested from the login flow API and returns \c true on success.
      *
      * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
      *
      * Reimplement this in a subclass. The default implementation does nothing.
      *
-     * \param credentialUrl the URL returned by the login flow API with the nc:// scheme
-     * \return \c true on success
+     * \since 0.8.0
      */
     virtual bool setLoginFlowCredentials(const QUrl &credentialUrl);
 
     /*!
-     * \brief Sets the login credentials requested from the login flow v2 API.
+     * \brief Sets the login credentials requested from the login flow v2 API and returns \c true on success.
      *
      * This has to be a valid JSON object requested from the polling endpoint.
      * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
      *
-     * \param credentials JSON object
-     * \return \c true on success
+     * \since 0.8.0
      */
     bool setLoginFlowCredentials(const QByteArray &credentials);
 
     /*!
-     * \brief Sets the login credentials requested from the login flow v2 API.
+     * \brief Sets the login credentials requested from the login flow v2 API and returns \c true on success.
      *
      * This has to be a valid JSON object requested from the polling endpoint.
      * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
      *
-     * \param credentials JSON object
-     * \return \c true on success
+     * \since 0.8.0
      */
     bool setLoginFlowCredentials(const QJsonDocument &credentials);
 
     /*!
-     * \brief Sets the login credentials requested from the login flow v2 API.
+     * \brief Sets the login credentials requested from the login flow v2 API and returns \c true on success.
      *
      * This has to be a valid JSON object requested from the polling endpoint.
      * See also https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html
      *
-     * \param credentials JSON object
-     * \return \c true on success
+     * \since 0.8.0
      */
     bool setLoginFlowCredentials(const QJsonObject &credentials);
 
@@ -331,6 +328,8 @@ public Q_SLOTS:
      *
      * This takes the scheme and the host and if available the port and the path from the \a url to
      * set them to setUseSSL(), setHost(), setServerPort() and setInstallPath().
+     *
+     * \since 0.8.0
      */
     bool setServerUrl(const QUrl &url);
 
@@ -339,6 +338,8 @@ public Q_SLOTS:
      *
      * This takes the scheme and the host and if available the port and the path from the \a url to
      * set them to setUseSSL(), setHost(), setServerPort() and setInstallPath().
+     *
+     * \since 0.8.0
      */
     bool setServerUrl(const QString &url);
 
