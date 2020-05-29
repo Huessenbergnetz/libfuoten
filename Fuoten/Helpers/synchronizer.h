@@ -361,8 +361,8 @@ protected Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(Synchronizer)
+    Q_DISABLE_MOVE(Synchronizer)
     Q_DECLARE_PRIVATE(Synchronizer)
-
 };
 
 }

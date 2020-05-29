@@ -169,8 +169,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(MoveFeed)
+    Q_DISABLE_MOVE(MoveFeed)
     Q_DECLARE_PRIVATE(MoveFeed)
-
 };
 
 }

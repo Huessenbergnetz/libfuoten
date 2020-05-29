@@ -64,8 +64,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(ArticleListModel)
+    Q_DISABLE_MOVE(ArticleListModel)
     Q_DECLARE_PRIVATE(ArticleListModel)
-
 };
 
 }

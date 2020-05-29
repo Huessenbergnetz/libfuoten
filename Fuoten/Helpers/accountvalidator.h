@@ -158,8 +158,8 @@ private Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(AccountValidator)
+    Q_DISABLE_MOVE(AccountValidator)
     Q_DECLARE_PRIVATE(AccountValidator)
-
 };
 
 }

@@ -75,8 +75,6 @@ class Error;
 class FUOTENSHARED_EXPORT AbstractNotificator : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(AbstractNotificator)
-    Q_DECLARE_PRIVATE(AbstractNotificator)
 public:
     /*!
      * \brief Constructs a new AbstractNotifier object with the given \a parent.
@@ -252,6 +250,11 @@ Q_SIGNALS:
 
 protected:
     const QScopedPointer<AbstractNotificatorPrivate> d_ptr;
+
+private:
+    Q_DISABLE_COPY(AbstractNotificator)
+    Q_DISABLE_MOVE(AbstractNotificator)
+    Q_DECLARE_PRIVATE(AbstractNotificator)
 };
 
 }

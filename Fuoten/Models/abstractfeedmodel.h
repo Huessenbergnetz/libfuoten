@@ -205,6 +205,7 @@ protected:
 
 private:
     Q_DISABLE_COPY(AbstractFeedModel)
+    Q_DISABLE_MOVE(AbstractFeedModel)
     Q_DECLARE_PRIVATE(AbstractFeedModel)
 };
 

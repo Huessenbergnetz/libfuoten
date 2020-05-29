@@ -166,8 +166,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(MarkFeedRead)
+    Q_DISABLE_MOVE(MarkFeedRead)
     Q_DECLARE_PRIVATE(MarkFeedRead)
-
 };
 
 }

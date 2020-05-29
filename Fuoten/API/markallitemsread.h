@@ -138,8 +138,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(MarkAllItemsRead)
+    Q_DISABLE_MOVE(MarkAllItemsRead)
     Q_DECLARE_PRIVATE(MarkAllItemsRead)
-
 };
 
 }

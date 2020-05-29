@@ -30,6 +30,12 @@
 #  define FUOTENSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 13, 0)
+#define Q_DISABLE_MOVE(Class) \
+    Class(const Class &&) Q_DECL_EQ_DELETE;\
+    Class &operator=(const Class &&) Q_DECL_EQ_DELETE;
+#endif
+
 namespace Fuoten {
 class Article;
 typedef QList<Fuoten::Article*> ArticleList;

@@ -202,8 +202,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(GetUpdatedItems)
+    Q_DISABLE_MOVE(GetUpdatedItems)
     Q_DECLARE_PRIVATE(GetUpdatedItems)
-
 };
 
 }

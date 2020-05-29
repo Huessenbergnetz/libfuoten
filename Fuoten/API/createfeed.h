@@ -165,8 +165,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(CreateFeed)
+    Q_DISABLE_MOVE(CreateFeed)
     Q_DECLARE_PRIVATE(CreateFeed)
-
 };
 
 }

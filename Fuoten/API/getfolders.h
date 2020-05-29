@@ -99,6 +99,7 @@ protected:
 private:
     Q_DECLARE_PRIVATE(GetFolders)
     Q_DISABLE_COPY(GetFolders)
+    Q_DISABLE_MOVE(GetFolders)
 };
 
 }

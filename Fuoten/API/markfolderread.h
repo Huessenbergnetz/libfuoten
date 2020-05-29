@@ -170,8 +170,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(MarkFolderRead)
+    Q_DISABLE_MOVE(MarkFolderRead)
     Q_DECLARE_PRIVATE(MarkFolderRead)
-
 };
 
 }

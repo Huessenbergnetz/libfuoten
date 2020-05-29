@@ -366,7 +366,7 @@ protected:
 
 private:
     Q_DISABLE_COPY(AbstractConfiguration)
-
+    Q_DISABLE_MOVE(AbstractConfiguration)
 };
 
 }

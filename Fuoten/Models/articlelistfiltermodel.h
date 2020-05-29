@@ -159,8 +159,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(ArticleListFilterModel)
+    Q_DISABLE_MOVE(ArticleListFilterModel)
     Q_DECLARE_PRIVATE(ArticleListFilterModel)
-
 };
 
 }

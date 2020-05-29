@@ -407,8 +407,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(BaseModel)
+    Q_DISABLE_MOVE(BaseModel)
     Q_DECLARE_PRIVATE(BaseModel)
-
 };
 
 }

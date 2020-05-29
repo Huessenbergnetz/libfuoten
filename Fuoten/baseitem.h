@@ -228,8 +228,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(BaseItem)
+    Q_DISABLE_MOVE(BaseItem)
     Q_DECLARE_PRIVATE(BaseItem)
-
 };
 
 }

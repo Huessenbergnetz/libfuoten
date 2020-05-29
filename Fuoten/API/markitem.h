@@ -170,8 +170,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(MarkItem)
+    Q_DISABLE_MOVE(MarkItem)
     Q_DECLARE_PRIVATE(MarkItem)
-
 };
 
 }

@@ -94,7 +94,7 @@ protected:
 private:
     Q_DECLARE_PRIVATE(GetUser)
     Q_DISABLE_COPY(GetUser)
-
+    Q_DISABLE_MOVE(GetUser)
 };
 
 }

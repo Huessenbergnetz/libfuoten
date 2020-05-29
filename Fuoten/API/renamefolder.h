@@ -171,8 +171,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(RenameFolder)
+    Q_DISABLE_MOVE(RenameFolder)
     Q_DECLARE_PRIVATE(RenameFolder)
-
 };
 
 }

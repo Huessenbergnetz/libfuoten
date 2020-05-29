@@ -326,6 +326,7 @@ protected:
 private:
     Q_DECLARE_PRIVATE(AbstractArticleModel)
     Q_DISABLE_COPY(AbstractArticleModel)
+    Q_DISABLE_MOVE(AbstractArticleModel)
 };
 
 }

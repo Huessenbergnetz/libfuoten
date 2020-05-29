@@ -184,7 +184,6 @@ public:
      */
     virtual bool loaded() const = 0;
 
-
     /*!
      * \brief Sets the local storage handler for the underlying model.
      * \sa storage
@@ -238,7 +237,6 @@ public:
      * \sa QLocale::setDefault()
      */
     Q_INVOKABLE virtual void reload(const QString &locale = QString()) = 0;
-
 
     /*!
      * \brief Getter function for the \link BaseModel::doubleParentId doubleParentId \endlink property.
@@ -319,8 +317,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(BaseFilterModel)
+    Q_DISABLE_MOVE(BaseFilterModel)
     Q_DECLARE_PRIVATE(BaseFilterModel)
-
 };
 
 }

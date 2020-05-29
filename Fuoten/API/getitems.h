@@ -289,8 +289,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(GetItems)
+    Q_DISABLE_MOVE(GetItems)
     Q_DECLARE_PRIVATE(GetItems)
-
 };
 
 }

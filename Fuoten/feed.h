@@ -449,8 +449,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(Feed)
+    Q_DISABLE_MOVE(Feed)
     Q_DECLARE_PRIVATE(Feed)
-
 };
 
 }

@@ -65,6 +65,7 @@ protected:
 private:
     Q_DECLARE_PRIVATE(FolderListModel)
     Q_DISABLE_COPY(FolderListModel)
+    Q_DISABLE_MOVE(FolderListModel)
 };
 
 }

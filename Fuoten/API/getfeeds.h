@@ -98,6 +98,7 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(GetFeeds)
+    Q_DISABLE_MOVE(GetFeeds)
     Q_DISABLE_COPY(GetFeeds)
 };
 

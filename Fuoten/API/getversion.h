@@ -94,6 +94,7 @@ protected:
 private:
     Q_DECLARE_PRIVATE(GetVersion)
     Q_DISABLE_COPY(GetVersion)
+    Q_DISABLE_MOVE(GetVersion)
 };
 
 }
