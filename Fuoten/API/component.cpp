@@ -303,6 +303,8 @@ void Component::sendRequest()
     }
 #endif
 
+    nr.setRawHeader(QByteArrayLiteral("User-Agent"), d->configuration->getUserAgent().toUtf8());
+
     if (!d->requestHeaders.isEmpty()) {
         QHash<QByteArray, QByteArray>::const_iterator i = d->requestHeaders.constBegin();
         while (i != d->requestHeaders.constEnd()) {
@@ -310,8 +312,6 @@ void Component::sendRequest()
             ++i;
         }
     }
-
-    nr.setRawHeader(QByteArrayLiteral("User-Agent"), d->configuration->getUserAgent().toUtf8());
 
     if (!d->payload.isEmpty()) {
         nr.setRawHeader(QByteArrayLiteral("Content-Length"), QByteArray::number(d->payload.length()));
@@ -342,7 +342,7 @@ void Component::sendRequest()
         }
     }
     if (!d->payload.isEmpty()) {
-        qDebug("Paylod: %s", d->payload.constData());
+        qDebug("Payload: %s", d->payload.constData());
     }
 #endif
 
