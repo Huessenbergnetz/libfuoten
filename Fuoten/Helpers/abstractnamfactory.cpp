@@ -21,7 +21,4 @@
 
 using namespace Fuoten;
 
-AbstractNamFactory::~AbstractNamFactory()
-{
-
-}
+AbstractNamFactory::~AbstractNamFactory() = default;
