@@ -909,7 +909,7 @@ QList<Feed*> SQLiteStorage::getFeeds(const QueryArgs &args)
                          QUrl(q.value(4).toString()),
                          QDateTime::fromTime_t(q.value(5).toUInt()),
                          q.value(6).toUInt(),
-                         (Feed::FeedOrdering)q.value(7).toInt(),
+                         static_cast<Feed::FeedOrdering>(q.value(7).toInt()),
                          q.value(8).toBool(),
                          q.value(9).toUInt(),
                          q.value(10).toString(),
@@ -952,7 +952,7 @@ Feed *SQLiteStorage::getFeed(qint64 id)
                         QUrl(q.value(4).toString()),
                         QDateTime::fromTime_t(q.value(5).toUInt()),
                         q.value(6).toUInt(),
-                        (Feed::FeedOrdering)q.value(7).toInt(),
+                        static_cast<Feed::FeedOrdering>(q.value(7).toInt()),
                         q.value(8).toBool(),
                         q.value(9).toUInt(),
                         q.value(10).toString(),
@@ -1146,7 +1146,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                         q.addBindValue(rFolderId);
                         q.addBindValue(title);
                         q.addBindValue(rLink.toString());
-                        q.addBindValue((int)rOrdering);
+                        q.addBindValue(static_cast<int>(rOrdering));
                         q.addBindValue(rPinned);
                         q.addBindValue(rUpdateErrorCount);
                         q.addBindValue(rLastUpdateError);
@@ -2645,7 +2645,7 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
     Q_ASSERT_X(qresult, "enqueue item", "failed to prepare datbase query");
 
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t()-10);
-    q.addBindValue((int)aq);
+    q.addBindValue(static_cast<int>(aq));
 
     if ((action == FuotenEnums::MarkAsUnread) || (action == FuotenEnums::MarkAsRead)) {
         q.addBindValue(article->id());
@@ -2790,7 +2790,7 @@ void EnqueueMarkReadWorker::run()
         qresult = q.prepare(QStringLiteral("UPDATE items SET unread = 0, queue = ? WHERE id = ?"));
         Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to prepary database query");
 
-        q.addBindValue((int)ii.value());
+        q.addBindValue(static_cast<int>(ii.value()));
         q.addBindValue(ii.key());
 
         qresult = q.exec();
