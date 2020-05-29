@@ -301,6 +301,7 @@ qint64 SQLiteStorage::getNewestItemId(FuotenEnums::Type type, qint64 id)
         break;
     case FuotenEnums::All:
         qs = QStringLiteral("SELECT id FROM items ORDER BY id DESC LIMIT 1");
+        break;
     case FuotenEnums::Folder:
         qs = QStringLiteral("SELECT it.id FROM items it INNER JOIN feeds fe ON it.feedId = fe.id WHERE fe.folderId = ? ORDER BY it.id DESC LIMIT 1");
         break;
