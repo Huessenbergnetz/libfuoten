@@ -98,9 +98,9 @@ void AbstractStorage::setError(Error *nError)
 }
 
 
-quint16 AbstractStorage::totalUnread() const { Q_D(const AbstractStorage); return d->totalUnread; }
+int AbstractStorage::totalUnread() const { Q_D(const AbstractStorage); return d->totalUnread; }
 
-void AbstractStorage::setTotalUnread(quint16 nTotalUnread)
+void AbstractStorage::setTotalUnread(int nTotalUnread)
 {
     Q_D(AbstractStorage);
     if (nTotalUnread != d->totalUnread) {
@@ -111,9 +111,9 @@ void AbstractStorage::setTotalUnread(quint16 nTotalUnread)
 }
 
 
-quint16 AbstractStorage::starred() const { Q_D(const AbstractStorage); return d->starred; }
+int AbstractStorage::starred() const { Q_D(const AbstractStorage); return d->starred; }
 
-void AbstractStorage::setStarred(quint16 nStarred)
+void AbstractStorage::setStarred(int nStarred)
 {
     Q_D(AbstractStorage);
     if (nStarred != d->starred) {

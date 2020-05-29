@@ -76,8 +76,8 @@ public:
 
 Q_SIGNALS:
     void requestedItems(const Fuoten::IdList &updatedItems, const Fuoten::IdList &newItems, const Fuoten::IdList &deletedItems);
-    void gotTotalUnread(quint16 tu);
-    void gotStarred(quint16 st);
+    void gotTotalUnread(int tu);
+    void gotStarred(int st);
     void failed(Fuoten::Error *e);
 
 protected:
@@ -123,7 +123,7 @@ Q_SIGNALS:
     void markedReadFeedInQueue(qint64 feedId, qint64 newestItemId);
     void markedReadFolderInQueue(qint64 folderId, qint64 newestItemId);
     void markedAllItemsReadInQueue();
-    void gotTotalUnread(quint16 tu);
+    void gotTotalUnread(int tu);
 
 protected:
     void run() override;

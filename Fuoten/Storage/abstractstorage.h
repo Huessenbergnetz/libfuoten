@@ -97,24 +97,24 @@ class FUOTENSHARED_EXPORT AbstractStorage : public QObject
      * \brief Total amount of unread items in the storage.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint16</TD><TD>totalUnread() const</TD></TR></TABLE>
+     * <TABLE><TR><TD>int</TD><TD>totalUnread() const</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>totalUnreadChanged(quint16 totalUnread)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>totalUnreadChanged(int totalUnread)</TD></TR></TABLE>
      *
      * \sa setTotalUnread()
      */
-    Q_PROPERTY(quint16 totalUnread READ totalUnread NOTIFY totalUnreadChanged)
+    Q_PROPERTY(int totalUnread READ totalUnread NOTIFY totalUnreadChanged)
     /*!
      * \brief Amount of starred items.
      *
      * \par Access functions:
-     * <TABLE><TR><TD>quint16</TD><TD>starred() const</TD></TR></TABLE>
+     * <TABLE><TR><TD>int</TD><TD>starred() const</TD></TR></TABLE>
      * \par Notifier signal:
-     * <TABLE><TR><TD>void</TD><TD>starredChanged(quint16 starred)</TD></TR></TABLE>
+     * <TABLE><TR><TD>void</TD><TD>starredChanged(int starred)</TD></TR></TABLE>
      *
      * \sa setStarred()
      */
-    Q_PROPERTY(quint16 starred READ starred NOTIFY starredChanged)
+    Q_PROPERTY(int starred READ starred NOTIFY starredChanged)
     /*!
      * \brief Returns true while the storage is in operation.
      *
@@ -188,13 +188,13 @@ public:
      * \brief Returns the total number of unread articles.
      * \sa totalUnread
      */
-    virtual quint16 totalUnread() const;
+    virtual int totalUnread() const;
 
     /*!
      * \brief Returns the total number of starred articles.
      * \sa starred
      */
-    virtual quint16 starred() const;
+    virtual int starred() const;
 
     /*!
      * \brief Returns the newest item/article ID for the given type.
@@ -661,13 +661,13 @@ protected Q_SLOTS:
      * \brief Sets the total number of unread articles.
      * \sa totalUnread
      */
-    virtual void setTotalUnread(quint16 nTotalUnread);
+    virtual void setTotalUnread(int nTotalUnread);
 
     /*!
      * \brief Sets the total number of starred articles.
      * \sa starred
      */
-    virtual void setStarred(quint16 nStarred);
+    virtual void setStarred(int nStarred);
 
 Q_SIGNALS:
     /*!
@@ -738,13 +738,13 @@ Q_SIGNALS:
      * \brief This signal is emitted if the amount of total unread articles changes.
      * \sa totalUnread
      */
-    void totalUnreadChanged(quint16 totalUnread);
+    void totalUnreadChanged(int totalUnread);
 
     /*!
      * \brief This signal is emitted if the amount of total starred articles changes.
      * \sa starred
      */
-    void starredChanged(quint16 starred);
+    void starredChanged(int starred);
 
     /*!
      * \brief Emit this after feeds have been received and processed.

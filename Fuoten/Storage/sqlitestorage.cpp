@@ -2228,11 +2228,11 @@ void ItemsRequestedWorker::run()
 
     qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
     Q_ASSERT_X(qresult, "items requested worker", "failed to select total unread item count from database");
-    Q_EMIT gotTotalUnread(q.value(0).toUInt());
+    Q_EMIT gotTotalUnread(q.value(0).toInt());
 
     qresult = (q.exec(QStringLiteral(SEL_TOTAL_STARRED)) && q.next());
     Q_ASSERT_X(qresult, "items requested worker", "failed to select total starred item count from database");
-    Q_EMIT gotStarred(q.value(0).toUInt());
+    Q_EMIT gotStarred(q.value(0).toInt());
 
     Q_EMIT requestedItems(updatedItemIds, newItemIds, removedItemIds);
 
@@ -2844,7 +2844,7 @@ void EnqueueMarkReadWorker::run()
 
     qresult = (q.exec(QStringLiteral(SEL_TOTAL_UNREAD)) && q.next());
     Q_ASSERT_X(qresult, "enqueue mark read worker", "failed to query totol unread item count from database");
-    Q_EMIT gotTotalUnread(q.value(0).toUInt());
+    Q_EMIT gotTotalUnread(q.value(0).toInt());
 
     switch (m_idType) {
     case FuotenEnums::Feed:

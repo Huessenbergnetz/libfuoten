@@ -36,8 +36,8 @@ public:
     AbstractConfiguration *configuration = nullptr;
     AbstractNotificator *notificator = nullptr;
     Error *error = nullptr;
-    quint16 totalUnread = 0;
-    quint16 starred = 0;
+    int totalUnread = 0;
+    int starred = 0;
     bool ready = false;
     bool inOperation = false;
 
