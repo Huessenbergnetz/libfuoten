@@ -38,8 +38,8 @@
 
 namespace Fuoten {
 class Article;
-typedef QList<Fuoten::Article*> ArticleList;
-typedef QList<qint64> IdList;
+using ArticleList = QList<Fuoten::Article *>;
+using IdList = QList<qint64>;
 }
 
 #endif // FUOTEN_GLOBAL_H
