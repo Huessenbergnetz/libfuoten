@@ -134,6 +134,8 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/API/markallitemsread.h \
         Fuoten/API/GetServerStatus \
         Fuoten/API/getserverstatus.h \
+        Fuoten/API/LoginFlowV2 \
+        Fuoten/API/loginflowv2.h \
         Fuoten/Helpers/abstractnamfactory.h \
         Fuoten/Helpers/AbstractNamFactory \
         Fuoten/Helpers/abstractnotificator.h \
@@ -204,6 +206,8 @@ INSTALLS += langfiles
 HEADERS += \
     Fuoten/API/getserverstatus.h \
     Fuoten/API/getserverstatus_p.h \
+    Fuoten/API/loginflowv2.h \
+    Fuoten/API/loginflowv2_p.h \
     Fuoten/fuoten_global.h \
     Fuoten/error.h \
     Fuoten/error_p.h \
@@ -297,6 +301,7 @@ HEADERS += \
 
 SOURCES += \
     Fuoten/API/getserverstatus.cpp \
+    Fuoten/API/loginflowv2.cpp \
     Fuoten/error.cpp \
     Fuoten/API/component.cpp \
     Fuoten/API/getversion.cpp \
