@@ -252,7 +252,7 @@ public:
      *
      * \sa productname, productnameChanged()
      */
-    QString productname() const;    
+    QString productname() const;
     /*!
      * \brief Returns \c true when the Nextcloud has extended support, otherwise \c false.
      *
@@ -311,7 +311,7 @@ Q_SIGNALS:
      *
      * This signal will be triggered in the successCallback().
      *
-     * \param versionString, versionString()
+     * \sa versionString, versionString()
      */
     void versionStringChanged(const QString &versionString);
     /*!
@@ -319,7 +319,7 @@ Q_SIGNALS:
      *
      * This signal will be triggered in the successCallback().
      *
-     * \param edition, edition()
+     * \sa edition, edition()
      */
     void editionChanged(const QString &edition);
     /*!
@@ -327,7 +327,7 @@ Q_SIGNALS:
      *
      * This signal will be triggered in the successCallback().
      *
-     * \param productname, productname()
+     * \sa productname, productname()
      */
     void productnameChanged(const QString &productname);
     /*!
@@ -335,7 +335,7 @@ Q_SIGNALS:
      *
      * This signal will be triggered in the successCallback().
      *
-     * \param hasExtendedSupport, hasExtendedSupport()
+     * \sa hasExtendedSupport, hasExtendedSupport()
      */
     void hasExtendedSupportChanged(bool hasExtendedSupport);
     /*!
@@ -343,7 +343,7 @@ Q_SIGNALS:
      *
      * This signal will be triggered in the successCallback().
      *
-     * \param setupPossible, setupPossible()
+     * \sa setupPossible, setupPossible()
      */
     void setupPossibleChanged(Fuoten::GetServerStatus::SetupPossible setupPossible);
 
