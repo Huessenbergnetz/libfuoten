@@ -786,18 +786,18 @@ void Component::setRequiresAuth(bool reqAuth)
 
 void Component::notify(const Fuoten::Error *e) const
 {
-    Q_D(const Component);
-    if (d->notificator) {
-        d->notificator->notify(e);
+    auto n = notificator();
+    if (n) {
+        n->notify(e);
     }
 }
 
 
 void Component::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data) const
 {
-    Q_D(const Component);
-    if (d->notificator) {
-        d->notificator->notify(type, severity, data);
+    auto n = notificator();
+    if (n) {
+        n->notify(type, severity, data);
     }
 }
 
