@@ -50,9 +50,6 @@ You can show the default values with `qmake -query`.
 
 ### Available qmake CONFIG options
 
-#### clazy
-`CONFIG+=clazy` enables the clazy static code checks (level 0, 1 and 2) and will set clang++ as compiler.
-
 #### asan
 `CONFIG+=asan` enables [address sanitizer](https://en.wikipedia.org/wiki/AddressSanitizer).
 
