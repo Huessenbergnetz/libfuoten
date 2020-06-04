@@ -466,9 +466,26 @@
         <source>Requesting updated and new articles</source>
         <translation>Rufe aktualisierte und neue Artikel ab</translation>
     </message>
-    <message id="err-decompression-failed">
-        <source>Decompressing the requested data failed.</source>
-        <translation>Das Dekomprimieren der angeforderten Daten ist fehlgeschlagen.</translation>
+    <message id="libfuoten-err-loginflowv2-invalid-login-url">
+        <source>The login URL returned by the Nextcloud API is invalid.</source>
+        <translation>Die von der Nextcloud-API erhaltene URL zur Anmeldung ist ungültig.</translation>
+    </message>
+    <message id="liburoten-err-loginflowv2-empty-token">
+        <source>The Nextcloud API returned an empty polling token.</source>
+        <translation>Die Nextcloud-API hat ein leeres Abfrage-Token zurückgeliefert.</translation>
+    </message>
+    <message id="libfuoten-err-loginflowv2-invalid-polling-url">
+        <source>The Nextcloud API returned an invalid polling URL.</source>
+        <translation>Die Nextcloud-API hat eine ungültige Abfrage-URL zuückgeliefert.</translation>
+    </message>
+    <message id="libfuoten-err-loginflowv2-invalid-auth-data">
+        <source>The returned login data is invalid.</source>
+        <translation>Die erhaltenen Anmeldedaten sind ungültig.</translation>
+    </message>
+    <message id="libfuoten-err-loginflowv2-overall-timeout" numerus="yes">
+        <source>The required authorisation message was not received within %n second(s).</source>
+        <extracomment>error message in the login flow</extracomment>
+        <translation><numerusform>Die benötigte Autorisierungsnachricht wurde nicht innerhalb von %n Sekunde erhalten.</numerusform><numerusform>Die benötigte Autorisierungsnachricht wurde nicht innerhalb von %n Sekunden erhalten.</numerusform></translation>
     </message>
 </context>
 </TS>

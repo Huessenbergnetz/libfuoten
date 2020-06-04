@@ -47,7 +47,7 @@
     </message>
     <message id="err-net-reply-6">
         <source>The SSL/TLS handshake failed and the encrypted channel could not be established.</source>
-        <translation type="unfinished"/>
+        <translation>SSL/TLS forhandlingen fejlede. Den krypterede kanal kunne ikke oprettes.</translation>
     </message>
     <message id="err-net-reply-7">
         <source>The connection was broken due to disconnection from the network.</source>
@@ -119,7 +119,7 @@
     </message>
     <message id="err-net-reply-401">
         <source>The server encountered an unexpected condition which prevented it from fulfilling the request.</source>
-        <translation type="unfinished"/>
+        <translation>Tjenesten er stødt på en uventet betingelse der forhindrer den i at udføre anmodningen.</translation>
     </message>
     <message id="err-net-reply-402">
         <source>The server does not support the functionality required to fulfill the request.</source>
@@ -131,7 +131,7 @@
     </message>
     <message id="err-net-reply-301">
         <source>The Network Access API cannot honor the request because the protocol is not known.</source>
-        <translation type="unfinished"/>
+        <translation>Network Access APIet kan ikke overholde anmodningen, fordi protokollen ikke er kendt.</translation>
     </message>
     <message id="err-net-reply-302">
         <source>The requested operation is invalid for this protocol.</source>
@@ -143,11 +143,11 @@
     </message>
     <message id="libfuoten-err-http-400">
         <source>Bad request — The server cannot or will not process the request due to an apparent client error.</source>
-        <translation type="unfinished"/>
+        <translation>Forkert anmodning - Serveren kan ikke eller vil ikke behandle anmodningen på grund af en tilsyneladende  fejl i klienten.</translation>
     </message>
     <message id="libfuoten-err-http-401">
         <source>Unauthorized — You need to provide authentication credentials to perform the request.</source>
-        <translation type="unfinished"/>
+        <translation>Uautoriseret - Du skal angive godkendelsesoplysninger for at udføre anmodningen.</translation>
     </message>
     <message id="libfuoten-err-http-403">
         <source>Fobidden — You might not have the necessary permissions to perform this action.</source>
@@ -159,7 +159,7 @@
     </message>
     <message id="libfuoten-err-http-405">
         <source>Method not allowed — The used method is not allowed for the requested resource.</source>
-        <translation type="unfinished"/>
+        <translation>Metode ikke tilladt - Den anvendte metode er ikke tilladt for den ønskede ressource.</translation>
     </message>
     <message id="libfuoten-err-http-406">
         <source>Not Acceptable — The requested resource is capable of generating only content not acceptable according to the Accept headers sent in the request.</source>
@@ -171,7 +171,7 @@
     </message>
     <message id="libfuoten-err-http-408">
         <source>Request timeout — The server timed out waiting for the request.</source>
-        <translation type="unfinished"/>
+        <translation>Tidsudløb for forespørgsel - Serveren løb tør for tid mens den ventede på forespørgslen.</translation>
     </message>
     <message id="libfuoten-err-http-409">
         <source>Conflict — The request could not be processed because of conflict in the request, such as an edit conflict between multiple simultaneous updates.</source>
@@ -191,7 +191,7 @@
     </message>
     <message id="libfuoten-err-http-413">
         <source>Payload too large — The request is larger than the server is willing or able to process.</source>
-        <translation type="unfinished"/>
+        <translation>Pakkeindholdet er for stort - Forespørgslen er større end serveren er villig til eller i stand til at behandle.</translation>
     </message>
     <message id="libfuoten-err-http-414">
         <source>URI too long — The URI provided was too long for the server to process.</source>
@@ -199,7 +199,7 @@
     </message>
     <message id="libfuoten-err-http-415">
         <source>Unsupported media type — The request entity has a media type which the server or resource does not support.</source>
-        <translation type="unfinished"/>
+        <translation>Ikke-understøttet medietype - Anmodningsenheden har en medietype, som serveren eller ressourcen ikke understøtter.</translation>
     </message>
     <message id="libfuoten-err-http-416">
         <source>Range not satisfiable — The client has asked for a portion of the resource, but the server cannot supply that portion.</source>
@@ -215,7 +215,7 @@
     </message>
     <message id="libfuoten-err-http-426">
         <source>Upgrade required — The client should switch to a different protocol.</source>
-        <translation type="unfinished"/>
+        <translation>Opgradering påkrævet - Klienten bør skifte til en anden protokol.</translation>
     </message>
     <message id="libfuoten-err-http-428">
         <source>Precondition required — The origin server requires the request to be conditional.</source>
@@ -223,7 +223,7 @@
     </message>
     <message id="libfuoten-err-http-429">
         <source>Too many requests — The user has sent too many requests in a given amount of time.</source>
-        <translation type="unfinished"/>
+        <translation>For mange anmodninger - Brugeren har sendt for mange anmodninger over en given tid.</translation>
     </message>
     <message id="libfuoten-err-http-431">
         <source>Request header fields too large — The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large.</source>
@@ -231,7 +231,7 @@
     </message>
     <message id="libfuoten-err-http-500">
         <source>Internal server error — An unexpected condition was encountered on the server.</source>
-        <translation type="unfinished"/>
+        <translation>Intern serverfejl - Der opstod en uventet tilstand på serveren.</translation>
     </message>
     <message id="libfuoten-err-http-501">
         <source>Not implemented — The server either does not recognize the request method, or it lacks the ability to fulfill the request.</source>
@@ -243,7 +243,7 @@
     </message>
     <message id="libfuoten-err-http-503">
         <source>Service unavailable — The server is currently unavailable (because it is overloaded or down for maintenance).</source>
-        <translation type="unfinished"/>
+        <translation>Tjenesten er ikke tilgængelig - Serveren er i øjeblikket ikke tilgængelig (fordi den er overbelastet eller nede til vedligeholdelse).</translation>
     </message>
     <message id="libfuoten-err-http-504">
         <source>Gateway timeout — The gateway or proxy and did not receive a timely response from the upstream server.</source>
@@ -251,7 +251,7 @@
     </message>
     <message id="libfuoten-err-http-505">
         <source>HTTP version not supported — The server does not support the HTTP protocol version used in the request.</source>
-        <translation type="unfinished"/>
+        <translation>HTTP-versionen understøttes ikke - Serveren understøtter ikke den HTTP-protokolversion, der blev efterspurgt  i anmodningen.</translation>
     </message>
     <message id="libfuoten-err-http-506">
         <source>Variant also negotiates — Transparent content negotiation for the request results in a circular reference.</source>
@@ -259,15 +259,15 @@
     </message>
     <message id="libfuoten-err-http-509">
         <source>Bandwidth limit exceeded — The request could not be processes cause it would exceed the bandwidth limit of the server.</source>
-        <translation type="unfinished"/>
+        <translation>Grænsen for båndbredde er overskredet - Forespørgslen kunne ikke behandles, da det ville overskride båndbreddegrænsen på serveren.</translation>
     </message>
     <message id="libfuoten-err-http-510">
         <source>Not extended — Further extensions to the request are required for the server to fulfil it.</source>
-        <translation type="unfinished"/>
+        <translation>Ikke udvidet - Yderligere udvidelser af anmodningen er påkrævet for at serveren kan opfylde den.</translation>
     </message>
     <message id="libfuoten-err-http-511">
         <source>Network authentication required — The client needs to authenticate to gain network access.</source>
-        <translation type="unfinished"/>
+        <translation>Netværksgodkendelse påkrævet - Klienten skal godkendes for at få netværksadgang.</translation>
     </message>
     <message id="err-net-reply-199">
         <source>An unknown proxy-related error was detected.</source>
@@ -428,7 +428,7 @@
     </message>
     <message id="libfuoten-err-articles-star-unstar-list">
         <source>The list of articles to star/unstar can not be empty.</source>
-        <translation type="unfinished"/>
+        <translation>Listen af artikler, der skal stjernemarkeres/afmarkeres, kan ikke være tom.</translation>
     </message>
     <message id="libfuoten-sync-unread-articles">
         <source>Synchronizing unread articles</source>
@@ -466,9 +466,26 @@
         <source>Requesting updated and new articles</source>
         <translation>Henter ajourførte og nye artikler</translation>
     </message>
-    <message id="err-decompression-failed">
-        <source>Decompressing the requested data failed.</source>
+    <message id="libfuoten-err-loginflowv2-invalid-login-url">
+        <source>The login URL returned by the Nextcloud API is invalid.</source>
         <translation type="unfinished"/>
+    </message>
+    <message id="liburoten-err-loginflowv2-empty-token">
+        <source>The Nextcloud API returned an empty polling token.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-loginflowv2-invalid-polling-url">
+        <source>The Nextcloud API returned an invalid polling URL.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-loginflowv2-invalid-auth-data">
+        <source>The returned login data is invalid.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-loginflowv2-overall-timeout" numerus="yes">
+        <source>The required authorisation message was not received within %n second(s).</source>
+        <extracomment>error message in the login flow</extracomment>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
 </context>
 </TS>

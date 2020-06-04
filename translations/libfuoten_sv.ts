@@ -466,9 +466,26 @@
         <source>Requesting updated and new articles</source>
         <translation>Frågar efter uppdaterade och nya artiklar</translation>
     </message>
-    <message id="err-decompression-failed">
-        <source>Decompressing the requested data failed.</source>
-        <translation>Kunde inte avkomprimera den begärda datan </translation>
+    <message id="libfuoten-err-loginflowv2-invalid-login-url">
+        <source>The login URL returned by the Nextcloud API is invalid.</source>
+        <translation>Den inloggnings-URL som mottogs av Nextcloud-API:et är inte giltig.</translation>
+    </message>
+    <message id="liburoten-err-loginflowv2-empty-token">
+        <source>The Nextcloud API returned an empty polling token.</source>
+        <translation>Nextcloud-API:et returnerade en tom avsökningstoken.</translation>
+    </message>
+    <message id="libfuoten-err-loginflowv2-invalid-polling-url">
+        <source>The Nextcloud API returned an invalid polling URL.</source>
+        <translation>Nextcloud-API:et returnerade en ogiltig avsöknings-URL.</translation>
+    </message>
+    <message id="libfuoten-err-loginflowv2-invalid-auth-data">
+        <source>The returned login data is invalid.</source>
+        <translation>De returnerade inloggningsuppgifterna är ogiltiga.</translation>
+    </message>
+    <message id="libfuoten-err-loginflowv2-overall-timeout" numerus="yes">
+        <source>The required authorisation message was not received within %n second(s).</source>
+        <extracomment>error message in the login flow</extracomment>
+        <translation><numerusform>Det begärda auktoriseringsmeddelandet togs inte emot inom %n sekund.</numerusform><numerusform>Det begärda auktoriseringsmeddelandet togs inte emot inom %n sekunder.</numerusform></translation>
     </message>
 </context>
 </TS>

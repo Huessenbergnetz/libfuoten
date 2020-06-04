@@ -466,9 +466,26 @@
         <source>Requesting updated and new articles</source>
         <translation type="unfinished"/>
     </message>
-    <message id="err-decompression-failed">
-        <source>Decompressing the requested data failed.</source>
+    <message id="libfuoten-err-loginflowv2-invalid-login-url">
+        <source>The login URL returned by the Nextcloud API is invalid.</source>
         <translation type="unfinished"/>
+    </message>
+    <message id="liburoten-err-loginflowv2-empty-token">
+        <source>The Nextcloud API returned an empty polling token.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-loginflowv2-invalid-polling-url">
+        <source>The Nextcloud API returned an invalid polling URL.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-loginflowv2-invalid-auth-data">
+        <source>The returned login data is invalid.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-loginflowv2-overall-timeout" numerus="yes">
+        <source>The required authorisation message was not received within %n second(s).</source>
+        <extracomment>error message in the login flow</extracomment>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
 </context>
 </TS>
