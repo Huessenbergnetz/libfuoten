@@ -29,7 +29,7 @@ class LoginFlowV2Private : public ComponentPrivate
 {
 public:
     LoginFlowV2Private(LoginFlowV2 *q);
-    ~LoginFlowV2Private();
+    ~LoginFlowV2Private() override;
 
     void startPolling(const QUrl &endpoint, const QString &token);
     void sendPollingRequest();
