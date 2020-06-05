@@ -344,6 +344,7 @@ void LoginFlowV2Private::overallTimerTimedOut()
     pollingReply = nullptr;
 
     Q_Q(LoginFlowV2);
+    q->setInOperation(false);
     //: error message in the login flow
     //% "The required authorisation message was not received within %n second(s)."
     q->setError(new Error(Error::RequestError, Error::Critical, qtTrId("libfuoten-err-loginflowv2-overall-timeout", pollingTimeout), QString(), q));
