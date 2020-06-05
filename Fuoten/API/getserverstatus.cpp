@@ -23,8 +23,8 @@
 
 using namespace Fuoten;
 
-GetServerStatusPrivate::GetServerStatusPrivate() :
-    ComponentPrivate()
+GetServerStatusPrivate::GetServerStatusPrivate(GetServerStatus *q) :
+    ComponentPrivate(), q_ptr(q)
 {
     baseRoute = QString();
     apiRoute = QStringLiteral("/status.php");
@@ -40,7 +40,7 @@ GetServerStatusPrivate::~GetServerStatusPrivate()
 }
 
 GetServerStatus::GetServerStatus(QObject *parent) :
-    Component(* new GetServerStatusPrivate, parent)
+    Component(* new GetServerStatusPrivate(this), parent)
 {
 
 }
@@ -66,6 +66,17 @@ void GetServerStatus::execute()
     qDebug("%s", "Start requesting server status.");
 
     setInOperation(true);
+
+    qDebug("%s", "Clearing old status data.");
+    Q_D(GetServerStatus);
+    d->setIsInstalled(false);
+    d->setIsInMaintenance(false);
+    d->setNeedsDbUpgrade(false);
+    d->setVersion(QVersionNumber());
+    d->setEdition(QString());
+    d->setProductname(QString());
+    d->setHasExtendedSupport(false);
+    d->setSetupPossible(NotPossible);
 
     sendRequest();
 }
@@ -133,55 +144,13 @@ void GetServerStatus::successCallback()
 
     const QJsonObject o = jsonResult().object();
 
-    const bool _isInstalled = o.value(QStringLiteral("installed")).toBool(false);
-    if (d->isInstalled != _isInstalled) {
-        qDebug("Changing isInstalled from %s to %s", d->isInstalled ? "true" : "false", _isInstalled ? "true" : "false");
-        d->isInstalled = _isInstalled;
-        Q_EMIT isInstalledChanged(d->isInstalled);
-    }
-
-    const bool _isInMaintenance = o.value(QStringLiteral("maintenance")).toBool(false);
-    if (d->isInMaintenance != _isInMaintenance) {
-        qDebug("Changing isInMaintenance from %s to %s", d->isInMaintenance ? "true" : "false", _isInMaintenance ? "true" : "false");
-        d->isInMaintenance = _isInMaintenance;
-        Q_EMIT isInMaintenanceChanged(d->isInMaintenance);
-    }
-
-    const bool _needsDbUpgrade = o.value(QStringLiteral("needsDbUpgrade")).toBool(false);
-    if (d->needsDbUpgrade != _needsDbUpgrade) {
-        qDebug("Changing needsDbUpgrade from %s to %s", d->needsDbUpgrade ? "true" : "false", _needsDbUpgrade ? "true" : "false");
-        d->needsDbUpgrade = _needsDbUpgrade;
-        Q_EMIT needsDbUpgradeChanged(d->needsDbUpgrade);
-    }
-
-    const QVersionNumber _version = QVersionNumber::fromString(o.value(QStringLiteral("version")).toString());
-    if (d->version != _version) {
-        qDebug() << "Changing version from" << d->version << "to" << _version;
-        d->version = _version;
-        Q_EMIT versionStringChanged(d->version.toString());
-        Q_EMIT versionChanged(d->version);
-    }
-
-    const QString _edition = o.value(QStringLiteral("edition")).toString();
-    if (d->edition != _edition) {
-        qDebug("Changing edition from \"%s\" to \"%s\"", qUtf8Printable(d->edition), qUtf8Printable(_edition));
-        d->edition = _edition;
-        Q_EMIT editionChanged(d->edition);
-    }
-
-    const QString _productname = o.value(QStringLiteral("productname")).toString();
-    if (d->productname != _productname) {
-        qDebug("Changing productname from \"%s\" to \"%s\"", qUtf8Printable(d->productname), qUtf8Printable(_productname));
-        d->productname = _productname;
-        Q_EMIT productnameChanged(d->productname);
-    }
-
-    const bool _hasExtendedSupport = o.value(QStringLiteral("extendedSupport")).toBool();
-    if (d->hasExtendedSupport != _hasExtendedSupport) {
-        qDebug("Changing hasExtendedSupport from %s to %s", d->hasExtendedSupport ? "true" : "false", _hasExtendedSupport ? "true" : "false");
-        d->hasExtendedSupport = _hasExtendedSupport;
-        Q_EMIT hasExtendedSupportChanged(d->hasExtendedSupport);
-    }
+    d->setIsInstalled(o.value(QStringLiteral("installed")).toBool(false));
+    d->setIsInMaintenance(o.value(QStringLiteral("maintenance")).toBool(false));
+    d->setNeedsDbUpgrade(o.value(QStringLiteral("needsDbUpgrade")).toBool(false));
+    d->setVersion(QVersionNumber::fromString(o.value(QStringLiteral("version")).toString()));
+    d->setEdition(o.value(QStringLiteral("edition")).toString());
+    d->setProductname(o.value(QStringLiteral("productname")).toString());
+    d->setHasExtendedSupport(o.value(QStringLiteral("extendedSupport")).toBool(false));
 
     SetupPossible _setupPossible = NotPossible;
     if (d->isInstalled && !d->isInMaintenance) {
@@ -190,11 +159,7 @@ void GetServerStatus::successCallback()
             _setupPossible = LoginFlowV2;
         }
     }
-    if (d->setupPossible != _setupPossible) {
-        qDebug() << "Changing setupPossible from" << d->setupPossible << "to" << _setupPossible;
-        d->setupPossible = _setupPossible;
-        Q_EMIT setupPossibleChanged(d->setupPossible);
-    }
+    d->setSetupPossible(_setupPossible);
 
     Q_EMIT succeeded(jsonResult());
 }
@@ -208,6 +173,87 @@ int GetServerStatus::compareVersion(const QVersionNumber &version) const
 {
     Q_D(const GetServerStatus);
     return QVersionNumber::compare(d->version.normalized(), version.normalized());
+}
+
+void GetServerStatusPrivate::setEdition(const QString &_edition)
+{
+    if (edition != _edition) {
+        qDebug("Changing edition from %s to %s", qUtf8Printable(edition), qUtf8Printable(_edition));
+        edition = _edition;
+        Q_Q(GetServerStatus);
+        Q_EMIT q->editionChanged(edition);
+    }
+}
+
+void GetServerStatusPrivate::setProductname(const QString &_productname)
+{
+    if (productname != _productname) {
+        qDebug("Changing productname from %s to %s", qUtf8Printable(productname), qUtf8Printable(_productname));
+        productname = _productname;
+        Q_Q(GetServerStatus);
+        Q_EMIT q->productnameChanged(productname);
+    }
+}
+
+void GetServerStatusPrivate::setVersion(const QVersionNumber &_version)
+{
+    if (version != _version) {
+        qDebug("Changing version from %s to %s", qUtf8Printable(version.toString()), qUtf8Printable(_version.toString()));
+        version = _version;
+        Q_Q(GetServerStatus);
+        Q_EMIT q->versionChanged(version);
+        Q_EMIT q->versionStringChanged(version.toString());
+    }
+}
+
+void GetServerStatusPrivate::setSetupPossible(GetServerStatus::SetupPossible _setupPossible)
+{
+    if (setupPossible != _setupPossible) {
+        qDebug() << "Changing setupPossible from" << setupPossible << "to" << _setupPossible;
+        setupPossible = _setupPossible;
+        Q_Q(GetServerStatus);
+        Q_EMIT q->setupPossibleChanged(setupPossible);
+    }
+}
+
+void GetServerStatusPrivate::setIsInstalled(bool _isInstalled)
+{
+    if (isInstalled != _isInstalled) {
+        qDebug() << "Changing isInstalled from" << isInstalled << "to" << _isInstalled;
+        isInstalled = _isInstalled;
+        Q_Q(GetServerStatus);
+        Q_EMIT q->isInstalledChanged(isInstalled);
+    }
+}
+
+void GetServerStatusPrivate::setIsInMaintenance(bool _isInMaintenance)
+{
+    if (isInMaintenance != _isInMaintenance) {
+        qDebug() << "Changing isInMaintenance from" << isInMaintenance << "to" << _isInMaintenance;
+        isInMaintenance = _isInMaintenance;
+        Q_Q(GetServerStatus);
+        Q_EMIT q->isInMaintenanceChanged(isInMaintenance);
+    }
+}
+
+void GetServerStatusPrivate::setHasExtendedSupport(bool _hasExtendedSupport)
+{
+    if (hasExtendedSupport != _hasExtendedSupport) {
+        qDebug() << "Changing hasExtendedSupport from" << hasExtendedSupport << "to" << _hasExtendedSupport;
+        hasExtendedSupport = _hasExtendedSupport;
+        Q_Q(GetServerStatus);
+        Q_EMIT q->hasExtendedSupportChanged(hasExtendedSupport);
+    }
+}
+
+void GetServerStatusPrivate::setNeedsDbUpgrade(bool _needsDbUpgrade)
+{
+    if (needsDbUpgrade != _needsDbUpgrade) {
+        qDebug() << "Changing needsDbUpgrade from" << needsDbUpgrade << "to" << _needsDbUpgrade;
+        needsDbUpgrade = _needsDbUpgrade;
+        Q_Q(GetServerStatus);
+        Q_EMIT q->needsDbUpgradeChanged(needsDbUpgrade);
+    }
 }
 
 #include "moc_getserverstatus.cpp"
