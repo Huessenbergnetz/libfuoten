@@ -60,7 +60,7 @@ class LoginFlowV2Private;
  * \par Mandatory properties
  * Component::configuration
  *
- * \par API rout
+ * \par API route
  * Not part of the News App API, uses general Nextcloud API at /index.php/login/v2
  *
  * \par Method
