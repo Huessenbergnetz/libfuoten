@@ -466,7 +466,7 @@ bool Component::checkOutput()
 {
     Q_D(Component);
 
-    if (!(d->expectedJSONType == Empty)) {
+    if (d->expectedJSONType != Empty) {
         QJsonParseError jsonError;
         d->jsonResult = QJsonDocument::fromJson(d->result, &jsonError);
         if (jsonError.error != QJsonParseError::NoError) {
