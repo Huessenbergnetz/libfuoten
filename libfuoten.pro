@@ -130,6 +130,8 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/API/getserverstatus.h \
         Fuoten/API/LoginFlowV2 \
         Fuoten/API/loginflowv2.h \
+        Fuoten/API/ConvertToAppPassword \
+        Fuoten/API/converttoapppassword.h \
         Fuoten/Helpers/abstractnamfactory.h \
         Fuoten/Helpers/AbstractNamFactory \
         Fuoten/Helpers/abstractnotificator.h \
@@ -198,6 +200,8 @@ langfiles.files = translations/*.qm
 INSTALLS += langfiles
 
 HEADERS += \
+    Fuoten/API/converttoapppassword.h \
+    Fuoten/API/converttoapppassword_p.h \
     Fuoten/API/getserverstatus.h \
     Fuoten/API/getserverstatus_p.h \
     Fuoten/API/loginflowv2.h \
@@ -294,6 +298,7 @@ HEADERS += \
     Fuoten/Helpers/abstractnotificator_p.h
 
 SOURCES += \
+    Fuoten/API/converttoapppassword.cpp \
     Fuoten/API/getserverstatus.cpp \
     Fuoten/API/loginflowv2.cpp \
     Fuoten/error.cpp \
