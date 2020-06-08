@@ -164,7 +164,8 @@ public:
         FeedRenamed,        /**< A feed has successfully been renamed on the server. The \a data will contain a QVariantList containing the following information as QString: 0: old title, 1: new title */
         FeedMarkedRead,     /**< A feed has been marked as read. The \a data will contain the title of the feed as a QString. */
         ItemsRequested,     /**< Items have been requested from the server. The \a data will contain the amount of new unread items as an integer value. */
-        AuthorizationSucceeded  /**< Requesting an application password from the Nextcloud API was successful. The \a data will containt a QVariantMap containing username and host. */
+        AuthorizationSucceeded, /**< Requesting an application password from the Nextcloud API was successful. The \a data will contain a QVariantMap containing username and host. */
+        AppPasswordRequested    /**< A normal password has been successfully upgraded to an application password. The \a data will conatin a QVariantMap containing username, useragent and host. */
     };
 
     /*!
