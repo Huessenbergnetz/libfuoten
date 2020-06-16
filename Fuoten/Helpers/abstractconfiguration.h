@@ -20,7 +20,7 @@
 #ifndef FUOTEN_CONFIG_H
 #define FUOTEN_CONFIG_H
 
-#include <QSettings>
+#include <QObject>
 #include <QDateTime>
 #include <QVersionNumber>
 #include "../fuoten_global.h"
@@ -43,7 +43,7 @@ namespace Fuoten {
  *
  * \headerfile "" <Fuoten/Helpers/AbstractConfiguration>
  */
-class FUOTENSHARED_EXPORT AbstractConfiguration : public QSettings
+class FUOTENSHARED_EXPORT AbstractConfiguration : public QObject
 {
     Q_OBJECT
 public:

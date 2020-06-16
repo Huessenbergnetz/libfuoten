@@ -26,7 +26,7 @@
 
 using namespace Fuoten;
 
-AbstractConfiguration::AbstractConfiguration(QObject *parent) : QSettings(parent)
+AbstractConfiguration::AbstractConfiguration(QObject *parent) : QObject(parent)
 {
 
 }
