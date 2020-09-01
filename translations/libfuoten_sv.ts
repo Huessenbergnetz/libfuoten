@@ -487,5 +487,15 @@
         <extracomment>error message in the login flow</extracomment>
         <translation><numerusform>Det begärda auktoriseringsmeddelandet togs inte emot inom %n sekund.</numerusform><numerusform>Det begärda auktoriseringsmeddelandet togs inte emot inom %n sekunder.</numerusform></translation>
     </message>
+    <message id="fuoten-convertpassword-empty-apppassword">
+        <source>The new application password returned by Nextcloud’s OCS API is empty.</source>
+        <extracomment>error message after automatically upgrading a password to an app password</extracomment>
+        <translation>Det nya programlösenord som returnerades av Nextclouds OCS API är tomt.</translation>
+    </message>
+    <message id="fuoten-convertpassword-unknown-error">
+        <source>An unknown error occured while trying to upgrade the password to an application password. Status: %1</source>
+        <extracomment>error message after automatically upgrading a password to an app password</extracomment>
+        <translation>Ett okänt fel inträffade vid uppgradering av lösenordet till ett programlösenord. Status: %1</translation>
+    </message>
 </context>
 </TS>
