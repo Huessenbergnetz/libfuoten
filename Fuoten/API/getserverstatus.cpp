@@ -154,9 +154,12 @@ void GetServerStatus::successCallback()
 
     SetupPossible _setupPossible = NotPossible;
     if (d->isInstalled && !d->isInMaintenance) {
-        _setupPossible = LoginFlow;
-        if (d->version.normalized() >= QVersionNumber(16, 0, 0)) {
-            _setupPossible = LoginFlowV2;
+        _setupPossible = Manual;
+        if (d->version.normalized() >= QVersionNumber(13, 0, 0)) {
+            _setupPossible = LoginFlow;
+            if (d->version.normalized() >= QVersionNumber(17, 0, 0)) {
+                _setupPossible = LoginFlowV2;
+            }
         }
     }
     d->setSetupPossible(_setupPossible);
