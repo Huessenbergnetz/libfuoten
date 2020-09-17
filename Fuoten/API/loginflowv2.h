@@ -99,7 +99,7 @@ class FUOTENSHARED_EXPORT LoginFlowV2 : public Component
     /*!
      * \brief Sets the timeout in seconds at which the authorisation request has to be succeeded.
      *
-     * The default value is 500 seconds. If this timeout expires, the login flow will be canceled
+     * The default value is 300 seconds. If this timeout expires, the login flow will be canceled
      * and polling will be stopped. Component::error() will return a valid Error object and
      * the Component::failed() signal will be emitted.
      *
