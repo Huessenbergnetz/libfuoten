@@ -23,15 +23,28 @@
 #include "getstatus.h"
 #include "component_p.h"
 #include <QJsonObject>
+#include <QVersionNumber>
 
 namespace Fuoten {
 
 class GetStatusPrivate : public ComponentPrivate {
 public:
-    GetStatusPrivate();
+    GetStatusPrivate(GetStatus *q);
     ~GetStatusPrivate() override;
 
+    void setVersion(const QString &_version);
+    void setVersion(const QVersionNumber &_version);
+    void setImproperlyConfiguredCrond(bool _improperlyConfiguredCron);
+    void setIncorrectDbCharset(bool _incorrectDbCharset);
+
     QJsonObject resultObject;
+    QVersionNumber version;
+    bool improperlyConfiguredCron = false;
+    bool incorrectDbCharset = false;
+
+private:
+    GetStatus *q_ptr;
+    Q_DECLARE_PUBLIC(GetStatus)
 };
 
 }

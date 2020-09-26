@@ -34,8 +34,9 @@ class GetStatusPrivate;
  * The status reply will contain the News App version number and possible warnings about improperly configurations.
  * To request the status, set the \link Component::configuration configuration \endlink property and call execute().
  *
- * The requested data will be written to AbstractConfiguration::setServerVersion() and AbstractConfiguration::setImproperlyConfiguredCron(). You can get the raw JSON response from the Component::succeeded() signal.
- * If the request failed for some reason, Component::failed() will be emitted and the Component::inOperation property will contain a valid pointer to an Error object.
+ * The requested data will be stored in the versionString, improperlyConfiguredCron and incorrectDbCharset properties.
+ * You can get the raw JSON response from the Component::succeeded() signal. If the request failed for some reason,
+ * Component::failed() will be emitted and the Component::inOperation property will contain a valid pointer to an Error object.
  *
  * \par Mandatory properties
  * Component::configuration
@@ -52,6 +53,45 @@ class GetStatusPrivate;
 class FUOTENSHARED_EXPORT GetStatus : public Component
 {
     Q_OBJECT
+    /*!
+     * \brief This property holds the version of the Nextcoud News app as a string.
+     *
+     * The default value is an empty string. It will be set in the successCallback().
+     *
+     * \since 0.8.0
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>QString</TD><TD>versionString() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>versionStringChanged(const QString versionString)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(QString versionString READ versionString NOTIFY versionStringChanged)
+    /*!
+     * \brief Returns \c true when the Nextcloud News app will fail to update the feed correctly, otherwise \c false.
+     *
+     * The default value is \c false. It will be set in the successCallback().
+     *
+     * \since 0.8.0
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>bool</TD><TD>impropertyConfiguredCron() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>improperlyConfiguredCronChanged(bool impropertyConfiguredCron)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(bool impropertyConfiguredCron READ improperlyConfiguredCron NOTIFY improperlyConfiguredCronChanged)
+    /*!
+     * \brief Returns \c true when the database charset of the Nextcloud News app is set up incorrectly, otherwise \c false.
+     *
+     * The default value is \c false. It will be set in the successCallback().
+     *
+     * \since 0.8.0
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>bool</TD><TD>incorrectDbCharset() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>incorrectDbCharsetChanged(bool incorrectDbCharset)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(bool incorrectDbCharset READ incorrectDbCharset NOTIFY incorrectDbCharsetChanged)
 public:
     /*!
      * \brief Constructs an API request object with the given \a parent to query the status from the remote server.
@@ -73,14 +113,69 @@ public:
      */
     Q_INVOKABLE void execute() override;
 
+    /*!
+     * \brief Returns the version of the Nextcloud News app as a string.
+     *
+     * The default value is an empty string.
+     *
+     * \since 0.8.0
+     * \sa versionString, versionStringChanged()
+     */
+    QString versionString() const;
+
+    /*!
+     * \brief Returns \c true if the webapp will fail to update the feed correctly.
+     * \since 0.8.0
+     * \sa improperlyConfiguredCron, improperlyConfiguredCronChanged()
+     */
+    bool improperlyConfiguredCron() const;
+
+    /*!
+     * \brief Returns \c true if the database charset is set up incorrectly.
+     * \since 0.8.0
+     * \sa incorrectDbCharset, incorrectDbCharsetChanged()
+     */
+    bool incorrectDbCharset() const;
+
+Q_SIGNALS:
+    /*!
+     * \brief Emitted when the versionString value changed.
+     *
+     * This signal will be triggered in the successCallback().
+     *
+     * \since 0.8.0
+     * \sa versionString, versionString()
+     */
+    void versionStringChanged(const QString &versionString);
+
+    /*!
+     * \brief Emitted when the improperlyConfiguredCron value changed.
+     *
+     * This signal will be triggered in the successCallback().
+     *
+     * \since 0.8.0
+     * \sa improperlyConfiguredCron, improperlyConfiguredCron()
+     */
+    void improperlyConfiguredCronChanged(bool improperlyConfiguredCron);
+
+    /*!
+     * \brief Emitted when the incorrectDbCharset value changed.
+     *
+     * This signal will be triggered in the successCallback().
+     *
+     * \since 0.8.0
+     * \sa incorrectDbCharset, incorrectDbCharset()
+     */
+    void incorrectDbCharsetChanged(bool incorrectDbCharset);
+
 protected:
     GetStatus(GetStatusPrivate &dd, QObject *parent = nullptr);
 
     /*!
      * \brief Finishes the status request if it was successful.
      *
-     * Will use AbstractConfiguration::setServerVersion() and AbstractConfiguration::setImproperlyConfiguredCron() to store the reply. Afterwards it will
-     * set Component::inOperation to \c false and emits the Component::succeeded() signal.
+     * Will set the versionString, improperlyConfiguredCron and incorrectDbCharset properties. Afterwards
+     * it willset Component::inOperation to \c false and emits the Component::succeeded() signal.
      */
     void successCallback() override;
 
