@@ -21,6 +21,7 @@
 #define FUOTENGETVERSION_H
 
 #include <QObject>
+#include <QVersionNumber>
 #include "component.h"
 #include "../fuoten_global.h"
 
@@ -34,8 +35,8 @@ class GetVersionPrivate;
  * The version reply will only contain the version number of the installed News App.
  * To request the version information, set the \link Component::configuration configuration \endlink property and call execute().
  *
- * The requested data will be written to AbstractConfiguration::setServerVersion(). You can get the raw JSON response from the Component::succeeded() signal.
- * If something failed, the Component::failed() signal will be emitted and Component::error will contain a valid pointer to an Error object.
+ * You can get the raw JSON response from the Component::succeeded() signal. If something failed, the Component::failed() signal
+ * will be emitted and Component::error will contain a valid pointer to an Error object.
  *
  * \par Mandatory properties
  * Component::configuration
@@ -52,6 +53,19 @@ class GetVersionPrivate;
 class FUOTENSHARED_EXPORT GetVersion : public Component
 {
     Q_OBJECT
+    /*!
+     * \brief This property holds the version of the Nextcoud News app as a string.
+     *
+     * The default value is an empty string. It will be set in the successCallback().
+     *
+     * \since 0.8.0
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>QString</TD><TD>versionString() const</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>versionStringChanged(const QString versionString)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(QString versionString READ versionString NOTIFY versionStringChanged)
 public:
     /*!
      * \brief Constructs an API request object with the given \a parent to query the News App version from the remote server.
@@ -73,14 +87,54 @@ public:
      */
     Q_INVOKABLE void execute() override;
 
+    /*!
+     * \brief Returns the version of the Nextcloud News app as a string.
+     *
+     * The default value is an empty string.
+     *
+     * \since 0.8.0
+     * \sa versionString, versionStringChanged()
+     */
+    QString versionString() const;
+
+    /*!
+     * \brief Returns the version of the Nextcloud News app.
+     *
+     * The default value is a null version.
+     *
+     * \since 0.8.0
+     * \sa versionChanged()
+     */
+    QVersionNumber version() const;
+
+Q_SIGNALS:
+    /*!
+     * \brief Emitted when the versionString value changed.
+     *
+     * This signal will be triggered in the successCallback().
+     *
+     * \since 0.8.0
+     * \sa versionString, versionString()
+     */
+    void versionStringChanged(const QString &versionString);
+    /*!
+     * \brief Emitted when the version value changed.
+     *
+     * This signal will be triggered in the successCallback().
+     *
+     * \since 0.8.0
+     * \sa version()
+     */
+    void versionChanged(const QVersionNumber &version);
+
 protected:
     GetVersion(GetVersionPrivate &dd, QObject *parent = nullptr);
 
     /*!
      * \brief Finishes the version request if it was successful.
      *
-     * Will use AbstractConfiguration::setServerVersion() to store the reply. Afterwards it will
-     * set Component::inOperation to \c false and emits the Component::succeeded() signal.
+     * Will set the versionString property and emit the versionStringChanged()
+     * and versionChanged() signals.
      */
     void successCallback() override;
 

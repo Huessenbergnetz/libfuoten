@@ -22,7 +22,6 @@
 
 #include "getversion.h"
 #include "component_p.h"
-#include <QJsonObject>
 
 namespace Fuoten {
 
@@ -31,7 +30,7 @@ public:
     GetVersionPrivate();
     ~GetVersionPrivate();
 
-    QJsonObject resultObject;
+    QVersionNumber version;
 };
 
 }

@@ -19,6 +19,7 @@
 
 #include "getversion_p.h"
 #include "../error.h"
+#include <QJsonObject>
 #include <QJsonValue>
 
 using namespace Fuoten;
@@ -65,9 +66,18 @@ void GetVersion::execute()
         return;
     }
 
+    Q_D(GetVersion);
+
     qDebug("%s", "Start requesting version information from the server.");
 
     setInOperation(true);
+
+    QVersionNumber v;
+    if (d->version != v) {
+        d->version = v;
+        Q_EMIT versionStringChanged(versionString());
+        Q_EMIT versionChanged(version());
+    }
 
     sendRequest();
 }
@@ -75,8 +85,16 @@ void GetVersion::execute()
 
 void GetVersion::successCallback()
 {
-    Q_D(const GetVersion);
-    configuration()->setServerVersion(d->resultObject.value(QStringLiteral("version")).toString());
+    Q_D(GetVersion);
+
+    const QVersionNumber v = QVersionNumber::fromString(jsonResult().object().value(QStringLiteral("version")).toString());
+
+    if (d->version != v) {
+        d->version = v;
+        Q_EMIT versionStringChanged(versionString());
+        Q_EMIT versionChanged(version());
+    }
+
     setInOperation(false);
 
     qDebug("%s", "Successfully requested version information from the server.");
@@ -89,24 +107,39 @@ bool GetVersion::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
 
-        Q_D(GetVersion);
-
-        d->resultObject = jsonResult().object();
-
-        if (Q_UNLIKELY(!d->resultObject.contains(QStringLiteral("version")))) {
+        const QJsonObject o = jsonResult().object();
+        if (Q_UNLIKELY(!o.contains(QStringLiteral("version")))) {
             //% "Can not find the version information in the server reply."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-not-found"), QString(), this));
             Q_EMIT failed(error());
-            if (configuration()) { configuration()->setServerVersion(QStringLiteral("0.0.0")); }
             return false;
         } else {
-            return true;
+            const QString s = o.value(QStringLiteral("version")).toString();
+            const QVersionNumber v = QVersionNumber::fromString(s);
+            if (Q_UNLIKELY(v.isNull())) {
+                //% "Server reply contains invalid version number."
+                setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-version-invalid"), s, this));
+                Q_EMIT failed(error());
+                return false;
+            } else {
+                return true;
+            }
         }
 
     } else {
-        configuration()->setServerVersion(QStringLiteral("0.0.0"));
         return false;
     }
+}
+
+QString GetVersion::versionString() const
+{
+    return version().toString();
+}
+
+QVersionNumber GetVersion::version() const
+{
+    Q_D(const GetVersion);
+    return d->version;
 }
 
 #include "moc_getversion.cpp"
