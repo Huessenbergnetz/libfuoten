@@ -40,7 +40,7 @@ AbstractConfiguration::~AbstractConfiguration()
 
 void AbstractConfiguration::checkAccountValidity()
 {
-    setIsAccountValid((!getUsername().isEmpty() && !getPassword().isEmpty() && !getHost().isEmpty() && !getServerVersion().isNull()));
+    setIsAccountValid((!getUsername().isEmpty() && !getPassword().isEmpty() && !getHost().isEmpty()));
 }
 
 

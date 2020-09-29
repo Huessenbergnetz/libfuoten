@@ -142,13 +142,6 @@ public:
     virtual bool isAccountValid() const = 0;
 
     /*!
-     * \brief Returns the News App version number used on the server.
-     *
-     * \sa setServerVersion()
-     */
-    virtual QVersionNumber getServerVersion() const = 0;
-
-    /*!
      * \brief Returns the server port used for the connection.
      *
      * The default implementation returns 0, what means that the connection should use the default port
@@ -194,15 +187,6 @@ public:
      * \param nImproperlyConfiguredCron \c true if the server side CRON is imporperly configured, otherwise \c false
      */
     virtual void setImproperlyConfiguredCron(bool nImproperlyConfiguredCron);
-
-    /*!
-     * \brief Sets the version of the News App used on the server.
-     *
-     * Reimplement this in a subclass.
-     *
-     * \param nServerVersion    the server version string
-     */
-    virtual void setServerVersion(const QString &nServerVersion) = 0;
 
     /*!
      * \brief Sets the user's avatar.
