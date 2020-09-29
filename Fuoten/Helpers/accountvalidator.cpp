@@ -21,8 +21,9 @@
 #include "abstractconfiguration.h"
 #include "../API/component.h"
 #include "../error.h"
+#include <QJsonObject>
+#include <QJsonValue>
 #include <QVersionNumber>
-
 
 using namespace Fuoten;
 
@@ -72,14 +73,14 @@ void AccountValidator::start()
 
 void AccountValidator::gotVersion()
 {
-    if (configuration()->getServerVersion() < QVersionNumber(5,2,4)) {
+    Q_D(AccountValidator);
+
+    if (d->version->version() < QVersionNumber(5,2,4)) {
         //% "The version of your News App is lower than 5.2.4. Status and user information can not be queried."
-        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-status-user"), configuration()->getServerVersion().toString(), this));
+        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-status-user"), d->version->versionString(), this));
         Q_EMIT succeeded();
         return;
     }
-
-    Q_D(AccountValidator);
 
     if (!d->status) {
         d->status = new GetStatus(this);
@@ -94,14 +95,14 @@ void AccountValidator::gotVersion()
 
 void AccountValidator::gotStatus()
 {
-    if (configuration()->getServerVersion() < QVersionNumber(6,0,5)) {
+    Q_D(AccountValidator);
+
+    if (d->version->version() < QVersionNumber(6,0,5)) {
         //% "The version of your News App is lower than 6.0.5. User information can not be queried."
-        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-user"), configuration()->getServerVersion().toString(), this));
+        setError(new Error(Error::ServerError, Error::Warning, qtTrId("id-err-version-low-user"), d->version->versionString(), this));
         Q_EMIT succeeded();
         return;
     }
-
-    Q_D(AccountValidator);
 
     if (!d->user) {
         d->user = new GetUser(this);
