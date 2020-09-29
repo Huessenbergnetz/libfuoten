@@ -22,7 +22,6 @@
 
 #include "getuser.h"
 #include "component_p.h"
-#include <QJsonObject>
 
 namespace Fuoten {
 
@@ -30,8 +29,6 @@ class GetUserPrivate : public ComponentPrivate {
 public:
     GetUserPrivate();
     ~GetUserPrivate() override;
-
-    QJsonObject resultObject;
 };
 
 }

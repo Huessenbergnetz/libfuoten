@@ -19,6 +19,7 @@
 
 #include "getuser_p.h"
 #include "../error.h"
+#include <QJsonObject>
 #include <QJsonValue>
 
 using namespace Fuoten;
@@ -75,15 +76,6 @@ void GetUser::execute()
 
 void GetUser::successCallback()
 {
-    Q_D(const GetUser);
-    configuration()->setDisplayName(d->resultObject.value(QStringLiteral("displayName")).toString());
-    const QJsonObject a = d->resultObject.value(QStringLiteral("avatar")).toObject();
-    if (!a.isEmpty()) {
-        configuration()->setAvatar(a.value(QStringLiteral("data")).toString(), a.value(QStringLiteral("mime")).toString());
-    } else {
-        configuration()->setAvatar(QString(), QString());
-    }
-
     setInOperation(false);
 
     qDebug("%s", "Successfully requested user information from the server.");
@@ -95,11 +87,9 @@ bool GetUser::checkOutput()
 {
     if (Q_LIKELY(Component::checkOutput())) {
 
-        Q_D(GetUser);
+        const QJsonObject o = jsonResult().object();
 
-        d->resultObject = jsonResult().object();
-
-        if (Q_UNLIKELY(!d->resultObject.contains(QStringLiteral("displayName")))) {
+        if (Q_UNLIKELY(!o.contains(QStringLiteral("displayName")))) {
             //% "Can not find the user's display name in the server reply."
             setError(new Error(Error::OutputError, Error::Critical, qtTrId("err-displayname-not-found"), QString(), this));
             Q_EMIT failed(error());
