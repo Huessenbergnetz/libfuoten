@@ -104,26 +104,6 @@ bool AbstractConfiguration::getIgnoreSSLErrors() const
 }
 
 
-void AbstractConfiguration::setAvatar(const QString &data, const QString &mime)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(mime)
-}
-
-
-void AbstractConfiguration::setDisplayName(const QString &nDisplayName)
-{
-    Q_UNUSED(nDisplayName)
-}
-
-
-void AbstractConfiguration::setImproperlyConfiguredCron(bool nImproperlyConfiguredCron)
-{
-    Q_UNUSED(nImproperlyConfiguredCron)
-}
-
-
-
 void AbstractConfiguration::setLastSync(const QDateTime &syncTime)
 {
     Q_UNUSED(syncTime);

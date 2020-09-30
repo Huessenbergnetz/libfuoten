@@ -171,37 +171,6 @@ public:
     virtual QString getUserAgent() const;
 
     /*!
-     * \brief Sets the user's display name.
-     *
-     * The default implementation does nothing.
-     *
-     * \param nDisplayName  the user's display name
-     */
-    virtual void setDisplayName(const QString &nDisplayName);
-
-    /*!
-     * \brief Set this to true if the server's cron job is improperly configured.
-     *
-     * The default implementation does nothing.
-     *
-     * \param nImproperlyConfiguredCron \c true if the server side CRON is imporperly configured, otherwise \c false
-     */
-    virtual void setImproperlyConfiguredCron(bool nImproperlyConfiguredCron);
-
-    /*!
-     * \brief Sets the user's avatar.
-     *
-     * Reimplement this in a subclass if you want to handle the user's avatar image returned by the GetUser request.
-     * \a data will be a base64 encoded data string representing the image data. \a mime will contain the image's mime type.
-     *
-     * The default implementation does nothing.
-     *
-     * \param data  base64 encoded image data
-     * \param mime  MIME type of the image
-     */
-    virtual void setAvatar(const QString &data, const QString &mime);
-
-    /*!
      * \brief Returns the last date and time in UTC a successful snychronization has been performed.
      *
      * Reimplement this in a subclass if you want let the Synchronizer save the last sync time.
