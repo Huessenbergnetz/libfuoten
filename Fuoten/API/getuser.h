@@ -46,7 +46,6 @@ class GetUserPrivate;
  * \par Method
  * GET
  *
- * \sa AccountValidator
  * \headerfile "" <Fuoten/API/GetUser>
  */
 class FUOTENSHARED_EXPORT GetUser : public Component

@@ -47,7 +47,6 @@ class GetVersionPrivate;
  * \par Method
  * GET
  *
- * \sa AccountValidator
  * \headerfile "" <Fuoten/API/GetVersion>
  */
 class FUOTENSHARED_EXPORT GetVersion : public Component

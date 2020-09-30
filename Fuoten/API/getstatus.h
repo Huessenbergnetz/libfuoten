@@ -47,7 +47,6 @@ class GetStatusPrivate;
  * \par Method
  * GET
  *
- * \sa AccountValidator
  * \headerfile "" <Fuoten/API/GetStatus>
  */
 class FUOTENSHARED_EXPORT GetStatus : public Component

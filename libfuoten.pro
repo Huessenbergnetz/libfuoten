@@ -39,8 +39,6 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/Helpers/AbstractConfiguration \
         Fuoten/Helpers/Synchronizer \
         Fuoten/Helpers/VersionNumber \
-        Fuoten/Helpers/AccountValidator \
-        Fuoten/Helpers/accountvalidator.h \
         Fuoten/Helpers/abstractconfiguration.h \
         Fuoten/Helpers/versionnumber.h \
         Fuoten/folder.h \
@@ -217,8 +215,6 @@ HEADERS += \
     Fuoten/API/getstatus_p.h \
     Fuoten/API/getuser.h \
     Fuoten/API/getuser_p.h \
-    Fuoten/Helpers/accountvalidator.h \
-    Fuoten/Helpers/accountvalidator_p.h \
     Fuoten/fuoten.h \
     Fuoten/baseitem.h \
     Fuoten/baseitem_p.h \
@@ -306,7 +302,6 @@ SOURCES += \
     Fuoten/API/getversion.cpp \
     Fuoten/API/getstatus.cpp \
     Fuoten/API/getuser.cpp \
-    Fuoten/Helpers/accountvalidator.cpp \
     Fuoten/baseitem.cpp \
     Fuoten/folder.cpp \
     Fuoten/Storage/abstractstorage.cpp \
