@@ -3041,4 +3041,90 @@ void SQLiteStorage::clearQueue()
     worker->start();
 }
 
+void SQLiteStorage::clearStorage()
+{
+    Q_ASSERT_X(configuration(), "clear storage", "no configuration available");
+
+    if (inOperation()) {
+        qWarning("%s", "Still in operation. Returning.");
+        return;
+    }
+
+    if (!ready()) {
+        setError(new Error(Error::StorageError, Error::Warning, qtTrId("libfuoten-err-sqlite-db-not-ready"), QString(), this));
+        return;
+    }
+
+    qDebug("%s", "Start clearing local storage.");
+
+    setInOperation(true);
+
+    Q_D(SQLiteStorage);
+
+    QSqlQuery q(d->db);
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP VIEW IF EXISTS total_starred")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP VIEW IF EXISTS total_unread")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP INDEX IF EXISTS items_feed_id_index")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP INDEX IF EXISTS items_item_guid")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP INDEX IF EXISTS feeds_folder_id_index")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP TABLE IF EXISTS items")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP TABLE IF EXISTS feeds")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP TABLE IF EXISTS folders")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+    if (Q_UNLIKELY(!q.exec(QStringLiteral("DROP TABLE IF EXISTS system")))) {
+        setError(new Error(q.lastError(), QString(), this));
+        setInOperation(false);
+        return;
+    }
+
+
+    configuration()->setLastSync(QDateTime::fromMSecsSinceEpoch(0));
+
+    qDebug("%s", "Finished clearing local storage.");
+
+    setInOperation(false);
+
+    Q_EMIT storageCleared();
+}
+
 #include "moc_sqlitestorage.cpp"

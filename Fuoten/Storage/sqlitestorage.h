@@ -171,6 +171,14 @@ public:
      */
     void clearQueue() override;
 
+    /*!
+     * \brief Deletes all local data from the database.
+     *
+     * This will clear the local storage and will emit AbstractStorage::storageCleared(). Will
+     * also set AbstractConfiguration::setLastSync() to an invalid QDateTime.
+     */
+    Q_INVOKABLE void clearStorage() override;
+
 public Q_SLOTS:
     void foldersRequested(const QJsonDocument &json) override;
     void folderCreated(const QJsonDocument &json) override;

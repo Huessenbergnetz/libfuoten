@@ -236,6 +236,12 @@ void AbstractStorage::clearQueue()
 }
 
 
+void AbstractStorage::clearStorage()
+{
+
+}
+
+
 void AbstractStorage::notify(AbstractNotificator::Type type, QtMsgType severity, const QVariant &data) const
 {
     Q_D(const AbstractStorage);

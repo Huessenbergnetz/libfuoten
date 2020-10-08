@@ -373,6 +373,15 @@ public:
      */
     virtual void clearQueue();
 
+    /*!
+     * \brief Removes all data from the storage.
+     *
+     * The default implementation does nothing. When reimplementing this, emit storageCleared() after
+     * successfully clear all stored data. Do not forget to also reset last sync time with
+     * AbstractConfiguration::setLastSync().
+     */
+    Q_INVOKABLE virtual void clearStorage();
+
 public Q_SLOTS:
     /*!
      * \brief Receives the reply data of the GetFolders request.
@@ -910,6 +919,13 @@ Q_SIGNALS:
      */
     void queueCleared();
 
+    /*!
+     * \brief This is emitted after the local storage has been cleared.
+     *
+     * Emit this in your implementation of clearStorage() after all local data
+     * has been deleted successfully.
+     */
+    void storageCleared();
 
 private:
     Q_DISABLE_COPY(AbstractStorage)
