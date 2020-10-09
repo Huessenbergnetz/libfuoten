@@ -256,4 +256,9 @@ bool AbstractConfiguration::setServerUrl(const QString &url)
     return setServerUrl(QUrl(url, QUrl::StrictMode));
 }
 
+void AbstractConfiguration::deleteAccount()
+{
+
+}
+
 #include "moc_abstractconfiguration.cpp"

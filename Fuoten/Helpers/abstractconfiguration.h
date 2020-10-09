@@ -234,6 +234,15 @@ public:
      */
     Q_INVOKABLE virtual QString getLoginFlowUserAgent() const;
 
+    /*!
+     * \brief Deletes all local account data.
+     *
+     * Reimplement this to delete the configuration entries for username, password, host, path,
+     * port and current verion. Make sure to emit the accountDelted() signal after deleting the
+     * data. The default version does nothing.
+     */
+    Q_INVOKABLE virtual void deleteAccount();
+
 public Q_SLOTS:
     /*!
      * \brief Sets login credentials requested from the login flow API and returns \c true on success.
@@ -295,6 +304,15 @@ public Q_SLOTS:
      * \since 0.8.0
      */
     bool setServerUrl(const QString &url);
+
+Q_SIGNALS:
+    /*!
+     * \brief Emitted when the account data has been deleted.
+     *
+     * Emit this signal in your implementation of deleteAccount() after the account data
+     * has been deleted.
+     */
+    void accountDeleted();
 
 protected:
     /*!
