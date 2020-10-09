@@ -315,7 +315,7 @@ void Component::sendRequest()
 
     if (!d->payload.isEmpty()) {
         nr.setRawHeader(QByteArrayLiteral("Content-Length"), QByteArray::number(d->payload.length()));
-        nr.setRawHeader(QByteArrayLiteral("Content-Type"), QByteArrayLiteral("application/json"));
+        nr.setRawHeader(QByteArrayLiteral("Content-Type"), d->payloadContentType);
     }
 
     if (d->expectedJSONType != Empty) {

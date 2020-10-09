@@ -41,6 +41,7 @@ public:
     QString apiRoute;
     QByteArray result;
     QByteArray payload;
+    QByteArray payloadContentType = QByteArrayLiteral("application/json");
     QJsonDocument jsonResult;
     QUrlQuery urlQuery;
     QNetworkAccessManager *networkAccessManager = nullptr;
