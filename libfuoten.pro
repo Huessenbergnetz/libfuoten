@@ -132,10 +132,16 @@ isEmpty(INSTALL_TRANSLATIONS_DIR): INSTALL_TRANSLATIONS_DIR = $$[QT_INSTALL_TRAN
         Fuoten/API/converttoapppassword.h \
         Fuoten/API/DeleteAppPassword \
         Fuoten/API/deleteapppassword.h \
+        Fuoten/API/GetWipeStatus \
+        Fuoten/API/getwipestatus.h \
+        Fuoten/API/PostWipeSuccess \
+        Fuoten/API/postwipesuccess.h \
         Fuoten/Helpers/abstractnamfactory.h \
         Fuoten/Helpers/AbstractNamFactory \
         Fuoten/Helpers/abstractnotificator.h \
-        Fuoten/Helpers/AbstractNotificator
+        Fuoten/Helpers/AbstractNotificator \
+        Fuoten/Helpers/WipeManager \
+        Fuoten/Helpers/wipemanager.h
 
     basePath = $${dirname(PWD)}
     for(header, INSTALL_HEADERS) {
@@ -206,8 +212,14 @@ HEADERS += \
     Fuoten/API/deleteapppassword_p.h \
     Fuoten/API/getserverstatus.h \
     Fuoten/API/getserverstatus_p.h \
+    Fuoten/API/getwipestatus.h \
+    Fuoten/API/getwipestatus_p.h \
     Fuoten/API/loginflowv2.h \
     Fuoten/API/loginflowv2_p.h \
+    Fuoten/API/postwipesuccess.h \
+    Fuoten/API/postwipesuccess_p.h \
+    Fuoten/Helpers/wipemanager.h \
+    Fuoten/Helpers/wipemanager_p.h \
     Fuoten/fuoten_global.h \
     Fuoten/error.h \
     Fuoten/error_p.h \
@@ -301,7 +313,10 @@ SOURCES += \
     Fuoten/API/converttoapppassword.cpp \
     Fuoten/API/deleteapppassword.cpp \
     Fuoten/API/getserverstatus.cpp \
+    Fuoten/API/getwipestatus.cpp \
     Fuoten/API/loginflowv2.cpp \
+    Fuoten/API/postwipesuccess.cpp \
+    Fuoten/Helpers/wipemanager.cpp \
     Fuoten/error.cpp \
     Fuoten/API/component.cpp \
     Fuoten/API/getversion.cpp \
