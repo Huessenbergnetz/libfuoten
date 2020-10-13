@@ -31,6 +31,7 @@ ConvertToAppPasswordPrivate::ConvertToAppPasswordPrivate() :
     apiRoute = QStringLiteral("/ocs/v2.php/core/getapppassword");
     requiresAuth = true;
     useStorage = false;
+    checkForWipe = false;
     expectedJSONType = Component::Object;
     namOperation = QNetworkAccessManager::GetOperation;
 }

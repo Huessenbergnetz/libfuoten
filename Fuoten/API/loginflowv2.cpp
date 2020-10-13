@@ -30,6 +30,7 @@ LoginFlowV2Private::LoginFlowV2Private(LoginFlowV2 *q) :
     apiRoute = QStringLiteral("/index.php/login/v2");
     requiresAuth = false;
     useStorage = false;
+    checkForWipe = false;
     expectedJSONType = Component::Object;
     namOperation = QNetworkAccessManager::PostOperation;
 }

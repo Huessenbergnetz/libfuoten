@@ -60,6 +60,7 @@ public:
     bool requiresAuth = true;
     bool inOperation = false;
     bool useStorage = true;
+    bool checkForWipe = true;
 
     void performNetworkOperation(const QNetworkRequest &request);
     static AbstractConfiguration *defaultConfiguration();

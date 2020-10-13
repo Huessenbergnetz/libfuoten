@@ -30,6 +30,7 @@ GetServerStatusPrivate::GetServerStatusPrivate(GetServerStatus *q) :
     apiRoute = QStringLiteral("/status.php");
     requiresAuth = false;
     useStorage = false;
+    checkForWipe = false;
     expectedJSONType = Component::Object;
     namOperation = QNetworkAccessManager::GetOperation;
 }
