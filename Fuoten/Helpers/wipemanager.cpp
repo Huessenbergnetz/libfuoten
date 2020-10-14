@@ -222,7 +222,11 @@ void WipeManager::checkForWipe()
 {
     Q_D(WipeManager);
     auto wipeChecker = new GetWipeStatus(this);
-    wipeChecker->setConfiguration(configuration());
+    AbstractConfiguration *conf = d->configuration;
+    if (!conf) {
+        conf = Component::defaultConfiguration();
+    }
+    wipeChecker->setConfiguration(conf);
     connect(wipeChecker, &GetWipeStatus::wipeRequested, this, [d](){
         d->doWipe();
     });
@@ -238,34 +242,16 @@ bool WipeManager::inOperation() const
 
 }
 
-AbstractConfiguration* WipeManager::configuration() const
-{
-    Q_D(const WipeManager);
-    return d->configuration;
-}
-
 void WipeManager::setConfiguration(AbstractConfiguration *configuration)
 {
     Q_D(WipeManager);
     d->configuration = configuration;
 }
 
-AbstractStorage* WipeManager::storage() const
-{
-    Q_D(const WipeManager);
-    return d->storage;
-}
-
 void WipeManager::setStorage(AbstractStorage *storage)
 {
     Q_D(WipeManager);
     d->storage = storage;
-}
-
-AbstractNotificator* WipeManager::notificator() const
-{
-    Q_D(const WipeManager);
-    return d->notificator;
 }
 
 void WipeManager::setNotificator(AbstractNotificator *notificator)
