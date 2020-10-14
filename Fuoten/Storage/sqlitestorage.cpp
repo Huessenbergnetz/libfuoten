@@ -2046,9 +2046,9 @@ void ItemsRequestedWorker::run()
                                                        ));
                     Q_ASSERT_X(qresult, "items requested worker", "failed to prepare update of item into database");
 
-                    q.addBindValue(o.value(QStringLiteral("title")).toString());
-                    q.addBindValue(o.value(QStringLiteral("url")).toString());
-                    q.addBindValue(o.value(QStringLiteral("author")).toString());
+                    q.addBindValue(o.value(QStringLiteral("title")).toString(QStringLiteral("")));
+                    q.addBindValue(o.value(QStringLiteral("url")).toString(QStringLiteral("")));
+                    q.addBindValue(o.value(QStringLiteral("author")).toString(QStringLiteral("")));
                     q.addBindValue(o.value(QStringLiteral("pubDate")).toInt());
                     q.addBindValue(o.value(QStringLiteral("enclosureMime")).toString());
                     q.addBindValue(o.value(QStringLiteral("enclosureLink")).toString());
@@ -2081,11 +2081,11 @@ void ItemsRequestedWorker::run()
                 q.addBindValue(std::llround(o.value(QStringLiteral("feedId")).toDouble()));
                 q.addBindValue(o.value(QStringLiteral("guid")).toString());
                 q.addBindValue(o.value(QStringLiteral("guidHash")).toString());
-                q.addBindValue(o.value(QStringLiteral("url")).toString());
-                q.addBindValue(o.value(QStringLiteral("title")).toString());
-                q.addBindValue(o.value(QStringLiteral("author")).toString());
+                q.addBindValue(o.value(QStringLiteral("url")).toString(QStringLiteral("")));
+                q.addBindValue(o.value(QStringLiteral("title")).toString(QStringLiteral("")));
+                q.addBindValue(o.value(QStringLiteral("author")).toString(QStringLiteral("")));
                 q.addBindValue(o.value(QStringLiteral("pubDate")).toInt());
-                q.addBindValue(o.value(QStringLiteral("body")).toString());
+                q.addBindValue(o.value(QStringLiteral("body")).toString(QStringLiteral("")));
                 q.addBindValue(o.value(QStringLiteral("enclosureMime")).toString());
                 q.addBindValue(o.value(QStringLiteral("enclosureLink")).toString());
                 q.addBindValue(unread);
