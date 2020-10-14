@@ -2091,8 +2091,8 @@ void ItemsRequestedWorker::run()
 
                 qDebug("Adding new article \"%s\" with ID %lli to the database.", qUtf8Printable(o.value(QStringLiteral("title")).toString()), id);
 
-                qresult = q.prepare(QStringLiteral("INSERT INTO items (id, feedId, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint) "
-                                                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                qresult = q.prepare(QStringLiteral("INSERT INTO items (id, feedId, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint, rtl, mediaThumbnail, mediaDescription) "
+                                                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                                                    ));
                 Q_ASSERT_X(qresult, "items requested worker", "failed to prepare insertion of new item into database");
 
@@ -2111,6 +2111,9 @@ void ItemsRequestedWorker::run()
                 q.addBindValue(o.value(QStringLiteral("starred")).toBool());
                 q.addBindValue(o.value(QStringLiteral("lastModified")).toInt());
                 q.addBindValue(o.value(QStringLiteral("fingerprint")).toString());
+                q.addBindValue(o.value(QStringLiteral("rtl")).toBool());
+                q.addBindValue(o.value(QStringLiteral("mediaThumbnail")).toString());
+                q.addBindValue(o.value(QStringLiteral("mediaDescription")).toString());
 
                 qresult = q.exec();
                 Q_ASSERT_X(qresult, "items requested worker", "failed to execute insertion of new item into database");
