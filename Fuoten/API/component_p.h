@@ -24,6 +24,7 @@
 #include "../Helpers/abstractconfiguration.h"
 #include "../Storage/abstractstorage.h"
 #include "../Helpers/abstractnamfactory.h"
+#include "../Helpers/wipemanager.h"
 #include <QTimer>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -49,6 +50,7 @@ public:
     AbstractConfiguration *configuration = nullptr;
     AbstractStorage *storage = nullptr;
     AbstractNotificator *notificator = nullptr;
+    WipeManager *wipeManager = nullptr;
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     QTimer *timeoutTimer = nullptr;
 #endif
@@ -71,6 +73,8 @@ public:
     static void setNetworkAccessManagerFactory(AbstractNamFactory *factory);
     static AbstractNotificator *defaultNotificator();
     static void setDefaultNotificator(AbstractNotificator *notificator);
+    static WipeManager *defaultWipeManager();
+    static void setDefaultWipeManager(WipeManager *wipeManager);
 
 private:
     Q_DISABLE_COPY(ComponentPrivate)

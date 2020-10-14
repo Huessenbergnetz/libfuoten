@@ -70,8 +70,19 @@ public:
         return m_defaultNotificator;
     }
 
-    void setNotificator(AbstractNotificator *notificator) {
+    void setNotificator(AbstractNotificator *notificator)
+    {
         m_defaultNotificator = notificator;
+    }
+
+    WipeManager *wipeManager() const
+    {
+        return m_defaultWipeManager;
+    }
+
+    void setWipeManager(WipeManager *wipeManager)
+    {
+        m_defaultWipeManager = wipeManager;
     }
 
 private:
@@ -79,6 +90,7 @@ private:
     AbstractStorage *m_defaultStorage = nullptr;
     AbstractNamFactory *m_namFactory = nullptr;
     AbstractNotificator *m_defaultNotificator = nullptr;
+    WipeManager *m_defaultWipeManager = nullptr;
 };
 Q_GLOBAL_STATIC(DefaultValues, defVals)
 
@@ -214,6 +226,29 @@ void ComponentPrivate::setDefaultNotificator(AbstractNotificator *notificator)
 }
 
 
+WipeManager *ComponentPrivate::defaultWipeManager()
+{
+    const DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+
+    defs->lock.lockForRead();
+    WipeManager *wm = defs->wipeManager();
+    defs->lock.unlock();
+
+    return wm;
+}
+
+
+void ComponentPrivate::setDefaultWipeManager(WipeManager *wipeManager)
+{
+    DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+    QWriteLocker locker(&defs->lock);
+    qDebug("%s", "Setting default wipe manager.");
+    defs->setWipeManager(wipeManager);
+}
+
+
 Component::Component(QObject *parent) :
     QObject(parent), d_ptr(new ComponentPrivate)
 {
@@ -230,6 +265,7 @@ Component::Component(ComponentPrivate &dd, QObject *parent) :
 
 Component::~Component()
 {
+
 }
 
 
@@ -631,6 +667,25 @@ void Component::setNotificator(AbstractNotificator *notificator)
     }
 }
 
+WipeManager *Component::wipeManager() const
+{
+    Q_D(const Component);
+    WipeManager *_wipeManager = d->wipeManager;
+    if (!_wipeManager) {
+        _wipeManager = ComponentPrivate::defaultWipeManager();
+    }
+    return _wipeManager;
+}
+
+void Component::setWipeManager(WipeManager *wipeManager)
+{
+    Q_D(Component);
+    if (wipeManager != d->wipeManager) {
+        d->wipeManager = wipeManager;
+        qDebug("%s", "Changed wipeManager.");
+        Q_EMIT wipeManagerChanged(d->wipeManager);
+    }
+}
 
 void Component::setDefaultConfiguration(AbstractConfiguration *config)
 {
@@ -671,6 +726,18 @@ AbstractNamFactory *Component::networkAccessManagerFactory()
 void Component::setDefaultNotificator(AbstractNotificator *notificator)
 {
     ComponentPrivate::setDefaultNotificator(notificator);
+}
+
+
+WipeManager *Component::defaultWipeManager()
+{
+    return ComponentPrivate::defaultWipeManager();
+}
+
+
+void Component::setDefaultWipeManager(WipeManager *wipeManager)
+{
+    ComponentPrivate::setDefaultWipeManager(wipeManager);
 }
 
 

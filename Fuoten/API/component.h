@@ -38,6 +38,7 @@ class AbstractConfiguration;
 class AbstractStorage;
 class AbstractNamFactory;
 class AbstractNotificator;
+class WipeManager;
 
 /*!
  * \brief Base class for all API requests.
@@ -250,7 +251,7 @@ class FUOTENSHARED_EXPORT Component : public QObject
      * \li void setUseStorage(bool useStorage)
      *
      * \par Notifier signal:
-     * void useStorageChanged(bool useStorage)
+     * \li void useStorageChanged(bool useStorage)
      */
     Q_PROPERTY(bool useStorage READ isUseStorageEnabled WRITE setUseStorage NOTIFY useStorageChanged)
     /*!
@@ -274,6 +275,23 @@ class FUOTENSHARED_EXPORT Component : public QObject
      * \sa notify()
      */
     Q_PROPERTY(Fuoten::AbstractNotificator *notificator READ notificator WRITE setNotificator NOTIFY notificatorChanged)
+    /*!
+     * \brief Pointer to a WipeManager to handle remote wipe requests.
+     *
+     * Set a wipe manager to handle remote wipe requests. This is not mandatory. If no wipe manager has been set via
+     * setWipeManager(), the one set via Component::setDefaultWipeManager() will be used - if any has been set.
+     * If you do not set a wipe manager either per instance of global, this property will hold a \c nullptr as default.
+     * If a wipe manager is set to an instance of thsi class via setWipeManager(), this wipe manager will take precedence
+     * over the global default wipe manager object (if any set).
+     *
+     * \par Access functions:
+     * \li WipeManager* wipeManager() const
+     * \li void setWipeManager(WipeManager *wipeManager)
+     *
+     * \par Notifier signal:
+     * \li void wipeManagerChanged(WipeManager *wipeManager)
+     */
+    Q_PROPERTY(Fuoten::WipeManager *wipeManager READ wipeManager WRITE setWipeManager NOTIFY wipeManagerChanged)
 public:
     /*!
      * \brief Constructs a component with the given \a parent.
@@ -374,6 +392,12 @@ public:
     AbstractNotificator *notificator() const;
 
     /*!
+     * \brief Getter function for the \link Component::wipeManager wipeManager\endlink property.
+     * \sa setWipeManager(), wipeManagerChanged()
+     */
+    WipeManager *wipeManager() const;
+
+    /*!
      * \brief Sets the timeout for the API request in seconds.
      *
      * \sa requestTimeout
@@ -404,6 +428,12 @@ public:
      * \sa notificator(), notificatorChanged()
      */
     void setNotificator(AbstractNotificator *notificator);
+
+    /*!
+     * \brief Setter function for the \link Component::wipeManager wipeManager\endlink property.
+     * \sa wipeManager(), wipeManagerChanged()
+     */
+    void setWipeManager(WipeManager *wipeManager);
 
     /*!
      * \brief Sets the global default configuration.
@@ -456,6 +486,18 @@ public:
      */
     static AbstractNotificator *defaultNotificator();
 
+    /*!
+     * \brief Sets the global default wipe manager.
+     * \sa defaultWipeManager()
+     */
+    static void setDefaultWipeManager(WipeManager *wipeManager);
+
+    /*!
+     * \brief Rerturns the global default wipe manager.
+     * \sa setDefaultWipeManager()
+     */
+    static WipeManager *defaultWipeManager();
+
 Q_SIGNALS:
     /*!
      * \brief This signal is emitted when the in operation status changes.
@@ -499,6 +541,12 @@ Q_SIGNALS:
      * \sa setNotificator(), notificator()
      */
     void notificatorChanged(Fuoten::AbstractNotificator *notificator);
+
+    /*!
+     * \brief Notifier signal for the \link Component::wipeManager wipeManager\endlink property.
+     * \sa setWipeManager(), wipeManager()
+     */
+    void wipeManagerChanged(Fuoten::WipeManager *wipeManager);
 
     /*!
      * \brief This signal is emitted if the SSL/TLS session encountered errors during the set up.
