@@ -18,6 +18,7 @@
  */
 
 #include "wipemanager_p.h"
+#include "abstractnotificator.h"
 #include "../API/getwipestatus.h"
 #include "../API/postwipesuccess.h"
 #include "../Storage/abstractstorage.h"
@@ -146,6 +147,14 @@ void WipeManagerPrivate::doWipe()
 
     Q_EMIT q->wipeStarted();
 
+    if (!notificator) {
+        notificator = Component::defaultNotificator();
+    }
+
+    if (notificator) {
+        notificator->notify(AbstractNotificator::RemoteWipeRequested, QtFatalMsg, QVariant());
+    }
+
     if (!storage) {
         storage = Component::defaultStorage();
     }
@@ -176,11 +185,13 @@ void WipeManagerPrivate::doWipe()
         QObject::connect(wipeNotifier, &PostWipeSuccess::succeeded, q, [this,q](){
             setInOperation(false);
             Q_EMIT q->wipeDone();
+            notificator->notify(AbstractNotificator::RemoteWipeDone, QtFatalMsg, QVariant());
         });
 
         QObject::connect(wipeNotifier, &PostWipeSuccess::failed, q, [this,q](){
             setInOperation(false);
             Q_EMIT q->wipeDone();
+            notificator->notify(AbstractNotificator::RemoteWipeDone, QtFatalMsg, QVariant());
         });
 
         wipeNotifier->execute();

@@ -165,7 +165,9 @@ public:
         FeedMarkedRead,     /**< A feed has been marked as read. The \a data will contain the title of the feed as a QString. */
         ItemsRequested,     /**< Items have been requested from the server. The \a data will contain the amount of new unread items as an integer value. */
         AuthorizationSucceeded, /**< Requesting an application password from the Nextcloud API was successful. The \a data will contain a QVariantMap containing username and host. */
-        AppPasswordRequested    /**< A normal password has been successfully upgraded to an application password. The \a data will conatin a QVariantMap containing username, useragent and host. */
+        AppPasswordRequested,   /**< A normal password has been successfully upgraded to an application password. The \a data will conatin a QVariantMap containing username, useragent and host. */
+        RemoteWipeRequested,    /**< A remote wipe has been requested by the server. */
+        RemoteWipeDone          /**< A remote wipe requested by the server has been performed. */
     };
 
     /*!
