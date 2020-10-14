@@ -285,14 +285,6 @@
         <source>An unknown error related to the server response was detected.</source>
         <translation>Ett oväntat fel, relaterat till serversvaret har identifierats.</translation>
     </message>
-    <message id="id-err-version-low-status-user">
-        <source>The version of your News App is lower than 5.2.4. Status and user information can not be queried.</source>
-        <translation>Versionsnummret för din nyhets-app är lägre än 5.2.4. Status och användarinformation kan inte hämtas.</translation>
-    </message>
-    <message id="id-err-version-low-user">
-        <source>The version of your News App is lower than 6.0.5. User information can not be queried.</source>
-        <translation>Versionsnummret för din nyhets-app är lägre än 6.0.5. Användarinformation kan inte hämtas.</translation>
-    </message>
     <message id="err-version-not-found">
         <source>Can not find the version information in the server reply.</source>
         <translation>Kan inte hitta versionsinformation i serversvaret.</translation>
@@ -496,6 +488,18 @@
         <source>An unknown error occured while trying to upgrade the password to an application password. Status: %1</source>
         <extracomment>error message after automatically upgrading a password to an app password</extracomment>
         <translation>Ett okänt fel inträffade vid uppgradering av lösenordet till ett programlösenord. Status: %1</translation>
+    </message>
+    <message id="err-version-invalid">
+        <source>Server reply contains invalid version number.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-wipe-no-token">
+        <source>Can not check for wipe status without a valid application token/password.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-wipe-success-no-token">
+        <source>Can not post wipe success to the remote server without application token/password.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

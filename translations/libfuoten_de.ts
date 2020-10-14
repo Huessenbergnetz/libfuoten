@@ -285,14 +285,6 @@
         <source>An unknown error related to the server response was detected.</source>
         <translation>Es wurde ein unbekannter Fehler im Zusammenhang mit der Server-Antwort festgestellt.</translation>
     </message>
-    <message id="id-err-version-low-status-user">
-        <source>The version of your News App is lower than 5.2.4. Status and user information can not be queried.</source>
-        <translation>Die Version Ihrer News App ist kleiner als 5.2.4. Status und Benutzerinformationen können nicht abgefragt werden.</translation>
-    </message>
-    <message id="id-err-version-low-user">
-        <source>The version of your News App is lower than 6.0.5. User information can not be queried.</source>
-        <translation>Die Version Ihrer News App ist kleiner als 6.0.5. Benutzerinformationen können nicht abgefragt werden.</translation>
-    </message>
     <message id="err-version-not-found">
         <source>Can not find the version information in the server reply.</source>
         <translation>Die Server-Antwort enthält keine Versionsinformation.</translation>
@@ -490,12 +482,24 @@
     <message id="fuoten-convertpassword-empty-apppassword">
         <source>The new application password returned by Nextcloud’s OCS API is empty.</source>
         <extracomment>error message after automatically upgrading a password to an app password</extracomment>
-        <translation type="unfinished"/>
+        <translation>Das von der Nextcloud-OCS-API erhaltene Anwendungspasswort ist leer.</translation>
     </message>
     <message id="fuoten-convertpassword-unknown-error">
         <source>An unknown error occured while trying to upgrade the password to an application password. Status: %1</source>
         <extracomment>error message after automatically upgrading a password to an app password</extracomment>
-        <translation type="unfinished"/>
+        <translation>Bei der Aktualisierung des Passworts auf ein Anwendungspasswort ist ein unbekannter Fehler aufgetreten. Status: %1</translation>
+    </message>
+    <message id="err-version-invalid">
+        <source>Server reply contains invalid version number.</source>
+        <translation>Die Server-Antwort enthält eine ungültige Versionsnummer.</translation>
+    </message>
+    <message id="libfuoten-err-wipe-no-token">
+        <source>Can not check for wipe status without a valid application token/password.</source>
+        <translation>Ohne gültiges Anwendungspasswort kann nicht auf einen Löschauftrag geprüft werden.</translation>
+    </message>
+    <message id="libfuoten-err-wipe-success-no-token">
+        <source>Can not post wipe success to the remote server without application token/password.</source>
+        <translation>Das erfolgreiche Löschen kann ohne Passwort nicht an den Server gemeldet werden.</translation>
     </message>
 </context>
 </TS>
