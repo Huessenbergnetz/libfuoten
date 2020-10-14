@@ -161,9 +161,28 @@ void SQLiteStorageManager::run()
         m_currentDbVersion = static_cast<quint16>(q.value(0).toUInt());
     }
 
-    if (Q_UNLIKELY(m_currentDbVersion == 0)) {
+    if (Q_UNLIKELY(m_currentDbVersion < 1)) {
         result = q.exec(QStringLiteral("INSERT INTO system (key, value) VALUES ('schema_version', '1')"));
         Q_ASSERT_X(result, "init database", "failed to insert schema version into database");
+        m_currentDbVersion = 1;
+    }
+
+    if (m_currentDbVersion < 2) {
+        qDebug("%s", "Performing database schema upgrade to version 2.");
+
+        result = q.exec(QStringLiteral("ALTER TABLE items ADD COLUMN rtl INTEGER NOT NULL DEFAULT 0"));
+        Q_ASSERT_X(result, "init databse", "failed to add column rtl to table items");
+
+        result = q.exec(QStringLiteral("ALTER TABLE items ADD COLUMN mediaThumbnail TEXT"));
+        Q_ASSERT_X(result, "init databse", "failed to add column mediaThumbnail to table items");
+
+        result = q.exec(QStringLiteral("ALTER TABLE items ADD COLUMN mediaDescription TEXT"));
+        Q_ASSERT_X(result, "init databse", "failed to add column mediaDescription to table items");
+
+        result = q.exec(QStringLiteral("UPDATE system SET value = '2' WHERE key = 'schema_version'"));
+        Q_ASSERT_X(result, "init database", "failed to update schema version in database");
+
+        m_currentDbVersion = 2;
     }
 
     Q_EMIT succeeded();
