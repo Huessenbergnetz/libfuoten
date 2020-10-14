@@ -150,19 +150,13 @@ void RenameFeed::successCallback()
 
 void RenameFeed::extractError(QNetworkReply *reply)
 {
-    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-    switch(statusCode) {
-    case 404:
+    if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
         //% "The feed was not found on the server."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-feed-not-exists"), QString(), this));
-        break;
-    default:
-        setError(new Error(reply, this));
-        break;
+        Q_EMIT failed(error());
+    } else {
+        Component::extractError(reply);
     }
-
-    Q_EMIT failed(error());
 }
 
 #include "moc_renamefeed.cpp"

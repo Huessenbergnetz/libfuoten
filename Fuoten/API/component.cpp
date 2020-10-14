@@ -442,9 +442,16 @@ void Component::extractError(QNetworkReply *reply)
 {
     Q_ASSERT_X(reply, "extract error", "invalid QNetworkReply");
 
+    Q_D(Component);
+
+    const int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if (d->checkForWipe && wipeManager() && (httpStatusCode == 401 || httpStatusCode == 403)) {
+        wipeManager()->checkForWipe();
+    }
+
     setError(new Error(reply, this));
 
-    setInOperation(false);
     Q_EMIT failed(error());
 }
 

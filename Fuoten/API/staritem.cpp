@@ -149,11 +149,10 @@ void StarItem::extractError(QNetworkReply *reply)
     if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404) {
         //% "The article was not found on the server."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-article-not-exists"), QString(), this));
+        Q_EMIT failed(error());
     } else {
-        setError(new Error(reply, this));
+        Component::extractError(reply);
     }
-
-    Q_EMIT failed(error());
 }
 
 

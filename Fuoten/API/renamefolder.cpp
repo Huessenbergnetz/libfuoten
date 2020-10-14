@@ -125,27 +125,23 @@ void RenameFolder::successCallback()
 
 void RenameFolder::extractError(QNetworkReply *reply)
 {
-    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    const int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
-    switch(statusCode) {
-    case 409:
+    if (statusCode == 409) {
         //% "The folder name does already exist on the server."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-name-exists"), QString(), this));
-        break;
-    case 404:
+        Q_EMIT failed(error());
+    } else if (statusCode == 404) {
         //% "The folder was not found on the server."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-not-exists"), QString(), this));
-        break;
-    case 422:
+        Q_EMIT failed(error());
+    } else if (statusCode == 422) {
         //% "The folder name is invalid (for instance empty)."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-folder-invalid-name"), QString(), this));
-        break;
-    default:
-        setError(new Error(reply, this));
-        break;
+        Q_EMIT failed(error());
+    } else {
+        Component::extractError(reply);
     }
-
-    Q_EMIT failed(error());
 }
 
 

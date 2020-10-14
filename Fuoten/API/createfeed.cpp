@@ -132,20 +132,17 @@ void CreateFeed::extractError(QNetworkReply *reply)
 {
     const int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
-    switch(statusCode) {
-    case 409:
+    if (statusCode == 409) {
         //% "The feed does already exist on the server."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-feed-exists"), QString(), this));
-        break;
-    case 422:
+        Q_EMIT failed(error());
+    } else if (statusCode == 422) {
         //% "The feed can not be read (most likely contains errors)."
         setError(new Error(Error::InputError, Error::Critical, qtTrId("libfuoten-err-feed-unreadable"), QString(), this));
-        break;
-    default:
-        setError(new Error(reply, this));
-        break;
+        Q_EMIT failed(error());
+    } else {
+        Component::extractError(reply);
     }
-    Q_EMIT failed(error());
 }
 
 
