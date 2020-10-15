@@ -1615,7 +1615,7 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
 
     QSqlQuery q(d->db);
 
-    bool qresult = q.prepare(QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId WHERE it.id = ?"));
+    bool qresult = q.prepare(QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue, it.rtl, it.mediaThumbnail, it.mediaDescription FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId WHERE it.id = ?"));
     Q_ASSERT_X(qresult, "get article", "failed to prepare database query");
 
     q.addBindValue(id);
@@ -1651,7 +1651,10 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
                                  q.value(17).toString(),
-                                 FuotenEnums::QueueActions(q.value(18).toInt())
+                                 FuotenEnums::QueueActions(q.value(18).toInt()),
+                                 q.value(19).toBool(),
+                                 QUrl(q.value(20).toString()),
+                                 q.value(21).toString()
                                  );
         return a;
 
@@ -1676,7 +1679,7 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
 
     Q_D(SQLiteStorage);
 
-    QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
+    QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue, it.rtl, it.mediaThumbnail, it.mediaDescription FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
     qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t())));
 
@@ -1784,7 +1787,10 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
                                  q.value(17).toString(),
-                                 FuotenEnums::QueueActions(q.value(18).toInt())
+                                 FuotenEnums::QueueActions(q.value(18).toInt()),
+                                 q.value(19).toBool(),
+                                 QUrl(q.value(20).toString()),
+                                 q.value(21).toString()
                                  ));
     }
 
@@ -1820,7 +1826,7 @@ void GetArticlesAsyncWorker::run()
     bool qresult = q.exec(QStringLiteral("PRAGMA foreign_keys = ON"));
     Q_ASSERT_X(qresult, "get articles async", "failed to enable foreign keys support");
 
-    QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
+    QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue, it.rtl, it.mediaThumbnail, it.mediaDescription FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
     qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t())));
 
@@ -1940,7 +1946,10 @@ void GetArticlesAsyncWorker::run()
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
                                  q.value(17).toString(),
-                                 FuotenEnums::QueueActions(q.value(18).toInt())
+                                 FuotenEnums::QueueActions(q.value(18).toInt()),
+                                 q.value(19).toBool(),
+                                 QUrl(q.value(20).toString()),
+                                 q.value(21).toString()
                                  ));
     }
 

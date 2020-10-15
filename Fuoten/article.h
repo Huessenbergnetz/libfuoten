@@ -212,7 +212,39 @@ class FUOTENSHARED_EXPORT Article : public BaseItem
      * <TABLE><TR><TD>void</TD><TD>humanPubTimeChanged(const QString &humanPubTime)</TD></TR></TABLE>
      */
     Q_PROPERTY(QString humanPubTime READ humanPubTime NOTIFY humanPubTimeChanged)
-
+    /*!
+     * \brief Returns \c true if the text is right to left.
+     *
+     * \since 0.8.0
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>bool</TD><TD>rtl() const</TD></TR><TR><TD>void</TD><TD>setRtl(bool nRtl)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>rtlChanged(bool rtl)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(bool rtl READ rtl WRITE setRtl NOTIFY rtlChanged)
+    /*!
+     * \brief Holds the url to a optional media thumbnail.
+     *
+     * \since 0.8.0
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>QUrl</TD><TD>mediaThumbnail() const</TD></TR><TR><TD>void</TD><TD>setMediaThumbnail(const QUrl &nMediaThumbnail)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>mediaThumbnailChanged(const QUrl &mediaThumbnail)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(QUrl mediaThumbnail READ mediaThumbnail WRITE setMediaThumbnail NOTIFY mediaThumbnailChanged)
+    /*!
+     * \brief Holds the description of a optional media object.
+     *
+     * \since 0.8.0
+     *
+     * \par Access functions:
+     * <TABLE><TR><TD>QString</TD><TD>mediaDescription() const</TD></TR><TR><TD>void</TD><TD>setMediaDescription(const QString &nMediaDescription)</TD></TR></TABLE>
+     * \par Notifier signal:
+     * <TABLE><TR><TD>void</TD><TD>mediaDescriptionChanged(const QString &mediaDescription)</TD></TR></TABLE>
+     */
+    Q_PROPERTY(QString mediaDescription READ mediaDescription WRITE setMediaDescription NOTIFY mediaDescriptionChanged)
 public:
     /*!
      * \brief Constructs a new Article object with default values and the given \a parent.
@@ -222,7 +254,7 @@ public:
     /*!
      * \brief Constructs a new Article object with the given arguments and \a parent.
      */
-    Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, FuotenEnums::QueueActions queue, QObject *parent = nullptr);
+    Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, FuotenEnums::QueueActions queue, bool rtl, const QUrl &mediaThumbnail, const QString &mediaDescription, QObject *parent = nullptr);
 
     /*!
      * \brief Constructs a new Article object with the given \a parent by copying the properties of \a other to the new object.
@@ -329,6 +361,21 @@ public:
      * \sa Article::humanPubTimeChanged()
      */
     QString humanPubTime() const;
+    /*!
+     * \brief Getter function for the \link Article::rtl rtl\endlink property.
+     * \sa setRtl(), rtlChanged()
+     */
+    bool rtl() const;
+    /*!
+     * \brief Getter function for the \link Article::mediaThumbnail mediaThumbnail\endlink property.
+     * \sa setMediaThumbnail(), mediaThumbnailChanged()
+     */
+    QUrl mediaThumbnail() const;
+    /*!
+     * \brief Getter function for the \link Article::mediaDescription mediaDescription\endlink property.
+     * \sa setMediaDescription(), mediaDescriptionChanged()
+     */
+    QString mediaDescription() const;
 
     FuotenEnums::QueueActions queue() const;
 
@@ -435,6 +482,24 @@ public:
      * \sa Article::folderName(), Article::folderNameChanged()
      */
     void setFolderName(const QString &nFolderName);
+    /*!
+     * \brief Setter function for the \link Article::rtl rtl\endlink property.
+     * Emits the rtlChanged() signal if \a nRtl is not equal to the stored value.
+     * \sa ŗtl(), rtlChanged()
+     */
+    void setRtl(bool nRtl);
+    /*!
+     * \brief Setter function for the \link Article::mediaThumbnail mediaThumbnail\endlink property.
+     * Emits the mediaThumbnailChanged() signal if \a nMediaThumbnail is not equal to the stored value.
+     * \sa mediaThumbnail(), mediaThumbnailChanged()
+     */
+    void setMediaThumbnail(const QUrl &nMediaThumbnail);
+    /*!
+     * \brief Setter function for the \link Article::mediaDescription mediaDescription\endlink property.
+     * Emits the mediaDescriptionChanged() signal if \a nMediaDescription is not equal to the stored value.
+     * \sa mediaDescription(), mediaDescriptionChanged()
+     */
+    void setMediaDescription(const QString &nMediaDescription);
 
     void setQueue(FuotenEnums::QueueActions queue);
 
@@ -583,6 +648,21 @@ Q_SIGNALS:
      * \sa Article::humanPubTime()
      */
     void humanPubTimeChanged(const QString &humanPubTime);
+    /*!
+     * \brief This is emitted if the value of the \link Article::rtl rtl\endlink property changes.
+     * \sa rtl(), setRtl()
+     */
+    void rtlChanged(bool rtl);
+    /*!
+     * \brief This is emitted if the value of the \link Article::mediaThumbnail mediaThumbnail\endlink property changes.
+     * \sa mediaThumbnail(), setMediaThumbnail()
+     */
+    void mediaThumbnailChanged(const QUrl &mediaThumbnail);
+    /*!
+     * \brief This is emitted if the value of the \link Article::mediaDescription mediaDescription\endlink property changes.
+     * \sa mediaDescription(), setMediaDescription()
+     */
+    void mediaDescriptionChanged(const QString &mediaDescription);
 
 protected:
     Article(ArticlePrivate &dd, QObject *parent = nullptr);

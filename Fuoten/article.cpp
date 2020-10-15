@@ -50,7 +50,10 @@ ArticlePrivate::ArticlePrivate(qint64 nId,
                const QString &nFingerprint,
                qint64 nFolderId,
                const QString &nFolderName,
-               FuotenEnums::QueueActions nQueue) :
+               FuotenEnums::QueueActions nQueue,
+               bool nRtl,
+               const QUrl &nMediaThumbnail,
+               const QString &nMediaDescription) :
     BaseItemPrivate(nId),
     feedId(nFeedId),
     folderId(nFolderId),
@@ -63,13 +66,16 @@ ArticlePrivate::ArticlePrivate(qint64 nId,
     enclosureMime(nEnclosureMime),
     fingerprint(nFingerprint),
     folderName(nFolderName),
+    mediaDescription(nMediaDescription),
     url(nUrl),
     enclosureLink(nEnclosureLink),
+    mediaThumbnail(nMediaThumbnail),
     pubDate(nPubDate),
     lastModified(nLastModified),
     queue(nQueue),
     unread(nUnread),
-    starred(nStarred)
+    starred(nStarred),
+    rtl(nRtl)
 {
     createHumanPubDateTime();
 }
@@ -97,6 +103,9 @@ ArticlePrivate::ArticlePrivate(Article *other) :
         folderId = other->folderId();
         folderName = other->folderName();
         queue = other->queue();
+        rtl = other->rtl();
+        mediaThumbnail = other->mediaThumbnail();
+        mediaDescription = other->mediaDescription();
         createHumanPubDateTime();
     }
 }
@@ -144,8 +153,8 @@ Article::Article(QObject *parent) :
 }
 
 
-Article::Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, FuotenEnums::QueueActions queue, QObject *parent) :
-    BaseItem(* new ArticlePrivate(id, feedId, feedTitle, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint, folderId, folderName, queue), parent)
+Article::Article(qint64 id, qint64 feedId, const QString &feedTitle, const QString &guid, const QString &guidHash, const QUrl &url, const QString &title, const QString &author, const QDateTime &pubDate, const QString &body, const QString &enclosureMime, const QUrl &enclosureLink, bool unread, bool starred, const QDateTime &lastModified, const QString &fingerprint, qint64 folderId, const QString &folderName, FuotenEnums::QueueActions queue, bool rtl, const QUrl &mediaThumbnail, const QString &mediaDescription, QObject *parent) :
+    BaseItem(* new ArticlePrivate(id, feedId, feedTitle, guid, guidHash, url, title, author, pubDate, body, enclosureMime, enclosureLink, unread, starred, lastModified, fingerprint, folderId, folderName, queue, rtl, mediaThumbnail, mediaDescription), parent)
 {
     qDebug("Creating new Article object (ID: %lli, Title: %s) at %p.", id, qUtf8Printable(title), this);
 }
@@ -398,6 +407,45 @@ QString Article::humanPubDate() const { Q_D(const Article); return d->humanPubDa
 
 
 QString Article::humanPubTime() const { Q_D(const Article); return d->humanPubTime; }
+
+
+bool Article::rtl() const { Q_D(const Article); return d->rtl; }
+
+void Article::setRtl(bool nRtl)
+{
+    Q_D(Article);
+    if (nRtl != d->rtl) {
+        qDebug("Changed rtl from %s to %s.", d->rtl ? "true" : "false", nRtl ? "true" : "false");
+        d->rtl = nRtl;
+        Q_EMIT rtlChanged(rtl());
+    }
+}
+
+
+QUrl Article::mediaThumbnail() const { Q_D(const Article); return d->mediaThumbnail; }
+
+void Article::setMediaThumbnail(const QUrl &nMediaThumbnail)
+{
+    Q_D(Article);
+    if (nMediaThumbnail != d->mediaThumbnail) {
+        qDebug("Changed mediaThumbnail from \"%s\" to \"%s\".", qUtf8Printable(d->mediaThumbnail.toString()), qUtf8Printable(nMediaThumbnail.toString()));
+        d->mediaThumbnail = nMediaThumbnail;
+        Q_EMIT mediaThumbnailChanged(mediaThumbnail());
+    }
+}
+
+
+QString Article::mediaDescription() const { Q_D(const Article); return d->mediaDescription; }
+
+void Article::setMediaDescription(const QString &nMediaDescription)
+{
+    Q_D(Article);
+    if (nMediaDescription != d->mediaDescription) {
+        qDebug("%s", "Changed mediaDescription.");
+        d->mediaDescription = nMediaDescription;
+        Q_EMIT mediaDescriptionChanged(mediaDescription());
+    }
+}
 
 
 FuotenEnums::QueueActions Article::queue() const { Q_D(const Article); return d->queue; }

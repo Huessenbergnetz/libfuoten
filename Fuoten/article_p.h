@@ -48,7 +48,10 @@ public:
                    const QString &nFingerprint,
                    qint64 nFolderId,
                    const QString &nFolderName,
-                   FuotenEnums::QueueActions nQueue);
+                   FuotenEnums::QueueActions nQueue,
+                   bool nRtl,
+                   const QUrl &nMediaThumbnail,
+                   const QString &nMediaDescription);
 
     ArticlePrivate(Article *other);
 
@@ -69,13 +72,16 @@ public:
     QString folderName;
     QString humanPubDate;
     QString humanPubTime;
+    QString mediaDescription;
     QUrl url;
     QUrl enclosureLink;
+    QUrl mediaThumbnail;
     QDateTime pubDate;
     QDateTime lastModified;
     FuotenEnums::QueueActions queue = 0;
     bool unread = false;
     bool starred = false;
+    bool rtl = false;
 
 private:
     Q_DISABLE_COPY(ArticlePrivate)
