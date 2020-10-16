@@ -491,15 +491,15 @@
     </message>
     <message id="err-version-invalid">
         <source>Server reply contains invalid version number.</source>
-        <translation type="unfinished"/>
+        <translation>Serversvaret innehåller ogiltigt versionsnummer</translation>
     </message>
     <message id="libfuoten-err-wipe-no-token">
         <source>Can not check for wipe status without a valid application token/password.</source>
-        <translation type="unfinished"/>
+        <translation>Kan inte söka efter rensningsstatus utan giltigt program-token/-lösenord.</translation>
     </message>
     <message id="libfuoten-err-wipe-success-no-token">
         <source>Can not post wipe success to the remote server without application token/password.</source>
-        <translation type="unfinished"/>
+        <translation>Kan inte posta rensningsstatus till fjärrservern utan giltigt program-token/-lösenord.</translation>
     </message>
 </context>
 </TS>
