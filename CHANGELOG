@@ -1,3 +1,6 @@
+libfuoten 0.8.1 - 2020-10-17
+* fixed: building on Qt 5.15+ (#64)
+
 libfuoten 0.8.0 - 2020-10-17
 * new: support upgrade to app password (#62)
 * new: support deleting app password (#61)
