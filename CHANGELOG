@@ -1,3 +1,12 @@
+libfuoten 0.8.0 - 2020-10-17
+* new: support upgrade to app password (#62)
+* new: support deleting app password (#61)
+* new: support remote wipe (#60)
+* new: add classes to support login flow (#54)
+* improved: add new item properties (#55)
+* changed: do not derive AbstractConfiguration from QSettings (#58)
+* fixed: inserting items with empty fields (#63)
+
 libfuoten 0.7.5 - 2019-05-06
 * fixed: article list model not updated (#53)
 
