@@ -408,10 +408,12 @@ void Component::_requestFinished()
 {
     Q_D(Component);
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     if (Q_LIKELY(d->timeoutTimer && d->timeoutTimer->isActive())) {
         qDebug("Stopping timeout timer with %i seconds left.", d->timeoutTimer->remainingTime()/1000);
         d->timeoutTimer->stop();
     }
+#endif
 
     if (Q_LIKELY(d->reply->error() == QNetworkReply::NoError)) {
 
