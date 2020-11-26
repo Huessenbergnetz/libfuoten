@@ -22,6 +22,8 @@
 #include "../Helpers/abstractconfiguration.h"
 #include "../API/component.h"
 #include <QRegularExpression>
+#include <QJsonValue>
+#include <cmath>
 
 using namespace Fuoten;
 
@@ -256,6 +258,21 @@ void AbstractStorage::notify(const Fuoten::Error *e) const
     Q_D(const AbstractStorage);
     if (d->notificator) {
         d->notificator->notify(e);
+    }
+}
+
+qint64 AbstractStorage::getIdFromJson(const QJsonValue &value)
+{
+    if (value.type() == QJsonValue::String) {
+        return value.toString().toLongLong();
+    } else if (value.type() == QJsonValue::Double) {
+        return std::llround(value.toDouble());
+    } else if (value.type() == QJsonValue::Null) {
+        return 0;
+    } else {
+        qCritical("Can not convert JSON value to integer ID that is not of type String, Double or Null. Detected type: %i", value.type());
+        Q_ASSERT_X(false, "get id from json", "not supported json type to convert id to qint64");
+        return 0;
     }
 }
 

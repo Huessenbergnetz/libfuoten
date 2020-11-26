@@ -628,6 +628,17 @@ public Q_SLOTS:
      */
     virtual void allItemsMarkedRead(qint64 newestItemId) = 0;
 
+    /*!
+     * \brief Convert a JSON value into an integer id.
+     *
+     * Based on the News App API version, IDs are either returned as numbers
+     * or as strings. This will check the JSON value type and convert it into
+     * an appropriate id value.
+     *
+     * \since 0.8.2
+     */
+    static qint64 getIdFromJson(const QJsonValue &value);
+
 protected:
     /*!
      * \brief Set this to \a true when the storage has finished it's initialization.
