@@ -18,7 +18,6 @@
  */
 
 #include "sqlitestorage_p.h"
-#include <cmath>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -382,7 +381,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
     for (const QJsonValue &f : folders) {
         const QJsonObject o = f.toObject();
         if (Q_LIKELY(!o.isEmpty())) {
-            reqFolders.insert(std::llround(o.value(QStringLiteral("id")).toDouble()), o.value(QStringLiteral("name")).toString());
+            reqFolders.insert(AbstractStorage::getIdFromJson(o.value(QStringLiteral("id"))), o.value(QStringLiteral("name")).toString());
         }
     }
 
@@ -563,7 +562,7 @@ void SQLiteStorage::folderCreated(const QJsonDocument &json)
         return;
     }
 
-    const qint64 id = std::llround(o.value(QStringLiteral("id")).toDouble());
+    const qint64 id = AbstractStorage::getIdFromJson(o.value(QStringLiteral("id")));
     if (id == 0) {
         qWarning("Can not add folder to SQLite database. Invalid ID.");
         return;
@@ -1062,13 +1061,13 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         for (const QJsonValue &f : feeds) {
             const QJsonObject o = f.toObject();
             if (Q_LIKELY(!o.isEmpty())) {
-                const qlonglong feedId = std::llround(o.value(QStringLiteral("id")).toDouble());
+                const qint64 feedId = AbstractStorage::getIdFromJson(o.value(QStringLiteral("id")));
                 const QString feedTitle = o.value(QStringLiteral("title")).toString();
                 newFeedIds.push_back(feedId);
                 newFeedNames.push_back(feedTitle);
 
                 q.bindValue(QStringLiteral(":id"), feedId);
-                q.bindValue(QStringLiteral(":folderId"), std::llround(o.value(QStringLiteral("folderId")).toDouble()));
+                q.bindValue(QStringLiteral(":folderId"), AbstractStorage::getIdFromJson(o.value(QStringLiteral("folderId"))));
                 q.bindValue(QStringLiteral(":title"), feedTitle);
                 q.bindValue(QStringLiteral(":url"), o.value(QStringLiteral("url")).toString());
                 q.bindValue(QStringLiteral(":link"), o.value(QStringLiteral("link")).toString());
@@ -1106,7 +1105,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
         for (const QJsonValue &f : feeds) {
             const QJsonObject o = f.toObject();
             if (Q_UNLIKELY(!o.isEmpty())) {
-                const qint64 id = std::llround(o.value(QStringLiteral("id")).toDouble());
+                const qint64 id = AbstractStorage::getIdFromJson(o.value(QStringLiteral("id")));
                 const QString title = o.value(QStringLiteral("title")).toString();
                 requestedFeedIds.push_back(id);
 
@@ -1122,7 +1121,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                     Q_ASSERT_X(qresult, "feeds requested", "failed to prepare inserting new feed into database");
 
                     q.addBindValue(id);
-                    q.addBindValue(std::llround(o.value(QStringLiteral("folderId")).toDouble()));
+                    q.addBindValue(AbstractStorage::getIdFromJson(o.value(QStringLiteral("folderId"))));
                     q.addBindValue(title);
                     q.addBindValue(o.value(QStringLiteral("url")).toString());
                     q.addBindValue(o.value(QStringLiteral("link")).toString());
@@ -1139,7 +1138,7 @@ void SQLiteStorage::feedsRequested(const QJsonDocument &json)
                 } else {
 
                     const QUrl rFaviconLink = QUrl(o.value(QStringLiteral("faviconLink")).toString());
-                    const qint64 rFolderId = std::llround(o.value(QStringLiteral("folderId")).toDouble());
+                    const qint64 rFolderId = AbstractStorage::getIdFromJson(o.value(QStringLiteral("folderId")));
                     const Feed::FeedOrdering rOrdering = static_cast<Feed::FeedOrdering>(o.value(QStringLiteral("ordering")).toInt());
                     const QUrl rLink = QUrl(o.value(QStringLiteral("link")).toString());
                     const bool rPinned = o.value(QStringLiteral("pinned")).toBool();
@@ -1293,8 +1292,8 @@ void SQLiteStorage::feedCreated(const QJsonDocument &json)
                                             ));
     Q_ASSERT_X(qresult, "feed created", "failed to prepare database query");
 
-    const qint64 id = std::llround(o.value(QStringLiteral("id")).toDouble());
-    const qint64 folderId = std::llround(o.value(QStringLiteral("folderId")).toDouble());
+    const qint64 id = AbstractStorage::getIdFromJson(o.value(QStringLiteral("id")));
+    const qint64 folderId = AbstractStorage::getIdFromJson(o.value(QStringLiteral("folderId")));
     const QString title = o.value(QStringLiteral("title")).toString();
 
     q.addBindValue(id);
@@ -2045,7 +2044,7 @@ void ItemsRequestedWorker::run()
     for (const QJsonValue &i : items) {
         const QJsonObject o = i.toObject();
         if (Q_LIKELY(!o.isEmpty())) {
-            const qint64 id = std::llround(o.value(QStringLiteral("id")).toDouble());
+            const qint64 id = AbstractStorage::getIdFromJson(o.value(QStringLiteral("id")));
 
             if (!currentItems.isEmpty() && currentItems.contains(id)) {
 
@@ -2106,7 +2105,7 @@ void ItemsRequestedWorker::run()
                 Q_ASSERT_X(qresult, "items requested worker", "failed to prepare insertion of new item into database");
 
                 q.addBindValue(id);
-                q.addBindValue(std::llround(o.value(QStringLiteral("feedId")).toDouble()));
+                q.addBindValue(AbstractStorage::getIdFromJson(o.value(QStringLiteral("feedId"))));
                 q.addBindValue(o.value(QStringLiteral("guid")).toString());
                 q.addBindValue(o.value(QStringLiteral("guidHash")).toString());
                 q.addBindValue(o.value(QStringLiteral("url")).toString(QStringLiteral("")));
