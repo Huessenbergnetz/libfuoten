@@ -1,3 +1,6 @@
+libfuoten 0.8.2 - 2020-11-26
+* fixed: handling changes in News App API data types (#65)
+
 libfuoten 0.8.1 - 2020-10-17
 * fixed: building on Qt 5.15+ (#64)
 
