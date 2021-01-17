@@ -472,7 +472,7 @@
     </message>
     <message id="libfuoten-err-loginflowv2-invalid-auth-data">
         <source>The returned login data is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>Den returnerede logindata er ugyldig.</translation>
     </message>
     <message id="libfuoten-err-loginflowv2-overall-timeout" numerus="yes">
         <source>The required authorisation message was not received within %n second(s).</source>
@@ -482,7 +482,7 @@
     <message id="fuoten-convertpassword-empty-apppassword">
         <source>The new application password returned by Nextcloud’s OCS API is empty.</source>
         <extracomment>error message after automatically upgrading a password to an app password</extracomment>
-        <translation type="unfinished"/>
+        <translation>Det nye programkodeord der blev returneret af Nextcloud’s OCS API er tomt.</translation>
     </message>
     <message id="fuoten-convertpassword-unknown-error">
         <source>An unknown error occured while trying to upgrade the password to an application password. Status: %1</source>
@@ -491,7 +491,7 @@
     </message>
     <message id="err-version-invalid">
         <source>Server reply contains invalid version number.</source>
-        <translation type="unfinished"/>
+        <translation>Svar fra server indeholder ugyldigt versionsnummer.</translation>
     </message>
     <message id="libfuoten-err-wipe-no-token">
         <source>Can not check for wipe status without a valid application token/password.</source>
@@ -499,6 +499,11 @@
     </message>
     <message id="libfuoten-err-wipe-success-no-token">
         <source>Can not post wipe success to the remote server without application token/password.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message id="libfuoten-err-json-parsing">
+        <source>JSON parsing error: %1</source>
+        <extracomment>intro for JSON parsing errors, %1 will be replaced by an error string</extracomment>
         <translation type="unfinished"/>
     </message>
 </context>

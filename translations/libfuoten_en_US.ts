@@ -501,5 +501,10 @@
         <source>Can not post wipe success to the remote server without application token/password.</source>
         <translation type="unfinished"/>
     </message>
+    <message id="libfuoten-err-json-parsing">
+        <source>JSON parsing error: %1</source>
+        <extracomment>intro for JSON parsing errors, %1 will be replaced by an error string</extracomment>
+        <translation type="unfinished"/>
+    </message>
 </context>
 </TS>

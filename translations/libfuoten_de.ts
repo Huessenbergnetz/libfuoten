@@ -501,5 +501,10 @@
         <source>Can not post wipe success to the remote server without application token/password.</source>
         <translation>Das erfolgreiche Löschen kann ohne Passwort nicht an den Server gemeldet werden.</translation>
     </message>
+    <message id="libfuoten-err-json-parsing">
+        <source>JSON parsing error: %1</source>
+        <extracomment>intro for JSON parsing errors, %1 will be replaced by an error string</extracomment>
+        <translation>Fehler bei der JSON-Verarbeitung: %1</translation>
+    </message>
 </context>
 </TS>
