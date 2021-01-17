@@ -362,9 +362,11 @@ Error::Error(QJsonParseError jsonError, QObject *parent) :
     Q_D(Error);
 
     if (jsonError.error != QJsonParseError::NoError) {
-        d->type = OutputError;
+        d->type = JSONParsingError;
         d->severity = Critical;
-        d->text = jsonError.errorString();
+        //: intro for JSON parsing errors, %1 will be replaced by an error string
+        //% "JSON parsing error: %1"
+        d->text = qtTrId("libfuoten-err-json-parsing").arg(jsonError.errorString());
     }
 
     d->printOut();
