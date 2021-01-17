@@ -408,6 +408,16 @@ void Component::_requestFinished()
 {
     Q_D(Component);
 
+    qDebug("%s", "Finished network operation.");
+#ifdef QT_DEBUG
+    qDebug("API URL: %s", qUtf8Printable(d->reply->url().toString()));
+    qDebug("Reply size: %lli", d->reply->size());
+    const QList<QByteArray> hl = d->reply->rawHeaderList();
+    for (const QByteArray &h : hl) {
+        qDebug("%s: %s", h.constData(), d->reply->rawHeader(h).constData());
+    }
+#endif
+
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     if (Q_LIKELY(d->timeoutTimer && d->timeoutTimer->isActive())) {
         qDebug("Stopping timeout timer with %i seconds left.", d->timeoutTimer->remainingTime()/1000);
