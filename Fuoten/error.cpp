@@ -194,7 +194,6 @@ Error::Error(QNetworkReply *reply, QObject *parent) :
             case 511:
                 //% "Network authentication required — The client needs to authenticate to gain network access."
                 d->text = qtTrId("libfuoten-err-http-511");
-                d->text = RequestError;
                 break;
             default:
                 //% "An unknown network-related error was detected."

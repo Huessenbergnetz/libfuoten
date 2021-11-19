@@ -783,7 +783,7 @@ void Component::setApiRoute(const QString &route)
 void Component::setApiRoute(const QStringList &routeParts)
 {
     Q_D(Component);
-    d->apiRoute = QStringLiteral("/").append(routeParts.join(QChar('/')));
+    d->apiRoute = QStringLiteral("/").append(routeParts.join(QLatin1Char('/')));
 }
 
 
