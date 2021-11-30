@@ -1,4 +1,5 @@
-set(TS_FILES libfuoten_da.ts
+set(TS_FILES libfuoten.ts
+             libfuoten_da.ts
              libfuoten_de.ts
              libfuoten_el.ts
              libfuoten_en_GB.ts
