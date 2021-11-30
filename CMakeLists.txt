@@ -10,7 +10,7 @@ project(libfuoten
         LANGUAGES CXX)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network Sql REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} 5.6.0 REQUIRED COMPONENTS Core Network Sql)
+find_package(Qt${QT_VERSION_MAJOR} 5.6.0 REQUIRED COMPONENTS Core Network Sql LinguistTools)
 
 # Include our cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
@@ -40,6 +40,7 @@ option(BUILD_SHARED_LIBS "Enable the build of shared libraries" ON)
 option(ENABLE_MAINTAINER_FLAGS "Enables some build flags used for development" OFF)
 option(BUILD_DOCS "Enable the build of doxygen docs" OFF)
 option(BUILD_DOCS_QUIET "Tell doxygen to be quiet while building the documentation." OFF)
+set(I18NDIR "${CMAKE_INSTALL_FULL_DATADIR}/libFuotenQt${QT_VERSION_MAJOR}/translations" CACHE PATH "Directory to install translations")
 
 configure_file(${CMAKE_MODULE_PATH}/fuoten-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}Config.cmake
@@ -73,6 +74,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}Core.pc
 )
 
 add_subdirectory(Fuoten)
+add_subdirectory(translations)
 
 if (BUILD_DOCS)
     if (CMAKE_VERSION VERSION_LESS "3.12.3")
