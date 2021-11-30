@@ -44,6 +44,7 @@ sudo zypper in doxygen libqt5-qtdoc-devel libqt5-qttools
 * ENABLE_MAINTAINER_FLAGS - Enables some build flags used for development (default: off)
 * BUILD_DOCS - Enable the creation of doc targets, needs doxygen (default: off)
 * BUILD_DOCS_QUIET - Tell doxygen to be quiet while building the documentation (default: off)
+* I18NDIR - Target installation directory for translation files
 
 ### Additional make targets
 When `BUILD_DOCS` is enabled, additional build targets are available.
