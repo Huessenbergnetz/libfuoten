@@ -203,7 +203,6 @@ public Q_SLOTS:
 private:
     Q_DECLARE_PRIVATE(SQLiteStorage)
     Q_DISABLE_COPY(SQLiteStorage)
-    Q_DISABLE_MOVE(SQLiteStorage)
 };
 
 }

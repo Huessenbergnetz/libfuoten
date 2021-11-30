@@ -231,7 +231,7 @@ QString SQLiteStoragePrivate::intListToString(const IdList &ints) const
     } else if (ints.count() == 1) {
         return QString::number(ints.first());
     } else {
-        return intListToStringList(ints).join(QChar(','));
+        return intListToStringList(ints).join(QLatin1Char(','));
     }
 }
 
@@ -376,7 +376,7 @@ void SQLiteStorage::foldersRequested(const QJsonDocument &json)
 
     qDebug("Processing %i folders requested from the remote server.", folders.size());
 
-    QHash<qint64, QString> reqFolders({{0, QString("")}});
+    QHash<qint64, QString> reqFolders({{0, QString()}});
 
     for (const QJsonValue &f : folders) {
         const QJsonObject o = f.toObject();
@@ -1848,7 +1848,7 @@ void GetArticlesAsyncWorker::run()
             for (qint64 id : ids) {
                 sl.append(QString::number(id));
             }
-            idListString = sl.join(QChar(','));
+            idListString = sl.join(QLatin1Char(','));
         }
 
 
@@ -2183,7 +2183,7 @@ void ItemsRequestedWorker::run()
                             }
 
                             if (!iIdsToDelete.isEmpty()) {
-                                qresult = q.exec(QStringLiteral("DELETE FROM items WHERE id IN (%1)").arg(iIdsToDelete.join(QChar(','))));
+                                qresult = q.exec(QStringLiteral("DELETE FROM items WHERE id IN (%1)").arg(iIdsToDelete.join(QLatin1Char(','))));
                                 Q_ASSERT_X(qresult, "items requested worker", "failed to delete items from database");
                             }
                         }

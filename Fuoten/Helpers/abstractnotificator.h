@@ -257,7 +257,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(AbstractNotificator)
-    Q_DISABLE_MOVE(AbstractNotificator)
     Q_DECLARE_PRIVATE(AbstractNotificator)
 };
 

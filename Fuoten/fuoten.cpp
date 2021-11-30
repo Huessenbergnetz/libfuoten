@@ -21,5 +21,5 @@
 
 QVersionNumber Fuoten::version()
 {
-    return QVersionNumber::fromString(QStringLiteral(VERSION_STRING));
+    return QVersionNumber::fromString(QStringLiteral(FUOTEN_VERSION));
 }

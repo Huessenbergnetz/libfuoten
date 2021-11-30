@@ -58,7 +58,7 @@ void AbstractConfiguration::setPassword(const QString &password)
 
 QString AbstractConfiguration::getUserAgent() const
 {
-    return QStringLiteral("Libfuoten %1").arg(QStringLiteral(VERSION_STRING));
+    return QStringLiteral("Libfuoten %1").arg(QStringLiteral(FUOTEN_VERSION));
 }
 
 

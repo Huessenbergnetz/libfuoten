@@ -940,7 +940,6 @@ Q_SIGNALS:
 
 private:
     Q_DISABLE_COPY(AbstractStorage)
-    Q_DISABLE_MOVE(AbstractStorage)
     Q_DECLARE_PRIVATE(AbstractStorage)
 };
 

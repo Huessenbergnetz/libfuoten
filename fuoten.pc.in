@@ -1,11 +1,11 @@
-prefix=$$INSTALL_PREFIX_DIR
+prefix=@CMAKE_INSTALL_PREFIX@
 exec_prefix=${prefix}
-libdir=$$INSTALL_LIB_DIR
-includedir=$$INSTALL_HEADERS_DIR
+libdir=@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/include/fuoten-qt@QT_VERSION_MAJOR@
 
-Name: libfuoten
-Description: Qt based library to provide access to the ownCloud / Nextcloud News app
-Version: $$VERSION
-Libs: -L${libdir} -lfuoten
+Name: libfuoten Qt@QT_VERSION_MAJOR@
+Description: Qt@QT_VERSION_MAJOR@ based library to provide access to the ownCloud / Nextcloud News app
+Version: @PROJECT_VERSION@
+Requires: Qt@QT_VERSION_MAJOR@Core Qt@QT_VERSION_MAJOR@Network Qt@QT_VERSION_MAJOR@Sql
+Libs: -L${libdir} -lFuotenQt@QT_VERSION_MAJOR@
 Cflags: -I${includedir}
-Requires: Qt5Core Qt5Network Qt5Sql

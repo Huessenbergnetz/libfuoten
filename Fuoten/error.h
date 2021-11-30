@@ -210,7 +210,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(Error)
-    Q_DISABLE_MOVE(Error)
     Q_DECLARE_PRIVATE(Error)
 };
 

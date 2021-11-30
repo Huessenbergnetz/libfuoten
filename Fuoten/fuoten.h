@@ -89,7 +89,6 @@ private:
     FuotenEnums();
     ~FuotenEnums();
     Q_DISABLE_COPY(FuotenEnums)
-    Q_DISABLE_MOVE(FuotenEnums)
 };
 }
 
