@@ -23,52 +23,46 @@ The source code is available on [Github](https://github.com/Huessenbergnetz/libf
 * [openSUSE](https://software.opensuse.org/package/libfuoten)
 
 ## Building libfuoten
-Either clone the git repository or download one of the [release](https://github.com/Huessenbergnetz/libfuoten/releases) tarballs. zlib, pkg-config and Qt 5.6 or newer are required to build libfuoten as well as the following Qt modules: Qt5Core, Qt5Network and Qt5Sql.
+Either clone the git repository or download one of the [release](https://github.com/Huessenbergnetz/libfuoten/releases) tarballs. cmake, zlib, pkg-config and Qt 5.6 or newer are required to build libfuoten as well as the following Qt modules: Qt5Core, Qt5Network and Qt5Sql.
 
 ### Install dependencies
-Install gcc, g++, qmake, make, zlib, Qt5Core, Qt5Network and Qt5Sql.
+Install gcc, g++, cmake, make, zlib, Qt5Core, Qt5Network and Qt5Sql.
 
 #### openSUSE
 
 ```
-sudo zypper in gcc-++ make pkg-config zlib-devel libqt5-qtbase-common-devel libqt5-qtbase-devel libQt5Core-devel libQt5Network-devel libQt5Sql-devel
+sudo zypper in cmake gcc-++ make pkg-config zlib-devel libqt5-qtbase-common-devel libqt5-qtbase-devel libQt5Core-devel libQt5Network-devel libQt5Sql-devel
 ```
 For creating documentation:
 ```
 sudo zypper in doxygen libqt5-qtdoc-devel libqt5-qttools
 ```
 
-### Available qmake variables
-* INSTALL_PREFIX_DIR - defaults to QT_INSTALL_PREFIX
-* INSTALL_LIB_DIR - defaults to QT_INSTALL_LIBS
-* INSTALL_TRANSLATIONS_DIR - defaults to QT_INSTALL_TRANSLATIONS
-* INSTALL_HEADERS_DIR - defaults to QT_INSTALL_HEADERS
-* QHG_BIN_PATH - defaults to QT_INSTALL_BINS/qhelpgenerator - used by the qhpdoc target
-* QT_TAG_FILES_PATH - defaults to QT_INSTALL_DOCS - used to link API documentation
-
-You can show the default values with `qmake -query`.
-
-### Available qmake CONFIG options
-
-#### asan
-`CONFIG+=asan` enables [address sanitizer](https://en.wikipedia.org/wiki/AddressSanitizer).
-
-#### no_install_dev_files
-`CONFIG+=no_install_dev_files` disables the installation of the header files.
+### Available cmake variables
+* We use cmake’s GNUInstallDirs extension to select target directories
+* BUILD_SHARED_LIBS - Enable the build of shared libraries (default: on)
+* ENABLE_MAINTAINER_FLAGS - Enables some build flags used for development (default: off)
+* BUILD_DOCS - Enable the creation of doc targets, needs doxygen (default: off)
+* BUILD_DOCS_QUIET - Tell doxygen to be quiet while building the documentation (default: off)
 
 ### Additional make targets
+When `BUILD_DOCS` is enabled, additional build targets are available.
 
-#### docs
-Will create HTML and QCH API documentation files. Use the `QHG_BIN_PATH` variable to set a proper path to the `qhelpgenerator` executable to create the Qt Compiled Help files for use in Qt Creator. You can link Qt classes into the documentation by setting a valid path to tag files in the `QT_TAG_FILES_PATH` variable. If the necessary tag files are found, the documenation will automatically link to the appropriate Qt help page.
+#### webdocs
+Will create HTML documentation files linked to Qt online documentation if correct tag files are avaiable.
+
+#### htmldocs
+Will create HTML documentation files linked to local Qt offline HTML documentation if correct tag files are available.
+
+#### qtdocs
+Will create compiled Qt documentation usable inside Qt creator if qhelpgenerator is available.
 
 ### Get libfuoten and build it
-On openSUSE qmake for qt5 is named qmake-qt5.
-
 ```
 git clone https://github.com/Huessenbergnetz/libfuoten.git
 cd libfuoten
 mkdir build && cd build
-qmake -r ..
+cmake ..
 make
 sudo make install
 ```
@@ -76,7 +70,7 @@ sudo make install
 ## License
 ```
 libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
-Copyright (C) 2016-2019 Hüssenbergnetz/Matthias Fehring
+Copyright (C) 2016-2021 Hüssenbergnetz/Matthias Fehring
 https://github.com/Huessenbergnetz/libfuoten
 
 This library is free software: you can redistribute it and/or
