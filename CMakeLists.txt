@@ -13,7 +13,7 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network Sql REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} 5.6.0 REQUIRED COMPONENTS Core Network Sql LinguistTools)
 
 # Include our cmake modules
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
