@@ -42,12 +42,12 @@ option(BUILD_DOCS "Enable the build of doxygen docs" OFF)
 option(BUILD_DOCS_QUIET "Tell doxygen to be quiet while building the documentation." OFF)
 set(LIBFUOTEN_I18NDIR "${CMAKE_INSTALL_FULL_DATADIR}/libFuotenQt${QT_VERSION_MAJOR}/translations" CACHE PATH "Directory to install translations")
 
-configure_file(${CMAKE_MODULE_PATH}/fuoten-config.cmake.in
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/fuoten-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}Config.cmake
     @ONLY
 )
 
-configure_file(${CMAKE_MODULE_PATH}/fuoten-config-version.cmake.in
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/fuoten-config-version.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}ConfigVersion.cmake
     @ONLY
 )
