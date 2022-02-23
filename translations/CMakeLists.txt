@@ -45,7 +45,7 @@ endfunction()
 
 function(fuoten_add_translation _qm_files)
     if (QT_VERSION VERSION_LESS "5.11.0")
-        fuoten_add_trans_func("${_qml_files}" ${ARGN})
+        fuoten_add_trans_func("${_qm_files}" ${ARGN})
     else()
         if(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
             qt5_add_translation("${_qm_files}" ${ARGN})
