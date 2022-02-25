@@ -40,7 +40,7 @@ option(BUILD_SHARED_LIBS "Enable the build of shared libraries" ON)
 option(ENABLE_MAINTAINER_FLAGS "Enables some build flags used for development" OFF)
 option(BUILD_DOCS "Enable the build of doxygen docs" OFF)
 option(BUILD_DOCS_QUIET "Tell doxygen to be quiet while building the documentation." OFF)
-set(LIBFUOTEN_I18NDIR "${LIBFUOTEN_I18NDIR}" CACHE PATH "Directory to install translations")
+set(LIBFUOTEN_I18NDIR "${CMAKE_INSTALL_DATADIR}/libFuotenQt${QT_VERSION_MAJOR}/translations" CACHE PATH "Directory to install translations")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/fuoten-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}Config.cmake
