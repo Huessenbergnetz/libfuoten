@@ -36,12 +36,11 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "libfuoten default install prefix" FORCE)
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
-
 option(BUILD_SHARED_LIBS "Enable the build of shared libraries" ON)
 option(ENABLE_MAINTAINER_FLAGS "Enables some build flags used for development" OFF)
 option(BUILD_DOCS "Enable the build of doxygen docs" OFF)
 option(BUILD_DOCS_QUIET "Tell doxygen to be quiet while building the documentation." OFF)
-set(LIBFUOTEN_I18NDIR "${CMAKE_INSTALL_FULL_DATADIR}/libFuotenQt${QT_VERSION_MAJOR}/translations" CACHE PATH "Directory to install translations")
+set(LIBFUOTEN_I18NDIR "${LIBFUOTEN_I18NDIR}" CACHE PATH "Directory to install translations")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/fuoten-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}Config.cmake
