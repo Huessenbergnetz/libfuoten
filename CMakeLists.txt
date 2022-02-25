@@ -3,6 +3,7 @@
 
 cmake_minimum_required(VERSION 3.12.4 FATAL_ERROR)
 cmake_policy(SET CMP0048 NEW)
+cmake_policy(SET CMP0076 NEW)
 
 project(libfuoten
         VERSION 0.8.2

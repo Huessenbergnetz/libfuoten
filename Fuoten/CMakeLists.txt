@@ -218,11 +218,57 @@ set(fuoten_PRIVATE_HEADERS
     Helpers/abstractnotificator_p.h
 )
 
-add_library(FuotenQt${QT_VERSION_MAJOR}
-    ${fuoten_SRCS}
-    ${fuoten_HEADERS}
-    ${fuoten_PRIVATE_HEADERS}
+#add_library(FuotenQt${QT_VERSION_MAJOR}
+#    ${fuoten_SRCS}
+#    ${fuoten_HEADERS}
+#    ${fuoten_PRIVATE_HEADERS}
+#)
+
+add_library(FuotenQt${QT_VERSION_MAJOR})
+
+target_sources(FuotenQt${QT_VERSION_MAJOR}
+    PRIVATE
+        fuoten_global.h
+        article.h
+        article_p.h
+        article.cpp
+        baseitem.h
+        baseitem_p.h
+        baseitem.cpp
+        error.h
+        error_p.h
+        error.cpp
+        feed.h
+        feed_p.h
+        feed.cpp
+        folder.h
+        folder_p.h
+        folder.cpp
+        fuoten.h
+        fuoten.cpp
 )
+
+set_property(TARGET FuotenQt${QT_VERSION_MAJOR}
+    APPEND PROPERTY PUBLIC_HEADER
+        fuoten_global.h
+        article.h
+        Article
+        baseitem.h
+        BaseItem
+        error.h
+        Error
+        feed.h
+        Feed
+        folder.h
+        Folder
+        fuoten.h
+        FuotenEnums
+)
+
+add_subdirectory(API)
+add_subdirectory(Helpers)
+add_subdirectory(Models)
+add_subdirectory(Storage)
 
 add_library(FuotenQt${QT_VERSION_MAJOR}::Core ALIAS FuotenQt${QT_VERSION_MAJOR})
 
@@ -280,12 +326,10 @@ set_target_properties(FuotenQt${QT_VERSION_MAJOR} PROPERTIES
     EXPORT_NAME Core
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER "${fuoten_HEADERS}"
 )
 
 install(TARGETS FuotenQt${QT_VERSION_MAJOR}
     EXPORT FuotenTargets
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
