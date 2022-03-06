@@ -61,6 +61,7 @@ target_link_libraries(FuotenQt${QT_VERSION_MAJOR}
 
 target_compile_definitions(FuotenQt${QT_VERSION_MAJOR}
     PRIVATE
+        $<$<NOT:$<CONFIG:Debug>>:QT_NO_DEBUG_OUTPUT>
         QT_NO_KEYWORDS
         QT_NO_CAST_TO_ASCII
         QT_NO_CAST_FROM_ASCII
