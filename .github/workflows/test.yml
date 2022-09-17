@@ -19,10 +19,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        qt_version: [512]
+        qt_version: [512, 514, 515]
         include:
           - qt_version: 512
             qt_version_full: 5.12.10
+          - qt_version: 514
+            qt_version_full: 5.14.2
+          - qt_version: 515
+            qt_version_full: 5.15.4
           - os: ubuntu-20.04
             ubuntu_name: focal
             
