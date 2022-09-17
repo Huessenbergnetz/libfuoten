@@ -34,9 +34,9 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-add-repository --yes ppa:beineri/opt-qt-${{ matrix.qt_version_full }}-${{ matrix.ubuntu_name }}
-        && sudo apt-get update -qq
-        && sudp apt-get install -y qt${{ matrix.qt_version}}base qt${{ matrix.qt_version }}tools
-        && export CMAKE_PREFIX_PATH=/opt/qt${{ matrix.qt_version }}        
+        sudo apt-get update -qq
+        sudo apt-get install -y qt${{ matrix.qt_version}}base qt${{ matrix.qt_version }}tools
+        export CMAKE_PREFIX_PATH=/opt/qt${{ matrix.qt_version }}        
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
