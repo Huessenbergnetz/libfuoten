@@ -1,20 +1,6 @@
-/* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
- * Copyright (C) 2016-2020 Hüssenbergnetz/Matthias Fehring
- * https://github.com/Huessenbergnetz/libfuoten
- *
- * This library is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>.
+/*
+ * SPDX-FileCopyrightText: (C) 2016-2022 Matthias Fehring <https://www.huessenbergnetz.de>
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 #include "feed_p.h"
@@ -91,7 +77,7 @@ QUrl Feed::url() const { Q_D(const Feed); return d->url; }
 
 void Feed::setUrl(const QUrl &nUrl)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nUrl != d->url) {
         d->url = nUrl;
         qDebug("Changed URL to %s.", qUtf8Printable(d->url.toString()));
@@ -106,7 +92,7 @@ QString Feed::title() const { Q_D(const Feed); return d->title; }
 
 void Feed::setTitle(const QString &nTitle)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nTitle != d->title) {
         d->title = nTitle;
         qDebug("Changed title to %s.", qUtf8Printable(d->title));
@@ -121,7 +107,7 @@ QDateTime Feed::added() const { Q_D(const Feed); return d->added; }
 
 void Feed::setAdded(const QDateTime &nAdded)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nAdded != d->added) {
         d->added = nAdded;
         qDebug("Changed added to %s.", qUtf8Printable(d->added.toString(Qt::ISODate)));
@@ -136,7 +122,7 @@ qint64 Feed::folderId() const { Q_D(const Feed); return d->folderId; }
 
 void Feed::setFolderId(qint64 nFolderId)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nFolderId != d->folderId) {
         d->folderId = nFolderId;
         qDebug("Changed folderId to %lli.", d->folderId);
@@ -151,7 +137,7 @@ QString Feed::folderName() const { Q_D(const Feed); return d->folderName; }
 
 void Feed::setFolderName(const QString &nFolderName)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nFolderName != d->folderName) {
         d->folderName = nFolderName;
         qDebug("Changed folderName to %s.", qUtf8Printable(d->folderName));
@@ -166,7 +152,7 @@ uint Feed::unreadCount() const { Q_D(const Feed); return d->unreadCount; }
 
 void Feed::setUnreadCount(uint nUnreadCount)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nUnreadCount != d->unreadCount) {
         d->unreadCount = nUnreadCount;
         qDebug("Changed unreadCount to %u.", d->unreadCount);
@@ -181,7 +167,7 @@ Feed::FeedOrdering Feed::ordering() const { Q_D(const Feed); return d->ordering;
 
 void Feed::setOrdering(FeedOrdering nOrdering)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nOrdering != d->ordering) {
         d->ordering = nOrdering;
         qDebug("Changed ordering to %s.", metaObject()->enumerator(metaObject()->indexOfEnumerator("FeedOrdering")).valueToKey(d->ordering));
@@ -196,7 +182,7 @@ QUrl Feed::link() const { Q_D(const Feed); return d->link; }
 
 void Feed::setLink(const QUrl &nLink)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nLink != d->link) {
         d->link = nLink;
         qDebug("Changed link to %s.", qUtf8Printable(d->link.toString()));
@@ -211,7 +197,7 @@ bool Feed::pinned() const { Q_D(const Feed); return d->pinned; }
 
 void Feed::setPinned(bool nPinned)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nPinned != d->pinned) {
         d->pinned = nPinned;
         qDebug("Changed pinned to %s.", d->pinned ? "true" : "false");
@@ -226,7 +212,7 @@ uint Feed::updateErrorCount() const { Q_D(const Feed); return d->updateErrorCoun
 
 void Feed::setUpdateErrorCount(uint nUpdateErrorCount)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nUpdateErrorCount != d->updateErrorCount) {
         d->updateErrorCount = nUpdateErrorCount;
         qDebug("Changed updateErrorCount to %u.", d->updateErrorCount);
@@ -241,7 +227,7 @@ QString Feed::lastUpdateError() const { Q_D(const Feed); return d->lastUpdateErr
 
 void Feed::setLastUpdateError(const QString &nLastUpdateError)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nLastUpdateError != d->lastUpdateError) {
         d->lastUpdateError = nLastUpdateError;
         qDebug("Changed lastUpdateError to %s.", qUtf8Printable(d->lastUpdateError));
@@ -256,7 +242,7 @@ QUrl Feed::faviconLink() const { Q_D(const Feed); return d->faviconLink; }
 
 void Feed::setFaviconLink(const QUrl &nFaviconLink)
 {
-    Q_D(Feed); 
+    Q_D(Feed);
     if (nFaviconLink != d->faviconLink) {
         d->faviconLink = nFaviconLink;
         qDebug("Changed faviconLink to %s.", qUtf8Printable(d->faviconLink.toString()));

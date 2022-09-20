@@ -1,20 +1,6 @@
-/* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
- * Copyright (C) 2016-2020 Hüssenbergnetz/Matthias Fehring
- * https://github.com/Huessenbergnetz/libfuoten
- *
- * This library is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>.
+/*
+ * SPDX-FileCopyrightText: (C) 2016-2022 Matthias Fehring <https://www.huessenbergnetz.de>
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 #include "renamefeed_p.h"
@@ -58,7 +44,7 @@ qint64 RenameFeed::feedId() const { Q_D(const RenameFeed); return d->feedId; }
 
 void RenameFeed::setFeedId(qint64 nFeedId)
 {
-    Q_D(RenameFeed); 
+    Q_D(RenameFeed);
     if (nFeedId != d->feedId) {
         d->feedId = nFeedId;
         qDebug("Changed feedId to %lli.", d->feedId);
@@ -71,7 +57,7 @@ QString RenameFeed::newName() const { Q_D(const RenameFeed); return d->newName; 
 
 void RenameFeed::setNewName(const QString &nNewName)
 {
-    Q_D(RenameFeed); 
+    Q_D(RenameFeed);
     if (nNewName != d->newName) {
         d->newName = nNewName;
         qDebug("Changed newName to \"%s\".", qUtf8Printable(d->newName));

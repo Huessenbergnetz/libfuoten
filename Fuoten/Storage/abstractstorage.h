@@ -1,20 +1,6 @@
-/* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
- * Copyright (C) 2016-2020 Hüssenbergnetz/Matthias Fehring
- * https://github.com/Huessenbergnetz/libfuoten
- *
- * This library is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>.
+/*
+ * SPDX-FileCopyrightText: (C) 2016-2022 Matthias Fehring <https://www.huessenbergnetz.de>
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 #ifndef FUOTENABSTRACTSTORAGE_H
@@ -205,7 +191,7 @@ public:
      * If the type does not match one of the supported or if there are not items, \c -1 is returned.
      */
     virtual qint64 getNewestItemId(FuotenEnums::Type type = FuotenEnums::All, qint64 id = -1) = 0;
-    
+
     /*!
      * \brief Returns a list of Folder objects from the local storage.
      *
@@ -231,7 +217,7 @@ public:
      * \endcode
      */
     virtual QList<Folder*> getFolders(FuotenEnums::SortingRole sortingRole = FuotenEnums::Name, Qt::SortOrder sortOrder = Qt::AscendingOrder, const IdList &ids = IdList(), FuotenEnums::Type idType = FuotenEnums::Folder, int limit = 0) = 0;
-    
+
 
     /*!
      * \brief Returns a list of Feed objects from the local storage.

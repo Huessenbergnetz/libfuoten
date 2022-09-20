@@ -1,20 +1,6 @@
-/* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
- * Copyright (C) 2016-2020 Hüssenbergnetz/Matthias Fehring
- * https://github.com/Huessenbergnetz/libfuoten
- *
- * This library is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>.
+/*
+ * SPDX-FileCopyrightText: (C) 2016-2022 Matthias Fehring <https://www.huessenbergnetz.de>
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 #include "getitems_p.h"
@@ -173,7 +159,7 @@ void GetItems::setBatchSize(int nBatchSize)
         return;
     }
 
-    Q_D(GetItems); 
+    Q_D(GetItems);
     if (nBatchSize != d->batchSize) {
         d->batchSize = nBatchSize;
         qDebug("Changed batchSize to %i.", d->batchSize);
@@ -191,7 +177,7 @@ void GetItems::setOffset(qint64 nOffset)
         return;
     }
 
-    Q_D(GetItems); 
+    Q_D(GetItems);
     if (nOffset != d->offset) {
         d->offset = nOffset;
         qDebug("Changed offset to %lli.", d->offset);
@@ -209,7 +195,7 @@ void GetItems::setType(FuotenEnums::Type nType)
         return;
     }
 
-    Q_D(GetItems); 
+    Q_D(GetItems);
     if (nType != d->type) {
         d->type = nType;
         qDebug("Changed type to %s.", FuotenEnums::staticMetaObject.enumerator(FuotenEnums::staticMetaObject.indexOfEnumerator("Type")).valueToKey(d->type));
@@ -227,7 +213,7 @@ void GetItems::setParentId(qint64 nParentId)
         return;
     }
 
-    Q_D(GetItems); 
+    Q_D(GetItems);
     if (nParentId != d->parentId) {
         d->parentId = nParentId;
         qDebug("Changed parentId to %lli.", d->parentId);
@@ -245,7 +231,7 @@ void GetItems::setGetRead(bool nGetRead)
         return;
     }
 
-    Q_D(GetItems); 
+    Q_D(GetItems);
     if (nGetRead != d->getRead) {
         d->getRead = nGetRead;
         qDebug("Changed getRead to %s.", d->getRead ? "true" : "false");
@@ -263,7 +249,7 @@ void GetItems::setOldestFirst(bool nOldestFirst)
         return;
     }
 
-    Q_D(GetItems); 
+    Q_D(GetItems);
     if (nOldestFirst != d->oldestFirst) {
         d->oldestFirst = nOldestFirst;
         qDebug("Changed oldestFirst to %s.", d->oldestFirst ? "true" : "false");

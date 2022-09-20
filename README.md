@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: (C) 2016-2022 Matthias Fehring <https://www.huessenbergnetz.de>
+SPDX-License-Identifier: LGPL-3.0-or-later
+-->
+
 # libfuoten
 A [Qt](https://www.qt.io/) based library to provide access to the ownCloud / Nextcloud [News App](https://github.com/nextcloud/news) API.
 
@@ -17,7 +22,7 @@ Have a look at the [roadmap](https://github.com/Huessenbergnetz/Fuoten/milestone
 * SQLite storage class
 
 ## Contributing
-The source code is available on [Github](https://github.com/Huessenbergnetz/libfuoten), feel free to clone or branch according to the [LGPLv3](https://github.com/Huessenbergnetz/libfuoten/blob/master/LICENSE). Translation is done on [Transifex](https://www.transifex.com/huessenbergnetz/libfuoten).
+The source code is available on [Github](https://github.com/Huessenbergnetz/libfuoten), feel free to clone or branch according to the [LGPLv3](https://github.com/Huessenbergnetz/libfuoten/blob/master/LICENSES/LGPL-3.0-or-later.txt). Translation is done on [Transifex](https://www.transifex.com/huessenbergnetz/libfuoten) and translations are licensed under the terms of the [CC-BY-4.0](https://github.com/Huessenbergnetz/libfuoten/blob/master/LICENSES/CC-BY-4.0.txt) license.
 
 ## Getting libfuoten
 * [openSUSE](https://software.opensuse.org/package/libfuoten)
@@ -71,7 +76,7 @@ sudo make install
 ## License
 ```
 libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
-Copyright (C) 2016-2021 Hüssenbergnetz/Matthias Fehring
+Copyright (C) 2016-2022 Hüssenbergnetz/Matthias Fehring
 https://github.com/Huessenbergnetz/libfuoten
 
 This library is free software: you can redistribute it and/or

@@ -1,20 +1,6 @@
-/* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
- * Copyright (C) 2016-2020 Hüssenbergnetz/Matthias Fehring
- * https://github.com/Huessenbergnetz/libfuoten
- *
- * This library is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>.
+/*
+ * SPDX-FileCopyrightText: (C) 2016-2022 Matthias Fehring <https://www.huessenbergnetz.de>
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 #include "error_p.h"
@@ -402,7 +388,7 @@ QString Error::text() const { Q_D(const Error); return d->text; }
 
 void Error::setText(const QString &nText)
 {
-    Q_D(Error); 
+    Q_D(Error);
     if (nText != d->text) {
         d->text = nText;
         qDebug("Changed text to \"%s\".", qUtf8Printable(d->text));
@@ -415,7 +401,7 @@ Error::Type Error::type() const { Q_D(const Error); return d->type; }
 
 void Error::setType(Type nType)
 {
-    Q_D(Error); 
+    Q_D(Error);
     if (nType != d->type) {
         d->type = nType;
         qDebug("Changed type to %s.", metaObject()->enumerator(metaObject()->indexOfEnumerator("Type")).valueToKey(d->type));
@@ -428,7 +414,7 @@ QString Error::data() const { Q_D(const Error); return d->data; }
 
 void Error::setData(const QString &nData)
 {
-    Q_D(Error); 
+    Q_D(Error);
     if (nData != d->data) {
         d->data = nData;
         qDebug("Changed data to \"%s\".", qUtf8Printable(d->data));
@@ -443,7 +429,7 @@ Error::Severity Error::severity() const { Q_D(const Error); return d->severity; 
 
 void Error::setSeverity(Severity nSeverity)
 {
-    Q_D(Error); 
+    Q_D(Error);
     if (nSeverity != d->severity) {
         d->severity = nSeverity;
         qDebug("Changed severity to %s.", metaObject()->enumerator(metaObject()->indexOfEnumerator("Severity")).valueToKey(d->severity));

@@ -1,20 +1,6 @@
-/* libfuoten - Qt based library to access the ownCloud/Nextcloud News App API
- * Copyright (C) 2016-2020 Hüssenbergnetz/Matthias Fehring
- * https://github.com/Huessenbergnetz/libfuoten
- *
- * This library is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>.
+/*
+ * SPDX-FileCopyrightText: (C) 2016-2022 Matthias Fehring <https://www.huessenbergnetz.de>
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 #include "getupdateditems_p.h"
@@ -166,7 +152,7 @@ void GetUpdatedItems::setLastModified(const QDateTime &nLastModified)
         return;
     }
 
-    Q_D(GetUpdatedItems); 
+    Q_D(GetUpdatedItems);
     if (nLastModified != d->lastModified) {
         d->lastModified = nLastModified;
         qDebug("Changed lastModified to %s.", qUtf8Printable(d->lastModified.toString(Qt::ISODate)));
@@ -184,7 +170,7 @@ void GetUpdatedItems::setType(FuotenEnums::Type nType)
         return;
     }
 
-    Q_D(GetUpdatedItems); 
+    Q_D(GetUpdatedItems);
     if (nType != d->type) {
         d->type = nType;
         qDebug("Changed type to %s.", FuotenEnums::staticMetaObject.enumerator(FuotenEnums::staticMetaObject.indexOfEnumerator("Type")).valueToKey(d->type));
@@ -202,7 +188,7 @@ void GetUpdatedItems::setParentId(qint64 nParentId)
         return;
     }
 
-    Q_D(GetUpdatedItems); 
+    Q_D(GetUpdatedItems);
     if (nParentId != d->parentId) {
         d->parentId = nParentId;
         qDebug("Changed parentId to %lli.", d->parentId);
