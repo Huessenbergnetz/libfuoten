@@ -32,7 +32,7 @@ the terms of this license.
 ## Attribution
 
 For bigger contributions and translations I would like to attribute you in the
-[AUTHORS](https://github.com/Huessenbergnetz/libfuoten/blob/master/AUTHORS) file.
+[CONTRIBUTORS](https://github.com/Huessenbergnetz/libfuoten/blob/master/CONTRIBUTORS) file.
 So, please let me know what kind of information I should add about you there. Simply send me a message
 through Transifex or GitHub.
 
