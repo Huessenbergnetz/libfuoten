@@ -1,7 +1,10 @@
+# SPDX-FileCopyrightText: (C) 2022 Matthias Fehring <https://www.huessenbergnetz.de>
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
 rebuild_master:
   steps:
     - rebuild_package:
-        project: home:buschmann23:Qt5:devel
-        package: libfuoten-qt5
+      project: home:buschmann23:Qt5:devel
+      package: libfuoten-qt5
   filters:
-    events: push
+    event: push
