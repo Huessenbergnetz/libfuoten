@@ -4,7 +4,7 @@
 rebuild_master:
   steps:
     - rebuild_package:
-      project: home:buschmann23:Qt5:devel
-      package: libfuoten-qt5
+        project: home:buschmann23:Qt5:devel
+        package: libfuoten-qt5
   filters:
     event: push
