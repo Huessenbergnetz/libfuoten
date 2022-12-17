@@ -53,7 +53,6 @@ private:
     bool m_ignoreSSLErrors = false;
 
     Q_DISABLE_COPY(WipeManagerConfig)
-    Q_DISABLE_MOVE(WipeManagerConfig)
 };
 
 class WipeManagerPrivate {

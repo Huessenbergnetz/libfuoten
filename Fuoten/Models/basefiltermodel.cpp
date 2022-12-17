@@ -4,6 +4,7 @@
  */
 
 #include "basefiltermodel_p.h"
+#include "Storage/abstractstorage.h"
 #include <QMetaEnum>
 
 using namespace Fuoten;

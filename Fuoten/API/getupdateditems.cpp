@@ -73,7 +73,11 @@ void GetUpdatedItems::execute()
     setInOperation(true);
 
     QUrlQuery uq;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    uq.addQueryItem(QStringLiteral("lastModified"), QString::number(lastModified().toSecsSinceEpoch()));
+#else
     uq.addQueryItem(QStringLiteral("lastModified"), QString::number(lastModified().toTime_t()));
+#endif
     uq.addQueryItem(QStringLiteral("type"), QString::number(static_cast<int>(type())));
     uq.addQueryItem(QStringLiteral("id"), QString::number(parentId()));
 

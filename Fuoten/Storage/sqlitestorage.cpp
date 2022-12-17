@@ -774,7 +774,11 @@ void SQLiteStorage::folderMarkedRead(qint64 id, qint64 newestItem)
     bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId IN (SELECT id FROM feeds WHERE folderId = ?)"));
     Q_ASSERT_X(qresult, "folder marked read", "failed to prepare database query");
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    q.addBindValue(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+#else
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+#endif
     q.addBindValue(id);
 
     qresult = q.exec();
@@ -911,7 +915,11 @@ QList<Feed*> SQLiteStorage::getFeeds(const QueryArgs &args)
                          q.value(2).toString(),
                          QUrl(q.value(3).toString()),
                          QUrl(q.value(4).toString()),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                         QDateTime::fromSecsSinceEpoch(q.value(5).toUInt()),
+#else
                          QDateTime::fromTime_t(q.value(5).toUInt()),
+#endif
                          q.value(6).toUInt(),
                          static_cast<Feed::FeedOrdering>(q.value(7).toInt()),
                          q.value(8).toBool(),
@@ -954,7 +962,11 @@ Feed *SQLiteStorage::getFeed(qint64 id)
                         q.value(2).toString(),
                         QUrl(q.value(3).toString()),
                         QUrl(q.value(4).toString()),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                        QDateTime::fromSecsSinceEpoch(q.value(5).toUInt()),
+#else
                         QDateTime::fromTime_t(q.value(5).toUInt()),
+#endif
                         q.value(6).toUInt(),
                         static_cast<Feed::FeedOrdering>(q.value(7).toInt()),
                         q.value(8).toBool(),
@@ -1540,7 +1552,11 @@ void SQLiteStorage::feedMarkedRead(qint64 id, qint64 newestItem)
     bool qresult = q.prepare(QStringLiteral("UPDATE items SET unread = 0, lastModified = ? WHERE feedId = ? AND id <= ?"));
     Q_ASSERT_X(qresult, "feed marked read", "failed to prepare database query");
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    q.addBindValue(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+#else
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+#endif
     q.addBindValue(id);
     q.addBindValue(newestItem);
 
@@ -1626,13 +1642,21 @@ Article *SQLiteStorage::getArticle(qint64 id, int bodyLimit)
                                  QUrl(q.value(5).toString()),
                                  q.value(6).toString(),
                                  q.value(7).toString(),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                                 QDateTime::fromSecsSinceEpoch(q.value(8).toUInt()),
+#else
                                  QDateTime::fromTime_t(q.value(8).toUInt()),
+#endif
                                  body,
                                  q.value(10).toString(),
                                  QUrl(q.value(11).toString()),
                                  q.value(12).toBool(),
                                  q.value(13).toBool(),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                                 QDateTime::fromSecsSinceEpoch(q.value(14).toUInt()),
+#else
                                  QDateTime::fromTime_t(q.value(14).toUInt()),
+#endif
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
                                  q.value(17).toString(),
@@ -1666,7 +1690,11 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
 
     QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue, it.rtl, it.mediaThumbnail, it.mediaDescription FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch())));
+#else
     qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t())));
+#endif
 
     if (args.parentId > -1) {
         if (args.parentIdType == FuotenEnums::Feed) {
@@ -1762,13 +1790,21 @@ QList<Article*> SQLiteStorage::getArticles(const QueryArgs &args)
                                  QUrl(q.value(5).toString()),
                                  q.value(6).toString(),
                                  q.value(7).toString(),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                                 QDateTime::fromSecsSinceEpoch(q.value(8).toUInt()),
+#else
                                  QDateTime::fromTime_t(q.value(8).toUInt()),
+#endif
                                  body,
                                  q.value(10).toString(),
                                  QUrl(q.value(11).toString()),
                                  q.value(12).toBool(),
                                  q.value(13).toBool(),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                                 QDateTime::fromSecsSinceEpoch(q.value(14).toUInt()),
+#else
                                  QDateTime::fromTime_t(q.value(14).toUInt()),
+#endif
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
                                  q.value(17).toString(),
@@ -1813,7 +1849,11 @@ void GetArticlesAsyncWorker::run()
 
     QString qs = QStringLiteral("SELECT it.id, it.feedId, fe.title, it.guid, it.guidHash, it.url, it.title, it.author, it.pubDate, it.body, it.enclosureMime, it.enclosureLink, it.unread, it.starred, it.lastModified, it.fingerprint, fo.id, fo.name, it.queue, it.rtl, it.mediaThumbnail, it.mediaDescription FROM items it LEFT JOIN feeds fe ON fe.id = it.feedId LEFT JOIN folders fo on fo.id = fe.folderId");
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch())));
+#else
     qs.append(QStringLiteral(" WHERE it.pubDate < %1").arg(QString::number(QDateTime::currentDateTimeUtc().toTime_t())));
+#endif
 
     if (m_args.parentId > -1) {
         if (m_args.parentIdType == FuotenEnums::Feed) {
@@ -1921,13 +1961,21 @@ void GetArticlesAsyncWorker::run()
                                  QUrl(q.value(5).toString()),
                                  q.value(6).toString(),
                                  q.value(7).toString(),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                                 QDateTime::fromSecsSinceEpoch(q.value(8).toUInt()),
+#else
                                  QDateTime::fromTime_t(q.value(8).toUInt()),
+#endif
                                  body,
                                  q.value(10).toString(),
                                  QUrl(q.value(11).toString()),
                                  q.value(12).toBool(),
                                  q.value(13).toBool(),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                                 QDateTime::fromSecsSinceEpoch(q.value(14).toUInt()),
+#else
                                  QDateTime::fromTime_t(q.value(14).toUInt()),
+#endif
                                  q.value(15).toString(),
                                  q.value(16).toLongLong(),
                                  q.value(17).toString(),
@@ -2184,7 +2232,11 @@ void ItemsRequestedWorker::run()
                         Q_ASSERT_X(qresult, "items requested worker", "failed to prepare selecting item IDs from database");
 
                         q.addBindValue(fId);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                        q.addBindValue(tt.toSecsSinceEpoch());
+#else
                         q.addBindValue(tt.toTime_t());
+#endif
 
                         qresult = q.exec();
                         Q_ASSERT_X(qresult, "items requested worker", "failed to selecting item IDs from database");
@@ -2197,7 +2249,11 @@ void ItemsRequestedWorker::run()
                         Q_ASSERT_X(qresult, "items requested worker", "failed to prepare item deletion from database");
 
                         q.addBindValue(fId);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+                        q.addBindValue(tt.toSecsSinceEpoch());
+#else
                         q.addBindValue(tt.toTime_t());
+#endif
 
                         qresult = q.exec();
                         Q_ASSERT_X(qresult, "items requested worker", "failed to execute item deletion from database");
@@ -2321,7 +2377,11 @@ void SQLiteStorage::itemsMarked(const IdList &itemIds, bool unread)
     Q_ASSERT_X(qresult, "items marked", "failed to prepare database query");
 
     q.addBindValue(unread);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    q.addBindValue(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+#else
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+#endif
 
     qresult = q.exec();
     Q_ASSERT_X(qresult, "items marked", "failed to execute databae query");
@@ -2408,7 +2468,11 @@ void SQLiteStorage::itemsStarred(const QList<QPair<qint64, QString> > &articles,
         Q_ASSERT_X(qresult, "items starred", "failed to prepare updating item in database");
 
         q.addBindValue(star);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+        q.addBindValue(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+#else
         q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+#endif
         q.addBindValue(p.first);
         q.addBindValue(p.second);
 
@@ -2447,7 +2511,11 @@ void SQLiteStorage::itemMarked(qint64 itemId, bool unread)
     Q_ASSERT_X(qresult, "item marked", "failed to prepare database transaction");
 
     q.addBindValue(unread);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    q.addBindValue(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+#else
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+#endif
     q.addBindValue(itemId);
 
     qresult = q.exec();
@@ -2504,7 +2572,11 @@ void SQLiteStorage::itemStarred(qint64 feedId, const QString &guidHash, bool sta
     Q_ASSERT_X(qresult, "item starred", "failed to prepare database transaction");
 
     q.addBindValue(star);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    q.addBindValue(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+#else
     q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t());
+#endif
     q.addBindValue(feedId);
     q.addBindValue(guidHash);
 
@@ -2660,7 +2732,11 @@ bool SQLiteStorage::enqueueItem(FuotenEnums::QueueAction action, Article *articl
     bool qresult = q.prepare(qs);
     Q_ASSERT_X(qresult, "enqueue item", "failed to prepare datbase query");
 
-    q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t()-10);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 8, 0))
+    q.addBindValue(QDateTime::currentDateTimeUtc().toSecsSinceEpoch() - 10);
+#else
+    q.addBindValue(QDateTime::currentDateTimeUtc().toTime_t() - 10);
+#endif
     q.addBindValue(static_cast<int>(aq));
 
     if ((action == FuotenEnums::MarkAsUnread) || (action == FuotenEnums::MarkAsRead)) {
