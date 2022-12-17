@@ -694,7 +694,11 @@ void AbstractArticleModel::queueCleared()
     const ArticleList as = articles();
 
     for (Article *a : as) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+        a->setQueue(FuotenEnums::QueueActions());
+#else
         a->setQueue(FuotenEnums::QueueActions(0));
+#endif
     }
 }
 

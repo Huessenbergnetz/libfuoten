@@ -64,7 +64,11 @@ public:
     QUrl mediaThumbnail;
     QDateTime pubDate;
     QDateTime lastModified;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    FuotenEnums::QueueActions queue;
+#else
     FuotenEnums::QueueActions queue = 0;
+#endif
     bool unread = false;
     bool starred = false;
     bool rtl = false;
