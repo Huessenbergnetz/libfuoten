@@ -82,7 +82,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(PostWipeSuccess)
     Q_DISABLE_COPY(PostWipeSuccess)
-    Q_DISABLE_MOVE(PostWipeSuccess)
 };
 
 }

@@ -73,7 +73,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(DeleteAppPassword)
     Q_DISABLE_COPY(DeleteAppPassword)
-    Q_DISABLE_MOVE(DeleteAppPassword)
 };
 
 }

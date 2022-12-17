@@ -81,7 +81,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(FolderListFilterModel)
-    Q_DISABLE_MOVE(FolderListFilterModel)
     Q_DECLARE_PRIVATE(FolderListFilterModel)
 };
 

@@ -149,7 +149,6 @@ protected Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(AbstractFolderModel)
-    Q_DISABLE_MOVE(AbstractFolderModel)
     Q_DECLARE_PRIVATE(AbstractFolderModel)
 };
 

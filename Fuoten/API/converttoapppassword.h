@@ -98,7 +98,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(ConvertToAppPassword)
     Q_DISABLE_COPY(ConvertToAppPassword)
-    Q_DISABLE_MOVE(ConvertToAppPassword)
 };
 
 }

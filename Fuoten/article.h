@@ -655,7 +655,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(Article)
-    Q_DISABLE_MOVE(Article)
     Q_DECLARE_PRIVATE(Article)
 };
 

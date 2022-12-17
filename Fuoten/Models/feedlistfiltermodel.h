@@ -136,7 +136,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(FeedListFilterModel)
-    Q_DISABLE_MOVE(FeedListFilterModel)
     Q_DECLARE_PRIVATE(FeedListFilterModel)
 };
 

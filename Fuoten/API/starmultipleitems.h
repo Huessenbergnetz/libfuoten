@@ -151,7 +151,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(StarMultipleItems)
-    Q_DISABLE_MOVE(StarMultipleItems)
     Q_DECLARE_PRIVATE(StarMultipleItems)
 };
 

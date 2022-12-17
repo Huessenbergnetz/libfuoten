@@ -202,7 +202,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(StarItem)
-    Q_DISABLE_MOVE(StarItem)
     Q_DECLARE_PRIVATE(StarItem)
 };
 

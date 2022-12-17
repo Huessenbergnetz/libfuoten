@@ -122,7 +122,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(DeleteFolder)
-    Q_DISABLE_MOVE(DeleteFolder)
     Q_DECLARE_PRIVATE(DeleteFolder)
 };
 

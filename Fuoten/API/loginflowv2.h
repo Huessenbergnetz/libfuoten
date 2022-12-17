@@ -234,7 +234,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(LoginFlowV2)
     Q_DISABLE_COPY(LoginFlowV2)
-    Q_DISABLE_MOVE(LoginFlowV2)
 };
 
 }

@@ -158,7 +158,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(RenameFeed)
-    Q_DISABLE_MOVE(RenameFeed)
     Q_DECLARE_PRIVATE(RenameFeed)
 };
 

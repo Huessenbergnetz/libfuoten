@@ -174,7 +174,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(GetStatus)
     Q_DISABLE_COPY(GetStatus)
-    Q_DISABLE_MOVE(GetStatus)
 };
 
 }

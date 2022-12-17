@@ -344,7 +344,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(GetServerStatus)
     Q_DISABLE_COPY(GetServerStatus)
-    Q_DISABLE_MOVE(GetServerStatus)
 };
 
 }

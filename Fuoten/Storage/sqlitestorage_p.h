@@ -10,6 +10,7 @@
 #include "abstractstorage_p.h"
 #include "../Helpers/abstractconfiguration.h"
 #include "../Helpers/abstractnotificator.h"
+#include "../article.h"
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QStringList>

@@ -50,7 +50,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(FeedListModel)
-    Q_DISABLE_MOVE(FeedListModel)
     Q_DECLARE_PRIVATE(FeedListModel)
 };
 

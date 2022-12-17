@@ -124,7 +124,6 @@ private:
     const QScopedPointer<WipeManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE(WipeManager)
     Q_DISABLE_COPY(WipeManager)
-    Q_DISABLE_MOVE(WipeManager)
 };
 
 }

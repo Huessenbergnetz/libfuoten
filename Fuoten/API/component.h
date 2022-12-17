@@ -777,7 +777,6 @@ private Q_SLOTS:
 
 private:
     Q_DISABLE_COPY(Component)
-    Q_DISABLE_MOVE(Component)
     Q_DECLARE_PRIVATE(Component)
 };
 

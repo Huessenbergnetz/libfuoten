@@ -28,7 +28,6 @@ namespace Fuoten {
 class FUOTENSHARED_EXPORT AbstractNamFactory
 {
     Q_DISABLE_COPY(AbstractNamFactory)
-    Q_DISABLE_MOVE(AbstractNamFactory)
 public:
     /*!
      * \brief Destroys the factory. The default implementation does nothing.

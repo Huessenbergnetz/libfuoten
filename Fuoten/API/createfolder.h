@@ -128,7 +128,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(CreateFolder)
-    Q_DISABLE_MOVE(CreateFolder)
     Q_DECLARE_PRIVATE(CreateFolder)
 };
 

@@ -152,7 +152,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(MarkMultipleItems)
-    Q_DISABLE_MOVE(MarkMultipleItems)
     Q_DECLARE_PRIVATE(MarkMultipleItems)
 };
 

@@ -303,7 +303,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(BaseFilterModel)
-    Q_DISABLE_MOVE(BaseFilterModel)
     Q_DECLARE_PRIVATE(BaseFilterModel)
 };
 

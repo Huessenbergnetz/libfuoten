@@ -93,7 +93,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(GetWipeStatus)
     Q_DISABLE_COPY(GetWipeStatus)
-    Q_DISABLE_MOVE(GetWipeStatus)
 };
 
 }
