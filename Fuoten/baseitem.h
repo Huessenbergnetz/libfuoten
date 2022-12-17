@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include "fuoten_global.h"
+#include "fuoten_export.h"
 
 class QJsonDocument;
 class QJsonObject;
@@ -50,7 +51,7 @@ class Component;
  *
  * \headerfile "" <Fuoten/BaseItem>
  */
-class FUOTENSHARED_EXPORT BaseItem : public QObject
+class FUOTEN_EXPORT BaseItem : public QObject
 {
     Q_OBJECT
     /*!

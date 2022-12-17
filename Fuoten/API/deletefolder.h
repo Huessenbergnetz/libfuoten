@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 
 namespace Fuoten {
@@ -34,7 +35,7 @@ class DeleteFolderPrivate;
  * \par Method
  * DELETE
  */
-class FUOTENSHARED_EXPORT DeleteFolder : public Component
+class FUOTEN_EXPORT DeleteFolder : public Component
 {
     Q_OBJECT
     /*!

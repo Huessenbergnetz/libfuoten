@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -34,7 +35,7 @@ class GetUserPrivate;
  *
  * \headerfile "" <Fuoten/API/GetUser>
  */
-class FUOTENSHARED_EXPORT GetUser : public Component
+class FUOTEN_EXPORT GetUser : public Component
 {
     Q_OBJECT
 public:

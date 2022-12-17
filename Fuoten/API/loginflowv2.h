@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -54,7 +55,7 @@ class LoginFlowV2Private;
  *
  * \headerfile "" <Fuoten/API/LoginFlowV2>
  */
-class FUOTENSHARED_EXPORT LoginFlowV2 : public Component
+class FUOTEN_EXPORT LoginFlowV2 : public Component
 {
     Q_OBJECT
     /*!

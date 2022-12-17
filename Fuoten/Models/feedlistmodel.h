@@ -9,6 +9,7 @@
 #include <QObject>
 #include "abstractfeedmodel.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -22,7 +23,7 @@ class FeedListModelPrivate;
  *
  * \headerfile "" <Fuoten/Models/FeedListModel>
  */
-class FUOTENSHARED_EXPORT FeedListModel : public AbstractFeedModel
+class FUOTEN_EXPORT FeedListModel : public AbstractFeedModel
 {
     Q_OBJECT
 public:

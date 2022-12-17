@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -40,7 +41,7 @@ class GetWipeStatusPrivate;
  *
  * \headerfile "" <Fuoten/API/GetWipeStatus>
  */
-class FUOTENSHARED_EXPORT GetWipeStatus : public Component
+class FUOTEN_EXPORT GetWipeStatus : public Component
 {
     Q_OBJECT
 public:

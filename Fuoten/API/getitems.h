@@ -10,6 +10,7 @@
 #include "component.h"
 #include "../fuoten.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 
 namespace Fuoten {
@@ -40,7 +41,7 @@ class GetItemsPrivate;
  * \sa Synchronizer
  * \headerfile "" <Fuoten/API/GetItems>
  */
-class FUOTENSHARED_EXPORT GetItems : public Component
+class FUOTEN_EXPORT GetItems : public Component
 {
     Q_OBJECT
     /*!

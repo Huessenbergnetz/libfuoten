@@ -7,7 +7,7 @@
 #define FUOTENABSTRACTNAMFACTORY_H
 
 #include <QObject>
-#include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 class QNetworkAccessManager;
 
@@ -25,7 +25,7 @@ namespace Fuoten {
  *
  * \headerfile "" <Fuoten/Helpers/AbstractNamFactory>
  */
-class FUOTENSHARED_EXPORT AbstractNamFactory
+class FUOTEN_EXPORT AbstractNamFactory
 {
     Q_DISABLE_COPY(AbstractNamFactory)
 public:

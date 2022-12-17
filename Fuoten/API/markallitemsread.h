@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -36,7 +37,7 @@ class MarkAllItemsReadPrivate;
  *
  * \headerfile "" <Fuoten/API/MarkFeedRead>
  */
-class FUOTENSHARED_EXPORT MarkAllItemsRead : public Component
+class FUOTEN_EXPORT MarkAllItemsRead : public Component
 {
     Q_OBJECT
     /*!

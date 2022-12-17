@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -36,7 +37,7 @@ class StarItemPrivate;
  *
  * \headerfile "" <Fuoten/API/StarItem>
  */
-class FUOTENSHARED_EXPORT StarItem : public Component
+class FUOTEN_EXPORT StarItem : public Component
 {
     Q_OBJECT
     /*!

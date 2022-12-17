@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -51,7 +52,7 @@ class ConvertToAppPasswordPrivate;
  *
  * \headerfile "" <Fuoten/API/ConvertToAppPassword>
  */
-class FUOTENSHARED_EXPORT ConvertToAppPassword : public Component
+class FUOTEN_EXPORT ConvertToAppPassword : public Component
 {
     Q_OBJECT
 public:

@@ -10,6 +10,7 @@
 #include "abstractstorage.h"
 #include "../fuoten.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -28,7 +29,7 @@ class Article;
  *
  * \headerfile "" <Fuoten/Storage/SQLiteStorage>
  */
-class FUOTENSHARED_EXPORT SQLiteStorage final : public AbstractStorage
+class FUOTEN_EXPORT SQLiteStorage final : public AbstractStorage
 {
     Q_OBJECT
 public:

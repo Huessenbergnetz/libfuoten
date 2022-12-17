@@ -10,6 +10,7 @@
 #include <QVersionNumber>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -39,7 +40,7 @@ class GetServerStatusPrivate;
  *
  * \headerfile "" <Fuoten/API/GetServerStatus>
  */
-class FUOTENSHARED_EXPORT GetServerStatus : public Component
+class FUOTEN_EXPORT GetServerStatus : public Component
 {
     Q_OBJECT
     /*!

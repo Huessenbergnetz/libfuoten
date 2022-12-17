@@ -10,6 +10,7 @@
 #include <QAbstractItemModel>
 #include "../fuoten_global.h"
 #include "../fuoten.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -21,7 +22,7 @@ class AbstractStorage;
  *
  * \headerfile "" <Fuoten/Models/BaseModel>
  */
-class FUOTENSHARED_EXPORT BaseModel : public QAbstractItemModel
+class FUOTEN_EXPORT BaseModel : public QAbstractItemModel
 {
     Q_OBJECT
     /*!

@@ -9,6 +9,7 @@
 #include <QObject>
 #include "basemodel.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -20,7 +21,7 @@ class Feed;
  *
  * \headerfile "" <Fuoten/Models/AbstractFeedModel>
  */
-class FUOTENSHARED_EXPORT AbstractFeedModel : public BaseModel
+class FUOTEN_EXPORT AbstractFeedModel : public BaseModel
 {
     Q_OBJECT
 public:

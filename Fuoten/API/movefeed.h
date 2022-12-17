@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -38,7 +39,7 @@ class MoveFeedPrivate;
  *
  * \headerfile "" <Fuoten/API/MoveFeed>
  */
-class FUOTENSHARED_EXPORT MoveFeed : public Component
+class FUOTEN_EXPORT MoveFeed : public Component
 {
     Q_OBJECT
     /*!

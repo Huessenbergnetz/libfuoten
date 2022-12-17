@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -36,7 +37,7 @@ class CreateFolderPrivate;
  *
  * \headerfile "" <Fuoten/API/CreateFolder>
  */
-class FUOTENSHARED_EXPORT CreateFolder : public Component
+class FUOTEN_EXPORT CreateFolder : public Component
 {
     Q_OBJECT
     /*!

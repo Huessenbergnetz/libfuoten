@@ -9,6 +9,7 @@
 #include <QObject>
 #include "basefiltermodel.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -22,7 +23,7 @@ class AbstractStorage;
  *
  * \headerfile "" <Fuoten/Models/FolderListFilterModel>
  */
-class FUOTENSHARED_EXPORT FolderListFilterModel : public BaseFilterModel
+class FUOTEN_EXPORT FolderListFilterModel : public BaseFilterModel
 {
     Q_OBJECT
 public:

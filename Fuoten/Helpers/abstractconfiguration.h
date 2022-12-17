@@ -11,6 +11,7 @@
 #include <QVersionNumber>
 #include "../fuoten_global.h"
 #include "../fuoten.h"
+#include "fuoten_export.h"
 
 class QUrl;
 class QJsonDocument;
@@ -29,7 +30,7 @@ namespace Fuoten {
  *
  * \headerfile "" <Fuoten/Helpers/AbstractConfiguration>
  */
-class FUOTENSHARED_EXPORT AbstractConfiguration : public QObject
+class FUOTEN_EXPORT AbstractConfiguration : public QObject
 {
     Q_OBJECT
 public:

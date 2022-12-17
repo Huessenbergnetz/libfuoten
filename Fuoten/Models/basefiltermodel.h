@@ -10,6 +10,7 @@
 #include <QSortFilterProxyModel>
 #include "../fuoten.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -21,7 +22,7 @@ class AbstractStorage;
  *
  * \headerfile "" <Fuoten/Model/BaseFilterModel>
  */
-class FUOTENSHARED_EXPORT BaseFilterModel : public QSortFilterProxyModel
+class FUOTEN_EXPORT BaseFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     /*!

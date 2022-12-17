@@ -11,6 +11,7 @@
 #include <QPair>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -39,7 +40,7 @@ class StarMultipleItemsPrivate;
  *
  * \headerfile "" <Fuoten/API/MarkFeedRead>
  */
-class FUOTENSHARED_EXPORT StarMultipleItems : public Component
+class FUOTEN_EXPORT StarMultipleItems : public Component
 {
     Q_OBJECT
     /*!

@@ -10,6 +10,7 @@
 #include "basemodel.h"
 #include "../fuoten.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -22,7 +23,7 @@ class Article;
  *
  * \headerfile "" <Fuoten/Models/AbstractArticleModel>
  */
-class FUOTENSHARED_EXPORT AbstractArticleModel : public BaseModel
+class FUOTEN_EXPORT AbstractArticleModel : public BaseModel
 {
     Q_OBJECT
     /*!

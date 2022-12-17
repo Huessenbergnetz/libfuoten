@@ -10,6 +10,7 @@
 #include "../fuoten.h"
 #include "../fuoten_global.h"
 #include "../Helpers/abstractnotificator.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -19,7 +20,7 @@ namespace Fuoten {
  * Used by AbstractStrorage::getFolders(), AbstractStroage::getFeeds() and AbstractStorage::getArticles() to set the arguments used to query a list
  * of objects. Not all members of this struct are used by every query.
  */
-struct FUOTENSHARED_EXPORT QueryArgs {
+struct FUOTEN_EXPORT QueryArgs {
     FuotenEnums::SortingRole sortingRole = FuotenEnums::ID; /**< The role/value used to sort the result by. */
     Qt::SortOrder sortOrder = Qt::AscendingOrder;           /**< The sorting order. */
     qint64 parentId = -1;                                   /**< ID of a parent object (Feed or Folder). Used by feed and article queries, defaults to -1. */
@@ -54,7 +55,7 @@ class AbstractNotificator;
  *
  * \headerfile "" <Fuoten/Storage/AbstractStorage>
  */
-class FUOTENSHARED_EXPORT AbstractStorage : public QObject
+class FUOTEN_EXPORT AbstractStorage : public QObject
 {
     Q_OBJECT
     /*!

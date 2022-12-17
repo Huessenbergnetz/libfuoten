@@ -13,6 +13,7 @@
 #include <QJsonDocument>
 #include "../Helpers/abstractnotificator.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 class QNetworkReply;
 
@@ -152,7 +153,7 @@ class WipeManager;
  *
  * \headerfile "" <Fuoten/API/Component>
  */
-class FUOTENSHARED_EXPORT Component : public QObject
+class FUOTEN_EXPORT Component : public QObject
 {
     Q_OBJECT
     /*!

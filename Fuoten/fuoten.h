@@ -7,19 +7,20 @@
 #define FUOTEN
 
 #include "fuoten_global.h"
+#include "fuoten_export.h"
 #include <QMetaType>
 #include <QVersionNumber>
 
 namespace Fuoten {
 
-FUOTENSHARED_EXPORT QVersionNumber version();
+FUOTEN_EXPORT QVersionNumber version();
 
 /*!
  * \brief Provides global enumerations.
  *
  * \headerfile "" <Fuoten/FuotenEnums>
  */
-class FUOTENSHARED_EXPORT FuotenEnums {
+class FUOTEN_EXPORT FuotenEnums {
     Q_GADGET
 public:
 

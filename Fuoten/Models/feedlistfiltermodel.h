@@ -9,6 +9,7 @@
 #include <QObject>
 #include "basefiltermodel.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -21,7 +22,7 @@ class FeedListFilterModelPrivate;
  *
  * \headerfile "" <Fuoten/Models/FeedListFilterModel>
  */
-class FUOTENSHARED_EXPORT FeedListFilterModel : public BaseFilterModel
+class FUOTEN_EXPORT FeedListFilterModel : public BaseFilterModel
 {
     Q_OBJECT
     /*!

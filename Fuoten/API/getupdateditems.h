@@ -11,6 +11,7 @@
 #include "component.h"
 #include "../fuoten.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -40,7 +41,7 @@ class GetUpdatedItemsPrivate;
  * \sa Synchronizer
  * \headerfile "" <Fuoten/API/GetUpdatedItems>
  */
-class FUOTENSHARED_EXPORT GetUpdatedItems : public Component
+class FUOTEN_EXPORT GetUpdatedItems : public Component
 {
     Q_OBJECT
     /*!

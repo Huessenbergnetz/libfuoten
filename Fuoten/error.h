@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include "fuoten_global.h"
+#include "fuoten_export.h"
 
 class QNetworkReply;
 struct QJsonParseError;
@@ -22,7 +23,7 @@ class ErrorPrivate;
  *
  * \headerfile "" <Fuoten/Error>
  */
-class FUOTENSHARED_EXPORT Error : public QObject
+class FUOTEN_EXPORT Error : public QObject
 {
     Q_OBJECT
     /*!

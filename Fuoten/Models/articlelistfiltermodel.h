@@ -10,6 +10,7 @@
 #include "basefiltermodel.h"
 #include "../fuoten.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -22,7 +23,7 @@ class ArticleListFilterModelPrivate;
  *
  * \headerfile "" <Fuoten/Models/ArticleListFilterModel>
  */
-class FUOTENSHARED_EXPORT ArticleListFilterModel : public BaseFilterModel
+class FUOTEN_EXPORT ArticleListFilterModel : public BaseFilterModel
 {
     Q_OBJECT
     /*!

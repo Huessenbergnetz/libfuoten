@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -43,7 +44,7 @@ class DeleteAppPasswordPrivate;
  *
  * \headerfile "" <Fuoten/API/DeleteAppPassword>
  */
-class FUOTENSHARED_EXPORT DeleteAppPassword : public Component
+class FUOTEN_EXPORT DeleteAppPassword : public Component
 {
     Q_OBJECT
 public:

@@ -12,6 +12,7 @@
 #include "baseitem.h"
 #include "fuoten_global.h"
 #include "fuoten.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -22,7 +23,7 @@ class ArticlePrivate;
  *
  * \headerfile "" <Fuoten/Article>
  */
-class FUOTENSHARED_EXPORT Article : public BaseItem
+class FUOTEN_EXPORT Article : public BaseItem
 {
     Q_OBJECT
     /*!

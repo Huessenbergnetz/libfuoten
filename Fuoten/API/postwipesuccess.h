@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -39,7 +40,7 @@ class PostWipeSuccessPrivate;
  *
  * \headerfile "" <Fuoten/API/PostWipeSuccess>
  */
-class FUOTENSHARED_EXPORT PostWipeSuccess : public Component
+class FUOTEN_EXPORT PostWipeSuccess : public Component
 {
     Q_OBJECT
 public:

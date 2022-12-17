@@ -6,6 +6,7 @@ add_library(FuotenQt${QT_VERSION_MAJOR})
 target_sources(FuotenQt${QT_VERSION_MAJOR}
     PRIVATE
         fuoten_global.h
+        ${CMAKE_CURRENT_BINARY_DIR}/fuoten_export.h
         article.h
         article_p.h
         article.cpp
@@ -28,6 +29,7 @@ target_sources(FuotenQt${QT_VERSION_MAJOR}
 set_property(TARGET FuotenQt${QT_VERSION_MAJOR}
     APPEND PROPERTY PUBLIC_HEADER
         fuoten_global.h
+        ${CMAKE_CURRENT_BINARY_DIR}/fuoten_export.h
         article.h
         Article
         baseitem.h
@@ -48,6 +50,8 @@ add_subdirectory(Models)
 add_subdirectory(Storage)
 
 add_library(FuotenQt${QT_VERSION_MAJOR}::Core ALIAS FuotenQt${QT_VERSION_MAJOR})
+
+generate_export_header(FuotenQt${QT_VERSION_MAJOR} BASE_NAME fuoten)
 
 target_compile_features(FuotenQt${QT_VERSION_MAJOR} PUBLIC cxx_std_14)
 

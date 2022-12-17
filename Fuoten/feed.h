@@ -11,6 +11,7 @@
 #include <QDateTime>
 #include "baseitem.h"
 #include "fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -21,7 +22,7 @@ class FeedPrivate;
  *
  * \headerfile "" <Fuoten/Feed>
  */
-class FUOTENSHARED_EXPORT Feed : public BaseItem
+class FUOTEN_EXPORT Feed : public BaseItem
 {
     Q_OBJECT
     /*!

@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 class QJsonObject;
 class QVariant;
@@ -58,7 +59,7 @@ class Error;
  *
  * \headerfile "" <Fuoten/Helpers/AbstractNotificator>
  */
-class FUOTENSHARED_EXPORT AbstractNotificator : public QObject
+class FUOTEN_EXPORT AbstractNotificator : public QObject
 {
     Q_OBJECT
 public:

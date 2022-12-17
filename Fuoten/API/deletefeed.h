@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -35,7 +36,7 @@ class DeleteFeedPrivate;
  *
  * \headerfile "" <Fuoten/API/DeleteFeed>
  */
-class FUOTENSHARED_EXPORT DeleteFeed : public Component
+class FUOTEN_EXPORT DeleteFeed : public Component
 {
     Q_OBJECT
     /*!

@@ -10,12 +10,6 @@
 #include <QMetaType>
 #include <QList>
 
-#if defined(FUOTEN_LIBRARY)
-#  define FUOTENSHARED_EXPORT Q_DECL_EXPORT
-#else
-#  define FUOTENSHARED_EXPORT Q_DECL_IMPORT
-#endif
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 13, 0)
 #define Q_DISABLE_MOVE(Class) \
     Class(const Class &&) Q_DECL_EQ_DELETE;\

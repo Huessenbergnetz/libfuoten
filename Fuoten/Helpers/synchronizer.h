@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -25,7 +26,7 @@ class AbstractNotificator;
  *
  * \headerfile "" <Fuoten/Helpers/Synchronizer>
  */
-class FUOTENSHARED_EXPORT Synchronizer : public QObject
+class FUOTEN_EXPORT Synchronizer : public QObject
 {
     Q_OBJECT
     /*!

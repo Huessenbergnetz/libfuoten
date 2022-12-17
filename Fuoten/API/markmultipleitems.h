@@ -9,6 +9,7 @@
 #include <QObject>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -35,7 +36,7 @@ class MarkMultipleItemsPrivate;
  *
  * \headerfile "" <Fuoten/API/MarkMultipleItems>
  */
-class FUOTENSHARED_EXPORT MarkMultipleItems : public Component
+class FUOTEN_EXPORT MarkMultipleItems : public Component
 {
     Q_OBJECT
     /*!

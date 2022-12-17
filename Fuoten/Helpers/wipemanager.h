@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -40,7 +41,7 @@ class AbstractNotificator;
  *
  * \headerfile "" <Fuoten/Helper/WipeManager>
  */
-class FUOTENSHARED_EXPORT WipeManager : public QObject
+class FUOTEN_EXPORT WipeManager : public QObject
 {
     Q_OBJECT
     /*!

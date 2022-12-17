@@ -10,6 +10,7 @@
 #include <QVersionNumber>
 #include "component.h"
 #include "../fuoten_global.h"
+#include "fuoten_export.h"
 
 namespace Fuoten {
 
@@ -35,7 +36,7 @@ class GetVersionPrivate;
  *
  * \headerfile "" <Fuoten/API/GetVersion>
  */
-class FUOTENSHARED_EXPORT GetVersion : public Component
+class FUOTEN_EXPORT GetVersion : public Component
 {
     Q_OBJECT
     /*!
