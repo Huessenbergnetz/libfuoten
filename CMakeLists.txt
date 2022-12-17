@@ -52,19 +52,19 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSIO
     VERSION ${libfuoten_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/fuoten-config.cmake.in
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/fuoten-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}Config.cmake
-    @ONLY
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/FuotenQt${QT_VERSION_MAJOR}
 )
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}Config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/FuotenQt${QT_VERSION_MAJOR}ConfigVersion.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/FuotenQt${QT_VERSION_MAJOR}/
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/FuotenQt${QT_VERSION_MAJOR}
     COMPONENT development
 )
 
 install(EXPORT FuotenTargets
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/FuotenQt${QT_VERSION_MAJOR}/
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/FuotenQt${QT_VERSION_MAJOR}
     FILE FuotenQt${QT_VERSION_MAJOR}Targets.cmake
     NAMESPACE Fuoten::
     COMPONENT development
