@@ -451,8 +451,13 @@ public:
      * The factory will be used to create QNetworkAccessManager objects on demand.
      * If no factory is set, a default QNetworkAccessManager object will be created.
      * The Component class will take ownership of the created QNetworkAccessManager.
+     *
+     * This is deprectated since version 0.9.0, use setDefaultNam() to directly set a
+     * single global instance of QNetworkAccessManager to reuse it for every request.
+     *
      * \sa networkAccessManagerFactory()
      */
+    [[deprecated("Use setDefaultNam() instead.")]]
     static void setNetworkAccessManagerFactory(AbstractNamFactory *factory);
 
     /*!
@@ -480,10 +485,24 @@ public:
     static void setDefaultWipeManager(WipeManager *wipeManager);
 
     /*!
-     * \brief Rerturns the global default wipe manager.
+     * \brief Returns the global default wipe manager.
      * \sa setDefaultWipeManager()
      */
     static WipeManager *defaultWipeManager();
+
+    /*!
+     * \brief Sets the global default network access manager.
+     * \sa defaultNam()
+     * \since 0.9.0
+     */
+    static void setDefaultNam(QNetworkAccessManager *nam);
+
+    /*!
+     * \brief Returns the global network access manager.
+     * \sa setDefaultNam()
+     * \since 0.9.0
+     */
+    static QNetworkAccessManager *defaultNam();
 
 Q_SIGNALS:
     /*!

@@ -71,12 +71,23 @@ public:
         m_defaultWipeManager = wipeManager;
     }
 
+    QNetworkAccessManager *defaultNam() const
+    {
+        return m_defaultNam;
+    }
+
+    void setDefaultNam(QNetworkAccessManager *nam)
+    {
+        m_defaultNam = nam;
+    }
+
 private:
     AbstractConfiguration *m_defaultConfig = nullptr;
     AbstractStorage *m_defaultStorage = nullptr;
     AbstractNamFactory *m_namFactory = nullptr;
     AbstractNotificator *m_defaultNotificator = nullptr;
     WipeManager *m_defaultWipeManager = nullptr;
+    QNetworkAccessManager *m_defaultNam = nullptr;
 };
 Q_GLOBAL_STATIC(DefaultValues, defVals)
 
@@ -235,6 +246,26 @@ void ComponentPrivate::setDefaultWipeManager(WipeManager *wipeManager)
 }
 
 
+QNetworkAccessManager *ComponentPrivate::defaultNam()
+{
+    const DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+
+    QReadLocker locker(&defs->lock);
+    return defs->defaultNam();
+}
+
+
+void ComponentPrivate::setDefaultNam(QNetworkAccessManager *nam)
+{
+    DefaultValues *defs = defVals();
+    Q_ASSERT(defs);
+    QWriteLocker locker(&defs->lock);
+    qDebug("%s", "Setting default QNetworkAccessManager.");
+    defs->setDefaultNam(nam);
+}
+
+
 Component::Component(QObject *parent) :
     QObject(parent), d_ptr(new ComponentPrivate)
 {
@@ -311,7 +342,10 @@ void Component::sendRequest()
         if (namf) {
             d->networkAccessManager = namf->create(this);
         } else {
-            d->networkAccessManager = new QNetworkAccessManager(this);
+            d->networkAccessManager = Component::defaultNam();
+            if (!d->networkAccessManager) {
+                d->networkAccessManager = new QNetworkAccessManager(this);
+            }
         }
         if (d->configuration->getIgnoreSSLErrors()) {
             connect(d->networkAccessManager, &QNetworkAccessManager::sslErrors, this, &Component::_ignoreSSLErrors);
@@ -749,6 +783,18 @@ void Component::setDefaultWipeManager(WipeManager *wipeManager)
 AbstractNotificator *Component::defaultNotificator()
 {
     return ComponentPrivate::defaultNotificator();
+}
+
+
+void Component::setDefaultNam(QNetworkAccessManager *nam)
+{
+    ComponentPrivate::setDefaultNam(nam);
+}
+
+
+QNetworkAccessManager *Component::defaultNam()
+{
+    return ComponentPrivate::defaultNam();
 }
 
 

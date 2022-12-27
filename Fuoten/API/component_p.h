@@ -61,6 +61,8 @@ public:
     static void setDefaultNotificator(AbstractNotificator *notificator);
     static WipeManager *defaultWipeManager();
     static void setDefaultWipeManager(WipeManager *wipeManager);
+    static QNetworkAccessManager *defaultNam();
+    static void setDefaultNam(QNetworkAccessManager *nam);
 
 private:
     Q_DISABLE_COPY(ComponentPrivate)
