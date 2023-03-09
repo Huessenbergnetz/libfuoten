@@ -19,6 +19,7 @@ on:
     branches: [ "master" ]
     paths-ignore:
       - '**/*.ts'
+      - '**/moc_*.cpp'
   schedule:
     - cron: '14 7 * * 1'
 
